@@ -29,6 +29,7 @@
       {% if section.blocks.size > 0 %}
         {% for block in section.blocks %}
           {% assign highlight = block.settings.highlight_text | default: "Modern Wellness." %}
+          {% assign span_tag = '<span class="highlight-text">' | append: highlight | append: '</span>' %}
           <div class="ayova-carousel-slide hero-slide" {{ block.shopify_attributes }}>
             <div class="container hero-slide-grid">
               <div class="hero-content">
@@ -38,7 +39,7 @@
                 
                 <h1 class="hero-title">
                   {% if block.settings.title != blank %}
-                    {{ block.settings.title | replace: highlight, '<span class="highlight-text">' | append: '</span>' }}
+                    {{ block.settings.title | replace: highlight, span_tag }}
                   {% else %}
                     Rooted in Ayurveda. <br>Made for <span class="highlight-text">Modern Wellness.</span>
                   {% endif %}

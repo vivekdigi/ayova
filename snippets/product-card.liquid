@@ -39,7 +39,7 @@
 
   {% assign card_reviews = reviews | default: "205" %}
   {% assign card_meta = category | default: "60 veg capsules" %}
-  {% assign variant_id = card_product.selected_or_first_available_variant.id %}
+  {% assign variant_id = card_product.selected_or_first_available_variant.id | default: card_product.variants.first.id %}
 
 {% else %}
   {% assign card_title = title | default: "Milk Thistle 800 mg" %}
