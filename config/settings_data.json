@@ -20,6 +20,22 @@
       "hero-carousel": {
         "type": "hero-carousel",
         "blocks": {
+          "slide_dWCr8A": {
+            "type": "slide",
+            "settings": {
+              "subtag": "100% PURE & NATURAL AYURVEDA",
+              "title": "Rooted in Ayurveda. Made for Modern Wellness.",
+              "highlight_text": "Modern Wellness.",
+              "description": "Clean, doctor-formulated herbal supplements designed for stress relief, digestive health, liver care, and daily vitality.",
+              "button_text": "Shop Now",
+              "button_link": "",
+              "secondary_button_text": "",
+              "secondary_button_link": "",
+              "image": "shopify://shop_images/vid_2026_06_30_6a439318877e0.jpg",
+              "image_url": "",
+              "floating_badge": "+ Digestive Support"
+            }
+          },
           "slide_t7aReT": {
             "type": "slide",
             "settings": {
@@ -38,6 +54,7 @@
           }
         },
         "block_order": [
+          "slide_dWCr8A",
           "slide_t7aReT"
         ],
         "settings": {
