@@ -5,11 +5,7 @@
 
 {% assign header_alignment = section.settings.header_alignment | default: 'center' %}
 {% assign items_desktop = section.settings.items_per_view | default: 4 %}
-
-{% assign sel_collection = section.settings.collection %}
-{% if sel_collection == blank or sel_collection.title == blank %}
-  {% assign sel_collection = collections[section.settings.collection] %}
-{% endif %}
+{% assign sel_collection = collections[section.settings.collection] %}
 
 <section class="section-padding formulations-section" id="formulations">
   <div class="container">
@@ -51,12 +47,9 @@
 
         {% elsif section.blocks.size > 0 %}
           {% for block in section.blocks %}
-            {% assign block_prod = block.settings.product %}
-            {% if block_prod == blank or block_prod.title == blank %}
-              {% assign block_prod = all_products[block.settings.product] %}
-            {% endif %}
+            {% assign block_prod = all_products[block.settings.product] %}
             <div class="ayova-carousel-slide" {{ block.shopify_attributes }}>
-              {% if block_prod != blank and block_prod.title != blank %}
+              {% if block_prod != blank %}
                 {% render 'product-card', product: block_prod %}
               {% else %}
                 {% render 'product-card',

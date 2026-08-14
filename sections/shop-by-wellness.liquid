@@ -40,13 +40,10 @@
 
         {% if section.blocks.size > 0 %}
           {% for block in section.blocks %}
-            {% assign block_coll = block.settings.collection %}
-            {% if block_coll == blank or block_coll.title == blank %}
-              {% assign block_coll = collections[block.settings.collection] %}
-            {% endif %}
+            {% assign block_coll = collections[block.settings.collection] %}
             
             {% assign goal_title = block.settings.title %}
-            {% if goal_title == blank and block_coll != blank and block_coll.title != blank %}
+            {% if goal_title == blank and block_coll != blank %}
               {% assign goal_title = block_coll.title %}
             {% endif %}
 
