@@ -1,0 +1,15 @@
+{
+  "current": {
+    "color_primary": "#173E34",
+    "color_accent": "#D96C3F",
+    "color_bg_cream": "#FAF8F2",
+    "sections": {}
+  },
+  "presets": {
+    "Default": {
+      "color_primary": "#173E34",
+      "color_accent": "#D96C3F",
+      "color_bg_cream": "#FAF8F2"
+    }
+  }
+}

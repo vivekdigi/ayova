@@ -1,0 +1,16 @@
+{
+  "sections": {
+    "main_contact": {
+      "type": "main-contact",
+      "settings": {}
+    },
+    "trust_badges": {
+      "type": "trust-badges",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main_contact",
+    "trust_badges"
+  ]
+}

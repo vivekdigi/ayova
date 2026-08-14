@@ -1,0 +1,315 @@
+{% comment %}
+  AYOVA CART MAIN SECTION
+  Figma Spec: Cart items table, free shipping progress bar, promo code, subtotal, checkout button
+{% endcomment %}
+
+<div class="section-padding cart-page">
+  <div class="container">
+    <h1 class="cart-title">Your Shopping Cart</h1>
+
+    <!-- Free Shipping Progress Bar -->
+    <div class="free-shipping-box">
+      <p class="shipping-msg">🎉 <strong>You unlocked Free Express Shipping!</strong> (Orders above Rs. 499)</p>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" style="width: 100%;"></div>
+      </div>
+    </div>
+
+    <div class="cart-grid">
+      <!-- Items Table -->
+      <div class="cart-items-box">
+        <div class="cart-item">
+          <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=200&auto=format&fit=crop&q=60" alt="Milk Thistle" class="item-img">
+          
+          <div class="item-info">
+            <h3 class="item-title"><a href="/products/milk-thistle">Milk Thistle 800 mg</a></h3>
+            <p class="item-meta">Pack: 1 Bottle (60 caps)</p>
+            <span class="item-price">Rs. 389.00</span>
+          </div>
+
+          <div class="item-qty-row">
+            <div class="quantity-selector">
+              <button type="button">-</button>
+              <input type="number" value="1" readonly>
+              <button type="button">+</button>
+            </div>
+            <button type="button" class="remove-btn">Remove</button>
+          </div>
+
+          <div class="item-total">
+            <span>Rs. 389.00</span>
+          </div>
+        </div>
+
+        <div class="cart-item">
+          <img src="https://images.unsplash.com/photo-1550572017-edf79289989a?w=200&auto=format&fit=crop&q=60" alt="PCOS Syrup" class="item-img">
+          
+          <div class="item-info">
+            <h3 class="item-title"><a href="/products/pcos-syrup">PCOS / PCOD Care Syrup</a></h3>
+            <p class="item-meta">Pack: 500 ml bottle</p>
+            <span class="item-price">Rs. 333.00</span>
+          </div>
+
+          <div class="item-qty-row">
+            <div class="quantity-selector">
+              <button type="button">-</button>
+              <input type="number" value="1" readonly>
+              <button type="button">+</button>
+            </div>
+            <button type="button" class="remove-btn">Remove</button>
+          </div>
+
+          <div class="item-total">
+            <span>Rs. 333.00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Summary Card -->
+      <div class="cart-summary-card">
+        <h3 class="summary-title">Order Summary</h3>
+
+        <!-- Promo Code Form -->
+        <div class="promo-box">
+          <input type="text" placeholder="Promo code / Coupon" class="promo-input">
+          <button type="button" class="btn btn-outline promo-btn">Apply</button>
+        </div>
+
+        <div class="summary-lines">
+          <div class="summary-line">
+            <span>Subtotal</span>
+            <span>Rs. 722.00</span>
+          </div>
+          <div class="summary-line">
+            <span>Estimated Shipping</span>
+            <span class="free-text">FREE</span>
+          </div>
+          <div class="summary-line">
+            <span>Tax (GST Included)</span>
+            <span>Rs. 0.00</span>
+          </div>
+          <div class="summary-line total-line">
+            <span>Total Payable</span>
+            <span>Rs. 722.00</span>
+          </div>
+        </div>
+
+        <a href="/pages/checkout" class="btn btn-primary btn-checkout">Proceed to Checkout →</a>
+
+        <p class="cart-guarantee">
+          🔒 Guaranteed 256-bit Secure Checkout & Free Returns
+        </p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<style>
+.cart-title {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 2.2rem;
+  color: var(--color-forest-primary);
+  margin-bottom: 24px;
+}
+
+.free-shipping-box {
+  background: var(--color-sage-light);
+  border: 1px solid var(--color-sage-border);
+  padding: 16px 24px;
+  border-radius: var(--radius-md);
+  margin-bottom: 32px;
+}
+
+.shipping-msg {
+  font-size: 0.95rem;
+  color: var(--color-forest-dark);
+  margin-bottom: 8px;
+}
+
+.progress-bar-bg {
+  height: 8px;
+  background: var(--color-sage-border);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: var(--color-forest-mid);
+  border-radius: var(--radius-full);
+}
+
+.cart-grid {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 36px;
+}
+
+.cart-items-box {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-sage-border);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cart-item {
+  display: grid;
+  grid-template-columns: 80px 1fr auto auto;
+  gap: 20px;
+  align-items: center;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--color-sage-border);
+}
+
+.cart-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.item-img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  background: var(--color-sage-light);
+}
+
+.item-title {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--color-forest-primary);
+}
+
+.item-meta {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.item-price {
+  font-weight: 700;
+  color: var(--color-forest-dark);
+}
+
+.remove-btn {
+  background: none;
+  border: none;
+  color: #c95634;
+  font-size: 0.8rem;
+  cursor: pointer;
+  margin-top: 4px;
+}
+
+.item-total {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--color-forest-dark);
+}
+
+.cart-summary-card {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-sage-border);
+  padding: 28px;
+  height: fit-content;
+}
+
+.summary-title {
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  color: var(--color-forest-primary);
+  margin-bottom: 20px;
+}
+
+.promo-box {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.promo-input {
+  flex-grow: 1;
+  padding: 10px 14px;
+  border: 1px solid var(--color-sage-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+}
+
+.promo-btn {
+  padding: 10px 16px;
+  font-size: 0.85rem;
+}
+
+.summary-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+  border-top: 1px solid var(--color-sage-border);
+  padding-top: 16px;
+}
+
+.summary-line {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+}
+
+.free-text {
+  color: var(--color-forest-mid);
+  font-weight: 700;
+}
+
+.total-line {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: var(--color-forest-dark);
+  border-top: 1px solid var(--color-sage-border);
+  padding-top: 12px;
+}
+
+.btn-checkout {
+  width: 100%;
+  padding: 16px;
+  font-size: 1.05rem;
+  margin-bottom: 16px;
+}
+
+.cart-guarantee {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .cart-grid {
+    grid-template-columns: 1fr;
+  }
+  .cart-item {
+    grid-template-columns: 70px 1fr;
+  }
+  .item-qty-row, .item-total {
+    grid-column: span 2;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Cart Page",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Cart Page"
+    }
+  ]
+}
+{% endschema %}

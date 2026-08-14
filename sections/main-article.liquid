@@ -1,0 +1,34 @@
+{% comment %}
+  AYOVA MAIN ARTICLE SECTION
+{% endcomment %}
+
+<article class="section-padding article-main-section">
+  <div class="container" style="max-width: 800px;">
+    <div class="article-header text-center" style="margin-bottom: 32px;">
+      <span class="blog-date" style="color: var(--color-terracotta); font-weight: 600;">{{ article.published_at | date: "%b %d, %Y" }} • By {{ article.author }}</span>
+      <h1 class="article-title" style="font-family: var(--font-serif); font-size: 2.6rem; margin: 12px 0 20px;">{{ article.title }}</h1>
+    </div>
+
+    {% if article.image %}
+      <div class="article-featured-image" style="border-radius: 16px; overflow: hidden; margin-bottom: 36px;">
+        <img src="{{ article.image | image_url: width: 1000 }}" alt="{{ article.title | escape }}" style="width: 100%; height: auto;">
+      </div>
+    {% endif %}
+
+    <div class="article-body rte" style="line-height: 1.8; font-size: 1.1rem; color: var(--color-text-main);">
+      {{ article.content }}
+    </div>
+  </div>
+</article>
+
+{% schema %}
+{
+  "name": "Main Article",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Main Article"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,42 @@
+{% comment %}
+  AYOVA MAIN BLOG SECTION
+{% endcomment %}
+
+<section class="section-padding blog-main-section">
+  <div class="container">
+    <div class="wellness-header-centered">
+      <span class="badge badge-accent">AYURVEDIC KNOWLEDGE</span>
+      <h1 class="section-title">{{ blog.title }}</h1>
+      <p class="section-subtitle">Doctor-backed articles on natural healing, dosha balancing, and clinical research</p>
+    </div>
+
+    <div class="blog-grid">
+      {% for article in blog.articles %}
+        <article class="blog-card">
+          <div class="blog-image-wrapper">
+            <span class="blog-category">HERBAL CARE</span>
+            <img src="{{ article.image | image_url: width: 600 }}" alt="{{ article.title | escape }}" class="blog-img">
+          </div>
+          <div class="blog-content">
+            <span class="blog-date">{{ article.published_at | date: "%b %d, %Y" }}</span>
+            <h3 class="blog-title"><a href="{{ article.url }}">{{ article.title }}</a></h3>
+            <p class="blog-excerpt">{{ article.excerpt_or_content | strip_html | truncatewords: 25 }}</p>
+            <a href="{{ article.url }}" class="blog-read-btn">Read Article →</a>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Main Blog",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Main Blog"
+    }
+  ]
+}
+{% endschema %}

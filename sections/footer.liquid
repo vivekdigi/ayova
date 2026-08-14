@@ -1,0 +1,210 @@
+{% comment %}
+  AYOVA FOOTER SECTION
+  Figma Spec: Brand Links, Newsletter, Trust Certifications, Payment Methods (UPI, Visa, RuPay)
+{% endcomment %}
+
+<footer class="ayova-footer">
+  <div class="container footer-container">
+    <div class="footer-grid">
+      
+      <!-- Col 1: Brand -->
+      <div class="footer-col brand-col">
+        <a href="/" class="footer-logo">
+          <span class="logo-title">AYOVA</span>
+          <span class="logo-sub">AYURVEDA & WELLNESS</span>
+        </a>
+        <p class="footer-brand-desc">
+          Ayova bridges centuries-old Ayurvedic wisdom with modern clinical research to deliver powerful, doctor-backed wellness supplements for daily health.
+        </p>
+        <div class="footer-socials">
+          <a href="#" aria-label="Instagram">📷</a>
+          <a href="#" aria-label="Facebook">📘</a>
+          <a href="#" aria-label="YouTube">▶️</a>
+        </div>
+      </div>
+
+      <!-- Col 2: Quick Links -->
+      <div class="footer-col">
+        <h4 class="footer-col-title">Shop Wellness</h4>
+        <ul class="footer-links">
+          <li><a href="/collections/liver-health">Liver Care & Detox</a></li>
+          <li><a href="/collections/women-wellness">Women Wellness & PCOS</a></li>
+          <li><a href="/collections/gut-digestive">Gut & Digestives</a></li>
+          <li><a href="/collections/immunity">Immunity Boosters</a></li>
+          <li><a href="/collections/all">All Products</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 3: Company -->
+      <div class="footer-col">
+        <h4 class="footer-col-title">Company</h4>
+        <ul class="footer-links">
+          <li><a href="/pages/about">Our Story & Heritage</a></li>
+          <li><a href="/pages/certifications">AYUSH & ISO Standards</a></li>
+          <li><a href="/pages/contact">Contact Us</a></li>
+          <li><a href="/pages/faq">FAQs</a></li>
+          <li><a href="/pages/terms">Terms & Refund Policy</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 4: Newsletter -->
+      <div class="footer-col">
+        <h4 class="footer-col-title">Join Ayova Club</h4>
+        <p class="footer-newsletter-text">Subscribe for exclusive health tips, Ayurvedic guidance, and 10% off your first order.</p>
+        <form class="footer-newsletter-form" onsubmit="event.preventDefault(); alert('Thank you for subscribing!');">
+          <input type="email" placeholder="Enter your email" required class="newsletter-input">
+          <button type="submit" class="btn btn-accent newsletter-btn">Subscribe</button>
+        </form>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <p class="copyright-text">© {{ 'now' | date: "%Y" }} AYOVA Wellness. All Rights Reserved. Formulated with Care in India.</p>
+      <div class="payment-methods">
+        <span class="payment-badge">UPI / QR</span>
+        <span class="payment-badge">VISA</span>
+        <span class="payment-badge">Mastercard</span>
+        <span class="payment-badge">RuPay</span>
+        <span class="payment-badge">NetBanking</span>
+        <span class="payment-badge">COD</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+.ayova-footer {
+  background: var(--color-forest-dark);
+  color: var(--color-white);
+  padding: 60px 0 30px;
+  border-top: 1px solid var(--color-forest-mid);
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
+  gap: 40px;
+  margin-bottom: 48px;
+}
+
+.footer-col-title {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+  color: var(--color-white);
+}
+
+.footer-brand-desc {
+  font-size: 0.9rem;
+  color: var(--color-sage-border);
+  margin: 16px 0 20px;
+  line-height: 1.6;
+}
+
+.footer-socials {
+  display: flex;
+  gap: 12px;
+  font-size: 1.2rem;
+}
+
+.footer-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footer-links a {
+  color: var(--color-sage-border);
+  font-size: 0.9rem;
+  transition: color var(--transition-fast);
+}
+
+.footer-links a:hover {
+  color: var(--color-terracotta);
+}
+
+.footer-newsletter-text {
+  font-size: 0.9rem;
+  color: var(--color-sage-border);
+  margin-bottom: 16px;
+}
+
+.footer-newsletter-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.newsletter-input {
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-forest-mid);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--color-white);
+}
+
+.newsletter-input::placeholder {
+  color: var(--color-sage-border);
+}
+
+.newsletter-btn {
+  border-radius: var(--radius-sm);
+  padding: 12px;
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.copyright-text {
+  font-size: 0.85rem;
+  color: var(--color-sage-border);
+}
+
+.payment-methods {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.payment-badge {
+  background: rgba(255, 255, 255, 0.12);
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-sage-light);
+}
+
+@media (max-width: 1024px) {
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": []
+}
+{% endschema %}

@@ -1,0 +1,205 @@
+{% comment %}
+  AYOVA BLOG POSTS & USER STORIES CAROUSEL SECTION
+  Figma Spec: Centered title "See why customers keep choosing Ayova.", video/story cards with play button, location, product tag
+{% endcomment %}
+
+{% assign header_alignment = section.settings.header_alignment | default: 'center' %}
+{% assign items_desktop = section.settings.items_per_view | default: 3 %}
+
+<section class="section-padding blog-section" id="blog">
+  <div class="container">
+    {% if header_alignment == 'center' %}
+      <div class="wellness-header-centered">
+        {% if section.settings.badge_text != blank %}
+          <span class="badge badge-accent">{{ section.settings.badge_text }}</span>
+        {% endif %}
+        <h2 class="section-title">{{ section.settings.title | default: "See why customers keep choosing Ayova." }}</h2>
+        <p class="section-subtitle">{{ section.settings.subtitle | default: "Real stories from real users sharing their wellness results with Ayova" }}</p>
+      </div>
+    {% else %}
+      <div class="wellness-header-row">
+        <div>
+          {% if section.settings.badge_text != blank %}
+            <span class="badge badge-accent">{{ section.settings.badge_text }}</span>
+          {% endif %}
+          <h2 class="section-title">{{ section.settings.title | default: "See why customers keep choosing Ayova." }}</h2>
+          <p class="section-subtitle">{{ section.settings.subtitle | default: "Real stories from real users sharing their wellness results with Ayova" }}</p>
+        </div>
+
+        <a href="/blogs/news" class="view-all-link">View All Stories →</a>
+      </div>
+    {% endif %}
+
+    <div class="ayova-carousel-wrapper" data-ayova-carousel data-items-per-view="{{ items_desktop }}" data-gap="24">
+      <div class="ayova-carousel-track">
+        
+        {% if section.blocks.size > 0 %}
+          {% for block in section.blocks %}
+            <div class="ayova-carousel-slide" {{ block.shopify_attributes }}>
+              <article class="blog-card story-video-card">
+                <div class="blog-image-wrapper">
+                  <span class="blog-category">{{ block.settings.category | default: "VERIFIED STORY" }}</span>
+                  <img src="{{ block.settings.image | default: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600&auto=format&fit=crop&q=80' }}" alt="{{ block.settings.title | escape }}" class="blog-img">
+                  <div class="video-play-badge" aria-label="Play video">▶</div>
+                </div>
+                <div class="blog-content">
+                  <h3 class="blog-title"><a href="{{ block.settings.url | default: '#' }}">{{ block.settings.title }}</a></h3>
+                  <p class="story-author-tag">{{ block.settings.author | default: "Divya • Delhi" }}</p>
+                  <p class="story-product-tag">{{ block.settings.product | default: "Milk Thistle 800mg User" }}</p>
+                </div>
+              </article>
+            </div>
+          {% endfor %}
+
+        {% else %}
+          <!-- Default Fallback Video Story Cards -->
+          <div class="ayova-carousel-slide">
+            <article class="blog-card story-video-card">
+              <div class="blog-image-wrapper">
+                <span class="blog-category">30-DAY JOURNEY</span>
+                <img src="https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600&auto=format&fit=crop&q=80" alt="My 30-day liver wellness routine" class="blog-img">
+                <div class="video-play-badge" aria-label="Play video">▶</div>
+              </div>
+              <div class="blog-content">
+                <h3 class="blog-title"><a href="#">My 30-day liver wellness routine</a></h3>
+                <p class="story-author-tag">Divya • Delhi</p>
+                <p class="story-product-tag">Milk Thistle 800mg User</p>
+              </div>
+            </article>
+          </div>
+
+          <div class="ayova-carousel-slide">
+            <article class="blog-card story-video-card">
+              <div class="blog-image-wrapper">
+                <span class="blog-category">MORNING ROUTINE</span>
+                <img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=600&auto=format&fit=crop&q=80" alt="Why I added probiotics to every morning" class="blog-img">
+                <div class="video-play-badge" aria-label="Play video">▶</div>
+              </div>
+              <div class="blog-content">
+                <h3 class="blog-title"><a href="#">Why I added probiotics to every morning</a></h3>
+                <p class="story-author-tag">Mehar • Bengaluru</p>
+                <p class="story-product-tag">Probiotics 30B CFU User</p>
+              </div>
+            </article>
+          </div>
+
+          <div class="ayova-carousel-slide">
+            <article class="blog-card story-video-card">
+              <div class="blog-image-wrapper">
+                <span class="blog-category">GUT HEALTH</span>
+                <img src="https://images.unsplash.com/photo-1512290900676-26c2a4d48dc1?w=600&auto=format&fit=crop&q=80" alt="A simpler way for 30-day gut cleanse" class="blog-img">
+                <div class="video-play-badge" aria-label="Play video">▶</div>
+              </div>
+              <div class="blog-content">
+                <h3 class="blog-title"><a href="#">A simpler way for 30-day gut cleanse</a></h3>
+                <p class="story-author-tag">Aniketh • Pune</p>
+                <p class="story-product-tag">Triphala Cleanse User</p>
+              </div>
+            </article>
+          </div>
+        {% endif %}
+
+      </div>
+
+      <div class="ayova-carousel-dots" data-carousel-dots></div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Blog Posts and Stories",
+  "settings": [
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge Tag Text",
+      "default": "REAL RESULTS"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "See why customers keep choosing Ayova."
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Section Subtitle",
+      "default": "Real stories from real users sharing their wellness results with Ayova"
+    },
+    {
+      "type": "select",
+      "id": "header_alignment",
+      "label": "Header Alignment",
+      "options": [
+        {
+          "value": "center",
+          "label": "Centered"
+        },
+        {
+          "value": "row",
+          "label": "Row with Link"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "items_per_view",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "label": "Cards Visible on Desktop",
+      "default": 3
+    }
+  ],
+  "blocks": [
+    {
+      "type": "story",
+      "name": "User Story Card",
+      "settings": [
+        {
+          "type": "text",
+          "id": "category",
+          "label": "Category Tag",
+          "default": "30-DAY JOURNEY"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Story Title",
+          "default": "My 30-day liver wellness routine"
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "label": "Author & Location",
+          "default": "Divya • Delhi"
+        },
+        {
+          "type": "text",
+          "id": "product",
+          "label": "Product Used",
+          "default": "Milk Thistle 800mg User"
+        },
+        {
+          "type": "text",
+          "id": "image",
+          "label": "Thumbnail Image URL"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Story Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Blog Posts and Stories"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,293 @@
+{% comment %}
+  REUSABLE AYOVA PRODUCT CARD SNIPPET
+  Figma Spec: Card with badge, image, star rating, price, add to cart
+  Supports both Shopify Product object and manual block attributes.
+{% endcomment %}
+
+{% assign card_product = product %}
+
+{% if card_product != blank %}
+  {% assign card_title = card_product.title %}
+  {% assign card_url = card_product.url %}
+  {% assign card_vendor = card_product.vendor | default: card_product.type | default: "AYURVEDIC" %}
+  {% assign card_price_formatted = card_product.price | money %}
+  
+  {% if card_product.compare_at_price > card_product.price %}
+    {% assign card_compare_price_formatted = card_product.compare_at_price | money %}
+  {% else %}
+    {% assign card_compare_price_formatted = compare_price %}
+  {% endif %}
+
+  {% if card_product.featured_image != blank %}
+    {% assign card_img_src = card_product.featured_image | image_url: width: 500 %}
+  {% elsif image_url != blank %}
+    {% assign card_img_src = image_url %}
+  {% else %}
+    {% assign card_img_src = "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=500&auto=format&fit=crop&q=60" %}
+  {% endif %}
+
+  {% assign card_badge = badge %}
+  {% if card_badge == blank %}
+    {% for tag in card_product.tags %}
+      {% assign downcased_tag = tag | downcase %}
+      {% if downcased_tag contains 'bestseller' or downcased_tag contains 'popular' or downcased_tag contains 'organic' or downcased_tag contains 'classic' %}
+        {% assign card_badge = tag | upcase %}
+        {% break %}
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+
+  {% assign card_reviews = reviews | default: "205" %}
+  {% assign card_meta = category | default: "60 veg capsules" %}
+  {% assign variant_id = card_product.selected_or_first_available_variant.id %}
+
+{% else %}
+  {% assign card_title = title | default: "Milk Thistle 800 mg" %}
+  {% assign card_url = link | default: "/products/milk-thistle" %}
+  {% assign card_vendor = subtitle | default: "LIVER HEALTH" %}
+  {% assign card_meta = category | default: "60 veg capsules" %}
+  {% assign card_price_formatted = price | default: "Rs. 389.00" %}
+  {% assign card_compare_price_formatted = compare_price %}
+  {% assign card_badge = badge | default: "BESTSELLER" %}
+  {% assign card_reviews = reviews | default: "205" %}
+  {% assign card_img_src = image_url %}
+  {% if card_img_src == blank and image != blank %}
+    {% assign card_img_src = image | image_url: width: 500 %}
+  {% endif %}
+  {% if card_img_src == blank %}
+    {% assign card_img_src = "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=500&auto=format&fit=crop&q=60" %}
+  {% endif %}
+  {% assign variant_id = "" %}
+{% endif %}
+
+<div class="ayova-product-card">
+  <div class="card-image-wrapper">
+    {% if card_badge != blank %}
+      <span class="card-badge">{{ card_badge }}</span>
+    {% endif %}
+
+    <a href="{{ card_url }}">
+      <img
+        src="{{ card_img_src }}"
+        alt="{{ card_title | escape }}"
+        loading="lazy"
+        width="400"
+        height="400"
+        class="card-img"
+      >
+    </a>
+
+    <div class="card-quick-view">
+      <a href="{{ card_url }}" class="quick-view-btn">Quick View</a>
+    </div>
+  </div>
+
+  <div class="card-info">
+    <span class="card-category-tag">{{ card_vendor }}</span>
+    <h3 class="card-title">
+      <a href="{{ card_url }}">{{ card_title }}</a>
+    </h3>
+    <p class="card-meta">{{ card_meta }}</p>
+
+    <div class="card-rating">
+      <span class="rating-stars">★★★★★</span>
+      <span class="rating-count">({{ card_reviews }})</span>
+    </div>
+
+    <div class="card-price-row">
+      <div class="card-price">
+        <span class="price-from">From</span>
+        <span class="price-amount">{{ card_price_formatted }}</span>
+        {% if card_compare_price_formatted != blank %}
+          <span class="price-compare">{{ card_compare_price_formatted }}</span>
+        {% endif %}
+      </div>
+      <span class="price-gst">inc. of GST</span>
+    </div>
+
+    <button type="button" class="btn btn-primary card-add-btn" data-add-to-cart {% if variant_id != blank %}data-variant-id="{{ variant_id }}"{% endif %}>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <path d="M16 10a4 4 0 0 1-8 0"></path>
+      </svg>
+      Add to cart
+    </button>
+  </div>
+</div>
+
+<style>
+.ayova-product-card {
+  background: var(--color-white);
+  border: 1px solid var(--color-sage-border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: all var(--transition-normal);
+}
+
+.ayova-product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-forest-mid);
+}
+
+.card-image-wrapper {
+  position: relative;
+  background: #F4F7F4;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.ayova-product-card:hover .card-img {
+  transform: scale(1.05);
+}
+
+.card-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: var(--color-forest-primary);
+  color: var(--color-white);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.65rem;
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  z-index: 2;
+  letter-spacing: 0.05em;
+}
+
+.card-quick-view {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  opacity: 0;
+  transition: all var(--transition-fast);
+  z-index: 2;
+}
+
+.ayova-product-card:hover .card-quick-view {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+.quick-view-btn {
+  background: rgba(250, 247, 240, 0.94);
+  border: 1px solid var(--color-sage-border);
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-forest-primary);
+}
+
+.card-info {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.card-category-tag {
+  color: var(--color-terracotta);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.card-title {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--color-text-dark);
+  margin-bottom: 2px;
+  line-height: 1.3;
+}
+
+.card-title a:hover {
+  color: var(--color-forest-primary);
+}
+
+.card-meta {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-bottom: 8px;
+}
+
+.card-rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.rating-count {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.card-price-row {
+  margin-top: auto;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.card-price {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.price-from {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.price-amount {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: var(--color-forest-dark);
+}
+
+.price-compare {
+  font-size: 0.85rem;
+  text-decoration: line-through;
+  color: var(--color-text-muted);
+}
+
+.price-gst {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.card-add-btn {
+  width: 100%;
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  font-size: 0.9rem;
+}
+
+.card-add-btn.btn-added {
+  background-color: #2e7d32 !important;
+}
+</style>

@@ -1,0 +1,142 @@
+{% comment %}
+  AYOVA ABOUT US MAIN SECTION
+{% endcomment %}
+
+<div class="section-padding about-page">
+  <div class="container">
+    
+    <!-- Hero Banner -->
+    <div class="about-hero">
+      <span class="badge badge-category">OUR HERITAGE & MISSION</span>
+      <h1 class="about-title">Rooted in Centuries of Ayurveda. <br>Crafted for Modern Living.</h1>
+      <p class="about-subtitle">
+        Ayova was born out of a single commitment: to strip away synthetic additives and deliver authentic, potent botanical extracts validated by clinical science.
+      </p>
+    </div>
+
+    <!-- 2 Column Story Grid -->
+    <div class="about-grid">
+      <div class="about-image-box">
+        <img src="https://images.unsplash.com/photo-1617897903246-719242758050?w=800&auto=format&fit=crop&q=80" alt="Ayurvedic Botanical Sourcing" class="about-img">
+      </div>
+      
+      <div class="about-text-box">
+        <h2 class="section-title">The Ayova Standard</h2>
+        <p class="about-p">
+          In a market crowded with underdosed supplements, Ayova uses standardized extracts from authentic wild-harvested herbs. Every batch is tested for heavy metals, microbial purity, and active phytochemical content.
+        </p>
+
+        <div class="about-stats-grid">
+          <div class="stat-card">
+            <span class="stat-num">100%</span>
+            <span class="stat-label">Plant-Based Ingredients</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-num">AYUSH</span>
+            <span class="stat-label">Certified Formulations</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-num">50K+</span>
+            <span class="stat-label">Satisfied Wellness Customers</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-num">0%</span>
+            <span class="stat-label">Fillers or Artificial Dyes</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<style>
+.about-hero {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 56px;
+}
+
+.about-title {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 2.8rem;
+  color: var(--color-forest-primary);
+  line-height: 1.2;
+  margin: 12px 0 16px;
+}
+
+.about-subtitle {
+  font-size: 1.15rem;
+  color: var(--color-text-muted);
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+
+.about-image-box {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+.about-img {
+  width: 100%;
+  height: 480px;
+  object-fit: cover;
+}
+
+.about-p {
+  font-size: 1.05rem;
+  color: var(--color-text-body);
+  margin-bottom: 28px;
+  line-height: 1.7;
+}
+
+.about-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.stat-card {
+  background: var(--color-sage-light);
+  padding: 20px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-sage-border);
+}
+
+.stat-num {
+  display: block;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.8rem;
+  color: var(--color-forest-dark);
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+@media (max-width: 900px) {
+  .about-title { font-size: 2rem; }
+  .about-grid { grid-template-columns: 1fr; }
+}
+</style>
+
+{% schema %}
+{
+  "name": "About Us Main Section",
+  "settings": [],
+  "presets": [
+    {
+      "name": "About Us Main Section"
+    }
+  ]
+}
+{% endschema %}

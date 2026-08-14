@@ -1,0 +1,254 @@
+{% comment %}
+  SHOP OUR MOST LOVED AYURVEDIC FORMULATIONS CAROUSEL SECTION
+  Figma & Image 1 Spec: Centered title, product card carousel slider with review stars, badge tags, prices, add to cart
+{% endcomment %}
+
+{% assign header_alignment = section.settings.header_alignment | default: 'center' %}
+{% assign items_desktop = section.settings.items_per_view | default: 4 %}
+{% assign sel_collection = collections[section.settings.collection] %}
+
+<section class="section-padding formulations-section" id="formulations">
+  <div class="container">
+    {% if header_alignment == 'center' %}
+      <div class="wellness-header-centered">
+        {% if section.settings.badge_text != blank %}
+          <span class="badge badge-category">{{ section.settings.badge_text }}</span>
+        {% endif %}
+        <h2 class="section-title">{{ section.settings.title | default: "Shop Our Most-Loved Ayurvedic Formulations" }}</h2>
+        <p class="section-subtitle">{{ section.settings.subtitle | default: "Pure standardized extracts & authentic classical formulations for maximum bioavailability" }}</p>
+      </div>
+    {% else %}
+      <div class="wellness-header-row">
+        <div>
+          {% if section.settings.badge_text != blank %}
+            <span class="badge badge-category">{{ section.settings.badge_text }}</span>
+          {% endif %}
+          <h2 class="section-title">{{ section.settings.title | default: "Shop Our Most-Loved Ayurvedic Formulations" }}</h2>
+          <p class="section-subtitle">{{ section.settings.subtitle | default: "Pure standardized extracts & authentic classical formulations" }}</p>
+        </div>
+
+        <div class="ayova-carousel-nav">
+          <button type="button" class="ayova-carousel-btn" data-carousel-prev aria-label="Previous">←</button>
+          <button type="button" class="ayova-carousel-btn" data-carousel-next aria-label="Next">→</button>
+        </div>
+      </div>
+    {% endif %}
+
+    <!-- Carousel Slider -->
+    <div class="ayova-carousel-wrapper" data-ayova-carousel data-items-per-view="{{ items_desktop }}" data-gap="24">
+      <div class="ayova-carousel-track">
+
+        {% if sel_collection != blank and sel_collection.products.size > 0 %}
+          {% for prod in sel_collection.products limit: section.settings.products_to_show %}
+            <div class="ayova-carousel-slide">
+              {% render 'product-card', product: prod %}
+            </div>
+          {% endfor %}
+
+        {% elsif section.blocks.size > 0 %}
+          {% for block in section.blocks %}
+            {% assign block_prod = all_products[block.settings.product] %}
+            <div class="ayova-carousel-slide" {{ block.shopify_attributes }}>
+              {% if block_prod != blank %}
+                {% render 'product-card', product: block_prod %}
+              {% else %}
+                {% render 'product-card',
+                  title: block.settings.title,
+                  subtitle: block.settings.category,
+                  category: block.settings.pack_size,
+                  price: block.settings.price,
+                  compare_price: block.settings.compare_price,
+                  badge: block.settings.badge,
+                  reviews: block.settings.reviews,
+                  image_url: block.settings.image_url
+                %}
+              {% endif %}
+            </div>
+          {% endfor %}
+
+        {% else %}
+          <!-- Exact Image 1 Formulations Product Cards -->
+          <div class="ayova-carousel-slide">
+            {% render 'product-card',
+              title: 'Triphala',
+              subtitle: 'LIVER HEALTH',
+              category: '60 capsules',
+              price: 'Rs. 389.00',
+              compare_price: 'Rs. 619.00',
+              reviews: '205',
+              image_url: 'https://images.unsplash.com/photo-1577401239170-897942555fb3?w=500&auto=format&fit=crop&q=60'
+            %}
+          </div>
+
+          <div class="ayova-carousel-slide">
+            {% render 'product-card',
+              title: 'Moringa Spirulina',
+              subtitle: 'WOMEN WELLNESS',
+              category: '60 capsules',
+              price: 'Rs. 333.00',
+              compare_price: 'Rs. 619.00',
+              reviews: '205',
+              image_url: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=500&auto=format&fit=crop&q=60'
+            %}
+          </div>
+
+          <div class="ayova-carousel-slide">
+            {% render 'product-card',
+              title: 'Sea Buckthorn Juice',
+              subtitle: 'DAILY NUTRITION',
+              category: '500 ML',
+              price: 'Rs. 299.00',
+              compare_price: 'Rs. 619.00',
+              reviews: '205',
+              image_url: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=500&auto=format&fit=crop&q=60'
+            %}
+          </div>
+
+          <div class="ayova-carousel-slide">
+            {% render 'product-card',
+              title: 'Old Monk Coffee',
+              subtitle: 'LIVER HEALTH',
+              category: '1 L',
+              price: 'Rs. 389.00',
+              compare_price: 'Rs. 619.00',
+              reviews: '205',
+              image_url: 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=500&auto=format&fit=crop&q=60'
+            %}
+          </div>
+        {% endif %}
+
+      </div>
+
+      <div class="ayova-carousel-dots" data-carousel-dots></div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Ayurvedic Formulations",
+  "settings": [
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge Tag Text",
+      "default": ""
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Heading",
+      "default": "Shop Our Most-Loved Ayurvedic Formulations"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Section Subtitle",
+      "default": "Pure standardized extracts & authentic classical formulations for maximum bioavailability"
+    },
+    {
+      "type": "select",
+      "id": "header_alignment",
+      "label": "Header Alignment",
+      "options": [
+        {
+          "value": "center",
+          "label": "Centered"
+        },
+        {
+          "value": "row",
+          "label": "Row with Controls"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Select Shopify Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 4,
+      "max": 12,
+      "step": 1,
+      "label": "Max Products from Collection",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "items_per_view",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "label": "Cards Visible on Desktop",
+      "default": 4
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product_item",
+      "name": "Custom Product Card",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Select Shopify Product"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Product Title",
+          "default": "Triphala"
+        },
+        {
+          "type": "text",
+          "id": "category",
+          "label": "Category Tag",
+          "default": "LIVER HEALTH"
+        },
+        {
+          "type": "text",
+          "id": "pack_size",
+          "label": "Pack Size / Variant",
+          "default": "60 capsules"
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Price",
+          "default": "Rs. 389.00"
+        },
+        {
+          "type": "text",
+          "id": "compare_price",
+          "label": "Compare Price",
+          "default": "Rs. 619.00"
+        },
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Pill Badge"
+        },
+        {
+          "type": "text",
+          "id": "reviews",
+          "label": "Review Count",
+          "default": "205"
+        },
+        {
+          "type": "text",
+          "id": "image_url",
+          "label": "Product Image URL"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Ayurvedic Formulations"
+    }
+  ]
+}
+{% endschema %}

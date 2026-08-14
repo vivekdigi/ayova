@@ -1,0 +1,269 @@
+{% comment %}
+  AYOVA CONTACT US MAIN SECTION
+  Figma Spec: Contact details cards, AYUSH helpline, map info, and inquiry form
+{% endcomment %}
+
+<div class="section-padding contact-page">
+  <div class="container">
+    
+    <!-- Hero Banner -->
+    <div class="contact-hero">
+      <span class="badge badge-category">CUSTOMER CARE & CONSULTATION</span>
+      <h1 class="contact-title">We’re Here to Help Your Wellness Journey</h1>
+      <p class="contact-subtitle">
+        Have a question about our Ayurvedic formulations, order status, or need personalized herb guidance? Contact our specialist team.
+      </p>
+    </div>
+
+    <!-- Contact Layout Grid -->
+    <div class="contact-grid">
+      
+      <!-- Contact Cards Info -->
+      <div class="contact-info-cards">
+        <div class="info-card">
+          <div class="card-icon">📞</div>
+          <div class="card-text">
+            <h3 class="info-card-title">Call & WhatsApp Support</h3>
+            <p class="info-card-detail">+91 98765 43210</p>
+            <p class="info-card-sub">Mon to Sat: 9:00 AM – 7:00 PM IST</p>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="card-icon">✉️</div>
+          <div class="card-text">
+            <h3 class="info-card-title">Email Us</h3>
+            <p class="info-card-detail">support@ayova.com</p>
+            <p class="info-card-sub">We reply within 24 business hours</p>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="card-icon">🏢</div>
+          <div class="card-text">
+            <h3 class="info-card-title">Ayova Herbal Labs</h3>
+            <p class="info-card-detail">Plot 45, Herbal Science Park, Sector 18</p>
+            <p class="info-card-sub">Gurugram, Haryana – 122015, India</p>
+          </div>
+        </div>
+
+        <div class="info-card ayush-card">
+          <div class="card-icon">🌿</div>
+          <div class="card-text">
+            <h3 class="info-card-title">Doctor Consultation</h3>
+            <p class="info-card-sub">Free consultation with licensed Ayurvedic Vaidyas on all orders above Rs. 999.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Inquiry Form -->
+      <div class="contact-form-card">
+        <h2 class="form-title">Send Us a Message</h2>
+        <p class="form-desc">Fill in the details below and our team will get back to you shortly.</p>
+
+        <form class="contact-form" onsubmit="event.preventDefault(); alert('Thank you! Your message has been sent to Ayova Support.');">
+          <div class="form-row-2">
+            <div class="form-field">
+              <label class="field-label">YOUR FULL NAME</label>
+              <input type="text" placeholder="e.g. Rahul Sharma" required class="field-input">
+            </div>
+            <div class="form-field">
+              <label class="field-label">EMAIL ADDRESS</label>
+              <input type="email" placeholder="you@example.com" required class="field-input">
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-field">
+              <label class="field-label">PHONE NUMBER</label>
+              <input type="tel" placeholder="+91 98765 43210" class="field-input">
+            </div>
+            <div class="form-field">
+              <label class="field-label">ORDER ID (OPTIONAL)</label>
+              <input type="text" placeholder="e.g. #AYV-10492" class="field-input">
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label class="field-label">SUBJECT / WELLNESS CATEGORY</label>
+            <select class="field-input">
+              <option>General Inquiry</option>
+              <option>Order & Shipping Status</option>
+              <option>Product & Dosage Guidance</option>
+              <option>Refund or Replacement</option>
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label class="field-label">YOUR MESSAGE</label>
+            <textarea rows="5" placeholder="How can we assist you today?" required class="field-input"></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-submit-contact">Send Message →</button>
+        </form>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<style>
+.contact-hero {
+  text-align: center;
+  max-width: 780px;
+  margin: 0 auto 48px;
+}
+
+.contact-title {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 2.6rem;
+  color: var(--color-forest-primary);
+  line-height: 1.2;
+  margin: 10px 0 14px;
+}
+
+.contact-subtitle {
+  font-size: 1.1rem;
+  color: var(--color-text-muted);
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 36px;
+}
+
+.contact-info-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.info-card {
+  background: var(--color-white);
+  padding: 24px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-sage-border);
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  box-shadow: var(--shadow-sm);
+}
+
+.ayush-card {
+  background: var(--color-sage-light);
+  border-color: var(--color-forest-mid);
+}
+
+.card-icon {
+  font-size: 1.8rem;
+  background: var(--color-sage-light);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.info-card-title {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--color-forest-primary);
+  margin-bottom: 4px;
+}
+
+.info-card-detail {
+  font-weight: 600;
+  color: var(--color-text-dark);
+  font-size: 0.95rem;
+}
+
+.info-card-sub {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.contact-form-card {
+  background: var(--color-white);
+  padding: 36px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-sage-border);
+  box-shadow: var(--shadow-md);
+}
+
+.form-title {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.6rem;
+  color: var(--color-forest-primary);
+  margin-bottom: 6px;
+}
+
+.form-desc {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  margin-bottom: 28px;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-forest-primary);
+  letter-spacing: 0.05em;
+}
+
+.field-input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-sage-border);
+  font-size: 0.95rem;
+  background: var(--color-cream-bg);
+}
+
+.btn-submit-contact {
+  padding: 16px;
+  font-size: 1.05rem;
+  margin-top: 10px;
+}
+
+@media (max-width: 900px) {
+  .contact-grid { grid-template-columns: 1fr; }
+  .form-row-2 { grid-template-columns: 1fr; }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Main Contact Section",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Main Contact Section"
+    }
+  ]
+}
+{% endschema %}

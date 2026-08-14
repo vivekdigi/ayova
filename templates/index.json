@@ -1,0 +1,56 @@
+{
+  "sections": {
+    "hero_carousel": {
+      "type": "hero-carousel",
+      "settings": {}
+    },
+    "shop_by_wellness": {
+      "type": "shop-by-wellness",
+      "settings": {}
+    },
+    "bestsellers_carousel": {
+      "type": "bestsellers-carousel",
+      "settings": {}
+    },
+    "ayurvedic_formulations": {
+      "type": "ayurvedic-formulations",
+      "settings": {}
+    },
+    "combo_kits": {
+      "type": "combo-kits",
+      "settings": {}
+    },
+    "marquee_strip": {
+      "type": "marquee-strip",
+      "settings": {}
+    },
+    "testimonials_carousel": {
+      "type": "testimonials-carousel",
+      "settings": {}
+    },
+    "blog_posts": {
+      "type": "blog-posts",
+      "settings": {}
+    },
+    "doctor_consultation": {
+      "type": "doctor-consultation",
+      "settings": {}
+    },
+    "trust_badges": {
+      "type": "trust-badges",
+      "settings": {}
+    }
+  },
+  "order": [
+    "hero_carousel",
+    "shop_by_wellness",
+    "bestsellers_carousel",
+    "ayurvedic_formulations",
+    "combo_kits",
+    "marquee_strip",
+    "testimonials_carousel",
+    "blog_posts",
+    "doctor_consultation",
+    "trust_badges"
+  ]
+}

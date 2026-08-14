@@ -1,0 +1,13 @@
+{
+  "general": {
+    "search": "Search wellness products...",
+    "cart": "Cart",
+    "checkout": "Checkout",
+    "shop_now": "Shop Now"
+  },
+  "products": {
+    "add_to_cart": "Add to cart",
+    "bestseller": "BESTSELLER",
+    "inc_tax": "inc. of GST"
+  }
+}
