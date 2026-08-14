@@ -1,9 +1,102 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "current": {
     "color_primary": "#173E34",
     "color_accent": "#D96C3F",
     "color_bg_cream": "#FAF8F2",
-    "sections": {}
+    "sections": {
+      "header": {
+        "type": "header",
+        "settings": {}
+      },
+      "hero-carousel": {
+        "type": "hero-carousel",
+        "blocks": {
+          "slide_t7aReT": {
+            "type": "slide",
+            "settings": {
+              "subtag": "100% PURE & NATURAL AYURVEDA",
+              "title": "Rooted in Ayurveda. Made for Modern Wellness.",
+              "highlight_text": "Modern Wellness.",
+              "description": "Clean, doctor-formulated herbal supplements designed for stress relief, digestive health, liver care, and daily vitality.",
+              "button_text": "Shop Now",
+              "button_link": "",
+              "secondary_button_text": "",
+              "secondary_button_link": "",
+              "image": "shopify://shop_images/vid_2026_06_30_6a439318877e0.jpg",
+              "image_url": "",
+              "floating_badge": "+ Digestive Support"
+            }
+          }
+        },
+        "block_order": [
+          "slide_t7aReT"
+        ],
+        "settings": {
+          "background_color": "#faf8f2",
+          "show_leaf_decorations": true,
+          "autoplay": true
+        }
+      },
+      "combo-kits": {
+        "type": "combo-kits",
+        "settings": {
+          "badge_text": "VALUE PACKS & COMBOS",
+          "title": "Complete Care COMBOS",
+          "subtitle": "Curated multi-product kits designed by doctors for holistic healing",
+          "header_alignment": "center",
+          "items_per_view": 3
+        }
+      },
+      "marquee-strip": {
+        "type": "marquee-strip",
+        "settings": {
+          "btn_text": "Explore All Products →",
+          "btn_url": ""
+        }
+      },
+      "testimonials-carousel": {
+        "type": "testimonials-carousel",
+        "settings": {
+          "badge_text": "VERIFIED REVIEWS",
+          "title": "Real stories. Real wellness journeys.",
+          "subtitle": "Thousands of verified buyers trust Ayova for their daily health transformation",
+          "header_alignment": "center",
+          "items_per_view": 3
+        }
+      },
+      "blog-posts": {
+        "type": "blog-posts",
+        "settings": {
+          "badge_text": "REAL RESULTS",
+          "title": "See why customers keep choosing Ayova.",
+          "subtitle": "Real stories from real users sharing their wellness results with Ayova",
+          "header_alignment": "center",
+          "items_per_view": 3
+        }
+      },
+      "doctor-consultation": {
+        "type": "doctor-consultation",
+        "settings": {
+          "title": "Our experts are here to guide you every step of the way.",
+          "description": "",
+          "consult_link": ""
+        }
+      },
+      "footer": {
+        "type": "footer",
+        "settings": {}
+      }
+    },
+    "content_for_index": []
   },
   "presets": {
     "Default": {
