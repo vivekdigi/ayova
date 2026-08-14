@@ -3,7 +3,7 @@
    Figma Design System: "Ayova new web share"
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&family=Inter:wght@400;500;600;700;800&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
 
 :root {
   /* Brand Color Palette */
@@ -117,9 +117,21 @@ h6,
 
 /* Layout Utilities */
 .container {
-  max-width: var(--container-max-width);
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 0 var(--container-padding);
+  padding: 0 80px;
+}
+
+@media (max-width: 1200px) {
+  .container {
+    padding: 0 48px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 20px;
+  }
 }
 
 .section-padding {
@@ -403,13 +415,14 @@ h6,
 }
 
 .announcement-bar {
-  background-color: var(--color-forest-dark);
+  background-color: #285044;
   color: var(--color-white);
-  font-family: var(--font-heading);
+  font-family: 'Montserrat', var(--font-heading), sans-serif;
   font-size: 0.8rem;
-  padding: 8px 0;
+  padding: 9px 0;
   text-align: center;
   font-weight: 500;
+  letter-spacing: 0.03em;
 }
 
 .announcement-content {
@@ -571,16 +584,18 @@ h6,
 }
 
 .hero-title {
-  font-family: var(--font-heading);
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
   font-weight: 700;
-  font-size: 3.2rem;
-  line-height: 1.15;
-  color: var(--color-forest-primary);
-  margin-bottom: 16px;
+  font-size: 4rem;
+  line-height: 1.08;
+  color: #173E34;
+  margin-bottom: 20px;
+  letter-spacing: -0.01em;
 }
 
 .highlight-text {
-  color: var(--color-forest-dark);
+  color: #285044;
+  font-style: italic;
 }
 
 .hero-description {
@@ -649,96 +664,100 @@ h6,
   margin: 0 auto;
 }
 
-/* Figma Exact 6 Wellness Goal Cards */
+/* Figma Exact Wellness Goal Cards — 200x200px compact tiles */
 .wellness-card-figma {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border-radius: 18px;
-  padding: 16px;
-  height: 280px;
+  border-radius: 22px;
+  padding: 12px 14px;
+  width: 200px;
+  min-width: 200px;
+  height: 200px;
   text-decoration: none;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
+  border: 1px solid var(--color-sage-border);
 }
 
 .wellness-card-figma:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 28px rgba(23, 62, 52, 0.12);
+  transform: translateY(-5px);
+  box-shadow: 0 14px 32px rgba(23, 62, 52, 0.14);
 }
 
-.card-bg-sage {
-  background-color: #EAF1EC;
-}
+/* Figma-exact card background color variants */
+.card-bg-sage     { background-color: #EEF3EF; }
+.card-bg-cream    { background-color: #F5EEE6; }
+.card-bg-light    { background-color: #EAF1EC; }
+.card-bg-pink     { background-color: #F6EBE5; }
+.card-bg-green    { background-color: #EAF0EA; }
+.card-bg-terracotta { background-color: #F5EEE6; }
 
-.card-bg-cream {
-  background-color: #F5EEE6;
-}
-
-.card-figma-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 2;
-}
-
-.card-figma-pill {
-  background: #FFFFFF;
+/* Number badge top-left (translucent pill) */
+.card-figma-num-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(4px);
   color: #173E34;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 700;
-  font-size: 0.65rem;
-  padding: 4px 10px;
-  border-radius: 4px;
-  letter-spacing: 0.05em;
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  padding: 4px 8px;
+  border-radius: 999px;
+  z-index: 3;
+  opacity: 0.72;
 }
 
-.card-figma-num {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.75rem;
-  color: #606B65;
-  font-weight: 600;
-}
-
+/* Center product image area */
 .card-figma-img-box {
-  width: 100%;
-  height: 140px;
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 8px 0;
+  margin: 4px 0;
 }
 
 .card-figma-img {
-  max-height: 130px;
+  max-height: 90px;
   width: auto;
   object-fit: contain;
+  filter: drop-shadow(0 4px 8px rgba(23, 62, 52, 0.18));
   transition: transform 0.4s ease;
 }
 
 .wellness-card-figma:hover .card-figma-img {
-  transform: scale(1.08);
+  transform: scale(1.1) translateY(-3px);
 }
 
+/* Bottom row: goal name + arrow */
 .card-figma-bottom {
-  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4px;
 }
 
 .card-figma-title {
-  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-family: 'Montserrat', sans-serif !important;
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 0.72rem;
   color: #173E34;
   line-height: 1.25;
-  margin-bottom: 4px;
+  margin: 0;
+  flex: 1;
 }
 
 .card-figma-cta {
   color: #D96C3F;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 600;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 /* Horizontal Category Pill Card (Figma Style) */
@@ -899,37 +918,40 @@ h6,
 /* PRODUCT CARD STYLES */
 .ayova-product-card {
   background: var(--color-white);
-  border: 1px solid var(--color-sage-border);
-  border-radius: var(--radius-md);
-  padding: 16px;
+  border: 1px solid #E2E6DF;
+  border-radius: 16px;
+  padding: 0;
   display: flex;
   flex-direction: column;
   height: 100%;
   transition: all var(--transition-normal);
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0px 2px 6px rgba(41, 55, 48, 0.06);
+  overflow: hidden;
 }
 
 .ayova-product-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-md);
-  border-color: var(--color-forest-mid);
+  transform: translateY(-5px);
+  box-shadow: 0px 8px 24px rgba(20, 36, 28, 0.12);
+  border-color: #B5C9BF;
 }
 
 .card-image-wrapper {
   position: relative;
-  background: var(--color-cream-card);
-  border-radius: var(--radius-sm);
+  background: #EEF3EF;
+  border-radius: 0;
   overflow: hidden;
-  aspect-ratio: 1 / 1;
+  height: 240px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-bottom: 1px solid #E2E6DF;
 }
 
 .card-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  padding: 16px;
   transition: transform 0.5s ease;
 }
 
@@ -969,10 +991,10 @@ h6,
 }
 
 .card-title {
-  font-family: var(--font-heading);
-  font-weight: 700;
-  font-size: 1.05rem;
-  color: var(--color-forest-primary);
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #1F2924;
   margin-bottom: 2px;
   line-height: 1.3;
 }
@@ -982,7 +1004,8 @@ h6,
 }
 
 .card-meta {
-  font-size: 0.82rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.8rem;
   color: var(--color-text-muted);
   margin-bottom: 8px;
 }
@@ -1047,12 +1070,20 @@ h6,
 
 .card-add-btn {
   width: 100%;
-  border-radius: var(--radius-full);
-  padding: 11px;
+  border-radius: 11px;
+  padding: 13px;
   font-size: 0.88rem;
   font-weight: 600;
-  background-color: var(--color-forest-mid);
+  font-family: 'Inter', sans-serif;
+  background-color: #285044;
   color: var(--color-white);
+  border: none;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.card-add-btn:hover {
+  background-color: #173E34;
 }
 
 /* BEST SELLERS SECTION */

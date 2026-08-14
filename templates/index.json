@@ -28,6 +28,10 @@
       "type": "testimonials-carousel",
       "settings": {}
     },
+    "video_testimonials": {
+      "type": "video-testimonials",
+      "settings": {}
+    },
     "blog_posts": {
       "type": "blog-posts",
       "settings": {}
@@ -49,6 +53,7 @@
     "combo_kits",
     "marquee_strip",
     "testimonials_carousel",
+    "video_testimonials",
     "blog_posts",
     "doctor_consultation",
     "trust_badges"

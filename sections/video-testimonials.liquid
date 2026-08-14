@@ -1,0 +1,395 @@
+{% comment %}
+  VIDEO TESTIMONIALS / CUSTOMER STORIES SECTION
+  Figma Spec: "Video Testimonials / Customer Stories" component (91:2010)
+  661px height section with video story cards, star rating, customer name & product
+{% endcomment %}
+
+{% assign items_desktop = section.settings.items_per_view | default: 3 %}
+
+<section class="section-padding video-testimonials-section" id="video-testimonials">
+  <div class="container">
+    <!-- Section Header -->
+    <div class="wellness-header-row">
+      <div>
+        {% if section.settings.badge_text != blank %}
+          <span class="badge badge-category">{{ section.settings.badge_text }}</span>
+        {% endif %}
+        <h2 class="section-title text-left">{{ section.settings.title | default: "Real Stories. Real Wellness Journeys." }}</h2>
+        <p class="section-subtitle text-left" style="margin: 0; max-width: 560px;">{{ section.settings.subtitle | default: "Hear from thousands of verified buyers who transformed their health with Ayova." }}</p>
+      </div>
+
+      <div class="ayova-carousel-nav">
+        <button type="button" class="ayova-carousel-btn" data-carousel-prev aria-label="Previous">←</button>
+        <button type="button" class="ayova-carousel-btn" data-carousel-next aria-label="Next">→</button>
+      </div>
+    </div>
+
+    <!-- Video Story Cards Carousel -->
+    <div class="ayova-carousel-wrapper" data-ayova-carousel data-items-per-view="{{ items_desktop }}" data-gap="24">
+      <div class="ayova-carousel-track">
+
+        {% if section.blocks.size > 0 %}
+          {% for block in section.blocks %}
+            <div class="ayova-carousel-slide" {{ block.shopify_attributes }}>
+              <div class="video-story-card">
+                <div class="video-story-thumb">
+                  {% if block.settings.thumbnail != blank %}
+                    <img src="{{ block.settings.thumbnail | image_url: width: 600 }}" alt="{{ block.settings.name | escape }}" loading="lazy" class="video-thumb-img">
+                  {% elsif block.settings.thumbnail_url != blank %}
+                    <img src="{{ block.settings.thumbnail_url }}" alt="{{ block.settings.name | escape }}" loading="lazy" class="video-thumb-img">
+                  {% else %}
+                    <div class="video-thumb-placeholder"></div>
+                  {% endif %}
+                  <div class="video-play-btn" aria-label="Play video">
+                    <span class="play-icon">▶</span>
+                  </div>
+                  <div class="video-duration-badge">{{ block.settings.duration | default: "1:24" }}</div>
+                </div>
+                <div class="video-story-info">
+                  <div class="story-rating">★★★★★</div>
+                  <p class="story-quote">"{{ block.settings.quote | default: "This changed my life!" }}"</p>
+                  <div class="story-author-row">
+                    <div class="story-avatar">{{ block.settings.name | slice: 0 | default: "P" }}</div>
+                    <div>
+                      <p class="story-author-name">{{ block.settings.name | default: "Priya S." }}</p>
+                      <p class="story-product-used">{{ block.settings.product | default: "Milk Thistle 800mg" }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+
+        {% else %}
+          <!-- Default Video Story Cards -->
+          <div class="ayova-carousel-slide">
+            <div class="video-story-card">
+              <div class="video-story-thumb" style="background: linear-gradient(135deg, #EEF3EF 0%, #D4E5D7 100%);">
+                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=500&auto=format&fit=crop&q=80" alt="Priya Sharma" loading="lazy" class="video-thumb-img">
+                <div class="video-play-btn" aria-label="Play video"><span class="play-icon">▶</span></div>
+                <div class="video-duration-badge">1:24</div>
+              </div>
+              <div class="video-story-info">
+                <div class="story-rating">★★★★★</div>
+                <p class="story-quote">"After 4 weeks of Ayova Milk Thistle, my liver enzymes normalized and energy improved drastically."</p>
+                <div class="story-author-row">
+                  <div class="story-avatar">P</div>
+                  <div>
+                    <p class="story-author-name">Priya Sharma</p>
+                    <p class="story-product-used">Milk Thistle 800mg</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ayova-carousel-slide">
+            <div class="video-story-card">
+              <div class="video-story-thumb" style="background: linear-gradient(135deg, #F5EEE6 0%, #E8D5C4 100%);">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&auto=format&fit=crop&q=80" alt="Rahul M." loading="lazy" class="video-thumb-img">
+                <div class="video-play-btn" aria-label="Play video"><span class="play-icon">▶</span></div>
+                <div class="video-duration-badge">2:08</div>
+              </div>
+              <div class="video-story-info">
+                <div class="story-rating">★★★★★</div>
+                <p class="story-quote">"Berberine has been a game-changer for my blood sugar levels. My doctor was impressed!"</p>
+                <div class="story-author-row">
+                  <div class="story-avatar">R</div>
+                  <div>
+                    <p class="story-author-name">Rahul Mehta</p>
+                    <p class="story-product-used">Berberine HCL 500mg</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ayova-carousel-slide">
+            <div class="video-story-card">
+              <div class="video-story-thumb" style="background: linear-gradient(135deg, #EAF0EA 0%, #C8DFC9 100%);">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=80" alt="Anjali K." loading="lazy" class="video-thumb-img">
+                <div class="video-play-btn" aria-label="Play video"><span class="play-icon">▶</span></div>
+                <div class="video-duration-badge">1:47</div>
+              </div>
+              <div class="video-story-info">
+                <div class="story-rating">★★★★★</div>
+                <p class="story-quote">"My immunity has improved so much this winter. Not a single cold in 6 months!"</p>
+                <div class="story-author-row">
+                  <div class="story-avatar">A</div>
+                  <div>
+                    <p class="story-author-name">Anjali Kapoor</p>
+                    <p class="story-product-used">Vitamin D3 K2 Combo</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ayova-carousel-slide">
+            <div class="video-story-card">
+              <div class="video-story-thumb" style="background: linear-gradient(135deg, #F6EBE5 0%, #EDCFC3 100%);">
+                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=500&auto=format&fit=crop&q=80" alt="Vikram T." loading="lazy" class="video-thumb-img">
+                <div class="video-play-btn" aria-label="Play video"><span class="play-icon">▶</span></div>
+                <div class="video-duration-badge">2:33</div>
+              </div>
+              <div class="video-story-info">
+                <div class="story-rating">★★★★★</div>
+                <p class="story-quote">"The Probiotics capsules have completely resolved my gut issues. Amazing product!"</p>
+                <div class="story-author-row">
+                  <div class="story-avatar">V</div>
+                  <div>
+                    <p class="story-author-name">Vikram Tiwari</p>
+                    <p class="story-product-used">Probiotics 50 Billion CFU</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+
+      </div>
+
+      <div class="ayova-carousel-dots" data-carousel-dots></div>
+    </div>
+  </div>
+</section>
+
+<style>
+.video-testimonials-section {
+  background-color: #FFFFFF;
+}
+
+.video-story-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E6DF;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0px 8px 24px rgba(20, 36, 28, 0.07);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.video-story-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 16px 36px rgba(20, 36, 28, 0.12);
+}
+
+.video-story-thumb {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+}
+
+.video-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.video-story-card:hover .video-thumb-img {
+  transform: scale(1.06);
+}
+
+.video-thumb-placeholder {
+  width: 100%;
+  height: 100%;
+  background: #EEF3EF;
+}
+
+/* Play button centered on thumbnail */
+.video-play-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(21, 61, 48, 0.88);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.28);
+  transition: transform 0.2s ease, background 0.2s ease;
+  backdrop-filter: blur(4px);
+}
+
+.video-story-card:hover .video-play-btn {
+  transform: translate(-50%, -50%) scale(1.12);
+  background: #285044;
+}
+
+.play-icon {
+  font-size: 1rem;
+  padding-left: 3px;
+}
+
+/* Duration badge bottom-right */
+.video-duration-badge {
+  position: absolute;
+  bottom: 10px;
+  right: 12px;
+  background: rgba(0,0,0,0.6);
+  color: #FFFFFF;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 5px;
+  letter-spacing: 0.02em;
+}
+
+.video-story-info {
+  padding: 20px 20px 22px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.story-rating {
+  color: #D19138;
+  font-size: 0.95rem;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+
+.story-quote {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.88rem;
+  color: #202824;
+  line-height: 1.55;
+  font-style: italic;
+  margin-bottom: 16px;
+  flex-grow: 1;
+}
+
+.story-author-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-top: 1px solid #E2E6DF;
+  padding-top: 14px;
+}
+
+.story-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #EEF3EF;
+  border: 1.5px solid #C7D5CF;
+  color: #285044;
+  font-weight: 700;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.story-author-name {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: #1F2924;
+  margin: 0 0 2px 0;
+}
+
+.story-product-used {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  color: #606B65;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .video-story-thumb {
+    height: 180px;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Video Testimonials",
+  "settings": [
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge Text"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Heading",
+      "default": "Real Stories. Real Wellness Journeys."
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Section Subtitle",
+      "default": "Hear from thousands of verified buyers who transformed their health with Ayova."
+    },
+    {
+      "type": "range",
+      "id": "items_per_view",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "label": "Cards Visible on Desktop",
+      "default": 3
+    }
+  ],
+  "blocks": [
+    {
+      "type": "video_story",
+      "name": "Video Story",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "thumbnail",
+          "label": "Thumbnail Image"
+        },
+        {
+          "type": "text",
+          "id": "thumbnail_url",
+          "label": "Thumbnail URL (fallback)"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Customer Name",
+          "default": "Priya Sharma"
+        },
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Customer Quote",
+          "default": "This changed my wellness journey completely!"
+        },
+        {
+          "type": "text",
+          "id": "product",
+          "label": "Product Purchased",
+          "default": "Milk Thistle 800mg"
+        },
+        {
+          "type": "text",
+          "id": "duration",
+          "label": "Video Duration",
+          "default": "1:24"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video Testimonials"
+    }
+  ]
+}
+{% endschema %}

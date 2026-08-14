@@ -68,26 +68,26 @@
               {% assign goal_img_src = "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&auto=format&fit=crop&q=80" %}
             {% endif %}
 
-            {% assign cycle_index = forloop.index | minus: 1 | modulo: 2 %}
-            {% if cycle_index == 0 %}
-              {% assign bg_class = "card-bg-sage" %}
-            {% else %}
-              {% assign bg_class = "card-bg-cream" %}
-            {% endif %}
+            {% assign cycle_index = forloop.index | minus: 1 | modulo: 6 %}
+            {% case cycle_index %}
+              {% when 0 %}{% assign bg_class = "card-bg-sage" %}
+              {% when 1 %}{% assign bg_class = "card-bg-cream" %}
+              {% when 2 %}{% assign bg_class = "card-bg-light" %}
+              {% when 3 %}{% assign bg_class = "card-bg-pink" %}
+              {% when 4 %}{% assign bg_class = "card-bg-green" %}
+              {% else %}{% assign bg_class = "card-bg-terracotta" %}
+            {% endcase %}
 
             <div class="ayova-carousel-slide">
               {% if layout_style == 'figma' %}
                 <a href="{{ goal_link | default: '#' }}" class="wellness-card-figma {{ bg_class }}" {{ block.shopify_attributes }}>
-                  <div class="card-figma-top">
-                    <span class="card-figma-pill">{{ goal_count | default: '4 PRODUCTS' }}</span>
-                    <span class="card-figma-num">0{{ forloop.index }}</span>
-                  </div>
+                  <span class="card-figma-num-badge">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
                   <div class="card-figma-img-box">
                     <img src="{{ goal_img_src }}" alt="{{ goal_title | escape }}" loading="lazy" class="card-figma-img">
                   </div>
                   <div class="card-figma-bottom">
                     <h3 class="card-figma-title">{{ goal_title | default: "Wellness Goal" }}</h3>
-                    <span class="card-figma-cta">Shop now →</span>
+                    <span class="card-figma-cta">→</span>
                   </div>
                 </a>
               {% elsif layout_style == 'pill' %}
@@ -116,99 +116,94 @@
           {% endfor %}
 
         {% else %}
-          <!-- Figma Exact 6 Wellness Goal Cards matching Image 1 -->
+          <!-- Figma Exact 7 Wellness Goal Cards matching Figma node IDs -->
           <div class="ayova-carousel-slide">
-            <a href="/collections/all" class="wellness-card-figma card-bg-sage">
-              <div class="card-figma-top">
-                <span class="card-figma-pill">6 PRODUCTS</span>
-                <span class="card-figma-num">01</span>
-              </div>
+            <a href="/collections/liver-wellness" class="wellness-card-figma card-bg-sage">
+              <span class="card-figma-num-badge">01</span>
               <div class="card-figma-img-box">
-                <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&auto=format&fit=crop&q=80" alt="Liver Health" class="card-figma-img">
+                <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=300&auto=format&fit=crop&q=80" alt="Liver Wellness" class="card-figma-img">
               </div>
               <div class="card-figma-bottom">
-                <h3 class="card-figma-title">Liver Health</h3>
-                <span class="card-figma-cta">Shop now →</span>
+                <h3 class="card-figma-title">Liver Wellness</h3>
+                <span class="card-figma-cta">→</span>
               </div>
             </a>
           </div>
 
           <div class="ayova-carousel-slide">
-            <a href="/collections/all" class="wellness-card-figma card-bg-cream">
-              <div class="card-figma-top">
-                <span class="card-figma-pill">5 PRODUCTS</span>
-                <span class="card-figma-num">02</span>
-              </div>
+            <a href="/collections/metabolic-balance" class="wellness-card-figma card-bg-cream">
+              <span class="card-figma-num-badge">02</span>
               <div class="card-figma-img-box">
-                <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&auto=format&fit=crop&q=80" alt="Men's Wellness" class="card-figma-img">
+                <img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?w=300&auto=format&fit=crop&q=80" alt="Metabolic Balance" class="card-figma-img">
               </div>
               <div class="card-figma-bottom">
-                <h3 class="card-figma-title">Men's Wellness</h3>
-                <span class="card-figma-cta">Shop now →</span>
+                <h3 class="card-figma-title">Metabolic Balance</h3>
+                <span class="card-figma-cta">→</span>
               </div>
             </a>
           </div>
 
           <div class="ayova-carousel-slide">
-            <a href="/collections/all" class="wellness-card-figma card-bg-sage">
-              <div class="card-figma-top">
-                <span class="card-figma-pill">4 PRODUCTS</span>
-                <span class="card-figma-num">03</span>
-              </div>
+            <a href="/collections/digestion" class="wellness-card-figma card-bg-light">
+              <span class="card-figma-num-badge">03</span>
               <div class="card-figma-img-box">
-                <img src="https://images.unsplash.com/photo-1512290900676-26c2a4d48dc1?w=400&auto=format&fit=crop&q=80" alt="Women's Wellness" class="card-figma-img">
+                <img src="https://images.unsplash.com/photo-1512290900676-26c2a4d48dc1?w=300&auto=format&fit=crop&q=80" alt="Digestion" class="card-figma-img">
               </div>
               <div class="card-figma-bottom">
-                <h3 class="card-figma-title">Women's Wellness</h3>
-                <span class="card-figma-cta">Shop now →</span>
+                <h3 class="card-figma-title">Digestion</h3>
+                <span class="card-figma-cta">→</span>
               </div>
             </a>
           </div>
 
           <div class="ayova-carousel-slide">
-            <a href="/collections/all" class="wellness-card-figma card-bg-sage">
-              <div class="card-figma-top">
-                <span class="card-figma-pill">5 PRODUCTS</span>
-                <span class="card-figma-num">04</span>
-              </div>
+            <a href="/collections/immunity" class="wellness-card-figma card-bg-pink">
+              <span class="card-figma-num-badge">04</span>
               <div class="card-figma-img-box">
-                <img src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=400&auto=format&fit=crop&q=80" alt="Immunity" class="card-figma-img">
+                <img src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=300&auto=format&fit=crop&q=80" alt="Immunity" class="card-figma-img">
               </div>
               <div class="card-figma-bottom">
                 <h3 class="card-figma-title">Immunity</h3>
-                <span class="card-figma-cta">Shop now →</span>
+                <span class="card-figma-cta">→</span>
               </div>
             </a>
           </div>
 
           <div class="ayova-carousel-slide">
-            <a href="/collections/all" class="wellness-card-figma card-bg-cream">
-              <div class="card-figma-top">
-                <span class="card-figma-pill">4 PRODUCTS</span>
-                <span class="card-figma-num">05</span>
-              </div>
+            <a href="/collections/energy-vitality" class="wellness-card-figma card-bg-green">
+              <span class="card-figma-num-badge">05</span>
               <div class="card-figma-img-box">
-                <img src="https://images.unsplash.com/photo-1577401239170-897942555fb3?w=400&auto=format&fit=crop&q=80" alt="Immunity & Antioxidants" class="card-figma-img">
+                <img src="https://images.unsplash.com/photo-1494597706938-56aab5f3fd88?w=300&auto=format&fit=crop&q=80" alt="Energy & Vitality" class="card-figma-img">
               </div>
               <div class="card-figma-bottom">
-                <h3 class="card-figma-title">Immunity & Antioxidants</h3>
-                <span class="card-figma-cta">Shop now →</span>
+                <h3 class="card-figma-title">Energy &amp; Vitality</h3>
+                <span class="card-figma-cta">→</span>
               </div>
             </a>
           </div>
 
           <div class="ayova-carousel-slide">
-            <a href="/collections/all" class="wellness-card-figma card-bg-sage">
-              <div class="card-figma-top">
-                <span class="card-figma-pill">3 KITS</span>
-                <span class="card-figma-num">06</span>
-              </div>
+            <a href="/collections/wellness-kits" class="wellness-card-figma card-bg-sage">
+              <span class="card-figma-num-badge">06</span>
               <div class="card-figma-img-box">
-                <img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=400&auto=format&fit=crop&q=80" alt="Digestive Health & Gut Care" class="card-figma-img">
+                <img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=300&auto=format&fit=crop&q=80" alt="Wellness Kits" class="card-figma-img">
               </div>
               <div class="card-figma-bottom">
-                <h3 class="card-figma-title">Digestive Health & Gut Care</h3>
-                <span class="card-figma-cta">Shop now →</span>
+                <h3 class="card-figma-title">Wellness Kits</h3>
+                <span class="card-figma-cta">→</span>
+              </div>
+            </a>
+          </div>
+
+          <div class="ayova-carousel-slide">
+            <a href="/collections/stress-sleep" class="wellness-card-figma card-bg-cream">
+              <span class="card-figma-num-badge">07</span>
+              <div class="card-figma-img-box">
+                <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=300&auto=format&fit=crop&q=80" alt="Stress & Sleep" class="card-figma-img">
+              </div>
+              <div class="card-figma-bottom">
+                <h3 class="card-figma-title">Stress &amp; Sleep</h3>
+                <span class="card-figma-cta">→</span>
               </div>
             </a>
           </div>
