@@ -40,17 +40,16 @@
           {% for block in section.blocks %}
             <div class="ayova-carousel-slide" {{ block.shopify_attributes }}>
               <div class="testimonial-card">
-                <div class="testimonial-header">
-                  <div class="testimonial-rating">★★★★★</div>
-                  <span class="verified-badge">✓ Verified Buyer</span>
+                <div class="verified-pill">
+                  <span class="verified-icon">✓</span> VERIFIED
                 </div>
-                <p class="testimonial-quote">"{{ block.settings.quote | default: "After using Ayova Milk Thistle for 4 weeks, my digestion feels so much lighter and liver enzymes normalized." }}"</p>
+                <div class="testimonial-rating">★★★★★</div>
+                <h3 class="testimonial-title">{{ block.settings.review_title | default: "Liver wellness that fits my routine" }}</h3>
+                <p class="testimonial-quote">"{{ block.settings.quote | default: "The capsules are easy to take and the packaging feels very trustworthy. I have been consistent for six weeks and feel noticeably lighter after meals." }}"</p>
+                <div class="testimonial-divider"></div>
                 <div class="testimonial-author">
-                  <div class="author-avatar">{{ block.settings.name | slice: 0 | default: "P" }}</div>
-                  <div class="author-info">
-                    <h4 class="author-name">{{ block.settings.name | default: "Priya Sharma" }}</h4>
-                    <span class="author-product">{{ block.settings.product | default: "Purchased: Milk Thistle 800mg" }}</span>
-                  </div>
+                  <h4 class="author-name">{{ block.settings.name | default: "PRIYA" | upcase }}</h4>
+                  <span class="author-product">Verified Buyer - {{ block.settings.product | default: "Milk Thistle" }}</span>
                 </div>
               </div>
             </div>
@@ -60,51 +59,48 @@
           <!-- Default Fallback Testimonials -->
           <div class="ayova-carousel-slide">
             <div class="testimonial-card">
-              <div class="testimonial-header">
-                <div class="testimonial-rating">★★★★★</div>
-                <span class="verified-badge">✓ Verified Buyer</span>
+              <div class="verified-pill">
+                <span class="verified-icon">✓</span> VERIFIED
               </div>
-              <p class="testimonial-quote">"After using Ayova Milk Thistle for 4 weeks, my digestion feels so much lighter and liver enzymes normalized. High quality natural product!"</p>
+              <div class="testimonial-rating">★★★★★</div>
+              <h3 class="testimonial-title">Liver wellness that fits my routine</h3>
+              <p class="testimonial-quote">"The capsules are easy to take and the packaging feels very trustworthy. I have been consistent for six weeks and feel noticeably lighter after meals."</p>
+              <div class="testimonial-divider"></div>
               <div class="testimonial-author">
-                <div class="author-avatar">P</div>
-                <div class="author-info">
-                  <h4 class="author-name">Shalini Malhotra</h4>
-                  <span class="author-product">Verified Buyer, New Delhi</span>
-                </div>
+                <h4 class="author-name">PRIYA</h4>
+                <span class="author-product">Verified Buyer - Milk Thistle</span>
               </div>
             </div>
           </div>
 
           <div class="ayova-carousel-slide">
             <div class="testimonial-card">
-              <div class="testimonial-header">
-                <div class="testimonial-rating">★★★★★</div>
-                <span class="verified-badge">✓ Verified Buyer</span>
+              <div class="verified-pill">
+                <span class="verified-icon">✓</span> VERIFIED
               </div>
-              <p class="testimonial-quote">"The PCOS Care Syrup helped regulate my cycle naturally within 2 months. No side effects like chemical medicines!"</p>
+              <div class="testimonial-rating">★★★★★</div>
+              <h3 class="testimonial-title">A simple daily wellness upgrade</h3>
+              <p class="testimonial-quote">"I wanted something uncomplicated. The clear dosage guidance, clean ingredients, and quick delivery made Ayova an easy repeat purchase."</p>
+              <div class="testimonial-divider"></div>
               <div class="testimonial-author">
-                <div class="author-avatar">A</div>
-                <div class="author-info">
-                  <h4 class="author-name">Ananya Verma</h4>
-                  <span class="author-product">Verified Buyer, Bengaluru</span>
-                </div>
+                <h4 class="author-name">ROHAN</h4>
+                <span class="author-product">Verified Buyer - Multivitamin Gummies</span>
               </div>
             </div>
           </div>
 
           <div class="ayova-carousel-slide">
             <div class="testimonial-card">
-              <div class="testimonial-header">
-                <div class="testimonial-rating">★★★★★</div>
-                <span class="verified-badge">✓ Verified Buyer</span>
+              <div class="verified-pill">
+                <span class="verified-icon">✓</span> VERIFIED
               </div>
-              <p class="testimonial-quote">"Berberine 500mg helped control my sugar spikes after meals noticeably. Really genuine doctor-backed Ayurvedic formulation."</p>
+              <div class="testimonial-rating">★★★★★</div>
+              <h3 class="testimonial-title">The support team was genuinely helpful</h3>
+              <p class="testimonial-quote">"I had questions before ordering and received a thoughtful response. The probiotics has now become part of my morning routine."</p>
+              <div class="testimonial-divider"></div>
               <div class="testimonial-author">
-                <div class="author-avatar">R</div>
-                <div class="author-info">
-                  <h4 class="author-name">Rajesh Mehta</h4>
-                  <span class="author-product">Verified Buyer, Mumbai</span>
-                </div>
+                <h4 class="author-name">NEHA</h4>
+                <span class="author-product">Verified Buyer - Probiotics</span>
               </div>
             </div>
           </div>
@@ -170,6 +166,11 @@
       "type": "testimonial",
       "name": "Testimonial",
       "settings": [
+        {
+          "type": "text",
+          "id": "review_title",
+          "label": "Review Title"
+        },
         {
           "type": "textarea",
           "id": "quote",

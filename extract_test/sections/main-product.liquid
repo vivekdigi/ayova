@@ -1,0 +1,297 @@
+{% comment %}
+  AYOVA PRODUCT DETAIL MAIN SECTION
+  Figma Spec: Gallery slider, variant selector, pricing, stock alert, add to cart, tabs
+{% endcomment %}
+
+<div class="section-padding product-page">
+  <div class="container product-grid">
+    
+    <!-- Product Gallery -->
+    <div class="product-gallery">
+      <div class="main-image-box">
+        <span class="badge badge-bestseller">AYUSH CERTIFIED</span>
+        <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=800&auto=format&fit=crop&q=80" alt="Milk Thistle 800mg" id="mainProductImg">
+      </div>
+      <div class="gallery-thumbs">
+        <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=200&auto=format&fit=crop&q=60" alt="Thumb 1" class="thumb active" onclick="document.getElementById('mainProductImg').src=this.src">
+        <img src="https://images.unsplash.com/photo-1550572017-edf79289989a?w=200&auto=format&fit=crop&q=60" alt="Thumb 2" class="thumb" onclick="document.getElementById('mainProductImg').src=this.src">
+        <img src="https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=200&auto=format&fit=crop&q=60" alt="Thumb 3" class="thumb" onclick="document.getElementById('mainProductImg').src=this.src">
+      </div>
+    </div>
+
+    <!-- Product Summary & Purchase Form -->
+    <div class="product-details">
+      <span class="badge badge-category">LIVER HEALTH & DETOX</span>
+      <h1 class="product-title">Milk Thistle 800 mg - Standardized Extract</h1>
+      
+      <div class="product-reviews-row">
+        <span class="rating-stars">★★★★★</span>
+        <span class="rating-text">4.9 / 5.0 (205 Verified Customer Reviews)</span>
+      </div>
+
+      <div class="product-price-box">
+        <span class="price-large">Rs. 389.00</span>
+        <span class="price-compare">Rs. 619.00</span>
+        <span class="price-discount">Save 37%</span>
+        <span class="gst-label">(Inclusive of all taxes)</span>
+      </div>
+
+      <p class="product-brief">
+        High-strength Silymarin extract formulated to support liver detox, protect against fatty liver symptoms, and improve enzyme balance.
+      </p>
+
+      <!-- Variants Selector -->
+      <div class="variant-picker">
+        <label class="variant-label">Pack Size:</label>
+        <div class="variant-options">
+          <button type="button" class="variant-btn active">1 Bottle (60 caps)</button>
+          <button type="button" class="variant-btn">2 Bottles (120 caps) - Save 15%</button>
+          <button type="button" class="variant-btn">3 Bottles Kit (180 caps) - Best Value</button>
+        </div>
+      </div>
+
+      <!-- Quantity + Add to Cart -->
+      <div class="purchase-row">
+        <div class="quantity-selector">
+          <button type="button" onclick="let q=document.getElementById('pQty'); if(q.value>1)q.value--;">-</button>
+          <input type="number" id="pQty" value="1" min="1" readonly>
+          <button type="button" onclick="let q=document.getElementById('pQty'); q.value++;">+</button>
+        </div>
+
+        <button type="button" class="btn btn-primary btn-add-cart" data-add-to-cart>
+          Add to Cart →
+        </button>
+      </div>
+
+      <!-- High Demand Alert -->
+      <div class="demand-alert">
+        <span>🔥 <strong>High Demand:</strong> Only 14 packs remaining in stock for fast dispatch today.</span>
+      </div>
+
+      <!-- Trust Features list -->
+      <div class="product-trust-list">
+        <div class="trust-feature">✓ 100% Ayurvedic Extracts</div>
+        <div class="trust-feature">✓ Doctor Recommended</div>
+        <div class="trust-feature">✓ Free Delivery on Rs. 499+</div>
+        <div class="trust-feature">✓ Cash on Delivery Available</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<style>
+.product-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+.main-image-box {
+  position: relative;
+  background: var(--color-sage-light);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--color-sage-border);
+}
+
+.main-image-box img {
+  width: 100%;
+  height: 480px;
+  object-fit: cover;
+}
+
+.gallery-thumbs {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.thumb {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-md);
+  object-fit: cover;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all var(--transition-fast);
+}
+
+.thumb:hover, .thumb.active {
+  border-color: var(--color-forest-primary);
+}
+
+.product-title {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 2.2rem;
+  color: var(--color-forest-primary);
+  margin: 8px 0 12px;
+  line-height: 1.2;
+}
+
+.product-reviews-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.rating-text {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.product-price-box {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 16px 0;
+  border-top: 1px solid var(--color-sage-border);
+  border-bottom: 1px solid var(--color-sage-border);
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.price-large {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 2rem;
+  color: var(--color-forest-dark);
+}
+
+.price-compare {
+  font-size: 1.1rem;
+  color: var(--color-text-muted);
+  text-decoration: line-through;
+}
+
+.price-discount {
+  background: var(--color-terracotta-light);
+  color: var(--color-terracotta-dark);
+  font-weight: 700;
+  font-size: 0.8rem;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+}
+
+.gst-label {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.product-brief {
+  color: var(--color-text-body);
+  font-size: 1rem;
+  margin-bottom: 24px;
+}
+
+.variant-picker {
+  margin-bottom: 24px;
+}
+
+.variant-label {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.variant-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.variant-btn {
+  padding: 12px 18px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-sage-border);
+  background: var(--color-white);
+  text-align: left;
+  font-weight: 600;
+  color: var(--color-text-dark);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.variant-btn.active, .variant-btn:hover {
+  border-color: var(--color-forest-primary);
+  background: var(--color-sage-light);
+  color: var(--color-forest-primary);
+}
+
+.purchase-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.quantity-selector {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--color-sage-border);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  background: var(--color-white);
+}
+
+.quantity-selector button {
+  width: 40px;
+  height: 48px;
+  border: none;
+  background: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.quantity-selector input {
+  width: 40px;
+  text-align: center;
+  border: none;
+  font-weight: 600;
+}
+
+.btn-add-cart {
+  flex-grow: 1;
+  font-size: 1.05rem;
+  border-radius: var(--radius-full);
+}
+
+.demand-alert {
+  background: #FFF0E8;
+  border: 1px solid #F4D0C0;
+  color: #C95634;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+  margin-bottom: 24px;
+}
+
+.product-trust-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  font-size: 0.9rem;
+  color: var(--color-forest-primary);
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .product-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Main Product View",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Main Product View"
+    }
+  ]
+}
+{% endschema %}

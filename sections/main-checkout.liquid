@@ -154,42 +154,45 @@
         <h3 class="summary-title">Order Summary</h3>
 
         <div class="checkout-items-list">
-          <div class="summary-item">
-            <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=200&auto=format&fit=crop&q=60" alt="Milk Thistle">
-            <div>
-              <h4 class="summary-item-name">Milk Thistle 800 mg</h4>
-              <p class="summary-item-qty">1 Bottle • Qty 1</p>
-              <span class="summary-item-price">Rs. 389.00</span>
+          {% for item in cart.items %}
+            <div class="summary-item">
+              {% if item.image %}
+                <img src="{{ item.image | image_url: width: 200 }}" alt="{{ item.title | escape }}">
+              {% else %}
+                <div style="width:60px; height:60px; background:#eee; border-radius:4px;"></div>
+              {% endif %}
+              <div>
+                <h4 class="summary-item-name">{{ item.product.title }}</h4>
+                <p class="summary-item-qty">
+                  {% unless item.product.has_only_default_variant %}{{ item.variant.title }} • {% endunless %}Qty {{ item.quantity }}
+                </p>
+                <span class="summary-item-price">{{ item.final_line_price | money }}</span>
+              </div>
             </div>
-          </div>
-
-          <div class="summary-item">
-            <img src="https://images.unsplash.com/photo-1550572017-edf79289989a?w=200&auto=format&fit=crop&q=60" alt="PCOS Syrup">
-            <div>
-              <h4 class="summary-item-name">PCOS / PCOD Care Syrup</h4>
-              <p class="summary-item-qty">500 ml • Qty 1</p>
-              <span class="summary-item-price">Rs. 333.00</span>
-            </div>
-          </div>
+          {% endfor %}
         </div>
 
         <div class="summary-totals">
           <div class="summary-row">
             <span>Item total</span>
-            <span>Rs. 722.00</span>
+            <span>{{ cart.items_subtotal_price | money }}</span>
           </div>
           <div class="summary-row">
             <span>Shipping</span>
-            <span class="free-text">FREE</span>
+            {% if cart.total_price >= 49900 %}
+              <span class="free-text">FREE</span>
+            {% else %}
+              <span>Calculated at checkout</span>
+            {% endif %}
           </div>
           <div class="summary-row total-payable">
             <span>Amount payable</span>
-            <span>Rs. 722.00</span>
+            <span>{{ cart.total_price | money }}</span>
           </div>
         </div>
 
-        <button type="button" class="btn btn-accent btn-pay" onclick="alert('Order Placed Successfully! Thank you for choosing Ayova.');">
-          PAY Rs. 722 SECURELY →
+        <button type="button" class="btn btn-accent btn-pay" onclick="alert('Order Placed! Please note: Submitting orders from a custom page requires a backend app or API integration.');">
+          PAY {{ cart.total_price | money }} SECURELY →
         </button>
 
         <p class="checkout-terms">

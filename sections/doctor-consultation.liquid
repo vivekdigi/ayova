@@ -5,44 +5,29 @@
 
 <section class="section-padding doctor-consultation-section" id="consult">
   <div class="container">
-    <div class="doctor-banner-card">
-      <div class="doctor-banner-grid">
+    <div class="doctor-banner">
         <div class="doctor-image-wrapper">
-          <img src="https://images.unsplash.com/photo-1594824813571-24a69c100d37?w=600&auto=format&fit=crop&q=80" alt="Certified Ayurvedic Doctor Consultation" class="doctor-img">
-          <div class="doctor-experience-tag">
-            <span class="exp-number">15+</span>
-            <span class="exp-text">Years Ayush Experience</span>
+          <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=600&auto=format&fit=crop&q=80" alt="Ayova Wellness Expert" class="doctor-img">
+          
+          <div class="badge-free-guidance">FREE 1:1 GUIDANCE</div>
+          
+          <div class="doctor-status-bar">
+            <div class="status-left">
+              <div class="status-title"><span class="status-dot"></span> Ayova Wellness Expert</div>
+              <div class="status-time">Available Mon-Sat • 10:00 AM-6:00 PM</div>
+            </div>
+            <a href="https://wa.me/919999999999" target="_blank" class="btn-chat-now">CHAT NOW →</a>
           </div>
         </div>
 
         <div class="doctor-content">
-          <span class="badge badge-doctor">FREE DOCTOR CONSULTATION</span>
           <h2 class="doctor-title">{{ section.settings.title | default: "Our experts are here to guide you every step of the way." }}</h2>
-          <p class="doctor-desc">{{ section.settings.description | default: "Talk directly with our team of certified Ayurvedic Vaidyas. Get personalized dosage advice, dietary regimen, and herbal recommendations for your unique Prakriti." }}</p>
-          
-          <div class="doctor-highlights">
-            <div class="doc-highlight-item">
-              <span class="doc-check">✓</span> 100% Confidential & Free Consultation
-            </div>
-            <div class="doc-highlight-item">
-              <span class="doc-check">✓</span> Custom Diet & Lifestyle Recommendation
-            </div>
-            <div class="doc-highlight-item">
-              <span class="doc-check">✓</span> Direct WhatsApp Assistance with Doctors
-            </div>
-          </div>
-
           <div class="doctor-actions">
-            <a href="{{ section.settings.consult_link | default: '#consult' }}" class="btn btn-primary btn-doctor">Talk to Our Doctors →</a>
-            <a href="https://wa.me/919999999999" target="_blank" class="btn btn-whatsapp">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
-              Chat on WhatsApp
-            </a>
+            <a href="{{ section.settings.consult_link | default: '#consult' }}" class="btn btn-primary btn-doctor">Talk to an Expert →</a>
           </div>
         </div>
       </div>
     </div>
-  </div>
 </section>
 
 {% schema %}

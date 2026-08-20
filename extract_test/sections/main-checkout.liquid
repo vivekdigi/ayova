@@ -1,0 +1,503 @@
+{% comment %}
+  AYOVA CUSTOM CHECKOUT & PAYMENT SECTION
+  Figma Spec: 3-Step Progress (01 Contact, 02 Delivery Address, 03 Payment Method: UPI, Card, NetBanking, COD) + Order Summary Sidebar
+{% endcomment %}
+
+<div class="section-padding checkout-page">
+  <div class="container">
+    
+    <!-- Checkout Breadcrumb & Header -->
+    <div class="checkout-header-row">
+      <div>
+        <span class="checkout-breadcrumb">Home / Cart / Checkout</span>
+        <h1 class="checkout-title">Secure Checkout</h1>
+        <p class="checkout-subtitle">Complete your delivery details and choose a payment method.</p>
+      </div>
+    </div>
+
+    <!-- 3-Step Progress Indicator -->
+    <div class="checkout-steps-bar">
+      <div class="step-item step-completed">
+        <span class="step-circle">✓</span>
+        <span class="step-label">CART</span>
+      </div>
+      <div class="step-connector active"></div>
+      <div class="step-item step-active">
+        <span class="step-circle">2</span>
+        <span class="step-label">CHECKOUT</span>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-item">
+        <span class="step-circle">3</span>
+        <span class="step-label">PAYMENT</span>
+      </div>
+    </div>
+
+    <!-- Main Checkout Grid -->
+    <div class="checkout-grid">
+      
+      <!-- Left Form Panels -->
+      <div class="checkout-forms">
+        
+        <!-- Step 1: Contact Details -->
+        <div class="checkout-card">
+          <div class="card-step-header">
+            <span class="step-num">01</span>
+            <div>
+              <h3 class="step-title">Contact details</h3>
+              <p class="step-desc">We’ll use these details for order and delivery updates.</p>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">EMAIL ADDRESS</label>
+              <input type="email" placeholder="you@example.com" value="user@example.com" class="form-input">
+            </div>
+            <div class="form-group">
+              <label class="form-label">MOBILE NUMBER</label>
+              <input type="tel" placeholder="+91 98765 43210" value="+91 98765 43210" class="form-input">
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: Delivery Address -->
+        <div class="checkout-card">
+          <div class="card-step-header">
+            <span class="step-num">02</span>
+            <div>
+              <h3 class="step-title">Delivery address</h3>
+              <p class="step-desc">Enter the address where you want your Ayova order delivered.</p>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">FULL NAME</label>
+              <input type="text" placeholder="Your full name" value="Rahul Sharma" class="form-input">
+            </div>
+            <div class="form-group">
+              <label class="form-label">PHONE</label>
+              <input type="tel" placeholder="Mobile number" value="+91 98765 43210" class="form-input">
+            </div>
+            <div class="form-group full-width">
+              <label class="form-label">ADDRESS</label>
+              <input type="text" placeholder="House / Flat / Building / Street" value="Flat 402, Green Park Apartments, Sector 15" class="form-input">
+            </div>
+            <div class="form-group">
+              <label class="form-label">CITY</label>
+              <input type="text" placeholder="City" value="Mumbai" class="form-input">
+            </div>
+            <div class="form-group">
+              <label class="form-label">PIN CODE</label>
+              <input type="text" placeholder="6-digit PIN code" value="400001" class="form-input">
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Payment Method -->
+        <div class="checkout-card">
+          <div class="card-step-header">
+            <span class="step-num">03</span>
+            <div>
+              <h3 class="step-title">Choose payment method</h3>
+              <p class="step-desc">All payment options are processed through secure 256-bit SSL checkout.</p>
+            </div>
+          </div>
+
+          <div class="payment-options">
+            
+            <!-- Option 1: UPI / QR -->
+            <label class="payment-option-card active">
+              <input type="radio" name="payment_type" checked>
+              <div class="payment-option-content">
+                <div class="payment-option-title">UPI / QR (Google Pay, PhonePe, Paytm)</div>
+                <div class="payment-option-sub">Pay instantly using any UPI app or scan QR code</div>
+              </div>
+              <span class="payment-tag">INSTANT</span>
+            </label>
+
+            <!-- Option 2: Card -->
+            <label class="payment-option-card">
+              <input type="radio" name="payment_type">
+              <div class="payment-option-content">
+                <div class="payment-option-title">Credit / Debit Card</div>
+                <div class="payment-option-sub">Visa, Mastercard, RuPay and supported cards</div>
+              </div>
+            </label>
+
+            <!-- Option 3: Net Banking -->
+            <label class="payment-option-card">
+              <input type="radio" name="payment_type">
+              <div class="payment-option-content">
+                <div class="payment-option-title">Net Banking</div>
+                <div class="payment-option-sub">All major Indian banks</div>
+              </div>
+            </label>
+
+            <!-- Option 4: COD -->
+            <label class="payment-option-card">
+              <input type="radio" name="payment_type">
+              <div class="payment-option-content">
+                <div class="payment-option-title">Cash on Delivery (COD)</div>
+                <div class="payment-option-sub">Pay cash upon delivery at your doorstep</div>
+              </div>
+            </label>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Order Summary Panel -->
+      <div class="checkout-summary-panel">
+        <h3 class="summary-title">Order Summary</h3>
+
+        <div class="checkout-items-list">
+          <div class="summary-item">
+            <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=200&auto=format&fit=crop&q=60" alt="Milk Thistle">
+            <div>
+              <h4 class="summary-item-name">Milk Thistle 800 mg</h4>
+              <p class="summary-item-qty">1 Bottle • Qty 1</p>
+              <span class="summary-item-price">Rs. 389.00</span>
+            </div>
+          </div>
+
+          <div class="summary-item">
+            <img src="https://images.unsplash.com/photo-1550572017-edf79289989a?w=200&auto=format&fit=crop&q=60" alt="PCOS Syrup">
+            <div>
+              <h4 class="summary-item-name">PCOS / PCOD Care Syrup</h4>
+              <p class="summary-item-qty">500 ml • Qty 1</p>
+              <span class="summary-item-price">Rs. 333.00</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="summary-totals">
+          <div class="summary-row">
+            <span>Item total</span>
+            <span>Rs. 722.00</span>
+          </div>
+          <div class="summary-row">
+            <span>Shipping</span>
+            <span class="free-text">FREE</span>
+          </div>
+          <div class="summary-row total-payable">
+            <span>Amount payable</span>
+            <span>Rs. 722.00</span>
+          </div>
+        </div>
+
+        <button type="button" class="btn btn-accent btn-pay" onclick="alert('Order Placed Successfully! Thank you for choosing Ayova.');">
+          PAY Rs. 722 SECURELY →
+        </button>
+
+        <p class="checkout-terms">
+          🔒 By continuing, you agree to Ayova’s Terms of Use and Refund Policy.
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<style>
+.checkout-breadcrumb {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.checkout-title {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 2.2rem;
+  color: var(--color-forest-primary);
+  margin: 4px 0;
+}
+
+.checkout-subtitle {
+  color: var(--color-text-muted);
+  margin-bottom: 24px;
+}
+
+.checkout-steps-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 36px;
+  background: var(--color-white);
+  padding: 16px 24px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-sage-border);
+}
+
+.step-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-text-muted);
+}
+
+.step-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--color-sage-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.step-completed .step-circle {
+  background: var(--color-forest-mid);
+  color: var(--color-white);
+}
+
+.step-active .step-circle {
+  background: var(--color-terracotta);
+  color: var(--color-white);
+}
+
+.step-active .step-label {
+  font-weight: 700;
+  color: var(--color-forest-primary);
+}
+
+.step-connector {
+  flex-grow: 1;
+  height: 2px;
+  background: var(--color-sage-border);
+}
+
+.step-connector.active {
+  background: var(--color-forest-mid);
+}
+
+.checkout-grid {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 36px;
+}
+
+.checkout-forms {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.checkout-card {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-sage-border);
+  padding: 28px;
+}
+
+.card-step-header {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.step-num {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--color-terracotta);
+}
+
+.step-title {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: var(--color-forest-primary);
+}
+
+.step-desc {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-group.full-width {
+  grid-column: span 2;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-forest-primary);
+  margin-bottom: 6px;
+  letter-spacing: 0.05em;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-sage-border);
+  font-size: 0.95rem;
+}
+
+.payment-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.payment-option-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-sage-border);
+  background: var(--color-white);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.payment-option-card.active, .payment-option-card:hover {
+  border-color: var(--color-forest-mid);
+  background: var(--color-sage-light);
+}
+
+.payment-option-title {
+  font-weight: 700;
+  color: var(--color-forest-primary);
+  font-size: 0.95rem;
+}
+
+.payment-option-sub {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.payment-tag {
+  margin-left: auto;
+  background: var(--color-terracotta);
+  color: var(--color-white);
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+}
+
+.checkout-summary-panel {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-sage-border);
+  padding: 28px;
+  height: fit-content;
+  box-shadow: var(--shadow-sm);
+}
+
+.checkout-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--color-sage-border);
+  padding-bottom: 20px;
+}
+
+.summary-item {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.summary-item img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  background: var(--color-sage-light);
+}
+
+.summary-item-name {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--color-forest-primary);
+}
+
+.summary-item-qty {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.summary-item-price {
+  font-weight: 700;
+  color: var(--color-forest-dark);
+}
+
+.summary-totals {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}
+
+.total-payable {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: var(--color-forest-dark);
+  border-top: 1px solid var(--color-sage-border);
+  padding-top: 12px;
+}
+
+.btn-pay {
+  width: 100%;
+  padding: 16px;
+  font-size: 1rem;
+  margin-bottom: 16px;
+}
+
+.checkout-terms {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  text-align: center;
+  line-height: 1.4;
+}
+
+@media (max-width: 900px) {
+  .checkout-grid {
+    grid-template-columns: 1fr;
+  }
+  .form-grid-2 {
+    grid-template-columns: 1fr;
+  }
+  .form-group.full-width {
+    grid-column: span 1;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Checkout Page",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Checkout Page"
+    }
+  ]
+}
+{% endschema %}

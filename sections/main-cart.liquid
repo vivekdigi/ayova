@@ -7,101 +7,108 @@
   <div class="container">
     <h1 class="cart-title">Your Shopping Cart</h1>
 
-    <!-- Free Shipping Progress Bar -->
-    <div class="free-shipping-box">
-      <p class="shipping-msg">🎉 <strong>You unlocked Free Express Shipping!</strong> (Orders above Rs. 499)</p>
-      <div class="progress-bar-bg">
-        <div class="progress-bar-fill" style="width: 100%;"></div>
-      </div>
-    </div>
-
-    <div class="cart-grid">
-      <!-- Items Table -->
-      <div class="cart-items-box">
-        <div class="cart-item">
-          <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=200&auto=format&fit=crop&q=60" alt="Milk Thistle" class="item-img">
-          
-          <div class="item-info">
-            <h3 class="item-title"><a href="/products/milk-thistle">Milk Thistle 800 mg</a></h3>
-            <p class="item-meta">Pack: 1 Bottle (60 caps)</p>
-            <span class="item-price">Rs. 389.00</span>
-          </div>
-
-          <div class="item-qty-row">
-            <div class="quantity-selector">
-              <button type="button">-</button>
-              <input type="number" value="1" readonly>
-              <button type="button">+</button>
+    {% if cart.item_count > 0 %}
+      <form action="{{ routes.cart_url }}" method="post" novalidate id="cart-form">
+        <!-- Free Shipping Progress Bar -->
+        <div class="free-shipping-box">
+          {% assign threshold = 49900 %}
+          {% if cart.total_price >= threshold %}
+            <p class="shipping-msg">🎉 <strong>You unlocked Free Express Shipping!</strong></p>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" style="width: 100%;"></div>
             </div>
-            <button type="button" class="remove-btn">Remove</button>
-          </div>
-
-          <div class="item-total">
-            <span>Rs. 389.00</span>
-          </div>
-        </div>
-
-        <div class="cart-item">
-          <img src="https://images.unsplash.com/photo-1550572017-edf79289989a?w=200&auto=format&fit=crop&q=60" alt="PCOS Syrup" class="item-img">
-          
-          <div class="item-info">
-            <h3 class="item-title"><a href="/products/pcos-syrup">PCOS / PCOD Care Syrup</a></h3>
-            <p class="item-meta">Pack: 500 ml bottle</p>
-            <span class="item-price">Rs. 333.00</span>
-          </div>
-
-          <div class="item-qty-row">
-            <div class="quantity-selector">
-              <button type="button">-</button>
-              <input type="number" value="1" readonly>
-              <button type="button">+</button>
+          {% else %}
+            {% assign diff = threshold | minus: cart.total_price | money %}
+            <p class="shipping-msg">Add <strong>{{ diff }}</strong> more to unlock Free Express Shipping!</p>
+            {% assign percent = cart.total_price | times: 100 | divided_by: threshold %}
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" style="width: {{ percent }}%;"></div>
             </div>
-            <button type="button" class="remove-btn">Remove</button>
+          {% endif %}
+        </div>
+
+        <div class="cart-grid">
+          <!-- Items Table -->
+          <div class="cart-items-box">
+            {% for item in cart.items %}
+              <div class="cart-item">
+                {% if item.image %}
+                  <img src="{{ item.image | image_url: width: 200 }}" alt="{{ item.title | escape }}" class="item-img">
+                {% else %}
+                  <div class="item-img" style="background:#eee"></div>
+                {% endif %}
+                
+                <div class="item-info">
+                  <h3 class="item-title"><a href="{{ item.url }}">{{ item.product.title }}</a></h3>
+                  {% unless item.product.has_only_default_variant %}
+                    <p class="item-meta">{{ item.variant.title }}</p>
+                  {% endunless %}
+                  <span class="item-price">{{ item.price | money }}</span>
+                </div>
+
+                <div class="item-qty-row">
+                  <div class="quantity-selector">
+                    <button type="button" data-cart-qty-change data-line="{{ forloop.index }}" data-qty="{{ item.quantity | minus: 1 }}">-</button>
+                    <input type="number" name="updates[]" id="updates_{{ item.key }}" value="{{ item.quantity }}" readonly>
+                    <button type="button" data-cart-qty-change data-line="{{ forloop.index }}" data-qty="{{ item.quantity | plus: 1 }}">+</button>
+                  </div>
+                  <button type="button" class="remove-btn" data-cart-qty-change data-line="{{ forloop.index }}" data-qty="0">Remove</button>
+                </div>
+
+                <div class="item-total">
+                  <span>{{ item.final_line_price | money }}</span>
+                </div>
+              </div>
+            {% endfor %}
           </div>
 
-          <div class="item-total">
-            <span>Rs. 333.00</span>
+          <!-- Order Summary Card -->
+          <div class="cart-summary-card">
+            <h3 class="summary-title">Order Summary</h3>
+
+            <!-- Promo Code Form - Note: Shopify handles discount codes securely at checkout -->
+            <div class="promo-box">
+              <input type="text" placeholder="Promo code / Coupon" class="promo-input">
+              <button type="button" class="btn btn-outline promo-btn">Apply</button>
+            </div>
+
+            <div class="summary-lines">
+              <div class="summary-line">
+                <span>Subtotal</span>
+                <span>{{ cart.items_subtotal_price | money }}</span>
+              </div>
+              <div class="summary-line">
+                <span>Estimated Shipping</span>
+                {% if cart.total_price >= 49900 %}
+                  <span class="free-text">FREE</span>
+                {% else %}
+                  <span>Calculated at checkout</span>
+                {% endif %}
+              </div>
+              <div class="summary-line">
+                <span>Tax (GST Included)</span>
+                <span>Calculated at checkout</span>
+              </div>
+              <div class="summary-line total-line">
+                <span>Total Payable</span>
+                <span>{{ cart.total_price | money }}</span>
+              </div>
+            </div>
+
+            <a href="/pages/checkout" class="btn btn-primary btn-checkout" style="display:block; text-align:center; text-decoration:none; box-sizing:border-box;">Proceed to Checkout →</a>
+
+            <p class="cart-guarantee">
+              🔒 Guaranteed 256-bit Secure Checkout & Free Returns
+            </p>
           </div>
         </div>
+      </form>
+    {% else %}
+      <div style="text-align:center; padding: 60px 0;">
+        <h2>Your cart is currently empty.</h2>
+        <a href="/collections/all" class="btn btn-primary" style="margin-top:20px;">Continue Shopping</a>
       </div>
-
-      <!-- Order Summary Card -->
-      <div class="cart-summary-card">
-        <h3 class="summary-title">Order Summary</h3>
-
-        <!-- Promo Code Form -->
-        <div class="promo-box">
-          <input type="text" placeholder="Promo code / Coupon" class="promo-input">
-          <button type="button" class="btn btn-outline promo-btn">Apply</button>
-        </div>
-
-        <div class="summary-lines">
-          <div class="summary-line">
-            <span>Subtotal</span>
-            <span>Rs. 722.00</span>
-          </div>
-          <div class="summary-line">
-            <span>Estimated Shipping</span>
-            <span class="free-text">FREE</span>
-          </div>
-          <div class="summary-line">
-            <span>Tax (GST Included)</span>
-            <span>Rs. 0.00</span>
-          </div>
-          <div class="summary-line total-line">
-            <span>Total Payable</span>
-            <span>Rs. 722.00</span>
-          </div>
-        </div>
-
-        <a href="/pages/checkout" class="btn btn-primary btn-checkout">Proceed to Checkout →</a>
-
-        <p class="cart-guarantee">
-          🔒 Guaranteed 256-bit Secure Checkout & Free Returns
-        </p>
-      </div>
-
-    </div>
+    {% endif %}
   </div>
 </div>
 
@@ -139,6 +146,7 @@
   height: 100%;
   background: var(--color-forest-mid);
   border-radius: var(--radius-full);
+  transition: width 0.3s ease;
 }
 
 .cart-grid {

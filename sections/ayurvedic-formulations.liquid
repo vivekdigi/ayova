@@ -41,7 +41,7 @@
         {% if sel_collection != blank and sel_collection.products.size > 0 %}
           {% for prod in sel_collection.products limit: section.settings.products_to_show %}
             <div class="ayova-carousel-slide">
-              {% render 'product-card', product: prod %}
+              {% render 'product-card', product: prod, show_per_count: section.settings.show_per_count %}
             </div>
           {% endfor %}
 
@@ -50,17 +50,20 @@
             {% assign block_prod = all_products[block.settings.product] %}
             <div class="ayova-carousel-slide" {{ block.shopify_attributes }}>
               {% if block_prod != blank %}
-                {% render 'product-card', product: block_prod %}
+                {% render 'product-card', product: block_prod, show_per_count: section.settings.show_per_count %}
               {% else %}
                 {% render 'product-card',
                   title: block.settings.title,
-                  subtitle: block.settings.category,
-                  category: block.settings.pack_size,
+                  short_description: block.settings.short_description,
+                  category: block.settings.category,
+                  pack: block.settings.pack_size,
                   price: block.settings.price,
                   compare_price: block.settings.compare_price,
                   badge: block.settings.badge,
                   reviews: block.settings.reviews,
-                  image_url: block.settings.image_url
+                  image_url: block.settings.image_url,
+                  show_per_count: section.settings.show_per_count,
+                  per_count_text: block.settings.per_count_text
                 %}
               {% endif %}
             </div>
@@ -135,6 +138,12 @@
       "default": ""
     },
     {
+      "type": "checkbox",
+      "id": "show_per_count",
+      "label": "Enable Per Count Details",
+      "default": true
+    },
+    {
       "type": "text",
       "id": "title",
       "label": "Section Heading",
@@ -203,6 +212,11 @@
           "default": "Triphala"
         },
         {
+          "type": "textarea",
+          "id": "short_description",
+          "label": "Short Description (Fallback)"
+        },
+        {
           "type": "text",
           "id": "category",
           "label": "Category Tag",
@@ -236,6 +250,11 @@
           "id": "reviews",
           "label": "Review Count",
           "default": "205"
+        },
+        {
+          "type": "text",
+          "id": "per_count_text",
+          "label": "Per Count Text (e.g. ₹58.10/count)"
         },
         {
           "type": "text",

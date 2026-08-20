@@ -1,0 +1,35 @@
+{% comment %}
+  AYOVA LIST COLLECTIONS SECTION
+{% endcomment %}
+
+<section class="section-padding collections-list-section">
+  <div class="container">
+    <div class="wellness-header-centered">
+      <span class="badge badge-category">AYUSH GOALS</span>
+      <h1 class="section-title">All Ayurvedic Collections</h1>
+      <p class="section-subtitle">Browse targeted formulations by health concerns and doshas</p>
+    </div>
+
+    <div class="collections-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px;">
+      {% for collection in collections %}
+        <div class="collection-card-item" style="background: #fff; border: 1px solid var(--color-sage-border); border-radius: 12px; padding: 20px; text-align: center;">
+          <h3 style="font-family: var(--font-serif); font-size: 1.4rem; margin-bottom: 8px;"><a href="{{ collection.url }}">{{ collection.title }}</a></h3>
+          <p style="font-size: 0.9rem; color: var(--color-text-muted);">{{ collection.products_count }} products</p>
+          <a href="{{ collection.url }}" class="btn btn-primary" style="margin-top: 14px; display: inline-block;">View Collection →</a>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "List Collections",
+  "settings": [],
+  "presets": [
+    {
+      "name": "List Collections"
+    }
+  ]
+}
+{% endschema %}

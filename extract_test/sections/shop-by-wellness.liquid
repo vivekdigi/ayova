@@ -1,0 +1,339 @@
+{% comment %}
+  SHOP BY WELLNESS GOALS CAROUSEL SECTION
+  Figma & Image 1 Spec: Horizontal Category Slider with Badge, Product Count, and Navigation Controls
+{% endcomment %}
+
+{% assign header_alignment = section.settings.header_alignment | default: 'center' %}
+{% assign items_desktop = section.settings.items_per_view | default: 6 %}
+{% assign layout_style = section.settings.card_style | default: 'figma' %}
+
+<section class="section-padding shop-wellness-section" id="shop-by-wellness">
+  <div class="container">
+    {% if header_alignment == 'center' %}
+      <div class="wellness-header-centered">
+        {% if section.settings.badge_text != blank %}
+          <span class="badge badge-category">{{ section.settings.badge_text }}</span>
+        {% endif %}
+        <h2 class="section-title">{{ section.settings.title | default: "Shop by Wellness Goal" }}</h2>
+        <p class="section-subtitle">{{ section.settings.subtitle | default: "Choose practical support for your everyday wellness routine." }}</p>
+      </div>
+    {% else %}
+      <div class="wellness-header-row">
+        <div>
+          {% if section.settings.badge_text != blank %}
+            <span class="badge badge-category">{{ section.settings.badge_text }}</span>
+          {% endif %}
+          <h2 class="section-title">{{ section.settings.title | default: "Shop by Wellness Goal" }}</h2>
+          <p class="section-subtitle">{{ section.settings.subtitle | default: "Choose practical support for your everyday wellness routine." }}</p>
+        </div>
+
+        <div class="ayova-carousel-nav">
+          <button type="button" class="ayova-carousel-btn" data-carousel-prev aria-label="Previous">←</button>
+          <button type="button" class="ayova-carousel-btn" data-carousel-next aria-label="Next">→</button>
+        </div>
+      </div>
+    {% endif %}
+
+    <!-- Carousel Slider -->
+    <div class="ayova-carousel-wrapper" data-ayova-carousel data-items-per-view="{{ items_desktop }}" data-gap="18">
+      <div class="ayova-carousel-track">
+
+        {% if section.blocks.size > 0 %}
+          {% for block in section.blocks %}
+            {% assign block_coll = collections[block.settings.collection] %}
+            
+            {% assign goal_title = block.settings.title %}
+            {% if goal_title == blank and block_coll != blank %}
+              {% assign goal_title = block_coll.title %}
+            {% endif %}
+
+            {% assign goal_link = block.settings.link %}
+            {% if goal_link == blank and block_coll != blank %}
+              {% assign goal_link = block_coll.url %}
+            {% endif %}
+
+            {% assign goal_count = block.settings.meta_text %}
+            {% if goal_count == blank and block_coll != blank %}
+              {% assign goal_count = block_coll.products_count | append: " PRODUCTS" %}
+            {% endif %}
+
+            {% assign goal_img_src = "" %}
+            {% if block.settings.image != blank %}
+              {% assign goal_img_src = block.settings.image | image_url: width: 400 %}
+            {% elsif block_coll.featured_image != blank %}
+              {% assign goal_img_src = block_coll.featured_image | image_url: width: 400 %}
+            {% elsif block.settings.fallback_image_url != blank %}
+              {% assign goal_img_src = block.settings.fallback_image_url %}
+            {% else %}
+              {% assign goal_img_src = "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&auto=format&fit=crop&q=80" %}
+            {% endif %}
+
+            {% assign cycle_index = forloop.index | minus: 1 | modulo: 6 %}
+            {% case cycle_index %}
+              {% when 0 %}{% assign bg_class = "card-bg-sage" %}
+              {% when 1 %}{% assign bg_class = "card-bg-cream" %}
+              {% when 2 %}{% assign bg_class = "card-bg-light" %}
+              {% when 3 %}{% assign bg_class = "card-bg-pink" %}
+              {% when 4 %}{% assign bg_class = "card-bg-green" %}
+              {% else %}{% assign bg_class = "card-bg-terracotta" %}
+            {% endcase %}
+
+            <div class="ayova-carousel-slide">
+              {% if layout_style == 'figma' %}
+                <a href="{{ goal_link | default: '#' }}" class="wellness-card-figma {{ bg_class }}" {{ block.shopify_attributes }}>
+                  <span class="card-figma-num-badge">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+                  <div class="card-figma-img-box">
+                    <img src="{{ goal_img_src }}" alt="{{ goal_title | escape }}" loading="lazy" class="card-figma-img">
+                  </div>
+                  <div class="card-figma-bottom">
+                    <h3 class="card-figma-title">{{ goal_title | default: "Wellness Goal" }}</h3>
+                    <span class="card-figma-cta">→</span>
+                  </div>
+                </a>
+              {% elsif layout_style == 'pill' %}
+                <a href="{{ goal_link | default: '#' }}" class="wellness-pill-card" {{ block.shopify_attributes }}>
+                  <div class="pill-card-img-box">
+                    <img src="{{ goal_img_src }}" alt="{{ goal_title | escape }}" loading="lazy" class="pill-card-img">
+                  </div>
+                  <div class="pill-card-content">
+                    <span class="pill-card-tag">{{ block.settings.tag | default: 'AYURVEDIC' }}</span>
+                    <h3 class="pill-card-title">{{ goal_title | default: "Wellness Goal" }}</h3>
+                    <span class="pill-card-meta">{{ goal_count | default: 'Explore' }}</span>
+                  </div>
+                  <span class="pill-card-arrow">→</span>
+                </a>
+              {% else %}
+                <a href="{{ goal_link | default: '#' }}" class="wellness-card" {{ block.shopify_attributes }}>
+                  <div class="card-bg-img" style="background-image: url('{{ goal_img_src }}');"></div>
+                  <div class="card-overlay">
+                    <span class="count-tag">{{ goal_count | default: '5 PRODUCTS' }}</span>
+                    <h3 class="wellness-title">{{ goal_title }}</h3>
+                    <span class="shop-link">Shop now →</span>
+                  </div>
+                </a>
+              {% endif %}
+            </div>
+          {% endfor %}
+
+        {% else %}
+          <!-- Figma Exact 7 Wellness Goal Cards matching Figma node IDs -->
+          <div class="ayova-carousel-slide">
+            <a href="/collections/liver-wellness" class="wellness-card-figma card-bg-sage">
+              <span class="card-figma-num-badge">01</span>
+              <div class="card-figma-img-box">
+                <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=300&auto=format&fit=crop&q=80" alt="Liver Wellness" class="card-figma-img">
+              </div>
+              <div class="card-figma-bottom">
+                <h3 class="card-figma-title">Liver Wellness</h3>
+                <span class="card-figma-cta">→</span>
+              </div>
+            </a>
+          </div>
+
+          <div class="ayova-carousel-slide">
+            <a href="/collections/metabolic-balance" class="wellness-card-figma card-bg-cream">
+              <span class="card-figma-num-badge">02</span>
+              <div class="card-figma-img-box">
+                <img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?w=300&auto=format&fit=crop&q=80" alt="Metabolic Balance" class="card-figma-img">
+              </div>
+              <div class="card-figma-bottom">
+                <h3 class="card-figma-title">Metabolic Balance</h3>
+                <span class="card-figma-cta">→</span>
+              </div>
+            </a>
+          </div>
+
+          <div class="ayova-carousel-slide">
+            <a href="/collections/digestion" class="wellness-card-figma card-bg-light">
+              <span class="card-figma-num-badge">03</span>
+              <div class="card-figma-img-box">
+                <img src="https://images.unsplash.com/photo-1512290900676-26c2a4d48dc1?w=300&auto=format&fit=crop&q=80" alt="Digestion" class="card-figma-img">
+              </div>
+              <div class="card-figma-bottom">
+                <h3 class="card-figma-title">Digestion</h3>
+                <span class="card-figma-cta">→</span>
+              </div>
+            </a>
+          </div>
+
+          <div class="ayova-carousel-slide">
+            <a href="/collections/immunity" class="wellness-card-figma card-bg-pink">
+              <span class="card-figma-num-badge">04</span>
+              <div class="card-figma-img-box">
+                <img src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=300&auto=format&fit=crop&q=80" alt="Immunity" class="card-figma-img">
+              </div>
+              <div class="card-figma-bottom">
+                <h3 class="card-figma-title">Immunity</h3>
+                <span class="card-figma-cta">→</span>
+              </div>
+            </a>
+          </div>
+
+          <div class="ayova-carousel-slide">
+            <a href="/collections/energy-vitality" class="wellness-card-figma card-bg-green">
+              <span class="card-figma-num-badge">05</span>
+              <div class="card-figma-img-box">
+                <img src="https://images.unsplash.com/photo-1494597706938-56aab5f3fd88?w=300&auto=format&fit=crop&q=80" alt="Energy & Vitality" class="card-figma-img">
+              </div>
+              <div class="card-figma-bottom">
+                <h3 class="card-figma-title">Energy &amp; Vitality</h3>
+                <span class="card-figma-cta">→</span>
+              </div>
+            </a>
+          </div>
+
+          <div class="ayova-carousel-slide">
+            <a href="/collections/wellness-kits" class="wellness-card-figma card-bg-sage">
+              <span class="card-figma-num-badge">06</span>
+              <div class="card-figma-img-box">
+                <img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=300&auto=format&fit=crop&q=80" alt="Wellness Kits" class="card-figma-img">
+              </div>
+              <div class="card-figma-bottom">
+                <h3 class="card-figma-title">Wellness Kits</h3>
+                <span class="card-figma-cta">→</span>
+              </div>
+            </a>
+          </div>
+
+          <div class="ayova-carousel-slide">
+            <a href="/collections/stress-sleep" class="wellness-card-figma card-bg-cream">
+              <span class="card-figma-num-badge">07</span>
+              <div class="card-figma-img-box">
+                <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=300&auto=format&fit=crop&q=80" alt="Stress & Sleep" class="card-figma-img">
+              </div>
+              <div class="card-figma-bottom">
+                <h3 class="card-figma-title">Stress &amp; Sleep</h3>
+                <span class="card-figma-cta">→</span>
+              </div>
+            </a>
+          </div>
+        {% endif %}
+
+      </div>
+
+      <div class="ayova-carousel-dots" data-carousel-dots></div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Shop By Wellness Goals",
+  "settings": [
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge Text",
+      "default": ""
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Heading",
+      "default": "Shop by Wellness Goal"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Section Subtitle",
+      "default": "Choose practical support for your everyday wellness routine."
+    },
+    {
+      "type": "select",
+      "id": "header_alignment",
+      "label": "Header Alignment",
+      "options": [
+        {
+          "value": "center",
+          "label": "Centered"
+        },
+        {
+          "value": "row",
+          "label": "Row with Controls"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "card_style",
+      "label": "Card Layout Style",
+      "options": [
+        {
+          "value": "figma",
+          "label": "Vertical Category Card (Image 1 Spec)"
+        },
+        {
+          "value": "pill",
+          "label": "Horizontal Pill Card"
+        },
+        {
+          "value": "card",
+          "label": "Vertical Image Banner Card"
+        }
+      ],
+      "default": "figma"
+    },
+    {
+      "type": "range",
+      "id": "items_per_view",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "label": "Items visible on Desktop",
+      "default": 6
+    }
+  ],
+  "blocks": [
+    {
+      "type": "wellness_goal",
+      "name": "Wellness Goal",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Select Collection (Auto-fetches details)"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Goal Title Override",
+          "default": "Liver Health"
+        },
+        {
+          "type": "text",
+          "id": "tag",
+          "label": "Category Tag",
+          "default": "DETOX"
+        },
+        {
+          "type": "text",
+          "id": "meta_text",
+          "label": "Product Count / Subtitle",
+          "default": "6 PRODUCTS"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Goal Image"
+        },
+        {
+          "type": "text",
+          "id": "fallback_image_url",
+          "label": "Fallback Image URL"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link URL Override"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shop By Wellness Goals"
+    }
+  ]
+}
+{% endschema %}

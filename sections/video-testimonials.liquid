@@ -40,7 +40,21 @@
                   {% else %}
                     <div class="video-thumb-placeholder"></div>
                   {% endif %}
-                  <div class="video-play-btn" aria-label="Play video">
+                  {% assign yt_id = "" %}
+                  {% if block.settings.youtube_url != blank %}
+                    {% assign yt_id = block.settings.youtube_url.id %}
+                  {% endif %}
+                  
+                  {% assign mp4_url = "" %}
+                  {% if block.settings.mp4_video != blank %}
+                    {% for source in block.settings.mp4_video.sources %}
+                      {% if source.format == 'mp4' %}
+                        {% assign mp4_url = source.url %}
+                      {% endif %}
+                    {% endfor %}
+                  {% endif %}
+
+                  <div class="video-play-btn" aria-label="Play video" data-yt-id="{{ yt_id }}" data-mp4-url="{{ mp4_url }}">
                     <span class="play-icon">▶</span>
                   </div>
                   <div class="video-duration-badge">{{ block.settings.duration | default: "1:24" }}</div>
@@ -151,6 +165,16 @@
 
       <div class="ayova-carousel-dots" data-carousel-dots></div>
     </div>
+    
+    <!-- Video Modal -->
+    <div id="videoModal-{{ section.id }}" class="ayova-video-modal">
+      <div class="video-modal-overlay"></div>
+      <div class="video-modal-content">
+        <button class="video-modal-close" aria-label="Close">✕</button>
+        <div id="videoPlayerContainer-{{ section.id }}" class="video-player-container"></div>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -311,7 +335,78 @@
     height: 180px;
   }
 }
+
+/* Video Modal Styles */
+.ayova-video-modal {
+  display: none;
+  position: fixed;
+  z-index: 99999;
+  top: 0; left: 0; width: 100%; height: 100%;
+  align-items: center; justify-content: center;
+}
+.ayova-video-modal.active { display: flex; }
+.video-modal-overlay {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(4px);
+}
+.video-modal-content {
+  position: relative; z-index: 1;
+  width: 90%; max-width: 900px;
+  background: #000; aspect-ratio: 16/9;
+  border-radius: 12px; overflow: visible;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+}
+.video-modal-close {
+  position: absolute; top: -45px; right: -5px;
+  color: #fff; font-size: 32px; cursor: pointer;
+  background: none; border: none; padding: 10px;
+  line-height: 1; font-weight: 300;
+}
+.video-player-container { width: 100%; height: 100%; border-radius: 12px; overflow: hidden; }
+.video-player-container iframe, .video-player-container video {
+  width: 100%; height: 100%; border: none;
+}
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const modal = document.getElementById('videoModal-{{ section.id }}');
+  if(!modal) return;
+  const overlay = modal.querySelector('.video-modal-overlay');
+  const closeBtn = modal.querySelector('.video-modal-close');
+  const container = document.getElementById('videoPlayerContainer-{{ section.id }}');
+  const sectionEl = document.getElementById('video-testimonials');
+  
+  if (!sectionEl) return;
+  const playBtns = sectionEl.querySelectorAll('.video-play-btn');
+
+  function closeModal() {
+    modal.classList.remove('active');
+    container.innerHTML = ''; // Stop video playback
+  }
+
+  overlay.addEventListener('click', closeModal);
+  closeBtn.addEventListener('click', closeModal);
+
+  playBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      const ytId = this.getAttribute('data-yt-id');
+      const mp4Url = this.getAttribute('data-mp4-url');
+      
+      if (mp4Url && mp4Url.trim() !== '') {
+        container.innerHTML = `<video src="${mp4Url}" controls autoplay style="width:100%; height:100%;"></video>`;
+        modal.classList.add('active');
+      } else if (ytId && ytId.trim() !== '') {
+        container.innerHTML = `<iframe src="https://www.youtube.com/embed/${ytId}?autoplay=1" allow="autoplay; fullscreen" style="width:100%; height:100%; border:none;"></iframe>`;
+        modal.classList.add('active');
+      } else {
+        alert("Please add a YouTube URL or upload an MP4 Video in the theme editor!");
+      }
+    });
+  });
+});
+</script>
 
 {% schema %}
 {
@@ -358,6 +453,17 @@
           "type": "text",
           "id": "thumbnail_url",
           "label": "Thumbnail URL (fallback)"
+        },
+        {
+          "type": "video_url",
+          "id": "youtube_url",
+          "accept": ["youtube", "vimeo"],
+          "label": "YouTube/Vimeo URL"
+        },
+        {
+          "type": "video",
+          "id": "mp4_video",
+          "label": "Upload MP4 Video (Overrides YouTube)"
         },
         {
           "type": "text",

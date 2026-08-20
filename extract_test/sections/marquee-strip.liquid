@@ -1,0 +1,65 @@
+{% comment %}
+  AYOVA ANNOUNCEMENT MARQUEE STRIP & CTA SECTION
+  Figma Spec: Ticker strip + Centered "Explore All Products →" button
+{% endcomment %}
+
+<section class="ayova-marquee-section">
+  <div class="marquee-wrapper">
+    <div class="marquee-track">
+      <div class="marquee-content">
+        <span class="marquee-item">✓ Free Shipping above ₹499</span>
+        <span class="marquee-star">•</span>
+        <span class="marquee-item">✓ 100% Ayurvedic Formulations</span>
+        <span class="marquee-star">•</span>
+        <span class="marquee-item">✓ Doctor Formulated</span>
+        <span class="marquee-star">•</span>
+        <span class="marquee-item">✓ AYUSH & ISO Certified Quality</span>
+        <span class="marquee-star">•</span>
+        <span class="marquee-item">✓ Ayurvedic Expert Support</span>
+        <span class="marquee-star">•</span>
+      </div>
+      <div class="marquee-content" aria-hidden="true">
+        <span class="marquee-item">✓ Free Shipping above ₹499</span>
+        <span class="marquee-star">•</span>
+        <span class="marquee-item">✓ 100% Ayurvedic Formulations</span>
+        <span class="marquee-star">•</span>
+        <span class="marquee-item">✓ Doctor Formulated</span>
+        <span class="marquee-star">•</span>
+        <span class="marquee-item">✓ AYUSH & ISO Certified Quality</span>
+        <span class="marquee-star">•</span>
+        <span class="marquee-item">✓ Ayurvedic Expert Support</span>
+        <span class="marquee-star">•</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="container text-center marquee-cta-wrapper" style="margin-top: 24px;">
+    <a href="{{ section.settings.btn_url | default: '#shop' }}" class="btn btn-primary btn-hero">
+      {{ section.settings.btn_text | default: "Explore All Products →" }}
+    </a>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Marquee Ticker and CTA",
+  "settings": [
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Button Text",
+      "default": "Explore All Products →"
+    },
+    {
+      "type": "url",
+      "id": "btn_url",
+      "label": "Button Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Marquee Ticker and CTA"
+    }
+  ]
+}
+{% endschema %}

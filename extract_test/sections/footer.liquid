@@ -1,0 +1,383 @@
+{% comment %}
+  AYOVA FOOTER — Figma "Footer / Premium E-commerce Redesign"
+  Gradient bg, marketplace logos, trust bar, 5-column grid, dynamic menus
+{% endcomment %}
+
+<footer class="ayova-footer">
+  <!-- Top Section: "SHOP AYOVA EVERYWHERE" -->
+  {% if section.settings.show_marketplace %}
+    <div class="footer-top">
+      <h3 class="footer-top-heading">{{ section.settings.marketplace_heading | default: 'SHOP AYOVA EVERYWHERE' }}</h3>
+      <p class="footer-top-subheading">{{ section.settings.marketplace_subheading | default: 'Your wellness essentials, wherever you shop.' }}</p>
+      <div class="marketplace-logos">
+        {% if section.settings.show_blinkit %}
+          <a href="{{ section.settings.blinkit_url }}" class="marketplace-logo marketplace-logo-blinkit" target="_blank" rel="noopener" aria-label="Shop on Blinkit">
+            <span>blinkit</span>
+          </a>
+        {% endif %}
+        {% if section.settings.show_amazon %}
+          <a href="{{ section.settings.amazon_url }}" class="marketplace-logo marketplace-logo-amazon" target="_blank" rel="noopener" aria-label="Shop on Amazon">
+            {% if section.settings.amazon_logo != blank %}
+              <img src="{{ section.settings.amazon_logo | image_url: width: 200 }}" alt="Amazon" width="100" height="30" style="width: auto; height: 30px;">
+            {% else %}
+              <span style="font-family: var(--font-accent); font-weight: 700; font-size: 18px; color: #232F3E;">amazon</span>
+            {% endif %}
+          </a>
+        {% endif %}
+        {% if section.settings.show_flipkart %}
+          <a href="{{ section.settings.flipkart_url }}" class="marketplace-logo marketplace-logo-flipkart" target="_blank" rel="noopener" aria-label="Shop on Flipkart">
+            {% if section.settings.flipkart_logo != blank %}
+              <img src="{{ section.settings.flipkart_logo | image_url: width: 200 }}" alt="Flipkart" width="90" height="28" style="width: auto; height: 28px;">
+            {% else %}
+              <span style="font-family: var(--font-accent); font-weight: 700; font-size: 16px; color: #FFFFFF;">Flipkart</span>
+            {% endif %}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="container" style="padding: 0;">
+    <!-- Trust Benefits Bar — Figma: #132820 bg, border-radius 16px -->
+    <div class="trust-badges-bar">
+      {% for block in section.blocks %}
+        {% if block.type == 'trust_badge' %}
+          <div class="trust-item" {{ block.shopify_attributes }}>
+            <div class="trust-icon-box">{{ block.settings.icon }}</div>
+            <div>
+              <div class="trust-title">{{ block.settings.title }}</div>
+              <div class="trust-desc">{{ block.settings.description }}</div>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="footer-main">
+      <!-- Divider -->
+      <div class="footer-divider" style="margin-bottom: 29px;"></div>
+
+      <!-- Main Content Grid — Figma: 5 columns -->
+      <div class="footer-grid">
+        <!-- Brand Column -->
+        <div class="footer-col">
+          <div class="footer-brand-logo">
+            {% if settings.logo != blank %}
+              <img src="{{ settings.logo | image_url: width: 178 }}" alt="{{ shop.name | escape }}" width="89" height="48" style="width: 89px; height: auto;" loading="lazy">
+            {% else %}
+              <span class="logo-title" style="color: #FFFFFF;">{{ shop.name | upcase }}</span>
+            {% endif %}
+          </div>
+          <p class="footer-brand-desc">{{ section.settings.brand_description | default: 'Science-backed wellness, rooted in nature. Thoughtfully formulated supplements designed for everyday health and long-term balance.' }}</p>
+          <p class="footer-fssai">{{ section.settings.fssai_text | default: 'FSSAI approved • Made in India' }}</p>
+        </div>
+
+        <!-- Shop Links -->
+        <div class="footer-col">
+          <h4 class="footer-col-title">{{ section.settings.col2_title | default: 'SHOP' }}</h4>
+          {% assign shop_menu = linklists[section.settings.shop_menu] %}
+          <div class="footer-links">
+            {% for link in shop_menu.links %}
+              <a href="{{ link.url }}">{{ link.title }}</a>
+            {% endfor %}
+            {% if shop_menu.links.size == 0 %}
+              <a href="/collections/all">All Products</a>
+              <a href="/collections/bestsellers">Bestsellers</a>
+              <a href="/collections">Wellness Goals</a>
+              <a href="/collections/combos">Combo Packs</a>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Help & Support -->
+        <div class="footer-col">
+          <h4 class="footer-col-title">{{ section.settings.col3_title | default: 'HELP & SUPPORT' }}</h4>
+          {% assign help_menu = linklists[section.settings.help_menu] %}
+          <div class="footer-links">
+            {% for link in help_menu.links %}
+              <a href="{{ link.url }}">{{ link.title }}</a>
+            {% endfor %}
+            {% if help_menu.links.size == 0 %}
+              <a href="/pages/faq">FAQs</a>
+              <a href="/pages/track-order">Track Your Order</a>
+              <a href="/pages/shipping">Shipping & Delivery</a>
+              <a href="/pages/returns">Returns & Refunds</a>
+              <a href="/pages/contact">Contact Us</a>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- About Ayova -->
+        <div class="footer-col">
+          <h4 class="footer-col-title">{{ section.settings.col4_title | default: 'ABOUT AYOVA' }}</h4>
+          {% assign about_menu = linklists[section.settings.about_menu] %}
+          <div class="footer-links">
+            {% for link in about_menu.links %}
+              <a href="{{ link.url }}">{{ link.title }}</a>
+            {% endfor %}
+            {% if about_menu.links.size == 0 %}
+              <a href="/pages/about">Our Story</a>
+              <a href="/pages/terms">Terms & Conditions</a>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Get in Touch -->
+        <div class="footer-col">
+          <h4 class="footer-col-title">{{ section.settings.col5_title | default: 'GET IN TOUCH' }}</h4>
+          {% if section.settings.phone != blank %}
+            <p class="footer-contact-label">Call us</p>
+            <a href="tel:{{ section.settings.phone | remove: ' ' }}" class="footer-contact-value">{{ section.settings.phone }}</a>
+          {% endif %}
+          {% if section.settings.email != blank %}
+            <p class="footer-contact-label">Email us</p>
+            <a href="mailto:{{ section.settings.email }}" class="footer-contact-value footer-contact-value-sm">{{ section.settings.email }}</a>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div class="footer-divider" style="margin-top: 29px;"></div>
+
+      <!-- Bottom Bar -->
+      <div class="footer-bottom">
+        <p class="footer-copyright">© {{ 'now' | date: '%Y' }} {{ shop.name }}. All Rights Reserved.</p>
+        <p class="footer-proudly">{{ section.settings.proudly_text | default: 'Proudly serving customers across India' }}</p>
+        <div class="footer-legal-links">
+          {% if section.settings.terms_url != blank %}
+            <a href="{{ section.settings.terms_url }}">Terms of Use</a>
+          {% endif %}
+          {% if section.settings.privacy_url != blank %}
+            <a href="{{ section.settings.privacy_url }}">Privacy Policy</a>
+          {% endif %}
+          {% if section.settings.refund_url != blank %}
+            <a href="{{ section.settings.refund_url }}">Refund Policy</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Marketplace Section"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_marketplace",
+      "label": "Show Marketplace Section",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "marketplace_heading",
+      "label": "Marketplace Heading",
+      "default": "SHOP AYOVA EVERYWHERE"
+    },
+    {
+      "type": "text",
+      "id": "marketplace_subheading",
+      "label": "Marketplace Subheading",
+      "default": "Your wellness essentials, wherever you shop."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_blinkit",
+      "label": "Show Blinkit",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "blinkit_url",
+      "label": "Blinkit URL"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_amazon",
+      "label": "Show Amazon",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "amazon_url",
+      "label": "Amazon URL"
+    },
+    {
+      "type": "image_picker",
+      "id": "amazon_logo",
+      "label": "Amazon Logo Image"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_flipkart",
+      "label": "Show Flipkart",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "flipkart_url",
+      "label": "Flipkart URL"
+    },
+    {
+      "type": "image_picker",
+      "id": "flipkart_logo",
+      "label": "Flipkart Logo Image"
+    },
+    {
+      "type": "header",
+      "content": "Brand Column"
+    },
+    {
+      "type": "textarea",
+      "id": "brand_description",
+      "label": "Brand Description",
+      "default": "Science-backed wellness, rooted in nature. Thoughtfully formulated supplements designed for everyday health and long-term balance."
+    },
+    {
+      "type": "text",
+      "id": "fssai_text",
+      "label": "Certification Text",
+      "default": "FSSAI approved • Made in India"
+    },
+    {
+      "type": "header",
+      "content": "Navigation Menus"
+    },
+    {
+      "type": "text",
+      "id": "col2_title",
+      "label": "Column 2 Title",
+      "default": "SHOP"
+    },
+    {
+      "type": "link_list",
+      "id": "shop_menu",
+      "label": "Shop Menu",
+      "default": "footer"
+    },
+    {
+      "type": "text",
+      "id": "col3_title",
+      "label": "Column 3 Title",
+      "default": "HELP & SUPPORT"
+    },
+    {
+      "type": "link_list",
+      "id": "help_menu",
+      "label": "Help & Support Menu"
+    },
+    {
+      "type": "text",
+      "id": "col4_title",
+      "label": "Column 4 Title",
+      "default": "ABOUT AYOVA"
+    },
+    {
+      "type": "link_list",
+      "id": "about_menu",
+      "label": "About Menu"
+    },
+    {
+      "type": "header",
+      "content": "Contact Info"
+    },
+    {
+      "type": "text",
+      "id": "col5_title",
+      "label": "Column 5 Title",
+      "default": "GET IN TOUCH"
+    },
+    {
+      "type": "text",
+      "id": "phone",
+      "label": "Phone Number",
+      "default": "+91 91114-53531"
+    },
+    {
+      "type": "text",
+      "id": "email",
+      "label": "Email Address",
+      "default": "info@ayovaorganics.com"
+    },
+    {
+      "type": "header",
+      "content": "Bottom Bar"
+    },
+    {
+      "type": "text",
+      "id": "proudly_text",
+      "label": "Proudly Text",
+      "default": "Proudly serving customers across India"
+    },
+    {
+      "type": "url",
+      "id": "terms_url",
+      "label": "Terms of Use URL"
+    },
+    {
+      "type": "url",
+      "id": "privacy_url",
+      "label": "Privacy Policy URL"
+    },
+    {
+      "type": "url",
+      "id": "refund_url",
+      "label": "Refund Policy URL"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "trust_badge",
+      "name": "Trust Badge",
+      "settings": [
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Icon (emoji or symbol)",
+          "default": "✓"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Secure checkout"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Description",
+          "default": "Protected online payments"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Footer",
+      "blocks": [
+        {
+          "type": "trust_badge",
+          "settings": { "icon": "✓", "title": "Secure checkout", "description": "Protected online payments" }
+        },
+        {
+          "type": "trust_badge",
+          "settings": { "icon": "₹", "title": "COD available", "description": "Prepaid and cash on delivery" }
+        },
+        {
+          "type": "trust_badge",
+          "settings": { "icon": "✦", "title": "Quality assured", "description": "FSSAI-approved formulations" }
+        },
+        {
+          "type": "trust_badge",
+          "settings": { "icon": "↗", "title": "Pan-India shipping", "description": "Delivery across India" }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

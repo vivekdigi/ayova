@@ -1,0 +1,199 @@
+{% comment %}
+  AYOVA CUSTOMER TESTIMONIALS CAROUSEL SECTION
+  Figma Spec: Centered title "Real stories. Real wellness journeys.", testimonial cards with stars, quote, author info
+{% endcomment %}
+
+{% assign header_alignment = section.settings.header_alignment | default: 'center' %}
+{% assign items_desktop = section.settings.items_per_view | default: 3 %}
+
+<section class="section-padding testimonials-section" id="testimonials">
+  <div class="container">
+    {% if header_alignment == 'center' %}
+      <div class="wellness-header-centered">
+        {% if section.settings.badge_text != blank %}
+          <span class="badge badge-category">{{ section.settings.badge_text }}</span>
+        {% endif %}
+        <h2 class="section-title">{{ section.settings.title | default: "Real stories. Real wellness journeys." }}</h2>
+        <p class="section-subtitle">{{ section.settings.subtitle | default: "Thousands of verified buyers trust Ayova for their daily health transformation" }}</p>
+      </div>
+    {% else %}
+      <div class="wellness-header-row">
+        <div>
+          {% if section.settings.badge_text != blank %}
+            <span class="badge badge-category">{{ section.settings.badge_text }}</span>
+          {% endif %}
+          <h2 class="section-title">{{ section.settings.title | default: "Real stories. Real wellness journeys." }}</h2>
+          <p class="section-subtitle">{{ section.settings.subtitle | default: "Thousands of verified buyers trust Ayova for their daily health transformation" }}</p>
+        </div>
+
+        <div class="ayova-carousel-nav">
+          <button type="button" class="ayova-carousel-btn" data-carousel-prev aria-label="Previous">←</button>
+          <button type="button" class="ayova-carousel-btn" data-carousel-next aria-label="Next">→</button>
+        </div>
+      </div>
+    {% endif %}
+
+    <div class="ayova-carousel-wrapper" data-ayova-carousel data-items-per-view="{{ items_desktop }}" data-gap="24">
+      <div class="ayova-carousel-track">
+
+        {% if section.blocks.size > 0 %}
+          {% for block in section.blocks %}
+            <div class="ayova-carousel-slide" {{ block.shopify_attributes }}>
+              <div class="testimonial-card">
+                <div class="testimonial-header">
+                  <div class="testimonial-rating">★★★★★</div>
+                  <span class="verified-badge">✓ Verified Buyer</span>
+                </div>
+                <p class="testimonial-quote">"{{ block.settings.quote | default: "After using Ayova Milk Thistle for 4 weeks, my digestion feels so much lighter and liver enzymes normalized." }}"</p>
+                <div class="testimonial-author">
+                  <div class="author-avatar">{{ block.settings.name | slice: 0 | default: "P" }}</div>
+                  <div class="author-info">
+                    <h4 class="author-name">{{ block.settings.name | default: "Priya Sharma" }}</h4>
+                    <span class="author-product">{{ block.settings.product | default: "Purchased: Milk Thistle 800mg" }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+
+        {% else %}
+          <!-- Default Fallback Testimonials -->
+          <div class="ayova-carousel-slide">
+            <div class="testimonial-card">
+              <div class="testimonial-header">
+                <div class="testimonial-rating">★★★★★</div>
+                <span class="verified-badge">✓ Verified Buyer</span>
+              </div>
+              <p class="testimonial-quote">"After using Ayova Milk Thistle for 4 weeks, my digestion feels so much lighter and liver enzymes normalized. High quality natural product!"</p>
+              <div class="testimonial-author">
+                <div class="author-avatar">P</div>
+                <div class="author-info">
+                  <h4 class="author-name">Shalini Malhotra</h4>
+                  <span class="author-product">Verified Buyer, New Delhi</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ayova-carousel-slide">
+            <div class="testimonial-card">
+              <div class="testimonial-header">
+                <div class="testimonial-rating">★★★★★</div>
+                <span class="verified-badge">✓ Verified Buyer</span>
+              </div>
+              <p class="testimonial-quote">"The PCOS Care Syrup helped regulate my cycle naturally within 2 months. No side effects like chemical medicines!"</p>
+              <div class="testimonial-author">
+                <div class="author-avatar">A</div>
+                <div class="author-info">
+                  <h4 class="author-name">Ananya Verma</h4>
+                  <span class="author-product">Verified Buyer, Bengaluru</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ayova-carousel-slide">
+            <div class="testimonial-card">
+              <div class="testimonial-header">
+                <div class="testimonial-rating">★★★★★</div>
+                <span class="verified-badge">✓ Verified Buyer</span>
+              </div>
+              <p class="testimonial-quote">"Berberine 500mg helped control my sugar spikes after meals noticeably. Really genuine doctor-backed Ayurvedic formulation."</p>
+              <div class="testimonial-author">
+                <div class="author-avatar">R</div>
+                <div class="author-info">
+                  <h4 class="author-name">Rajesh Mehta</h4>
+                  <span class="author-product">Verified Buyer, Mumbai</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+
+      </div>
+
+      <div class="ayova-carousel-dots" data-carousel-dots></div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Testimonials Carousel",
+  "settings": [
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge Text",
+      "default": "VERIFIED REVIEWS"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Heading",
+      "default": "Real stories. Real wellness journeys."
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Section Subtitle",
+      "default": "Thousands of verified buyers trust Ayova for their daily health transformation"
+    },
+    {
+      "type": "select",
+      "id": "header_alignment",
+      "label": "Header Alignment",
+      "options": [
+        {
+          "value": "center",
+          "label": "Centered"
+        },
+        {
+          "value": "row",
+          "label": "Row with Controls"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "items_per_view",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "label": "Cards Visible on Desktop",
+      "default": 3
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Review Quote"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Customer Name",
+          "default": "Customer Name"
+        },
+        {
+          "type": "text",
+          "id": "product",
+          "label": "Product Purchased",
+          "default": "Verified Buyer"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials Carousel"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,121 @@
+{% comment %}
+  PRODUCT CARD SNIPPET — Figma: 310x690px card
+  Accepts either a Shopify product object OR manual parameters for fallback
+  
+  Usage:
+    {% render 'product-card', product: product_object %}
+    {% render 'product-card', title: 'Name', price: '389.00', image_url: '...' %}
+{% endcomment %}
+
+{% if product != blank and product != empty %}
+  {%- assign card_title = product.title -%}
+  {%- assign card_url = product.url -%}
+  {%- assign card_price = product.price | money -%}
+  {%- assign card_compare = product.compare_at_price | money -%}
+  {%- assign card_has_compare = false -%}
+  {%- if product.compare_at_price > product.price -%}
+    {%- assign card_has_compare = true -%}
+  {%- endif -%}
+  {%- assign card_available = product.available -%}
+  {%- assign card_image = product.featured_image -%}
+  {%- assign card_type = product.type -%}
+  {%- assign card_vendor = product.vendor -%}
+  {%- assign card_first_variant = product.first_available_variant | default: product.selected_or_first_available_variant -%}
+{% else %}
+  {%- assign card_title = title | default: 'Product Name' -%}
+  {%- assign card_url = url | default: '#' -%}
+  {%- assign card_price = price | default: 'Rs. 389.00' -%}
+  {%- assign card_compare = compare_price -%}
+  {%- assign card_has_compare = false -%}
+  {%- if compare_price != blank -%}
+    {%- assign card_has_compare = true -%}
+  {%- endif -%}
+  {%- assign card_available = true -%}
+  {%- assign card_image = nil -%}
+  {%- assign card_type = subtitle | default: category -%}
+  {%- assign card_vendor = '' -%}
+{% endif %}
+
+<div class="ayova-product-card">
+  <!-- Image Area — Figma: 278x360px, bg #EEF3EF, border-radius 22px -->
+  <div class="card-image-wrapper">
+    {% if badge != blank %}
+      <span class="card-badge">{{ badge }}</span>
+    {% elsif product != blank and product.compare_at_price > product.price %}
+      {%- assign save_pct = product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price | round -%}
+      <span class="card-badge">SAVE {{ save_pct }}%</span>
+    {% endif %}
+
+    <a href="{{ card_url }}" aria-label="View {{ card_title | escape }}">
+      {% if card_image != blank %}
+        <img
+          src="{{ card_image | image_url: width: 560 }}"
+          srcset="{{ card_image | image_url: width: 280 }} 1x, {{ card_image | image_url: width: 560 }} 2x"
+          alt="{{ card_image.alt | default: card_title | escape }}"
+          class="card-img"
+          loading="lazy"
+          width="278"
+          height="360"
+        >
+      {% elsif image_url != blank %}
+        <img src="{{ image_url }}" alt="{{ card_title | escape }}" class="card-img" loading="lazy" width="278" height="360">
+      {% else %}
+        {{ 'product-1' | placeholder_svg_tag: 'card-img' }}
+      {% endif %}
+    </a>
+
+    <span class="card-quick-view">Quick View</span>
+  </div>
+
+  <!-- Info Section — Figma: padding 14px 18px -->
+  <div class="card-info">
+    {% if card_type != blank %}
+      <span class="card-category-tag">{{ card_type }}</span>
+    {% endif %}
+
+    <h3 class="card-title">
+      <a href="{{ card_url }}">{{ card_title }}</a>
+    </h3>
+
+    {% if category != blank %}
+      <span class="card-meta">{{ category }}</span>
+    {% elsif product != blank and product.metafields.custom.pack_size != blank %}
+      <span class="card-meta">{{ product.metafields.custom.pack_size }}</span>
+    {% endif %}
+
+    <!-- Rating -->
+    <div class="card-rating">
+      <span class="rating-stars">★★★★★</span>
+      {% if reviews != blank %}
+        <span class="rating-count">({{ reviews }})</span>
+      {% elsif product != blank and product.metafields.reviews.rating_count != blank %}
+        <span class="rating-count">({{ product.metafields.reviews.rating_count }})</span>
+      {% endif %}
+    </div>
+
+    <!-- Price Row -->
+    <div class="card-price-row">
+      <span class="price-amount">{{ card_price }}</span>
+      {% if card_has_compare %}
+        <span class="price-compare">{{ card_compare }}</span>
+      {% endif %}
+    </div>
+
+    <!-- Add to Cart Button — Figma: #285044, border-radius 11px -->
+    {% if product != blank %}
+      <form method="post" action="/cart/add">
+        <input type="hidden" name="id" value="{{ card_first_variant.id }}">
+        <input type="hidden" name="quantity" value="1">
+        <button type="submit" class="btn-add-cart" {% unless card_available %}disabled{% endunless %}>
+          {% if card_available %}
+            Add to Cart
+          {% else %}
+            Sold Out
+          {% endif %}
+        </button>
+      </form>
+    {% else %}
+      <button type="button" class="btn-add-cart">Add to Cart</button>
+    {% endif %}
+  </div>
+</div>

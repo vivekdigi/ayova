@@ -3,14 +3,9 @@
     "main_about": {
       "type": "main-about",
       "settings": {}
-    },
-    "trust_badges": {
-      "type": "trust-badges",
-      "settings": {}
     }
   },
   "order": [
-    "main_about",
-    "trust_badges"
+    "main_about"
   ]
 }

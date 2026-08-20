@@ -1,0 +1,16 @@
+{
+  "sections": {
+    "main_product": {
+      "type": "main-product",
+      "settings": {}
+    },
+    "bestsellers_carousel": {
+      "type": "bestsellers-carousel",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main_product",
+    "bestsellers_carousel"
+  ]
+}

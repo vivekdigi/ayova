@@ -1,72 +1,112 @@
 {% comment %}
-  AYOVA HEADER & ANNOUNCEMENT BAR SECTION
+  AYOVA HEADER — Figma Pixel-Perfect
+  Dynamic: Logo, Navigation (Shopify menus), Utilities, Mobile Drawer
+  Announcement bar with dynamic blocks
 {% endcomment %}
 
-<header class="ayova-header-wrapper">
-  <!-- Top Announcement Bar -->
-  <div class="announcement-bar">
-    <div class="container announcement-content">
-      <span>🌿 Free Shipping on orders above Rs. 499</span>
-      <span class="announcement-divider">•</span>
-      <span>100% Ayurvedic &amp; Lab Tested</span>
-      <span class="announcement-divider">•</span>
-      <span>AYUSH &amp; ISO Certified Quality</span>
-      <span class="announcement-divider">•</span>
-      <span>⭐ 10,000+ Happy Customers</span>
+<header class="ayova-header-wrapper" data-header>
+  <!-- Announcement Bar — Figma: 34px, #285044 -->
+  {% if section.settings.show_announcement %}
+    <div class="announcement-bar" style="background-color: {{ section.settings.announcement_bg | default: '#285044' }}; color: {{ section.settings.announcement_text_color | default: '#FFFFFF' }};">
+      <div class="container announcement-content">
+        {% for block in section.blocks %}
+          {% if block.type == 'announcement' %}
+            {% unless forloop.first %}
+              <span class="announcement-divider">•</span>
+            {% endunless %}
+            <span {{ block.shopify_attributes }}>{{ block.settings.text }}</span>
+          {% endif %}
+        {% endfor %}
+      </div>
     </div>
-  </div>
+  {% endif %}
 
-  <!-- Main Navigation Header -->
+  <!-- Main Header — Figma: 80px height -->
   <div class="main-header">
-    <div class="container header-container">
-      <!-- Logo -->
-      <a href="/" class="header-logo">
-        <span class="logo-title">AYOVA</span>
-        <span class="logo-sub">AYURVEDA & WELLNESS</span>
+    <div class="header-inner">
+      <!-- Logo — Figma: 97x48px -->
+      <a href="/" class="header-logo" aria-label="{{ shop.name }}">
+        {% assign custom_logo = section.settings.logo | default: settings.logo %}
+        {% assign custom_logo_width = section.settings.logo_width | default: 97 %}
+        {% if custom_logo != blank %}
+          {% assign custom_logo_width_2x = custom_logo_width | times: 2 %}
+          <img
+            src="{{ custom_logo | image_url: width: custom_logo_width }}"
+            srcset="{{ custom_logo | image_url: width: custom_logo_width }} 1x, {{ custom_logo | image_url: width: custom_logo_width_2x }} 2x"
+            alt="{{ custom_logo.alt | default: shop.name | escape }}"
+            width="{{ custom_logo_width }}"
+            height="{{ custom_logo_width | divided_by: 2 }}"
+            loading="eager"
+            style="width: {{ custom_logo_width }}px; height: auto;"
+          >
+        {% else %}
+          <span class="logo-text">
+            <span class="logo-title">{{ shop.name | upcase }}</span>
+          </span>
+        {% endif %}
       </a>
 
-      <!-- Desktop Navigation Links -->
-      <nav class="header-nav">
-        <a href="/" class="nav-link active">Home</a>
-        <a href="/collections/all" class="nav-link">Shop</a>
-        <a href="/collections" class="nav-link">Wellness Goals</a>
-        <a href="/pages/about" class="nav-link">About</a>
-        <a href="/pages/contact" class="nav-link">Contact us</a>
+      <!-- Desktop Navigation — Figma: Montserrat Medium/SemiBold 16px, gap 26px -->
+      {% assign main_menu = linklists[section.settings.menu] %}
+      <nav class="header-nav" role="navigation" aria-label="Main navigation">
+        {% for link in main_menu.links %}
+          <div class="nav-item {% if link.active %}active{% endif %}">
+            <a href="{{ link.url }}" class="nav-link" {% if link.current %}aria-current="page"{% endif %}>
+              {{ link.title }}
+            </a>
+            {% if link.links.size > 0 %}
+              <div class="nav-dropdown">
+                {% for child_link in link.links %}
+                  <a href="{{ child_link.url }}" class="nav-dropdown-link">{{ child_link.title }}</a>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
       </nav>
 
-      <!-- Right Header Utilities -->
+      <!-- Header Utilities — Figma: Search, Account, Wishlist icons + Cart pill -->
       <div class="header-utilities">
-        <!-- Search Button -->
-        <button type="button" class="utility-icon-btn" aria-label="Search">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <!-- Search -->
+        <button type="button" class="utility-icon-btn" aria-label="Search" data-search-toggle>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
         </button>
 
         <!-- Account -->
-        <a href="/account" class="utility-icon-btn" aria-label="Account">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <a href="{{ routes.account_url }}" class="utility-icon-btn" aria-label="Account">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
             <circle cx="12" cy="7" r="4"></circle>
           </svg>
         </a>
 
-        <!-- Cart Bag Button with Counter -->
-        <a href="/cart" class="cart-btn" aria-label="Cart">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        {% if section.settings.show_wishlist %}
+          <!-- Wishlist -->
+          <button type="button" class="utility-icon-btn" aria-label="Wishlist">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+          </button>
+        {% endif %}
+
+        <!-- Cart Bag — Figma: #285044, border-radius 20px, 46px wide -->
+        <a href="{{ routes.cart_url }}" class="cart-btn" aria-label="Cart ({{ cart.item_count }} items)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
             <line x1="3" y1="6" x2="21" y2="6"></line>
             <path d="M16 10a4 4 0 0 1-8 0"></path>
           </svg>
-          <span class="cart-count-badge" data-cart-count>2</span>
+          <span class="cart-count-badge" data-cart-count>{{ cart.item_count }}</span>
         </a>
 
-        <!-- Mobile Toggle -->
-        <button type="button" class="mobile-toggle-btn" data-mobile-menu-toggle aria-label="Toggle menu">
+        <!-- Mobile Menu Toggle -->
+        <button type="button" class="mobile-toggle-btn" data-mobile-menu-toggle aria-label="Open menu" aria-expanded="false">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="3" y1="12" x2="21" y2="12"></line>
             <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
             <line x1="3" y1="18" x2="21" y2="18"></line>
           </svg>
         </button>
@@ -74,209 +114,210 @@
     </div>
   </div>
 
-  <!-- Mobile Drawer Menu -->
-  <div class="mobile-menu-drawer" data-mobile-menu>
-    <nav class="mobile-nav">
-      <a href="/" class="mobile-nav-link">Home</a>
-      <a href="/collections/all" class="mobile-nav-link">Shop</a>
-      <a href="/pages/about" class="mobile-nav-link">About Us</a>
-      <a href="/pages/contact" class="mobile-nav-link">Contact Us</a>
+  <!-- Mobile Menu Drawer -->
+  <div class="mobile-menu-overlay" data-mobile-overlay></div>
+  <div class="mobile-menu-drawer" data-mobile-menu role="dialog" aria-label="Mobile menu">
+    <div class="mobile-menu-header">
+      <a href="/" class="header-logo" aria-label="{{ shop.name }}">
+        {% assign custom_logo = section.settings.logo | default: settings.logo %}
+        {% assign custom_logo_width = section.settings.logo_width | default: 97 %}
+        {% if custom_logo != blank %}
+          <img src="{{ custom_logo | image_url: width: custom_logo_width }}" alt="{{ shop.name | escape }}" width="{{ custom_logo_width }}" height="{{ custom_logo_width | divided_by: 2 }}" style="width: {{ custom_logo_width }}px; height: auto;">
+        {% else %}
+          <span class="logo-text"><span class="logo-title">{{ shop.name | upcase }}</span></span>
+        {% endif %}
+      </a>
+      <button type="button" class="mobile-menu-close" data-mobile-menu-close aria-label="Close menu">✕</button>
+    </div>
+    <nav class="mobile-nav" aria-label="Mobile navigation">
+      {% for link in main_menu.links %}
+        <a href="{{ link.url }}" class="mobile-nav-link">{{ link.title }}</a>
+        {% if link.links.size > 0 %}
+          <div class="mobile-nav-child">
+            {% for child_link in link.links %}
+              <a href="{{ child_link.url }}" class="mobile-nav-link">{{ child_link.title }}</a>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endfor %}
     </nav>
+  </div>
+
+  <!-- Search Overlay (Rich Design) -->
+  <div class="search-overlay-bg" data-search-overlay-bg></div>
+  <div class="search-overlay-panel" data-search-overlay role="dialog" aria-label="Search" aria-modal="true">
+    <div class="search-panel-inner">
+
+      <div class="search-panel-header">
+        <span class="search-eyebrow">SEARCH AYOVA</span>
+        <h2 class="search-panel-title">What are you looking for?</h2>
+        <p class="search-panel-sub">Search products, ingredients or wellness goals.</p>
+        <button type="button" class="search-close-btn" data-search-close aria-label="Close search">✕</button>
+      </div>
+
+      <form action="{{ routes.search_url }}" method="get" role="search" class="search-panel-form">
+        <div class="search-panel-input-wrap">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7A857F" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="search" name="q" id="searchPanelInput" class="search-panel-input" placeholder="Search Milk Thistle, Curcumin, Liver Care..." autocomplete="off" aria-label="Search" spellcheck="false">
+          <button type="button" class="search-clear-btn" id="searchClearBtn" aria-label="Clear">✕</button>
+        </div>
+        <input type="hidden" name="type" value="product">
+      </form>
+
+      <!-- Live Results (shown while typing) -->
+      <div class="search-live-results" id="searchLiveResults" style="display:none;">
+        <div class="search-results-grid" id="searchResultsGrid"></div>
+        <p class="search-results-footer">Start typing to see matching products instantly.</p>
+      </div>
+
+      <!-- Popular Products (shown by default) -->
+      <div class="search-popular" id="searchPopular">
+        <div class="search-popular-header">
+          <div>
+            <h4 class="search-popular-title">Popular products</h4>
+            <p class="search-popular-sub">Frequently explored by Ayova customers</p>
+          </div>
+          <a href="/collections/all" class="search-view-all">VIEW ALL PRODUCTS →</a>
+        </div>
+        <div class="search-popular-grid">
+          {% assign popular_collection = collections['all'] %}
+          {% for product in popular_collection.products limit: 4 %}
+            <a href="{{ product.url }}" class="search-pop-card">
+              <div class="search-pop-img">
+                {% if product.featured_image %}
+                  <img src="{{ product.featured_image | image_url: width: 200 }}" alt="{{ product.title | escape }}" loading="lazy">
+                {% endif %}
+              </div>
+              <div class="search-pop-info">
+                {% if product.type != blank %}
+                  <span class="search-pop-cat">{{ product.type | upcase }}</span>
+                {% endif %}
+                <span class="search-pop-name">{{ product.title }}</span>
+                <span class="search-pop-price">{{ product.price | money }}</span>
+                <div class="search-pop-stars">★★★★★</div>
+              </div>
+              <span class="search-pop-btn">VIEW PRODUCT →</span>
+            </a>
+          {% endfor %}
+        </div>
+        <p class="search-panel-hint">Start typing to see matching products instantly.</p>
+      </div>
+
+    </div>
   </div>
 </header>
 
-<style>
-.ayova-header-wrapper {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: var(--color-white);
-  box-shadow: var(--shadow-sm);
-}
-
-.announcement-bar {
-  background-color: #285044;
-  color: var(--color-white);
-  font-family: 'Montserrat', var(--font-heading), sans-serif;
-  font-size: 0.78rem;
-  padding: 9px 0;
-  text-align: center;
-  font-weight: 500;
-  letter-spacing: 0.03em;
-}
-
-.announcement-content {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.announcement-divider {
-  opacity: 0.5;
-}
-
-.main-header {
-  border-bottom: 1px solid var(--color-sage-border);
-  padding: 16px 0;
-}
-
-.header-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.header-logo {
-  display: flex;
-  flex-direction: column;
-}
-
-.logo-title {
-  font-family: var(--font-heading);
-  font-weight: 700;
-  font-size: 1.8rem;
-  letter-spacing: 0.1em;
-  color: var(--color-forest-primary);
-  line-height: 1;
-}
-
-.logo-sub {
-  font-size: 0.55rem;
-  letter-spacing: 0.25em;
-  color: var(--color-terracotta);
-  font-weight: 600;
-}
-
-.header-nav {
-  display: flex;
-  align-items: center;
-  gap: 32px;
-}
-
-.nav-link {
-  font-family: var(--font-heading);
-  font-weight: 500;
-  font-size: 0.95rem;
-  color: var(--color-text-dark);
-  transition: color var(--transition-fast);
-  position: relative;
-  padding: 4px 0;
-}
-
-.nav-link:hover, .nav-link.active {
-  color: var(--color-forest-mid);
-}
-
-.nav-link.active::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background-color: var(--color-forest-mid);
-}
-
-.header-utilities {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.utility-icon-btn {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 1px solid var(--color-sage-border);
-  background: var(--color-white);
-  color: var(--color-forest-primary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.utility-icon-btn:hover {
-  background: var(--color-sage-light);
-  border-color: var(--color-forest-primary);
-}
-
-.cart-btn {
-  position: relative;
-  background-color: var(--color-forest-mid);
-  color: var(--color-white);
-  padding: 10px 18px;
-  border-radius: var(--radius-full);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: background var(--transition-fast);
-}
-
-.cart-btn:hover {
-  background-color: var(--color-forest-dark);
-}
-
-.cart-count-badge {
-  position: absolute;
-  top: -4px;
-  right: -4px;
-  background: var(--color-terracotta);
-  color: var(--color-white);
-  font-size: 0.7rem;
-  font-weight: 700;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px solid var(--color-white);
-}
-
-.mobile-toggle-btn {
-  display: none;
-  background: none;
-  border: none;
-  color: var(--color-forest-primary);
-  cursor: pointer;
-}
-
-.mobile-menu-drawer {
-  display: none;
-  background: var(--color-white);
-  border-bottom: 1px solid var(--color-sage-border);
-  padding: 16px 24px;
-}
-
-.mobile-menu-drawer.active {
-  display: block;
-}
-
-.mobile-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.mobile-nav-link {
-  font-weight: 600;
-  color: var(--color-forest-primary);
-}
-
-@media (max-width: 900px) {
-  .header-nav { display: none; }
-  .mobile-toggle-btn { display: block; }
-  .announcement-divider { display: none; }
-}
-</style>
-
 {% schema %}
 {
-  "name": "Header and Announcement",
-  "settings": []
+  "name": "Header",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo Image"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "min": 50,
+      "max": 250,
+      "step": 5,
+      "default": 95,
+      "unit": "px",
+      "label": "Custom logo width"
+    },
+    {
+      "type": "header",
+      "content": "Announcement Bar"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_announcement",
+      "label": "Show Announcement Bar",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "announcement_bg",
+      "label": "Announcement Background",
+      "default": "#285044"
+    },
+    {
+      "type": "color",
+      "id": "announcement_text_color",
+      "label": "Announcement Text Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Main Navigation Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "header",
+      "content": "Utilities"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_wishlist",
+      "label": "Show Wishlist Icon",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sticky",
+      "label": "Sticky Header",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "announcement",
+      "name": "Announcement Message",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Message Text",
+          "default": "🌿 Free Shipping on orders above Rs. 499"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Header",
+      "blocks": [
+        {
+          "type": "announcement",
+          "settings": { "text": "🌿 Free Shipping on orders above Rs. 499" }
+        },
+        {
+          "type": "announcement",
+          "settings": { "text": "100% Ayurvedic & Lab Tested" }
+        },
+        {
+          "type": "announcement",
+          "settings": { "text": "AYUSH & ISO Certified Quality" }
+        },
+        {
+          "type": "announcement",
+          "settings": { "text": "⭐ 10,000+ Happy Customers" }
+        }
+      ]
+    }
+  ]
 }
 {% endschema %}

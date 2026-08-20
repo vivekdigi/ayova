@@ -1,0 +1,321 @@
+{% comment %}
+  AYOVA FAQ SECTION — Accordion two-column layout
+{% endcomment %}
+
+<!-- FAQ Hero -->
+<div class="faq-hero">
+  <div class="container">
+    <span class="faq-eyebrow">FREQUENTLY ASKED QUESTIONS</span>
+    <h1 class="faq-hero-title">Everything you may want to know<br>before you order.</h1>
+    <p class="faq-hero-sub">We've answered the most common questions about our products, ingredients, and delivery.</p>
+  </div>
+</div>
+
+<!-- FAQ Accordion Section -->
+<div class="section-padding faq-section">
+  <div class="container">
+    <div class="faq-columns">
+
+      <!-- Left Column -->
+      <div class="faq-col">
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            What ingredients does Ayova use?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Ayova uses 100% plant-based, standardized botanical extracts. Every ingredient is lab-tested for potency, purity, and safety. We never use synthetic fillers, artificial colors, or proprietary blends.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            Are Ayova products FSSAI approved?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Yes. All Ayova formulations are manufactured in FSSAI-licensed, GMP-certified facilities under AYUSH guidelines. You can verify our license numbers on the product packaging.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            How long does delivery take?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Standard delivery takes 3–5 business days across India. Metro cities typically receive orders in 2–3 days. You'll receive a tracking link via SMS and email after dispatch.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            Do you offer Cash on Delivery (COD)?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Yes, COD is available across most serviceable pin codes in India. COD orders may take 1–2 extra days for verification.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            Can I take Ayova supplements with existing medication?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>We recommend consulting a healthcare professional before combining any supplements with prescription medication. Our support team is also available to guide you.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column -->
+      <div class="faq-col">
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            What is your return policy?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>We offer a 30-day satisfaction guarantee. If you are not happy with your purchase for any reason, contact us and we'll arrange a full refund or exchange — no questions asked.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            Are Ayova products suitable for vegetarians?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Yes! All our capsules use plant-based HPMC shells (not gelatin). Every product in our range is 100% vegetarian-friendly.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            How do combo packs work?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Combo packs are curated bundles of complementary supplements that work better together. They are priced at a discount compared to buying individual products and ship together in one box.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            Is there a subscription option?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>We are working on a subscription program. Subscribe to our newsletter to get early access and an exclusive first-subscriber discount when it launches.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            How can I contact Ayova support?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>You can reach us at <a href="mailto:info@ayovaorganics.com">info@ayovaorganics.com</a> or call us at +91 91114-53531. We're available Monday–Saturday, 9 AM–6 PM IST.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Still Have Questions CTA -->
+    <div class="faq-cta">
+      <div class="faq-cta-inner">
+        <h3>Still have a question?</h3>
+        <p>Our wellness experts are happy to help you find the right product for your needs.</p>
+        <a href="/pages/contact" class="btn btn-primary">Contact Us →</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Marketplace Strip -->
+<div class="faq-marketplace">
+  <div class="container">
+    <h3 class="marketplace-title-faq">SHOP AYOVA EVERYWHERE</h3>
+    <p class="marketplace-sub-faq">Your wellness essentials, wherever you shop.</p>
+    <div class="marketplace-logos-faq">
+      <a href="#" class="mkt-logo mkt-blinkit" target="_blank" rel="noopener"><span>blinkit</span></a>
+      <a href="#" class="mkt-logo mkt-amazon" target="_blank" rel="noopener"><span>amazon</span></a>
+      <a href="#" class="mkt-logo mkt-flipkart" target="_blank" rel="noopener"><span>Flipkart</span></a>
+    </div>
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('.faq-question').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var item = this.closest('.faq-item');
+    var isOpen = item.classList.contains('open');
+    // Close all
+    document.querySelectorAll('.faq-item').forEach(function(i) {
+      i.classList.remove('open');
+      i.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+      i.querySelector('.faq-icon').textContent = '+';
+    });
+    // Toggle clicked
+    if (!isOpen) {
+      item.classList.add('open');
+      this.setAttribute('aria-expanded', 'true');
+      this.querySelector('.faq-icon').textContent = '×';
+    }
+  });
+});
+</script>
+
+<style>
+.faq-hero {
+  background: var(--color-sage-light, #EEF2EF);
+  padding: 72px 0 56px;
+  border-bottom: 1px solid var(--color-sage-border);
+}
+.faq-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--color-terracotta);
+  display: block;
+  margin-bottom: 14px;
+  text-transform: uppercase;
+}
+.faq-hero-title {
+  font-family: var(--font-heading);
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: var(--color-forest-dark);
+  line-height: 1.2;
+  margin-bottom: 16px;
+}
+.faq-hero-sub {
+  font-size: 1.05rem;
+  color: var(--color-text-muted);
+  max-width: 620px;
+}
+.faq-section { background: #fff; }
+.faq-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+.faq-col { display: flex; flex-direction: column; gap: 0; }
+.faq-item {
+  border-bottom: 1px solid var(--color-sage-border);
+}
+.faq-question {
+  width: 100%;
+  background: none;
+  border: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-forest-dark);
+  cursor: pointer;
+  text-align: left;
+  transition: color 0.2s;
+}
+.faq-question:hover { color: var(--color-forest-primary); }
+.faq-item.open .faq-question { color: var(--color-terracotta); }
+.faq-icon {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1.5px solid var(--color-sage-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  color: var(--color-forest-primary);
+  transition: all 0.2s;
+}
+.faq-item.open .faq-icon {
+  background: var(--color-terracotta);
+  border-color: var(--color-terracotta);
+  color: #fff;
+}
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease, padding 0.2s;
+}
+.faq-item.open .faq-answer {
+  max-height: 300px;
+  padding-bottom: 20px;
+}
+.faq-answer p {
+  font-size: 0.92rem;
+  color: var(--color-text-muted);
+  line-height: 1.65;
+}
+.faq-answer a { color: var(--color-terracotta); }
+.faq-cta {
+  margin-top: 60px;
+  text-align: center;
+  background: var(--color-sage-light);
+  border: 1px solid var(--color-sage-border);
+  border-radius: 16px;
+  padding: 48px;
+}
+.faq-cta h3 {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  color: var(--color-forest-dark);
+  margin-bottom: 10px;
+}
+.faq-cta p { color: var(--color-text-muted); margin-bottom: 24px; font-size: 1rem; }
+/* Marketplace */
+.faq-marketplace {
+  background: var(--color-forest-dark);
+  padding: 60px 0;
+  text-align: center;
+}
+.marketplace-title-faq {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+.marketplace-sub-faq { color: #a8c4b8; font-size: 1rem; margin-bottom: 32px; }
+.marketplace-logos-faq { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+.mkt-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 28px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 1rem;
+  text-decoration: none;
+  min-width: 130px;
+  transition: opacity 0.2s;
+}
+.mkt-logo:hover { opacity: 0.85; }
+.mkt-blinkit { background: #F8D000; color: #1A1A1A; }
+.mkt-amazon { background: #fff; color: #232F3E; font-family: var(--font-accent); }
+.mkt-flipkart { background: #2874F0; color: #fff; }
+@media (max-width: 900px) {
+  .faq-hero-title { font-size: 1.9rem; }
+  .faq-columns { grid-template-columns: 1fr; gap: 0; }
+  .faq-hero { padding: 48px 0 36px; }
+}
+@media (max-width: 600px) {
+  .faq-cta { padding: 32px 20px; }
+}
+</style>
+
+{% schema %}
+{
+  "name": "FAQ Page",
+  "settings": [],
+  "presets": [
+    {
+      "name": "FAQ Page"
+    }
+  ]
+}
+{% endschema %}

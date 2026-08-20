@@ -39,109 +39,64 @@
         {% if section.blocks.size > 0 %}
           {% for block in section.blocks %}
             <div class="ayova-carousel-slide" {{ block.shopify_attributes }}>
-              <div class="ayova-product-card">
-                <div class="card-image-wrapper">
-                  {% if block.settings.badge != blank %}
-                    <span class="card-badge">{{ block.settings.badge }}</span>
-                  {% endif %}
-                  <img src="{{ block.settings.image | default: 'https://images.unsplash.com/photo-1617897903246-719242758050?w=600&auto=format&fit=crop&q=80' }}" alt="{{ block.settings.title | escape }}" class="card-img">
-                </div>
-                <div class="card-info">
-                  <span class="card-category-tag">{{ block.settings.tag | default: "COMPLETE CARE KIT" }}</span>
-                  <h3 class="card-title"><a href="#">{{ block.settings.title }}</a></h3>
-                  <p class="card-meta">{{ block.settings.pack_size | default: "2 Products Kit" }}</p>
-                  <div class="card-rating">
-                    <span class="rating-stars">★★★★★</span>
-                    <span class="rating-count">({{ block.settings.reviews | default: "180" }})</span>
-                  </div>
-                  <div class="card-price-row">
-                    <div class="card-price">
-                      <span class="price-from">From</span>
-                      <span class="price-amount">Rs. {{ block.settings.price | default: "749.00" }}</span>
-                      {% if block.settings.compare_price != blank %}
-                        <span class="price-compare">Rs. {{ block.settings.compare_price }}</span>
-                      {% endif %}
-                    </div>
-                    <span class="price-gst">inc. of GST</span>
-                  </div>
-                  <button type="button" class="btn btn-primary card-add-btn" data-add-to-cart>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
-                    Add Kit to Cart
-                  </button>
-                </div>
-              </div>
+              {% render 'product-card',
+                title: block.settings.title,
+                short_description: block.settings.short_description,
+                category: block.settings.tag,
+                pack: block.settings.pack_size,
+                price: block.settings.price,
+                compare_price: block.settings.compare_price,
+                badge: block.settings.badge,
+                reviews: block.settings.reviews,
+                image_url: block.settings.image,
+                show_per_count: section.settings.show_per_count,
+                per_count_text: block.settings.per_count_text
+              %}
             </div>
           {% endfor %}
 
         {% else %}
           <!-- Default Fallback Combo Cards -->
           <div class="ayova-carousel-slide">
-            <div class="ayova-product-card">
-              <div class="card-image-wrapper">
-                <span class="card-badge">SAVE 25%</span>
-                <img src="https://images.unsplash.com/photo-1617897903246-719242758050?w=600&auto=format&fit=crop&q=80" alt="Milk Thistle & Liver Care Combo" class="card-img">
-              </div>
-              <div class="card-info">
-                <span class="card-category-tag">LIVER CARE</span>
-                <h3 class="card-title"><a href="#combos">Milk Thistle & Liver Care Combo</a></h3>
-                <p class="card-meta">2 Pack Combo</p>
-                <div class="card-rating"><span class="rating-stars">★★★★★</span><span class="rating-count">(205)</span></div>
-                <div class="card-price-row">
-                  <div class="card-price"><span class="price-from">From</span><span class="price-amount">Rs. 749.00</span><span class="price-compare">Rs. 998.00</span></div>
-                  <span class="price-gst">inc. of GST</span>
-                </div>
-                <button type="button" class="btn btn-primary card-add-btn" data-add-to-cart>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
-                  Add Kit to Cart
-                </button>
-              </div>
-            </div>
+            {% render 'product-card',
+              title: 'Milk Thistle & Liver Care Combo',
+              category: 'LIVER CARE',
+              pack: '2 Pack Combo',
+              price: 'Rs. 749.00',
+              compare_price: 'Rs. 998.00',
+              badge: 'SAVE 25%',
+              reviews: '205',
+              image_url: 'https://images.unsplash.com/photo-1617897903246-719242758050?w=600&auto=format&fit=crop&q=80',
+              show_per_count: section.settings.show_per_count
+            %}
           </div>
 
           <div class="ayova-carousel-slide">
-            <div class="ayova-product-card">
-              <div class="card-image-wrapper">
-                <span class="card-badge">BEST VALUE</span>
-                <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&auto=format&fit=crop&q=80" alt="PCOS Care & Metabolism Combo" class="card-img">
-              </div>
-              <div class="card-info">
-                <span class="card-category-tag">WOMEN'S HEALTH</span>
-                <h3 class="card-title"><a href="#combos">PCOS Care & Metabolism Combo</a></h3>
-                <p class="card-meta">2 Pack Combo</p>
-                <div class="card-rating"><span class="rating-stars">★★★★★</span><span class="rating-count">(184)</span></div>
-                <div class="card-price-row">
-                  <div class="card-price"><span class="price-from">From</span><span class="price-amount">Rs. 799.00</span><span class="price-compare">Rs. 1,049.00</span></div>
-                  <span class="price-gst">inc. of GST</span>
-                </div>
-                <button type="button" class="btn btn-primary card-add-btn" data-add-to-cart>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
-                  Add Kit to Cart
-                </button>
-              </div>
-            </div>
+            {% render 'product-card',
+              title: 'PCOS Care & Metabolism Combo',
+              category: 'WOMEN\'S HEALTH',
+              pack: '2 Pack Combo',
+              price: 'Rs. 799.00',
+              compare_price: 'Rs. 1,049.00',
+              badge: 'BEST VALUE',
+              reviews: '184',
+              image_url: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&auto=format&fit=crop&q=80',
+              show_per_count: section.settings.show_per_count
+            %}
           </div>
 
           <div class="ayova-carousel-slide">
-            <div class="ayova-product-card">
-              <div class="card-image-wrapper">
-                <span class="card-badge">POPULAR</span>
-                <img src="https://images.unsplash.com/photo-1512290900676-26c2a4d48dc1?w=600&auto=format&fit=crop&q=80" alt="Triphala & Probiotics Combo" class="card-img">
-              </div>
-              <div class="card-info">
-                <span class="card-category-tag">GUT HEALTH</span>
-                <h3 class="card-title"><a href="#combos">Triphala & Probiotics Digestive Kit</a></h3>
-                <p class="card-meta">2 Pack Combo</p>
-                <div class="card-rating"><span class="rating-stars">★★★★★</span><span class="rating-count">(167)</span></div>
-                <div class="card-price-row">
-                  <div class="card-price"><span class="price-from">From</span><span class="price-amount">Rs. 745.00</span><span class="price-compare">Rs. 970.00</span></div>
-                  <span class="price-gst">inc. of GST</span>
-                </div>
-                <button type="button" class="btn btn-primary card-add-btn" data-add-to-cart>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
-                  Add Kit to Cart
-                </button>
-              </div>
-            </div>
+            {% render 'product-card',
+              title: 'Triphala & Probiotics Digestive Kit',
+              category: 'GUT HEALTH',
+              pack: '2 Pack Combo',
+              price: 'Rs. 745.00',
+              compare_price: 'Rs. 970.00',
+              badge: 'POPULAR',
+              reviews: '167',
+              image_url: 'https://images.unsplash.com/photo-1512290900676-26c2a4d48dc1?w=600&auto=format&fit=crop&q=80',
+              show_per_count: section.settings.show_per_count
+            %}
           </div>
         {% endif %}
 
@@ -161,6 +116,12 @@
       "id": "badge_text",
       "label": "Badge Text",
       "default": "VALUE PACKS & COMBOS"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_per_count",
+      "label": "Enable Per Count Details",
+      "default": true
     },
     {
       "type": "text",
@@ -224,6 +185,11 @@
           "default": "Liver Detox Kit"
         },
         {
+          "type": "textarea",
+          "id": "short_description",
+          "label": "Short Description (Fallback)"
+        },
+        {
           "type": "text",
           "id": "pack_size",
           "label": "Pack Size",
@@ -246,6 +212,11 @@
           "id": "compare_price",
           "label": "Compare Price",
           "default": "998.00"
+        },
+        {
+          "type": "text",
+          "id": "per_count_text",
+          "label": "Per Count Text (e.g. ₹58.10/count)"
         },
         {
           "type": "text",

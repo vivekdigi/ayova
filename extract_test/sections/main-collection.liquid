@@ -1,0 +1,404 @@
+{% comment %}
+  AYOVA MAIN SHOP / COLLECTION SECTION WITH FILTERS & PAGINATION
+  Figma Spec: Category Banner, Sidebar Filters (Wellness Goals, Price, Stock), Sort, Grid, and Pagination
+{% endcomment %}
+
+<div class="section-padding collection-page">
+  <div class="container">
+    
+    <!-- Collection Banner Header -->
+    <div class="collection-banner">
+      <div class="banner-content">
+        <span class="badge badge-category">AYUSH & ISO CERTIFIED FORMULATIONS</span>
+        <h1 class="collection-title">{{ collection.title | default: "All Ayurvedic Products" }}</h1>
+        <p class="collection-desc">{{ collection.description | default: "Explore doctor-backed Ayurvedic supplements formulated for daily wellness, liver care, PCOS management, and immunity." }}</p>
+      </div>
+    </div>
+
+    <!-- Collection Layout: Filter Sidebar + Product Grid -->
+    <div class="collection-layout">
+      
+      <!-- Sidebar Filters -->
+      <aside class="collection-filters">
+        <div class="filter-header">
+          <h3 class="filter-heading">Filters</h3>
+          <button type="button" class="clear-filters-btn" onclick="document.querySelectorAll('.filter-input-chk').forEach(c=>c.checked=false);">Clear All</button>
+        </div>
+        
+        <!-- Category / Wellness Goals Filter -->
+        <div class="filter-group">
+          <h4 class="filter-title">Wellness Goal</h4>
+          <label class="filter-label"><input type="checkbox" class="filter-input-chk" checked> All Formulations (12)</label>
+          <label class="filter-label"><input type="checkbox" class="filter-input-chk"> Liver Health & Detox (4)</label>
+          <label class="filter-label"><input type="checkbox" class="filter-input-chk"> Women Wellness & PCOS (3)</label>
+          <label class="filter-label"><input type="checkbox" class="filter-input-chk"> Gut & Digestive Support (3)</label>
+          <label class="filter-label"><input type="checkbox" class="filter-input-chk"> Daily Immunity & Energy (2)</label>
+        </div>
+
+        <!-- Form Factor Filter -->
+        <div class="filter-group">
+          <h4 class="filter-title">Product Type</h4>
+          <label class="filter-label"><input type="checkbox" class="filter-input-chk"> Herbal Capsules (6)</label>
+          <label class="filter-label"><input type="checkbox" class="filter-input-chk"> Ayurvedic Syrups (3)</label>
+          <label class="filter-label"><input type="checkbox" class="filter-input-chk"> Wellness Gummies (2)</label>
+          <label class="filter-label"><input type="checkbox" class="filter-input-chk"> Wellness Kits (1)</label>
+        </div>
+
+        <!-- Price Filter -->
+        <div class="filter-group">
+          <h4 class="filter-title">Price Range</h4>
+          <div class="price-inputs">
+            <input type="number" placeholder="Min (Rs. 200)" class="filter-price-input">
+            <span class="price-sep">-</span>
+            <input type="number" placeholder="Max (Rs. 1000)" class="filter-price-input">
+          </div>
+        </div>
+
+        <!-- Stock Filter -->
+        <div class="filter-group">
+          <h4 class="filter-title">Availability</h4>
+          <label class="filter-label"><input type="checkbox" class="filter-input-chk" checked> In Stock (12)</label>
+          <label class="filter-label"><input type="checkbox" class="filter-input-chk"> Out of Stock (0)</label>
+        </div>
+      </aside>
+
+      <!-- Main Product Grid & Controls -->
+      <main class="collection-products">
+        <div class="collection-toolbar">
+          <span class="product-count">Showing <strong>12</strong> Products</span>
+          <div class="sort-box">
+            <label for="sort-select">Sort by:</label>
+            <select id="sort-select" class="sort-select">
+              <option>Featured</option>
+              <option>Best Selling</option>
+              <option>Price: Low to High</option>
+              <option>Price: High to Low</option>
+              <option>Customer Rating</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-3">
+          {% render 'product-card',
+            title: 'Milk Thistle 800 mg',
+            subtitle: 'LIVER HEALTH',
+            category: '60 capsules',
+            price: 'Rs. 389.00',
+            badge: 'BESTSELLER',
+            reviews: '205',
+            image_url: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=500&auto=format&fit=crop&q=60'
+          %}
+
+          {% render 'product-card',
+            title: 'PCOS / PCOD Care Syrup',
+            subtitle: 'WOMEN WELLNESS',
+            category: '500 ml',
+            price: 'Rs. 333.00',
+            badge: 'POPULAR',
+            reviews: '184',
+            image_url: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=500&auto=format&fit=crop&q=60'
+          %}
+
+          {% render 'product-card',
+            title: 'Berberine HCl 500 mg',
+            subtitle: 'METABOLIC HEALTH',
+            category: '60 veg capsules',
+            price: 'Rs. 499.00',
+            badge: 'CLINICAL',
+            reviews: '312',
+            image_url: 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=500&auto=format&fit=crop&q=60'
+          %}
+
+          {% render 'product-card',
+            title: 'Probiotics 30B CFU',
+            subtitle: 'GUT HEALTH',
+            category: '30 capsules',
+            price: 'Rs. 425.00',
+            badge: 'ADVANCED',
+            reviews: '150',
+            image_url: 'https://images.unsplash.com/photo-1577401239170-897942555fb3?w=500&auto=format&fit=crop&q=60'
+          %}
+
+          {% render 'product-card',
+            title: 'Multivitamin Gummies',
+            subtitle: 'DAILY VITALITY',
+            category: '60 gummies',
+            price: 'Rs. 399.00',
+            badge: 'TASTY CARE',
+            reviews: '98',
+            image_url: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=500&auto=format&fit=crop&q=60'
+          %}
+
+          {% render 'product-card',
+            title: 'Vitamin D3 + K2 Lichen',
+            subtitle: 'BONE & IMMUNITY',
+            category: '90 Veg Capsules',
+            price: 'Rs. 450.00',
+            badge: 'VEGAN D3',
+            reviews: '220',
+            image_url: 'https://images.unsplash.com/photo-1550572017-edf79289989a?w=500&auto=format&fit=crop&q=60'
+          %}
+
+          {% render 'product-card',
+            title: 'Ashwagandha KSM-66',
+            subtitle: 'STRESS & SLEEP',
+            category: '60 capsules',
+            price: 'Rs. 549.00',
+            badge: 'HIGH POTENCY',
+            reviews: '410',
+            image_url: 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=500&auto=format&fit=crop&q=60'
+          %}
+
+          {% render 'product-card',
+            title: 'Triphala Gut Cleanse',
+            subtitle: 'DIGESTIVE CARE',
+            category: '120 tablets',
+            price: 'Rs. 320.00',
+            badge: 'ORGANIC',
+            reviews: '190',
+            image_url: 'https://images.unsplash.com/photo-1577401239170-897942555fb3?w=500&auto=format&fit=crop&q=60'
+          %}
+
+          {% render 'product-card',
+            title: 'Liver Care Syrup 200ml',
+            subtitle: 'HERBAL DETOX',
+            category: 'Pure extracts',
+            price: 'Rs. 299.00',
+            badge: 'CLASSIC',
+            reviews: '175',
+            image_url: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=500&auto=format&fit=crop&q=60'
+          %}
+        </div>
+
+        <!-- Pagination Component -->
+        <div class="pagination-wrapper">
+          <nav class="pagination">
+            <span class="page-link prev disabled">← Prev</span>
+            <span class="page-link active">1</span>
+            <a href="#" class="page-link">2</a>
+            <a href="#" class="page-link">3</a>
+            <span class="page-dots">...</span>
+            <a href="#" class="page-link">8</a>
+            <a href="#" class="page-link next">Next →</a>
+          </nav>
+        </div>
+
+      </main>
+
+    </div>
+  </div>
+</div>
+
+<style>
+.collection-banner {
+  background: linear-gradient(135deg, var(--color-sage-light) 0%, var(--color-cream-bg) 100%);
+  padding: 44px;
+  border-radius: var(--radius-lg);
+  margin-bottom: 36px;
+  border: 1px solid var(--color-sage-border);
+}
+
+.collection-title {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 2.4rem;
+  color: var(--color-forest-primary);
+  margin: 8px 0;
+}
+
+.collection-desc {
+  color: var(--color-text-muted);
+  max-width: 720px;
+  font-size: 1.05rem;
+}
+
+.collection-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 36px;
+}
+
+.collection-filters {
+  background: var(--color-white);
+  padding: 24px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-sage-border);
+  height: fit-content;
+  box-shadow: var(--shadow-sm);
+}
+
+.filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--color-sage-border);
+}
+
+.filter-heading {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-forest-primary);
+}
+
+.clear-filters-btn {
+  background: none;
+  border: none;
+  color: var(--color-terracotta);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.filter-group {
+  margin-bottom: 24px;
+}
+
+.filter-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--color-text-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.filter-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.filter-input-chk {
+  accent-color: var(--color-forest-mid);
+  width: 16px;
+  height: 16px;
+}
+
+.price-inputs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-price-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--color-sage-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+}
+
+.collection-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  background: var(--color-white);
+  padding: 14px 20px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-sage-border);
+}
+
+.product-count {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}
+
+.sort-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.sort-select {
+  padding: 8px 14px;
+  border: 1px solid var(--color-sage-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-white);
+  color: var(--color-forest-primary);
+  font-weight: 600;
+}
+
+/* Pagination Styles */
+.pagination-wrapper {
+  margin-top: 48px;
+  display: flex;
+  justify-content: center;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--color-white);
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-sage-border);
+  box-shadow: var(--shadow-sm);
+}
+
+.page-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 50%;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-forest-primary);
+  transition: all var(--transition-fast);
+}
+
+.page-link.prev, .page-link.next {
+  border-radius: var(--radius-full);
+}
+
+.page-link:hover {
+  background: var(--color-sage-light);
+  color: var(--color-forest-mid);
+}
+
+.page-link.active {
+  background: var(--color-forest-mid);
+  color: var(--color-white);
+}
+
+.page-link.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.page-dots {
+  color: var(--color-text-muted);
+  padding: 0 4px;
+}
+
+@media (max-width: 900px) {
+  .collection-layout {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Main Collection Section",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Main Collection Section"
+    }
+  ]
+}
+{% endschema %}
