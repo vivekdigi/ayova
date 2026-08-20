@@ -17,7 +17,7 @@
     {%- assign card_has_compare = true -%}
   {%- endif -%}
   {%- assign card_available = product.available -%}
-  {%- assign card_image = product.featured_image -%}
+  {%- assign card_image = custom_image | default: product.featured_image -%}
   {%- assign card_type = product.type -%}
   {%- assign card_vendor = product.vendor -%}
   {%- assign card_first_variant = product.first_available_variant | default: product.selected_or_first_available_variant -%}
@@ -31,8 +31,8 @@
     {%- assign card_has_compare = true -%}
   {%- endif -%}
   {%- assign card_available = true -%}
-  {%- assign card_image = nil -%}
-  {%- assign card_type = subtitle | default: category -%}
+  {%- assign card_image = custom_image -%}
+  {%- assign card_type = category | default: 'Category' -%}
   {%- assign card_vendor = '' -%}
 {% endif %}
 

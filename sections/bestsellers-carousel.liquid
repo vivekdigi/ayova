@@ -50,7 +50,21 @@
             {% assign block_prod = all_products[block.settings.product] %}
             <div class="ayova-carousel-slide" {{ block.shopify_attributes }}>
               {% if block_prod != blank %}
-                {% render 'product-card', product: block_prod, show_per_count: section.settings.show_per_count %}
+                {% render 'product-card',
+                  product: block_prod,
+                  title: block.settings.title,
+                  short_description: block.settings.short_description,
+                  category: block.settings.category,
+                  pack: block.settings.pack_size,
+                  price: block.settings.price,
+                  compare_price: block.settings.compare_price,
+                  badge: block.settings.badge,
+                  reviews: block.settings.reviews,
+                  custom_image: block.settings.custom_image,
+                  image_url: block.settings.image_url,
+                  show_per_count: section.settings.show_per_count,
+                  per_count_text: block.settings.per_count_text
+                %}
               {% else %}
                 {% render 'product-card',
                   title: block.settings.title,
@@ -61,6 +75,7 @@
                   compare_price: block.settings.compare_price,
                   badge: block.settings.badge,
                   reviews: block.settings.reviews,
+                  custom_image: block.settings.custom_image,
                   image_url: block.settings.image_url,
                   show_per_count: section.settings.show_per_count,
                   per_count_text: block.settings.per_count_text
@@ -262,9 +277,14 @@
           "label": "Per Count Text (e.g. ₹58.10/count)"
         },
         {
+          "type": "image_picker",
+          "id": "custom_image",
+          "label": "Custom Product Image"
+        },
+        {
           "type": "text",
           "id": "image_url",
-          "label": "Product Image URL"
+          "label": "Fallback Image URL"
         }
       ]
     }
