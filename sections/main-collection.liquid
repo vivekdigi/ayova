@@ -32,47 +32,69 @@
       <aside class="collection-filters">
         <div class="filter-header">
           <h3 class="filter-heading">Filters</h3>
-          <a href="{{ collection.url }}" class="clear-filters-btn">Clear All</a>
+          <a href="{{ collection.url }}?sort_by={{ collection.sort_by }}" class="clear-filters-btn">Clear All</a>
         </div>
 
-        <!-- Category / Tag Filters -->
-        {% if collection.all_tags.size > 0 %}
-          <div class="filter-group">
-            <h4 class="filter-title">Category</h4>
-            {% for tag in collection.all_tags %}
-              <div class="filter-label">
-                {% if current_tags contains tag %}
-                  <a href="{{ collection.url | remove_tag: tag }}" class="filter-tag-link active-tag">
-                    <span class="filter-chk-box active-chk">✓</span> {{ tag }}
-                  </a>
-                {% else %}
-                  <a href="{{ collection.url | append: '/' | append: tag | handle }}" class="filter-tag-link">
-                    <span class="filter-chk-box"></span> {{ tag }}
-                  </a>
-                {% endif %}
-              </div>
-            {% endfor %}
-          </div>
-        {% endif %}
+        <form id="CollectionFiltersForm">
+          {%- if collection.sort_by != blank -%}
+            <input type="hidden" name="sort_by" value="{{ collection.sort_by }}">
+          {%- endif -%}
 
-        <!-- Price Filter (Visual only — Shopify price filtering requires Storefront API in OS2.0) -->
-        <div class="filter-group">
-          <h4 class="filter-title">Price Range</h4>
-          <div class="price-inputs">
-            <input type="number" placeholder="Min" class="filter-price-input" id="price-min">
-            <span class="price-sep">–</span>
-            <input type="number" placeholder="Max" class="filter-price-input" id="price-max">
-          </div>
-          <button class="apply-price-btn" onclick="applyPriceFilter()">Apply</button>
-        </div>
-
-        <!-- Availability Filter -->
-        <div class="filter-group">
-          <h4 class="filter-title">Availability</h4>
-          <label class="filter-label">
-            <input type="checkbox" class="filter-input-chk" checked onclick="this.checked=true;"> In Stock ({{ collection.products_count }})
-          </label>
-        </div>
+          {%- for filter in collection.filters -%}
+            <div class="filter-group">
+              <h4 class="filter-title">{{ filter.label }}</h4>
+              
+              {%- case filter.type -%}
+                {%- when 'list' -%}
+                  {%- for filter_value in filter.values -%}
+                    <label class="filter-label" for="Filter-{{ filter.param_name }}-{{ forloop.index }}" style="display:flex;align-items:center;gap:8px;">
+                      <input type="checkbox"
+                        name="{{ filter_value.param_name }}"
+                        value="{{ filter_value.value }}"
+                        id="Filter-{{ filter.param_name }}-{{ forloop.index }}"
+                        class="filter-input-chk"
+                        {% if filter_value.active -%}checked{%- endif %}
+                        {% if filter_value.count == 0 and filter_value.active == false -%}disabled{%- endif %}
+                        onchange="this.closest('form').submit()"
+                        style="margin:0;"
+                      >
+                      <span>{{ filter_value.label }} ({{ filter_value.count }})</span>
+                    </label>
+                  {%- endfor -%}
+                  
+                {%- when 'price_range' -%}
+                  <div class="price-inputs">
+                    <input
+                      name="{{ filter.min_value.param_name }}"
+                      id="Filter-{{ filter.min_value.param_name }}"
+                      {% if filter.min_value.value -%}
+                        value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}"
+                      {%- endif %}
+                      type="number"
+                      placeholder="Min"
+                      min="0"
+                      max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                      class="filter-price-input"
+                    >
+                    <span class="price-sep">–</span>
+                    <input
+                      name="{{ filter.max_value.param_name }}"
+                      id="Filter-{{ filter.max_value.param_name }}"
+                      {% if filter.max_value.value -%}
+                        value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}"
+                      {%- endif %}
+                      type="number"
+                      placeholder="Max"
+                      min="0"
+                      max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                      class="filter-price-input"
+                    >
+                  </div>
+                  <button type="submit" class="apply-price-btn">Apply</button>
+              {%- endcase -%}
+            </div>
+          {%- endfor -%}
+        </form>
       </aside>
 
       <!-- Main Product Grid & Controls -->
