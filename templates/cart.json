@@ -3,9 +3,25 @@
     "main_cart": {
       "type": "main-cart",
       "settings": {}
+    },
+    "best_sellers": {
+      "type": "bestsellers-carousel",
+      "settings": {
+        "title": "Bestsellers",
+        "collection": "all"
+      }
+    },
+    "you_might_also_like": {
+      "type": "bestsellers-carousel",
+      "settings": {
+        "title": "You Might Also Like",
+        "collection": "all"
+      }
     }
   },
   "order": [
-    "main_cart"
+    "main_cart",
+    "best_sellers",
+    "you_might_also_like"
   ]
 }

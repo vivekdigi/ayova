@@ -9,22 +9,47 @@
 
     {% if cart.item_count > 0 %}
       <form action="{{ routes.cart_url }}" method="post" novalidate id="cart-form">
-        <!-- Free Shipping Progress Bar -->
-        <div class="free-shipping-box">
-          {% assign threshold = 49900 %}
-          {% if cart.total_price >= threshold %}
-            <p class="shipping-msg">🎉 <strong>You unlocked Free Express Shipping!</strong></p>
-            <div class="progress-bar-bg">
-              <div class="progress-bar-fill" style="width: 100%;"></div>
+        <!-- Multi-Step Milestone Progress Bar -->
+        <div class="cart-milestone-box">
+          {% assign cart_total = cart.total_price | divided_by: 100.0 %}
+          {% assign milestone1 = 499 %}
+          {% assign milestone2 = 999 %}
+          {% assign milestone3 = 1499 %}
+          
+          <div class="milestone-text-top">
+            {% if cart_total < milestone1 %}
+              Add ₹{{ milestone1 | minus: cart_total | round }} more to unlock <strong>Free Shipping!</strong>
+            {% elsif cart_total < milestone2 %}
+              Add ₹{{ milestone2 | minus: cart_total | round }} more to get a <strong>Free Sipper!</strong>
+            {% elsif cart_total < milestone3 %}
+              Add ₹{{ milestone3 | minus: cart_total | round }} more to get <strong>Free Ashwagandha!</strong>
+            {% else %}
+              🎉 You have unlocked <strong>All Rewards!</strong>
+            {% endif %}
+          </div>
+
+          <div class="milestone-track-container">
+            {% assign percent = cart_total | divided_by: milestone3 | times: 100 %}
+            {% if percent > 100 %}{% assign percent = 100 %}{% endif %}
+            
+            <div class="milestone-track-bg"></div>
+            <div class="milestone-track-fill" style="width: {{ percent }}%;"></div>
+            
+            <div class="milestone-point {% if cart_total >= milestone1 %}active{% endif %}" style="left: {{ milestone1 | times: 100.0 | divided_by: milestone3 }}%;">
+              <div class="point-circle">✓</div>
+              <div class="point-label">Free Shipping<br><small>worth ₹99</small></div>
             </div>
-          {% else %}
-            {% assign diff = threshold | minus: cart.total_price | money %}
-            <p class="shipping-msg">Add <strong>{{ diff }}</strong> more to unlock Free Express Shipping!</p>
-            {% assign percent = cart.total_price | times: 100 | divided_by: threshold %}
-            <div class="progress-bar-bg">
-              <div class="progress-bar-fill" style="width: {{ percent }}%;"></div>
+            
+            <div class="milestone-point {% if cart_total >= milestone2 %}active{% endif %}" style="left: {{ milestone2 | times: 100.0 | divided_by: milestone3 }}%;">
+              <div class="point-circle">✓</div>
+              <div class="point-label">Free Sipper<br><small>worth ₹299</small></div>
             </div>
-          {% endif %}
+            
+            <div class="milestone-point {% if cart_total >= milestone3 %}active{% endif %}" style="left: 100%;">
+              <div class="point-circle">✓</div>
+              <div class="point-label">Free Ashwagandha<br><small>worth ₹599</small></div>
+            </div>
+          </div>
         </div>
 
         <div class="cart-grid">
@@ -56,7 +81,8 @@
                 </div>
 
                 <div class="item-total">
-                  <span>{{ item.final_line_price | money }}</span>
+                  <div class="item-price-strike">{% if item.original_line_price > item.final_line_price %}{{ item.original_line_price | money }}{% endif %}</div>
+                  <div class="item-price-final">Total: {{ item.final_line_price | money }}</div>
                 </div>
               </div>
             {% endfor %}
@@ -67,35 +93,76 @@
             <h3 class="summary-title">Order Summary</h3>
 
             <!-- Promo Code Form - Note: Shopify handles discount codes securely at checkout -->
-            <div class="promo-box">
-              <input type="text" placeholder="Promo code / Coupon" class="promo-input">
-              <button type="button" class="btn btn-outline promo-btn">Apply</button>
+            <div class="coupon-card">
+              <div class="coupon-header">Offer & Coupons</div>
+              <div class="coupon-input-group">
+                <input type="text" placeholder="Apply Coupon" class="coupon-input">
+                <button type="button" class="btn-coupon">Apply</button>
+              </div>
             </div>
 
             <div class="summary-lines">
+              <div class="summary-line-title">Payment Summary</div>
+              
               <div class="summary-line">
-                <span>Subtotal</span>
-                <span>{{ cart.items_subtotal_price | money }}</span>
+                <span>Product Total</span>
+                <span>{{ cart.original_total_price | money }}</span>
               </div>
+              
+              {% assign total_discount = cart.original_total_price | minus: cart.total_price %}
+              {% if total_discount > 0 %}
+              <div class="summary-line text-green">
+                <span>Discount Applied</span>
+                <span>-{{ total_discount | money }}</span>
+              </div>
+              {% endif %}
+
               <div class="summary-line">
                 <span>Estimated Shipping</span>
                 {% if cart.total_price >= 49900 %}
-                  <span class="free-text">FREE</span>
+                  <span class="text-green">FREE</span>
                 {% else %}
                   <span>Calculated at checkout</span>
                 {% endif %}
               </div>
-              <div class="summary-line">
-                <span>Tax (GST Included)</span>
-                <span>Calculated at checkout</span>
+              
+              <div class="summary-line total-line-sub">
+                <span>Sub Total</span>
+                <span>{{ cart.total_price | money }}</span>
               </div>
+              
               <div class="summary-line total-line">
-                <span>Total Payable</span>
+                <span>YOU PAY ONLY</span>
                 <span>{{ cart.total_price | money }}</span>
               </div>
             </div>
 
-            <a href="/pages/checkout" class="btn btn-primary btn-checkout" style="display:block; text-align:center; text-decoration:none; box-sizing:border-box;">Proceed to Checkout →</a>
+            {% if total_discount > 0 or cart.total_price >= 49900 %}
+            <div class="total-savings-box">
+              <div class="savings-header">
+                <span class="icon-tag">🏷️</span> Total Savings <span class="savings-amount">{% if cart.total_price >= 49900 %}₹99 + {% endif %}{{ total_discount | money }}</span>
+              </div>
+              <div class="savings-breakup">
+                <p><strong>Break Up of Savings</strong></p>
+                <ul>
+                  {% if total_discount > 0 %}<li><span class="check-green">✓</span> Discount Value: {{ total_discount | money }}</li>{% endif %}
+                  {% if cart.total_price >= 49900 %}<li><span class="check-green">✓</span> Free Shipping Value: ₹99.00</li>{% endif %}
+                </ul>
+              </div>
+            </div>
+            {% endif %}
+
+            <div class="checkout-action-box">
+              <div class="action-price">
+                <span class="label">TOTAL PAYABLE</span>
+                <span class="amount">{{ cart.total_price | money }}</span>
+              </div>
+              {% if customer %}
+                <button type="submit" name="checkout" class="btn btn-primary btn-checkout-dark">Proceed to Checkout →</button>
+              {% else %}
+                <a href="/customer_authentication/login?return_to=%2Fcheckout" class="btn btn-primary btn-checkout-dark">Proceed to Checkout →</a>
+              {% endif %}
+            </div>
 
             <p class="cart-guarantee">
               🔒 Guaranteed 256-bit Secure Checkout & Free Returns
@@ -121,32 +188,75 @@
   margin-bottom: 24px;
 }
 
-.free-shipping-box {
-  background: var(--color-sage-light);
-  border: 1px solid var(--color-sage-border);
+/* --- Milestone Bar --- */
+.cart-milestone-box {
+  background: #fdfafa;
+  border: 1px solid #e5dbcd;
   padding: 16px 24px;
   border-radius: var(--radius-md);
   margin-bottom: 32px;
+  text-align: center;
 }
-
-.shipping-msg {
-  font-size: 0.95rem;
-  color: var(--color-forest-dark);
-  margin-bottom: 8px;
+.milestone-text-top {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 24px;
 }
-
-.progress-bar-bg {
-  height: 8px;
-  background: var(--color-sage-border);
-  border-radius: var(--radius-full);
-  overflow: hidden;
+.milestone-track-container {
+  position: relative;
+  min-height: 80px;
+  width: 90%;
+  margin: 0 auto;
 }
-
-.progress-bar-fill {
-  height: 100%;
-  background: var(--color-forest-mid);
-  border-radius: var(--radius-full);
-  transition: width 0.3s ease;
+.milestone-track-bg {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: #e0e0e0;
+  border-radius: 2px;
+}
+.milestone-track-fill {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  height: 4px;
+  background: #20874e;
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+.milestone-point {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  text-align: center;
+  width: 120px;
+}
+.point-circle {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #ccc;
+  margin: 0 auto 8px;
+  line-height: 20px;
+  font-size: 12px;
+  color: #ccc;
+}
+.milestone-point.active .point-circle {
+  border-color: #20874e;
+  background: #20874e;
+  color: #fff;
+}
+.point-label {
+  font-size: 12px;
+  color: #666;
+  line-height: 1.2;
+}
+.milestone-point.active .point-label {
+  color: #333;
+  font-weight: 600;
 }
 
 .cart-grid {
@@ -220,11 +330,25 @@
   color: var(--color-forest-dark);
 }
 
+/* --- Cart Items --- */
+.item-price-strike {
+  text-decoration: line-through;
+  color: #999;
+  font-size: 12px;
+  text-align: right;
+}
+.item-price-final {
+  font-weight: 700;
+  font-size: 16px;
+  color: #333;
+}
+
+/* --- Order Summary --- */
 .cart-summary-card {
   background: var(--color-white);
   border-radius: var(--radius-lg);
   border: 1px solid var(--color-sage-border);
-  padding: 28px;
+  padding: 24px;
   height: fit-content;
 }
 
@@ -235,60 +359,174 @@
   margin-bottom: 20px;
 }
 
-.promo-box {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 24px;
-}
-
-.promo-input {
-  flex-grow: 1;
-  padding: 10px 14px;
+.coupon-card {
+  background: var(--color-bg-cream);
   border: 1px solid var(--color-sage-border);
-  border-radius: var(--radius-sm);
-  font-size: 0.85rem;
-}
-
-.promo-btn {
-  padding: 10px 16px;
-  font-size: 0.85rem;
-}
-
-.summary-lines {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  border-radius: var(--radius-md);
+  padding: 16px;
   margin-bottom: 24px;
-  border-top: 1px solid var(--color-sage-border);
-  padding-top: 16px;
+  text-align: left;
+}
+.coupon-header {
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--color-text-heading);
+  margin-bottom: 12px;
+}
+.coupon-input-group {
+  display: flex;
+  position: relative;
+}
+.coupon-input {
+  flex: 1;
+  border: 1px solid var(--color-sage-border);
+  border-radius: 30px;
+  padding: 10px 100px 10px 16px;
+  font-size: 14px;
+  outline: none;
+  background: #fff;
+}
+.coupon-input:focus {
+  border-color: var(--color-forest-mid);
+}
+.btn-coupon {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  background: #1F2924;
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  padding: 0 24px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+.btn-coupon:hover {
+  opacity: 0.9;
 }
 
+.summary-line-title {
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 8px;
+}
+.summary-lines {
+  margin-bottom: 24px;
+}
 .summary-line {
   display: flex;
   justify-content: space-between;
-  font-size: 0.95rem;
-  color: var(--color-text-muted);
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: #333;
 }
-
-.free-text {
-  color: var(--color-forest-mid);
-  font-weight: 700;
+.text-green {
+  color: #20874e !important;
+  font-weight: 600;
 }
-
-.total-line {
-  font-family: var(--font-heading);
-  font-weight: 700;
-  font-size: 1.3rem;
-  color: var(--color-forest-dark);
-  border-top: 1px solid var(--color-sage-border);
+.total-line-sub {
+  border-top: 1px dashed #ccc;
   padding-top: 12px;
+  margin-top: 12px;
+  font-weight: 700;
+}
+.total-line {
+  border-top: 1px solid var(--color-sage-border);
+  padding-top: 16px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--color-forest-primary);
 }
 
-.btn-checkout {
-  width: 100%;
+/* --- Savings Box --- */
+.total-savings-box {
+  border: 1.5px solid #20874e;
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  margin-bottom: 24px;
+}
+.savings-header {
+  font-weight: 700;
+  font-size: 15px;
+  color: #20874e;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.savings-breakup p {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 6px;
+}
+.savings-breakup ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.savings-breakup li {
+  font-size: 12px;
+  color: #333;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+}
+.check-green {
+  color: #fff;
+  background: #20874e;
+  border-radius: 50%;
+  width: 14px;
+  height: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  margin-right: 6px;
+}
+
+/* --- Checkout Action Box --- */
+.checkout-action-box {
+  background: #111;
+  border-radius: var(--radius-md);
   padding: 16px;
-  font-size: 1.05rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 16px;
+}
+.action-price {
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+}
+.action-price .label {
+  font-size: 10px;
+  opacity: 0.7;
+}
+.action-price .amount {
+  font-size: 18px;
+  font-weight: 700;
+}
+.btn-checkout-dark {
+  background: #fff;
+  color: #111;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: none;
+}
+.btn-checkout-dark:hover {
+  background: #f0f0f0;
 }
 
 .cart-guarantee {
@@ -301,11 +539,17 @@
   .cart-grid {
     grid-template-columns: 1fr;
   }
+}
+@media (max-width: 600px) {
   .cart-item {
-    grid-template-columns: 70px 1fr;
+    grid-template-columns: 80px 1fr;
   }
-  .item-qty-row, .item-total {
-    grid-column: span 2;
+  .item-qty-row {
+    grid-column: 2 / -1;
+  }
+  .item-total {
+    grid-column: 2 / -1;
+    text-align: left;
   }
 }
 </style>

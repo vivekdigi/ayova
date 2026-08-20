@@ -9,18 +9,18 @@
 <section class="section-padding video-testimonials-section" id="video-testimonials">
   <div class="container">
     <!-- Section Header -->
-    <div class="wellness-header-row">
-      <div>
-        {% if section.settings.badge_text != blank %}
-          <span class="badge badge-category">{{ section.settings.badge_text }}</span>
-        {% endif %}
-        <h2 class="section-title text-left">{{ section.settings.title | default: "Real Stories. Real Wellness Journeys." }}</h2>
-        <p class="section-subtitle text-left" style="margin: 0; max-width: 560px;">{{ section.settings.subtitle | default: "Hear from thousands of verified buyers who transformed their health with Ayova." }}</p>
-      </div>
-
-      <div class="ayova-carousel-nav">
-        <button type="button" class="ayova-carousel-btn" data-carousel-prev aria-label="Previous">←</button>
-        <button type="button" class="ayova-carousel-btn" data-carousel-next aria-label="Next">→</button>
+    <div style="text-align: center; margin-bottom: 24px;">
+      {% if section.settings.badge_text != blank %}
+        <span class="badge badge-category">{{ section.settings.badge_text }}</span>
+      {% endif %}
+      <h2 class="section-title" style="margin-bottom: 12px;">{{ section.settings.title | default: "Real Stories. Real Wellness Journeys." }}</h2>
+      <p class="section-subtitle" style="margin: 0 auto; max-width: 560px;">{{ section.settings.subtitle | default: "Hear from thousands of verified buyers who transformed their health with Ayova." }}</p>
+    </div>
+    
+    <div style="display: flex; justify-content: flex-start; margin-bottom: 24px;">
+      <div class="ayova-carousel-nav" style="gap: 12px;">
+        <button type="button" class="ayova-carousel-btn" data-carousel-prev aria-label="Previous" style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid #e0e0e0; background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center;">←</button>
+        <button type="button" class="ayova-carousel-btn" data-carousel-next aria-label="Next" style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid #e0e0e0; background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center;">→</button>
       </div>
     </div>
 

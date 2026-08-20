@@ -1291,7 +1291,8 @@ h6 {
   font-family: var(--font-accent);
   font-weight: 600;
   font-size: 11px;
-  color: #059669; /* Green from Centrum screenshot */
+  color: #059669;
+  /* Green from Centrum screenshot */
   text-transform: uppercase;
   margin-left: 4px;
 }
@@ -2760,7 +2761,7 @@ h6 {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0,0,0,0.55);
+  background: rgba(0, 0, 0, 0.55);
   z-index: 10000;
   display: none;
   align-items: flex-start;
@@ -2768,9 +2769,11 @@ h6 {
   padding: 80px 20px 20px;
   overflow-y: auto;
 }
+
 .search-overlay-panel.active {
   display: flex;
 }
+
 .search-panel-inner {
   background: #fff;
   border-radius: 20px;
@@ -2778,14 +2781,16 @@ h6 {
   max-width: 900px;
   padding: 40px;
   position: relative;
-  box-shadow: 0 24px 80px rgba(0,0,0,0.18);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.18);
   max-height: 90vh;
   overflow-y: auto;
 }
+
 .search-panel-header {
   margin-bottom: 28px;
   position: relative;
 }
+
 .search-eyebrow {
   font-size: 0.72rem;
   font-weight: 700;
@@ -2795,6 +2800,7 @@ h6 {
   margin-bottom: 10px;
   text-transform: uppercase;
 }
+
 .search-panel-title {
   font-family: var(--font-heading);
   font-size: 2rem;
@@ -2803,10 +2809,12 @@ h6 {
   margin: 0 0 8px;
   line-height: 1.2;
 }
+
 .search-panel-sub {
   font-size: 0.95rem;
   color: var(--color-text-muted, #7A857F);
 }
+
 .search-close-btn {
   position: absolute;
   top: 0;
@@ -2824,8 +2832,15 @@ h6 {
   justify-content: center;
   transition: background 0.2s;
 }
-.search-close-btn:hover { background: #f0f4f2; }
-.search-panel-form { margin-bottom: 32px; }
+
+.search-close-btn:hover {
+  background: #f0f4f2;
+}
+
+.search-panel-form {
+  margin-bottom: 32px;
+}
+
 .search-panel-input-wrap {
   display: flex;
   align-items: center;
@@ -2835,9 +2850,11 @@ h6 {
   border-radius: 12px;
   transition: border-color 0.2s;
 }
+
 .search-panel-input-wrap:focus-within {
   border-color: var(--color-forest-primary, #285044);
 }
+
 .search-panel-input {
   flex: 1;
   border: none;
@@ -2850,7 +2867,11 @@ h6 {
   background: transparent;
   font-family: var(--font-body);
 }
-.search-panel-input::placeholder { color: #a0b0a8; }
+
+.search-panel-input::placeholder {
+  color: #a0b0a8;
+}
+
 .search-clear-btn {
   background: none;
   border: none;
@@ -2860,7 +2881,11 @@ h6 {
   padding: 2px 6px;
   display: none;
 }
-.search-clear-btn.visible { display: block; }
+
+.search-clear-btn.visible {
+  display: block;
+}
+
 /* Popular products grid */
 .search-popular-header {
   display: flex;
@@ -2868,6 +2893,7 @@ h6 {
   align-items: flex-end;
   margin-bottom: 20px;
 }
+
 .search-popular-title {
   font-family: var(--font-heading);
   font-size: 1.15rem;
@@ -2875,10 +2901,12 @@ h6 {
   color: var(--color-forest-dark);
   margin: 0 0 4px;
 }
+
 .search-popular-sub {
   font-size: 0.82rem;
   color: var(--color-text-muted);
 }
+
 .search-view-all {
   font-size: 0.8rem;
   font-weight: 700;
@@ -2887,12 +2915,14 @@ h6 {
   letter-spacing: 0.04em;
   white-space: nowrap;
 }
+
 .search-popular-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 16px;
   margin-bottom: 20px;
 }
+
 .search-pop-card {
   display: flex;
   flex-direction: column;
@@ -2903,16 +2933,24 @@ h6 {
   transition: transform 0.2s, box-shadow 0.2s;
   background: var(--color-sage-light, #F4F6F5);
 }
+
 .search-pop-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
+
 .search-pop-img {
   aspect-ratio: 1;
   overflow: hidden;
   background: #eef2ef;
 }
-.search-pop-img img { width: 100%; height: 100%; object-fit: cover; }
+
+.search-pop-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .search-pop-info {
   padding: 12px;
   display: flex;
@@ -2920,24 +2958,32 @@ h6 {
   gap: 3px;
   flex: 1;
 }
+
 .search-pop-cat {
   font-size: 0.65rem;
   font-weight: 700;
   color: var(--color-terracotta);
   letter-spacing: 0.08em;
 }
+
 .search-pop-name {
   font-size: 0.88rem;
   font-weight: 600;
   color: var(--color-forest-dark);
   line-height: 1.3;
 }
+
 .search-pop-price {
   font-size: 0.85rem;
   font-weight: 700;
   color: var(--color-forest-dark);
 }
-.search-pop-stars { font-size: 0.75rem; color: #F4A30A; }
+
+.search-pop-stars {
+  font-size: 0.75rem;
+  color: #F4A30A;
+}
+
 .search-pop-btn {
   display: block;
   margin: 0 12px 12px;
@@ -2950,11 +2996,13 @@ h6 {
   text-align: center;
   letter-spacing: 0.04em;
 }
+
 .search-panel-hint {
   font-size: 0.82rem;
   color: var(--color-text-muted);
   text-align: center;
 }
+
 /* Live results */
 .search-results-grid {
   display: grid;
@@ -2962,17 +3010,22 @@ h6 {
   gap: 16px;
   margin-bottom: 16px;
 }
+
 .search-results-footer {
   font-size: 0.82rem;
   color: var(--color-text-muted);
   text-align: center;
 }
+
 /* Overlay bg */
 .search-overlay-bg {
   display: none;
 }
+
 /* old compat */
-.search-input-wrapper { display: none; }
+.search-input-wrapper {
+  display: none;
+}
 
 /* ── ACCESSIBILITY ────────────────────────────────────────────────────────── */
 .skip-to-content {
@@ -3233,4 +3286,18 @@ h6 {
   .doctor-content {
     padding: 24px 18px;
   }
+}
+
+/* Custom Wellness Goal Fix */
+.card-figma-num-badge {
+  display: none !important;
+}
+
+.card-figma-bottom {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  gap: 4px !important;
 }
