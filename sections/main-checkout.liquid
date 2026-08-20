@@ -288,20 +288,21 @@
 .checkout-forms {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 0;
 }
 
 .checkout-card {
   background: var(--color-white);
   border-radius: var(--radius-lg);
   border: 1px solid var(--color-sage-border);
-  padding: 28px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
 }
 
 .card-step-header {
   display: flex;
-  gap: 16px;
-  margin-bottom: 24px;
+  gap: 12px;
+  margin-bottom: 12px;
 }
 
 .step-num {
@@ -309,6 +310,7 @@
   font-weight: 700;
   font-size: 1.5rem;
   color: var(--color-terracotta);
+  margin: 0;
 }
 
 .step-title {
@@ -316,17 +318,19 @@
   font-weight: 700;
   font-size: 1.3rem;
   color: var(--color-forest-primary);
+  margin: 0 0 4px 0;
 }
 
 .step-desc {
   font-size: 0.85rem;
   color: var(--color-text-muted);
+  margin: 0;
 }
 
 .form-grid-2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 12px;
 }
 
 .form-group.full-width {
@@ -338,38 +342,44 @@
   font-size: 0.75rem;
   font-weight: 700;
   color: var(--color-forest-primary);
-  margin-bottom: 6px;
+  margin: 0 0 4px 0;
   letter-spacing: 0.05em;
 }
 
 .form-input {
   width: 100%;
-  padding: 12px 16px;
+  padding: 8px 12px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--color-sage-border);
   font-size: 0.95rem;
+  margin: 0;
 }
 
 .payment-options {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 0;
+  border: 1px solid var(--color-sage-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
 }
 
 .payment-option-card {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 16px 20px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--color-sage-border);
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--color-sage-border);
   background: var(--color-white);
   cursor: pointer;
   transition: all var(--transition-fast);
 }
 
+.payment-option-card:last-child {
+  border-bottom: none;
+}
+
 .payment-option-card.active, .payment-option-card:hover {
-  border-color: var(--color-forest-mid);
   background: var(--color-sage-light);
 }
 

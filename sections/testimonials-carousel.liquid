@@ -43,13 +43,18 @@
                 <div class="verified-pill">
                   <span class="verified-icon">✓</span> VERIFIED
                 </div>
-                <div class="testimonial-rating">★★★★★</div>
+                <div class="testimonial-rating" style="color: #FFC107;">★★★★★</div>
                 <h3 class="testimonial-title">{{ block.settings.review_title | default: "Liver wellness that fits my routine" }}</h3>
                 <p class="testimonial-quote">"{{ block.settings.quote | default: "The capsules are easy to take and the packaging feels very trustworthy. I have been consistent for six weeks and feel noticeably lighter after meals." }}"</p>
                 <div class="testimonial-divider"></div>
                 <div class="testimonial-author">
-                  <h4 class="author-name">{{ block.settings.name | default: "PRIYA" | upcase }}</h4>
-                  <span class="author-product">Verified Buyer - {{ block.settings.product | default: "Milk Thistle" }}</span>
+                  {% if block.settings.image != blank %}
+                    <img src="{{ block.settings.image | image_url: width: 80 }}" class="testimonial-avatar" alt="{{ block.settings.name | escape }}" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; margin-right: 12px; margin-bottom: 0;">
+                  {% endif %}
+                  <div>
+                    <h4 class="author-name">{{ block.settings.name | default: "PRIYA" | upcase }}</h4>
+                    <span class="author-product">Verified Buyer - {{ block.settings.product | default: "Milk Thistle" }}</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -62,7 +67,7 @@
               <div class="verified-pill">
                 <span class="verified-icon">✓</span> VERIFIED
               </div>
-              <div class="testimonial-rating">★★★★★</div>
+              <div class="testimonial-rating" style="color: #FFC107;">★★★★★</div>
               <h3 class="testimonial-title">Liver wellness that fits my routine</h3>
               <p class="testimonial-quote">"The capsules are easy to take and the packaging feels very trustworthy. I have been consistent for six weeks and feel noticeably lighter after meals."</p>
               <div class="testimonial-divider"></div>
@@ -78,7 +83,7 @@
               <div class="verified-pill">
                 <span class="verified-icon">✓</span> VERIFIED
               </div>
-              <div class="testimonial-rating">★★★★★</div>
+              <div class="testimonial-rating" style="color: #FFC107;">★★★★★</div>
               <h3 class="testimonial-title">A simple daily wellness upgrade</h3>
               <p class="testimonial-quote">"I wanted something uncomplicated. The clear dosage guidance, clean ingredients, and quick delivery made Ayova an easy repeat purchase."</p>
               <div class="testimonial-divider"></div>
@@ -94,7 +99,7 @@
               <div class="verified-pill">
                 <span class="verified-icon">✓</span> VERIFIED
               </div>
-              <div class="testimonial-rating">★★★★★</div>
+              <div class="testimonial-rating" style="color: #FFC107;">★★★★★</div>
               <h3 class="testimonial-title">The support team was genuinely helpful</h3>
               <p class="testimonial-quote">"I had questions before ordering and received a thoughtful response. The probiotics has now become part of my morning routine."</p>
               <div class="testimonial-divider"></div>
@@ -170,6 +175,11 @@
           "type": "text",
           "id": "review_title",
           "label": "Review Title"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Customer Image / Avatar"
         },
         {
           "type": "textarea",

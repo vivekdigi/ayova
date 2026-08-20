@@ -7,7 +7,11 @@
   <div class="container">
     <div class="doctor-banner">
         <div class="doctor-image-wrapper">
-          <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=600&auto=format&fit=crop&q=80" alt="Ayova Wellness Expert" class="doctor-img">
+          {% if section.settings.image != blank %}
+            <img src="{{ section.settings.image | image_url: width: 800 }}" alt="Ayova Wellness Expert" class="doctor-img" loading="lazy">
+          {% else %}
+            <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=600&auto=format&fit=crop&q=80" alt="Ayova Wellness Expert" class="doctor-img">
+          {% endif %}
           
           <div class="badge-free-guidance">FREE 1:1 GUIDANCE</div>
           
@@ -16,7 +20,7 @@
               <div class="status-title"><span class="status-dot"></span> Ayova Wellness Expert</div>
               <div class="status-time">Available Mon-Sat • 10:00 AM-6:00 PM</div>
             </div>
-            <a href="https://wa.me/919999999999" target="_blank" class="btn-chat-now">CHAT NOW →</a>
+            <a href="https://wa.me/{{ section.settings.whatsapp_number | default: '919999999999' | remove: ' ' | remove: '+' | remove: '-' }}" target="_blank" class="btn-chat-now">CHAT NOW →</a>
           </div>
         </div>
 
@@ -41,6 +45,11 @@
       "default": "Our experts are here to guide you every step of the way."
     },
     {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Consultant Image"
+    },
+    {
       "type": "textarea",
       "id": "description",
       "label": "Description"
@@ -49,6 +58,13 @@
       "type": "url",
       "id": "consult_link",
       "label": "Consultation Link"
+    },
+    {
+      "type": "text",
+      "id": "whatsapp_number",
+      "label": "WhatsApp Number",
+      "default": "919999999999",
+      "info": "Enter number with country code (e.g. 919876543210)"
     }
   ],
   "presets": [

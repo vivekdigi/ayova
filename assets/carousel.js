@@ -66,7 +66,6 @@ class AyovaCarousel {
 
     this.slides.forEach(slide => {
       slide.style.width = `${slideWidth}px`;
-      slide.style.marginRight = `${this.gap}px`;
     });
 
     this.maxIndex = Math.max(0, this.slides.length - this.itemsPerView);
