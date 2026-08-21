@@ -26,17 +26,16 @@
           <h2 class="section-title">{{ section.settings.title | default: "Shop by Wellness Goal" }}</h2>
           <p class="section-subtitle">{{ section.settings.subtitle | default: "Choose practical support for your everyday wellness routine." }}</p>
         </div>
-
-        <div class="ayova-carousel-nav">
-          <button type="button" class="ayova-carousel-btn" data-carousel-prev aria-label="Previous">←</button>
-          <button type="button" class="ayova-carousel-btn" data-carousel-next aria-label="Next">→</button>
-        </div>
       </div>
     {% endif %}
 
     <!-- Carousel Slider -->
-    <div class="ayova-carousel-wrapper" data-ayova-carousel data-items-per-view="{{ items_desktop }}" data-gap="18">
-      <div class="ayova-carousel-track">
+    <div class="ayova-carousel-wrapper" data-ayova-carousel data-items-per-view="{{ items_desktop }}" data-gap="18" style="position: relative;">
+      
+      <button type="button" class="ayova-overlay-btn ws-prev" aria-label="Previous">←</button>
+
+      <div class="ayova-carousel-track" id="wellness-track-{{ section.id }}" style="scrollbar-width: none; -ms-overflow-style: none;">
+        <style>#wellness-track-{{ section.id }}::-webkit-scrollbar { display: none; }</style>
 
         {% if section.blocks.size > 0 %}
           {% for block in section.blocks %}
@@ -211,10 +210,55 @@
 
       </div>
 
-      <div class="ayova-carousel-dots" data-carousel-dots></div>
+      <button type="button" class="ayova-overlay-btn ws-next" aria-label="Next">→</button>
     </div>
   </div>
 </section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const track = document.getElementById('wellness-track-{{ section.id }}');
+  const prevBtn = track.parentElement.querySelector('.ws-prev');
+  const nextBtn = track.parentElement.querySelector('.ws-next');
+
+  if(prevBtn && nextBtn && track) {
+    prevBtn.addEventListener('click', () => track.scrollBy({ left: -300, behavior: 'smooth' }));
+    nextBtn.addEventListener('click', () => track.scrollBy({ left: 300, behavior: 'smooth' }));
+  }
+});
+</script>
+
+<style>
+.ayova-overlay-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  background: #fff;
+  border: 1px solid #eaeaea;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  color: #333;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transition: background 0.2s, color 0.2s;
+}
+.ayova-overlay-btn:hover {
+  background: var(--color-forest-dark, #1a3c34);
+  color: #fff;
+}
+.ayova-overlay-btn.ws-prev { left: -20px; }
+.ayova-overlay-btn.ws-next { right: -20px; }
+@media (max-width: 1024px) {
+  .ayova-overlay-btn.ws-prev { left: 0px; }
+  .ayova-overlay-btn.ws-next { right: 0px; }
+}
+</style>
 
 {% schema %}
 {
