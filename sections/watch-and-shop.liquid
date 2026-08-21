@@ -34,23 +34,29 @@
                 <div class="ws-product-header">
                   <img src="{{ block.settings.product.featured_image | image_url: width: 60 }}" alt="{{ block.settings.product.title }}" class="ws-product-thumb">
                   <div class="ws-product-details">
-                    <span class="ws-product-title">{{ block.settings.product.title | truncate: 35 }}</span>
-                    <span class="ws-product-price">{{ block.settings.product.price | money }}</span>
+                    <span class="ws-product-title">{{ block.settings.custom_title | default: block.settings.product.title | truncate: 35 }}</span>
+                    <span class="ws-product-price">
+                      {% if block.settings.custom_price != blank %}
+                        {{ block.settings.custom_price }}
+                      {% else %}
+                        {{ block.settings.product.price | money }}
+                      {% endif %}
+                    </span>
                   </div>
                 </div>
                 <form method="post" action="/cart/add" class="ws-add-to-cart-form">
                   <input type="hidden" name="id" value="{{ block.settings.product.selected_or_first_available_variant.id }}">
-                  <button type="submit" class="ws-buy-btn">Add to Cart</button>
+                  <button type="submit" class="ws-buy-btn">Buy Now</button>
                 </form>
               {% else %}
                 <div class="ws-product-header">
                   <div class="ws-product-thumb placeholder-svg"></div>
                   <div class="ws-product-details">
-                    <span class="ws-product-title">Sample Product Name</span>
-                    <span class="ws-product-price">Rs. 999</span>
+                    <span class="ws-product-title">{{ block.settings.custom_title | default: 'Sample Product Name' }}</span>
+                    <span class="ws-product-price">{{ block.settings.custom_price | default: 'Rs. 999' }}</span>
                   </div>
                 </div>
-                <button type="button" class="ws-buy-btn">Add to Cart</button>
+                <button type="button" class="ws-buy-btn">Buy Now</button>
               {% endif %}
             </div>
           </div>
@@ -108,14 +114,13 @@ document.addEventListener('DOMContentLoaded', function() {
 .ws-prev { left: 10px; }
 .ws-next { right: 10px; }
 
-@media (max-width: 1024px) {
-  .ws-prev { left: 5px; }
-  .ws-next { right: 5px; }
+@media (max-width: 768px) {
+  .ws-prev, .ws-next { display: none !important; }
 }
 
 .watch-and-shop-section {
   background: #fff;
-  padding: 60px 0;
+  padding: 40px 0;
 }
 .watch-shop-title {
   text-align: center;
@@ -273,6 +278,18 @@ document.addEventListener('DOMContentLoaded', function() {
           "type": "product",
           "id": "product",
           "label": "Linked Product"
+        },
+        {
+          "type": "text",
+          "id": "custom_title",
+          "label": "Custom Product Title",
+          "info": "Overrides the default product name"
+        },
+        {
+          "type": "text",
+          "id": "custom_price",
+          "label": "Custom Price",
+          "info": "Overrides the default product price (e.g. Rs. 499)"
         }
       ]
     }
