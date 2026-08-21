@@ -4,6 +4,14 @@
       "type": "hero-carousel",
       "settings": {}
     },
+    "watch_and_shop": {
+      "type": "watch-and-shop",
+      "settings": {}
+    },
+    "shop_by_circles": {
+      "type": "shop-by-category-circles",
+      "settings": {}
+    },
     "shop_by_wellness": {
       "type": "shop-by-wellness",
       "settings": {}
@@ -47,6 +55,8 @@
   },
   "order": [
     "hero_carousel",
+    "watch_and_shop",
+    "shop_by_circles",
     "shop_by_wellness",
     "bestsellers_carousel",
     "ayurvedic_formulations",
