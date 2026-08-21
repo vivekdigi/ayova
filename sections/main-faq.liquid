@@ -5,9 +5,9 @@
 <!-- FAQ Hero -->
 <div class="faq-hero">
   <div class="container">
-    <span class="faq-eyebrow">FREQUENTLY ASKED QUESTIONS</span>
-    <h1 class="faq-hero-title">Everything you may want to know<br>before you order.</h1>
-    <p class="faq-hero-sub">We've answered the most common questions about our products, ingredients, and delivery.</p>
+    <span class="faq-eyebrow">{{ section.settings.hero_eyebrow | escape }}</span>
+    <h1 class="faq-hero-title">{{ section.settings.hero_title | newline_to_br }}</h1>
+    <p class="faq-hero-sub">{{ section.settings.hero_subtitle | escape }}</p>
   </div>
 </div>
 
@@ -15,103 +15,36 @@
 <div class="section-padding faq-section">
   <div class="container">
     <div class="faq-columns">
-
+      {% assign half_count = section.blocks.size | divided_by: 2.0 | ceil %}
+      
       <!-- Left Column -->
       <div class="faq-col">
-        <div class="faq-item">
-          <button class="faq-question" aria-expanded="false">
-            What ingredients does Ayova use?
-            <span class="faq-icon">+</span>
-          </button>
-          <div class="faq-answer">
-            <p>Ayova uses 100% plant-based, standardized botanical extracts. Every ingredient is lab-tested for potency, purity, and safety. We never use synthetic fillers, artificial colors, or proprietary blends.</p>
+        {% for block in section.blocks limit: half_count %}
+          <div class="faq-item" {{ block.shopify_attributes }}>
+            <button class="faq-question" aria-expanded="false">
+              {{ block.settings.question | escape }}
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>{{ block.settings.answer }}</p>
+            </div>
           </div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-question" aria-expanded="false">
-            Are Ayova products FSSAI approved?
-            <span class="faq-icon">+</span>
-          </button>
-          <div class="faq-answer">
-            <p>Yes. All Ayova formulations are manufactured in FSSAI-licensed, GMP-certified facilities under AYUSH guidelines. You can verify our license numbers on the product packaging.</p>
-          </div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-question" aria-expanded="false">
-            How long does delivery take?
-            <span class="faq-icon">+</span>
-          </button>
-          <div class="faq-answer">
-            <p>Standard delivery takes 3–5 business days across India. Metro cities typically receive orders in 2–3 days. You'll receive a tracking link via SMS and email after dispatch.</p>
-          </div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-question" aria-expanded="false">
-            Do you offer Cash on Delivery (COD)?
-            <span class="faq-icon">+</span>
-          </button>
-          <div class="faq-answer">
-            <p>Yes, COD is available across most serviceable pin codes in India. COD orders may take 1–2 extra days for verification.</p>
-          </div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-question" aria-expanded="false">
-            Can I take Ayova supplements with existing medication?
-            <span class="faq-icon">+</span>
-          </button>
-          <div class="faq-answer">
-            <p>We recommend consulting a healthcare professional before combining any supplements with prescription medication. Our support team is also available to guide you.</p>
-          </div>
-        </div>
+        {% endfor %}
       </div>
 
       <!-- Right Column -->
       <div class="faq-col">
-        <div class="faq-item">
-          <button class="faq-question" aria-expanded="false">
-            What is your return policy?
-            <span class="faq-icon">+</span>
-          </button>
-          <div class="faq-answer">
-            <p>We offer a 30-day satisfaction guarantee. If you are not happy with your purchase for any reason, contact us and we'll arrange a full refund or exchange — no questions asked.</p>
+        {% for block in section.blocks offset: half_count %}
+          <div class="faq-item" {{ block.shopify_attributes }}>
+            <button class="faq-question" aria-expanded="false">
+              {{ block.settings.question | escape }}
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>{{ block.settings.answer }}</p>
+            </div>
           </div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-question" aria-expanded="false">
-            Are Ayova products suitable for vegetarians?
-            <span class="faq-icon">+</span>
-          </button>
-          <div class="faq-answer">
-            <p>Yes! All our capsules use plant-based HPMC shells (not gelatin). Every product in our range is 100% vegetarian-friendly.</p>
-          </div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-question" aria-expanded="false">
-            How do combo packs work?
-            <span class="faq-icon">+</span>
-          </button>
-          <div class="faq-answer">
-            <p>Combo packs are curated bundles of complementary supplements that work better together. They are priced at a discount compared to buying individual products and ship together in one box.</p>
-          </div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-question" aria-expanded="false">
-            Is there a subscription option?
-            <span class="faq-icon">+</span>
-          </button>
-          <div class="faq-answer">
-            <p>We are working on a subscription program. Subscribe to our newsletter to get early access and an exclusive first-subscriber discount when it launches.</p>
-          </div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-question" aria-expanded="false">
-            How can I contact Ayova support?
-            <span class="faq-icon">+</span>
-          </button>
-          <div class="faq-answer">
-            <p>You can reach us at <a href="mailto:info@ayovaorganics.com">info@ayovaorganics.com</a> or call us at +91 91114-53531. We're available Monday–Saturday, 9 AM–6 PM IST.</p>
-          </div>
-        </div>
+        {% endfor %}
       </div>
 
     </div>
@@ -119,27 +52,16 @@
     <!-- Still Have Questions CTA -->
     <div class="faq-cta">
       <div class="faq-cta-inner">
-        <h3>Still have a question?</h3>
-        <p>Our wellness experts are happy to help you find the right product for your needs.</p>
-        <a href="/pages/contact" class="btn btn-primary">Contact Us →</a>
+        <h3>{{ section.settings.cta_title | escape }}</h3>
+        <p>{{ section.settings.cta_text | escape }}</p>
+        <a href="{{ section.settings.cta_link }}" class="btn btn-primary">{{ section.settings.cta_button_label | escape }} →</a>
       </div>
     </div>
 
   </div>
 </div>
 
-<!-- Marketplace Strip -->
-<div class="faq-marketplace">
-  <div class="container">
-    <h3 class="marketplace-title-faq">SHOP AYOVA EVERYWHERE</h3>
-    <p class="marketplace-sub-faq">Your wellness essentials, wherever you shop.</p>
-    <div class="marketplace-logos-faq">
-      <a href="#" class="mkt-logo mkt-blinkit" target="_blank" rel="noopener"><span>blinkit</span></a>
-      <a href="#" class="mkt-logo mkt-amazon" target="_blank" rel="noopener"><span>amazon</span></a>
-      <a href="#" class="mkt-logo mkt-flipkart" target="_blank" rel="noopener"><span>Flipkart</span></a>
-    </div>
-  </div>
-</div>
+
 
 <script>
 document.querySelectorAll('.faq-question').forEach(function(btn) {
@@ -311,10 +233,85 @@ document.querySelectorAll('.faq-question').forEach(function(btn) {
 {% schema %}
 {
   "name": "FAQ Page",
-  "settings": [],
+  "settings": [
+    {
+      "type": "header",
+      "content": "Hero Settings"
+    },
+    {
+      "type": "text",
+      "id": "hero_eyebrow",
+      "label": "Hero Eyebrow",
+      "default": "FREQUENTLY ASKED QUESTIONS"
+    },
+    {
+      "type": "textarea",
+      "id": "hero_title",
+      "label": "Hero Title",
+      "default": "Everything you may want to know\nbefore you order."
+    },
+    {
+      "type": "text",
+      "id": "hero_subtitle",
+      "label": "Hero Subtitle",
+      "default": "We've answered the most common questions about our products, ingredients, and delivery."
+    },
+    {
+      "type": "header",
+      "content": "CTA Settings"
+    },
+    {
+      "type": "text",
+      "id": "cta_title",
+      "label": "CTA Title",
+      "default": "Still have a question?"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA Text",
+      "default": "Our wellness experts are happy to help you find the right product for your needs."
+    },
+    {
+      "type": "text",
+      "id": "cta_button_label",
+      "label": "CTA Button Label",
+      "default": "Contact Us"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "CTA Button Link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq_item",
+      "name": "FAQ Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "What is your question?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Provide the answer here.</p>"
+        }
+      ]
+    }
+  ],
   "presets": [
     {
-      "name": "FAQ Page"
+      "name": "FAQ Page",
+      "blocks": [
+        { "type": "faq_item" },
+        { "type": "faq_item" },
+        { "type": "faq_item" }
+      ]
     }
   ]
 }

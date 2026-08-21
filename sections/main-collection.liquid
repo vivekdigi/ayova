@@ -30,10 +30,56 @@
 
       <!-- Sidebar Filters -->
       <aside class="collection-filters">
-        <div class="filter-header">
+        <div class="filter-header" style="margin-bottom: 24px;">
+          <h3 class="filter-heading" style="color: #D35F3C; font-size: 11px; letter-spacing: 1px; text-transform: uppercase;">Filter Products</h3>
+        </div>
+
+        <!-- Dynamic Category List -->
+        <div class="figma-category-list" style="margin-bottom: 32px;">
+          {% for c in collections %}
+            {% if c.handle != 'frontpage' and c.handle != 'all' and c.products_count > 0 %}
+              <div class="figma-cat-group" style="margin-bottom: 16px;">
+                <h4 style="font-size: 14px; font-weight: 700; color: #1A362D; margin-bottom: 12px;">
+                  <a href="{{ c.url }}" style="text-decoration: none; color: inherit;">{{ c.title }}</a>
+                </h4>
+                {% for prod in c.products limit: 5 %}
+                  <label style="display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: #7A857F; margin-bottom: 8px; cursor: pointer;">
+                    <input type="checkbox" value="{{ prod.title | escape }}" class="client-side-filter-chk" style="accent-color: #285044; margin-top: 3px;" onchange="applyClientSideProductFilter()"> {{ prod.title }}
+                  </label>
+                {% endfor %}
+                {% if c.products_count > 5 %}
+                  <a href="{{ c.url }}" style="font-size: 12px; color: #D35F3C; font-weight: 600;">View All →</a>
+                {% endif %}
+              </div>
+              <hr style="border: 0; border-top: 1px solid #e0e0e0; margin: 16px 0;">
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        <div class="filter-header" style="margin-top: 32px;">
           <h3 class="filter-heading">Filters</h3>
           <a href="{{ collection.url }}?sort_by={{ collection.sort_by }}" class="clear-filters-btn">Clear All</a>
         </div>
+
+        <!-- Category / Tag Filters (Fallback) -->
+        {% if collection.all_tags.size > 0 %}
+          <div class="filter-group">
+            <h4 class="filter-title">Category</h4>
+            {% for tag in collection.all_tags %}
+              <div class="filter-label">
+                {% if current_tags contains tag %}
+                  <a href="{{ collection.url | remove_tag: tag }}" class="filter-tag-link active-tag">
+                    <span class="filter-chk-box active-chk">✓</span> {{ tag }}
+                  </a>
+                {% else %}
+                  <a href="{{ collection.url | append: '/' | append: tag | handle }}" class="filter-tag-link">
+                    <span class="filter-chk-box"></span> {{ tag }}
+                  </a>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
 
         <form id="CollectionFiltersForm">
           {%- if collection.sort_by != blank -%}
@@ -55,7 +101,6 @@
                         class="filter-input-chk"
                         {% if filter_value.active -%}checked{%- endif %}
                         {% if filter_value.count == 0 and filter_value.active == false -%}disabled{%- endif %}
-                        onchange="this.closest('form').submit()"
                         style="margin:0;"
                       >
                       <span>{{ filter_value.label }} ({{ filter_value.count }})</span>
@@ -63,38 +108,200 @@
                   {%- endfor -%}
                   
                 {%- when 'price_range' -%}
+                  <div class="price-slider-wrapper" style="position:relative; width:100%; height:40px; margin-bottom:12px;">
+                    <style>
+                      .price-slider-wrapper input[type=range] {
+                        position: absolute; pointer-events: none; -webkit-appearance: none; width: 100%; height: 4px; background: transparent; top: 18px; outline: none; margin:0; padding:0; border: none;
+                      }
+                      .price-slider-wrapper input[type=range]::-webkit-slider-thumb {
+                        pointer-events: auto; -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: #285044; border: 2px solid #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.3); cursor: pointer; position:relative; z-index: 10; margin-top:-7px;
+                      }
+                      .price-slider-wrapper input[type=range]::-moz-range-thumb {
+                        pointer-events: auto; width: 18px; height: 18px; border-radius: 50%; background: #285044; border: 2px solid #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.3); cursor: pointer; position:relative; z-index: 10; border:none;
+                      }
+                      .price-slider-track {
+                        position: absolute; width: 100%; height: 4px; background: #e0e0e0; top: 18px; border-radius: 2px;
+                      }
+                      .price-slider-fill {
+                        position: absolute; height: 4px; background: #285044; top: 18px; border-radius: 2px; z-index: 1;
+                      }
+                    </style>
+                    <div class="price-slider-track"></div>
+                    <div class="price-slider-fill" id="price-slider-fill-{{ filter.label | handle }}"></div>
+                    {% assign max_price = filter.range_max | money_without_currency | replace: ',', '' | default: 5000 | round %}
+                    {% assign current_min = filter.min_value.value | money_without_currency | replace: ',', '' | default: 0 | round %}
+                    {% assign current_max = filter.max_value.value | money_without_currency | replace: ',', '' | default: max_price | round %}
+                    <input type="range" min="0" max="{{ max_price }}" value="{{ current_min }}" id="slider-min-{{ filter.label | handle }}" step="1" oninput="updatePriceInputs(this, 'min')">
+                    <input type="range" min="0" max="{{ max_price }}" value="{{ current_max }}" id="slider-max-{{ filter.label | handle }}" step="1" oninput="updatePriceInputs(this, 'max')">
+                  </div>
+                  
                   <div class="price-inputs">
                     <input
                       name="{{ filter.min_value.param_name }}"
                       id="Filter-{{ filter.min_value.param_name }}"
-                      {% if filter.min_value.value -%}
-                        value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}"
-                      {%- endif %}
+                      value="{{ current_min }}"
                       type="number"
                       placeholder="Min"
                       min="0"
-                      max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                      max="{{ max_price }}"
                       class="filter-price-input"
+                      onchange="updatePriceSliders()"
                     >
                     <span class="price-sep">–</span>
                     <input
                       name="{{ filter.max_value.param_name }}"
                       id="Filter-{{ filter.max_value.param_name }}"
-                      {% if filter.max_value.value -%}
-                        value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}"
-                      {%- endif %}
+                      value="{{ current_max }}"
                       type="number"
                       placeholder="Max"
                       min="0"
-                      max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                      max="{{ max_price }}"
                       class="filter-price-input"
+                      onchange="updatePriceSliders()"
                     >
                   </div>
-                  <button type="submit" class="apply-price-btn">Apply</button>
+                  <!-- The Apply button has been removed for automatic AJAX filtering -->
+                  
+                  <script>
+                    function applyClientSideProductFilter() {
+                      var checkboxes = document.querySelectorAll('.client-side-filter-chk:checked');
+                      var selectedTitles = Array.from(checkboxes).map(function(cb) { return cb.value.trim().toLowerCase(); });
+                      var cards = document.querySelectorAll('.shop-product-grid .shop-product-card');
+                      
+                      if(selectedTitles.length === 0) {
+                        cards.forEach(function(card) {
+                          card.style.display = 'block';
+                        });
+                        return;
+                      }
+                      
+                      cards.forEach(function(card) {
+                        var titleEl = card.querySelector('.shop-card-title a');
+                        if(!titleEl) return;
+                        var cardTitle = titleEl.innerText.trim().toLowerCase();
+                        var match = selectedTitles.includes(cardTitle);
+                        card.style.display = match ? 'block' : 'none';
+                      });
+                    }
+
+                    function updatePriceInputs(slider, type) {
+                      var minSlider = document.getElementById('slider-min-{{ filter.label | handle }}');
+                      var maxSlider = document.getElementById('slider-max-{{ filter.label | handle }}');
+                      var minInput = document.getElementById('Filter-{{ filter.min_value.param_name }}');
+                      var maxInput = document.getElementById('Filter-{{ filter.max_value.param_name }}');
+                      var fill = document.getElementById('price-slider-fill-{{ filter.label | handle }}');
+                      
+                      var minVal = parseInt(minSlider.value) || 0;
+                      var maxVal = parseInt(maxSlider.value) || 0;
+                      
+                      if(minVal >= maxVal) {
+                        if(type === 'min') { minSlider.value = maxVal - 1; minVal = maxVal - 1; }
+                        else { maxSlider.value = minVal + 1; maxVal = minVal + 1; }
+                      }
+                      
+                      minInput.value = minVal;
+                      maxInput.value = maxVal;
+                      
+                      var percent1 = (minVal / minSlider.max) * 100;
+                      var percent2 = (maxVal / maxSlider.max) * 100;
+                      fill.style.left = percent1 + "%";
+                      fill.style.right = (100 - percent2) + "%";
+                    }
+                    
+                    function updatePriceSliders() {
+                      var minSlider = document.getElementById('slider-min-{{ filter.label | handle }}');
+                      var maxSlider = document.getElementById('slider-max-{{ filter.label | handle }}');
+                      var minInput = document.getElementById('Filter-{{ filter.min_value.param_name }}');
+                      var maxInput = document.getElementById('Filter-{{ filter.max_value.param_name }}');
+                      var fill = document.getElementById('price-slider-fill-{{ filter.label | handle }}');
+                      if(!minSlider) return;
+                      
+                      minSlider.value = minInput.value || 0;
+                      maxSlider.value = maxInput.value || maxSlider.max;
+                      
+                      var percent1 = ((minInput.value || 0) / minSlider.max) * 100;
+                      var percent2 = ((maxInput.value || maxSlider.max) / maxSlider.max) * 100;
+                      fill.style.left = percent1 + "%";
+                      fill.style.right = (100 - percent2) + "%";
+                    }
+                    
+                    document.addEventListener('DOMContentLoaded', function() {
+                      updatePriceSliders();
+                    });
+                  </script>
               {%- endcase -%}
             </div>
           {%- endfor -%}
         </form>
+        
+        <script>
+          document.addEventListener('DOMContentLoaded', function() {
+            initAjaxFilters();
+          });
+
+          function initAjaxFilters() {
+            var form = document.getElementById('CollectionFiltersForm');
+            if(!form) return;
+
+            // Listen to checkbox changes
+            var checkboxes = form.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(function(cb) {
+              cb.addEventListener('change', submitFiltersAJAX);
+            });
+
+            // Listen to price inputs with debounce
+            var priceInputs = form.querySelectorAll('input[type="number"], input[type="range"]');
+            var timeout;
+            priceInputs.forEach(function(input) {
+              input.addEventListener('change', function() {
+                clearTimeout(timeout);
+                timeout = setTimeout(submitFiltersAJAX, 600);
+              });
+            });
+
+            form.addEventListener('submit', function(e) {
+              e.preventDefault();
+              submitFiltersAJAX();
+            });
+          }
+
+          function submitFiltersAJAX() {
+            var form = document.getElementById('CollectionFiltersForm');
+            var formData = new FormData(form);
+            var searchParams = new URLSearchParams(formData);
+            var url = new URL(window.location.href);
+            url.search = searchParams.toString();
+            
+            var grid = document.querySelector('.collection-products');
+            if(grid) grid.style.opacity = '0.5';
+
+            fetch(url.toString())
+              .then(res => res.text())
+              .then(html => {
+                var parser = new DOMParser();
+                var newDoc = parser.parseFromString(html, 'text/html');
+                
+                // Update product grid
+                var newGrid = newDoc.querySelector('.collection-products');
+                if(newGrid && grid) {
+                  grid.innerHTML = newGrid.innerHTML;
+                  grid.style.opacity = '1';
+                }
+                
+                // Update filters form to reflect active states
+                var newFilters = newDoc.getElementById('CollectionFiltersForm');
+                if(newFilters && form) {
+                  form.innerHTML = newFilters.innerHTML;
+                  initAjaxFilters(); // re-attach listeners
+                  if(typeof updatePriceSliders === 'function') {
+                    updatePriceSliders(); // re-initialize sliders if present
+                  }
+                }
+                
+                history.pushState(null, '', url.toString());
+              });
+          }
+        </script>
       </aside>
 
       <!-- Main Product Grid & Controls -->

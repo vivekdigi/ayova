@@ -8,15 +8,19 @@
   <div class="container">
     <div class="about-hero-inner">
       <div class="about-hero-text">
-        <span class="about-eyebrow">OUR STORY</span>
-        <h1 class="about-hero-title">Wellness made cleaner,<br>cleaner and more trustworthy.</h1>
-        <p class="about-hero-desc">
-          Ayova was founded with one simple belief — that wellness products should work, be honest about what's inside, and be accessible to everyone in India.
-        </p>
-        <a href="/collections/all" class="btn about-hero-btn">Explore Our Products →</a>
+        <span class="about-eyebrow">{{ section.settings.hero_eyebrow | escape }}</span>
+        <h1 class="about-hero-title">{{ section.settings.hero_title | newline_to_br }}</h1>
+        <p class="about-hero-desc">{{ section.settings.hero_desc | escape }}</p>
+        {% if section.settings.hero_btn_label != blank %}
+        <a href="{{ section.settings.hero_btn_link }}" class="btn about-hero-btn">{{ section.settings.hero_btn_label | escape }} →</a>
+        {% endif %}
       </div>
       <div class="about-hero-image">
-        <img src="https://images.unsplash.com/photo-1500595046743-cd271d694d30?w=800&auto=format&fit=crop&q=80" alt="Fresh herbs and natural wellness" loading="lazy">
+        {% if section.settings.hero_image != blank %}
+          <img src="{{ section.settings.hero_image | image_url: width: 800 }}" alt="{{ section.settings.hero_image.alt | default: 'Ayova Hero' }}" loading="lazy">
+        {% else %}
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+        {% endif %}
       </div>
     </div>
   </div>
@@ -28,38 +32,35 @@
     <div class="about-story-grid">
 
       <div class="about-story-text">
-        <span class="about-eyebrow">BORN FROM A SIMPLE PROBLEM</span>
-        <h2 class="about-story-title">Born from a simple wellness problem.</h2>
-        <p class="about-story-p">
-          Our founder spent years struggling to find supplements he could actually trust. The market was flooded with products that were under-dosed, filled with synthetic binders, and impossible to verify.
-        </p>
-        <p class="about-story-p">
-          Ayova was built to be different. We work directly with certified Ayurvedic formulators, use only standardized botanical extracts, and publish every ingredient with its exact potency — no hidden proprietary blends, no marketing fictions.
-        </p>
+        <span class="about-eyebrow">{{ section.settings.story_eyebrow | escape }}</span>
+        <h2 class="about-story-title">{{ section.settings.story_title | escape }}</h2>
+        <div class="about-story-p">
+          {{ section.settings.story_text }}
+        </div>
         <div class="about-story-stats">
-          <div class="story-stat">
-            <strong>50,000+</strong>
-            <span>Happy Customers</span>
-          </div>
-          <div class="story-stat">
-            <strong>100%</strong>
-            <span>Plant-Based</span>
-          </div>
-          <div class="story-stat">
-            <strong>AYUSH</strong>
-            <span>Certified</span>
-          </div>
+          {% for block in section.blocks %}
+            {% if block.type == 'stat' %}
+              <div class="story-stat" {{ block.shopify_attributes }}>
+                <strong>{{ block.settings.stat_value | escape }}</strong>
+                <span>{{ block.settings.stat_label | escape }}</span>
+              </div>
+            {% endif %}
+          {% endfor %}
         </div>
       </div>
 
       <div class="about-story-image-col">
         <div class="story-main-img">
-          <img src="https://images.unsplash.com/photo-1466637574441-749b8f19452f?w=600&auto=format&fit=crop&q=80" alt="Natural herbs being prepared" loading="lazy">
+          {% if section.settings.story_image != blank %}
+            <img src="{{ section.settings.story_image | image_url: width: 600 }}" alt="{{ section.settings.story_image.alt | default: 'Our Story' }}" loading="lazy">
+          {% else %}
+            {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+          {% endif %}
         </div>
         <div class="story-mission-card">
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#a8c4b8" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          <p class="mission-quote">"We decided to build a wellness brand people could understand, question and trust."</p>
-          <span class="mission-author">— Ayova Founders</span>
+          <p class="mission-quote">"{{ section.settings.mission_quote | escape }}"</p>
+          <span class="mission-author">— {{ section.settings.mission_author | escape }}</span>
         </div>
       </div>
 
@@ -71,52 +72,24 @@
 <div class="about-values-section">
   <div class="container">
     <div class="values-header">
-      <span class="about-eyebrow">WHY WE'RE DIFFERENT</span>
-      <h2 class="values-title">The Ayova Standard</h2>
+      <span class="about-eyebrow">{{ section.settings.values_eyebrow | escape }}</span>
+      <h2 class="values-title">{{ section.settings.values_title | escape }}</h2>
     </div>
     <div class="values-grid">
-      <div class="value-card">
-        <div class="value-icon">🌿</div>
-        <h3>Standardized Extracts</h3>
-        <p>Every ingredient is standardized to a verified potency — not raw powders that vary batch to batch.</p>
-      </div>
-      <div class="value-card">
-        <div class="value-icon">🔬</div>
-        <h3>Lab Tested</h3>
-        <p>Third-party tested for heavy metals, microbial purity, and active phytochemical content.</p>
-      </div>
-      <div class="value-card">
-        <div class="value-icon">📋</div>
-        <h3>Full Transparency</h3>
-        <p>Every supplement lists its exact ingredient, extract ratio, and dosage. No proprietary blends.</p>
-      </div>
-      <div class="value-card">
-        <div class="value-icon">✅</div>
-        <h3>AYUSH & FSSAI Certified</h3>
-        <p>Manufactured in GMP-certified facilities under AYUSH and FSSAI regulations for Indian consumers.</p>
-      </div>
+      {% for block in section.blocks %}
+        {% if block.type == 'value' %}
+          <div class="value-card" {{ block.shopify_attributes }}>
+            <div class="value-icon">{{ block.settings.icon | escape }}</div>
+            <h3>{{ block.settings.title | escape }}</h3>
+            <p>{{ block.settings.text | escape }}</p>
+          </div>
+        {% endif %}
+      {% endfor %}
     </div>
   </div>
 </div>
 
-<!-- Marketplace / Shop Everywhere Strip -->
-<div class="about-marketplace-section">
-  <div class="container">
-    <h3 class="marketplace-title">SHOP AYOVA EVERYWHERE</h3>
-    <p class="marketplace-sub">Your wellness essentials, wherever you shop.</p>
-    <div class="marketplace-logos">
-      <a href="#" class="marketplace-logo marketplace-logo-blinkit" target="_blank" rel="noopener">
-        <span>blinkit</span>
-      </a>
-      <a href="#" class="marketplace-logo marketplace-logo-amazon" target="_blank" rel="noopener">
-        <span style="font-family: var(--font-accent); font-weight: 700; color: #232F3E;">amazon</span>
-      </a>
-      <a href="#" class="marketplace-logo marketplace-logo-flipkart" target="_blank" rel="noopener">
-        <span style="font-weight: 700; color: #fff;">Flipkart</span>
-      </a>
-    </div>
-  </div>
-</div>
+
 
 <style>
 /* About Hero */
@@ -168,8 +141,9 @@
   overflow: hidden;
   box-shadow: 0 20px 60px rgba(0,0,0,0.3);
   aspect-ratio: 4/3;
+  background: #3a5c4e;
 }
-.about-hero-image img {
+.about-hero-image img, .about-hero-image svg {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -190,7 +164,7 @@
   margin: 12px 0 20px;
   line-height: 1.25;
 }
-.about-story-p {
+.about-story-p p {
   font-size: 1rem;
   color: var(--color-text-muted);
   line-height: 1.7;
@@ -216,8 +190,9 @@
   border-radius: 16px;
   overflow: hidden;
   aspect-ratio: 4/3;
+  background: #eaeaea;
 }
-.story-main-img img { width: 100%; height: 100%; object-fit: cover; }
+.story-main-img img, .story-main-img svg { width: 100%; height: 100%; object-fit: cover; }
 .story-mission-card {
   background: var(--color-forest-dark);
   border-radius: 16px;
@@ -270,38 +245,6 @@
   margin-bottom: 10px;
 }
 .value-card p { font-size: 0.9rem; color: var(--color-text-muted); line-height: 1.55; }
-/* Marketplace */
-.about-marketplace-section {
-  background: var(--color-forest-dark);
-  padding: 64px 0;
-  text-align: center;
-}
-.marketplace-title {
-  font-family: var(--font-heading);
-  font-size: 1.6rem;
-  font-weight: 700;
-  color: #fff;
-  letter-spacing: 0.05em;
-  margin-bottom: 8px;
-}
-.marketplace-sub { color: #a8c4b8; font-size: 1rem; margin-bottom: 36px; }
-.marketplace-logos { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
-.marketplace-logo {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 14px 32px;
-  border-radius: 10px;
-  font-size: 1rem;
-  font-weight: 700;
-  text-decoration: none;
-  transition: opacity 0.2s;
-  min-width: 140px;
-}
-.marketplace-logo:hover { opacity: 0.85; }
-.marketplace-logo-blinkit { background: #F8D000; color: #1A1A1A; }
-.marketplace-logo-amazon { background: #fff; color: #232F3E; }
-.marketplace-logo-flipkart { background: #2874F0; color: #fff; }
 /* Responsive */
 @media (max-width: 900px) {
   .about-hero-inner,
@@ -321,10 +264,203 @@
 {% schema %}
 {
   "name": "About Us Page",
-  "settings": [],
+  "settings": [
+    {
+      "type": "header",
+      "content": "Hero Settings"
+    },
+    {
+      "type": "text",
+      "id": "hero_eyebrow",
+      "label": "Hero Eyebrow",
+      "default": "OUR STORY"
+    },
+    {
+      "type": "textarea",
+      "id": "hero_title",
+      "label": "Hero Title",
+      "default": "Wellness made cleaner,\ncleaner and more trustworthy."
+    },
+    {
+      "type": "textarea",
+      "id": "hero_desc",
+      "label": "Hero Description",
+      "default": "Ayova was founded with one simple belief — that wellness products should work, be honest about what's inside, and be accessible to everyone in India."
+    },
+    {
+      "type": "text",
+      "id": "hero_btn_label",
+      "label": "Hero Button Label",
+      "default": "Explore Our Products"
+    },
+    {
+      "type": "url",
+      "id": "hero_btn_link",
+      "label": "Hero Button Link"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Hero Image"
+    },
+    {
+      "type": "header",
+      "content": "Story Settings"
+    },
+    {
+      "type": "text",
+      "id": "story_eyebrow",
+      "label": "Story Eyebrow",
+      "default": "BORN FROM A SIMPLE PROBLEM"
+    },
+    {
+      "type": "text",
+      "id": "story_title",
+      "label": "Story Title",
+      "default": "Born from a simple wellness problem."
+    },
+    {
+      "type": "richtext",
+      "id": "story_text",
+      "label": "Story Text",
+      "default": "<p>Our founder spent years struggling to find supplements he could actually trust. The market was flooded with products that were under-dosed, filled with synthetic binders, and impossible to verify.</p><p>Ayova was built to be different. We work directly with certified Ayurvedic formulators, use only standardized botanical extracts, and publish every ingredient with its exact potency — no hidden proprietary blends, no marketing fictions.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "story_image",
+      "label": "Story Image"
+    },
+    {
+      "type": "textarea",
+      "id": "mission_quote",
+      "label": "Mission Quote",
+      "default": "We decided to build a wellness brand people could understand, question and trust."
+    },
+    {
+      "type": "text",
+      "id": "mission_author",
+      "label": "Mission Author",
+      "default": "Ayova Founders"
+    },
+    {
+      "type": "header",
+      "content": "Values Settings"
+    },
+    {
+      "type": "text",
+      "id": "values_eyebrow",
+      "label": "Values Eyebrow",
+      "default": "WHY WE'RE DIFFERENT"
+    },
+    {
+      "type": "text",
+      "id": "values_title",
+      "label": "Values Title",
+      "default": "The Ayova Standard"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Statistic",
+      "settings": [
+        {
+          "type": "text",
+          "id": "stat_value",
+          "label": "Value",
+          "default": "100%"
+        },
+        {
+          "type": "text",
+          "id": "stat_label",
+          "label": "Label",
+          "default": "Plant-Based"
+        }
+      ]
+    },
+    {
+      "type": "value",
+      "name": "Value",
+      "settings": [
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Icon (Emoji)",
+          "default": "🌿"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Standardized Extracts"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Description",
+          "default": "Every ingredient is standardized to a verified potency — not raw powders that vary batch to batch."
+        }
+      ]
+    }
+  ],
   "presets": [
     {
-      "name": "About Us Page"
+      "name": "About Us Page",
+      "blocks": [
+        {
+          "type": "stat",
+          "settings": {
+            "stat_value": "50,000+",
+            "stat_label": "Happy Customers"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "stat_value": "100%",
+            "stat_label": "Plant-Based"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "stat_value": "AYUSH",
+            "stat_label": "Certified"
+          }
+        },
+        {
+          "type": "value",
+          "settings": {
+            "icon": "🌿",
+            "title": "Standardized Extracts",
+            "text": "Every ingredient is standardized to a verified potency — not raw powders that vary batch to batch."
+          }
+        },
+        {
+          "type": "value",
+          "settings": {
+            "icon": "🔬",
+            "title": "Lab Tested",
+            "text": "Third-party tested for heavy metals, microbial purity, and active phytochemical content."
+          }
+        },
+        {
+          "type": "value",
+          "settings": {
+            "icon": "📋",
+            "title": "Full Transparency",
+            "text": "Every supplement lists its exact ingredient, extract ratio, and dosage. No proprietary blends."
+          }
+        },
+        {
+          "type": "value",
+          "settings": {
+            "icon": "✅",
+            "title": "AYUSH & FSSAI Certified",
+            "text": "Manufactured in GMP-certified facilities under AYUSH and FSSAI regulations for Indian consumers."
+          }
+        }
+      ]
     }
   ]
 }

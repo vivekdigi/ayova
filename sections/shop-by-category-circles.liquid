@@ -1,0 +1,147 @@
+<div class="shop-by-circles-section section-padding">
+  <div class="container">
+    {% if section.settings.title != blank %}
+      <h2 class="shop-circles-title">{{ section.settings.title | escape }}</h2>
+    {% endif %}
+
+    <div class="shop-circles-grid">
+      {% for block in section.blocks %}
+        <a href="{{ block.settings.link | default: '#' }}" class="shop-circle-item" {{ block.shopify_attributes }}>
+          <div class="shop-circle-img-wrap" style="border-color: {{ block.settings.border_color }};">
+            {% if block.settings.image != blank %}
+              <img src="{{ block.settings.image | image_url: width: 300 }}" alt="{{ block.settings.title | escape }}" class="shop-circle-img" loading="lazy">
+            {% else %}
+              {{ 'collection-1' | placeholder_svg_tag: 'shop-circle-img placeholder-svg' }}
+            {% endif %}
+          </div>
+          <span class="shop-circle-label">{{ block.settings.title | escape }}</span>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<style>
+.shop-by-circles-section {
+  background: #fff;
+  padding: 40px 0 60px;
+}
+.shop-circles-title {
+  text-align: center;
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  font-weight: 500;
+  color: var(--color-forest-dark);
+  margin-bottom: 30px;
+}
+.shop-circles-grid {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+.shop-circle-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  gap: 12px;
+  transition: transform 0.2s ease;
+}
+.shop-circle-item:hover {
+  transform: translateY(-5px);
+}
+.shop-circle-img-wrap {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 3px solid transparent; /* controlled dynamically by block setting */
+  padding: 4px; /* space between border and image */
+  background: linear-gradient(white, white) padding-box, 
+              linear-gradient(135deg, #FFB75E, #ED8F03) border-box; 
+  /* fallback gradient if no border color chosen */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.shop-circle-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.shop-circle-label {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-forest-dark);
+}
+
+@media (max-width: 600px) {
+  .shop-circles-grid {
+    gap: 16px;
+  }
+  .shop-circle-img-wrap {
+    width: 90px;
+    height: 90px;
+  }
+  .shop-circle-label {
+    font-size: 0.9rem;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Shop For (Circles)",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Shop For"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category Circle",
+      "limit": 5,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Upload Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Category"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "color",
+          "id": "border_color",
+          "label": "Border Color",
+          "default": "#FFB75E"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shop For (Circles)",
+      "blocks": [
+        { "type": "category", "settings": { "title": "Women", "border_color": "#FF8C42" } },
+        { "type": "category", "settings": { "title": "Men", "border_color": "#4A90E2" } },
+        { "type": "category", "settings": { "title": "50+", "border_color": "#50E3C2" } },
+        { "type": "category", "settings": { "title": "Kids", "border_color": "#F5A623" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,271 @@
+<div class="watch-and-shop-section section-padding">
+  <div class="container">
+    {% if section.settings.title != blank %}
+      <h2 class="watch-shop-title">{{ section.settings.title | escape }}</h2>
+    {% endif %}
+
+    <div class="watch-shop-grid">
+      {% for block in section.blocks %}
+        <div class="watch-shop-card" {{ block.shopify_attributes }}>
+          <div class="ws-video-container" data-youtube-id="{% if block.settings.youtube_url != blank %}{{ block.settings.youtube_url.id }}{% endif %}">
+            
+            {% if block.settings.poster != blank %}
+              <img src="{{ block.settings.poster | image_url: width: 400 }}" alt="Poster" class="ws-poster">
+            {% else %}
+              {{ 'image' | placeholder_svg_tag: 'ws-poster placeholder-svg' }}
+            {% endif %}
+
+            {% if block.settings.mp4_video != blank %}
+              <video class="ws-video-element" muted loop playsinline>
+                {% for source in block.settings.mp4_video.sources %}
+                  <source src="{{ source.url }}" type="{{ source.mime_type }}">
+                {% endfor %}
+              </video>
+            {% elsif block.settings.youtube_url != blank %}
+              <div class="ws-youtube-player" id="yt-{{ block.id }}" data-id="{{ block.settings.youtube_url.id }}"></div>
+            {% endif %}
+
+          </div>
+          
+          <div class="ws-product-info">
+            {% if block.settings.product != blank %}
+              <div class="ws-product-header">
+                <img src="{{ block.settings.product.featured_image | image_url: width: 60 }}" alt="{{ block.settings.product.title }}" class="ws-product-thumb">
+                <div class="ws-product-details">
+                  <span class="ws-product-title">{{ block.settings.product.title | truncate: 35 }}</span>
+                  <span class="ws-product-price">{{ block.settings.product.price | money }}</span>
+                </div>
+              </div>
+              <a href="{{ block.settings.product.url }}" class="ws-buy-btn">Buy Now</a>
+            {% else %}
+              <div class="ws-product-header">
+                <div class="ws-product-thumb placeholder-svg"></div>
+                <div class="ws-product-details">
+                  <span class="ws-product-title">Sample Product Name</span>
+                  <span class="ws-product-price">Rs. 999</span>
+                </div>
+              </div>
+              <a href="#" class="ws-buy-btn">Buy Now</a>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Handle MP4 hover to play
+  const cards = document.querySelectorAll('.watch-shop-card');
+  
+  cards.forEach(card => {
+    const video = card.querySelector('.ws-video-element');
+    const youtubeContainer = card.querySelector('.ws-youtube-player');
+    let ytPlayer = null;
+    let iframeCreated = false;
+
+    card.addEventListener('mouseenter', () => {
+      if (video) {
+        video.play();
+        video.style.opacity = '1';
+      } else if (youtubeContainer && !iframeCreated) {
+        // Create YouTube iframe on hover to auto-play and mute
+        const videoId = youtubeContainer.getAttribute('data-id');
+        youtubeContainer.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&loop=1&playlist=${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none;"></iframe>`;
+        youtubeContainer.style.opacity = '1';
+        iframeCreated = true;
+      } else if (youtubeContainer && iframeCreated) {
+        youtubeContainer.style.opacity = '1';
+      }
+    });
+
+    card.addEventListener('mouseleave', () => {
+      if (video) {
+        video.pause();
+        video.style.opacity = '0';
+      } else if (youtubeContainer) {
+        // To pause youtube iframe, we can just hide it or remove it. Removing is easier without API.
+        youtubeContainer.innerHTML = '';
+        youtubeContainer.style.opacity = '0';
+        iframeCreated = false;
+      }
+    });
+  });
+});
+</script>
+
+<style>
+.watch-and-shop-section {
+  background: #fff;
+  padding: 60px 0;
+}
+.watch-shop-title {
+  text-align: center;
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--color-forest-dark);
+  margin-bottom: 40px;
+}
+.watch-shop-grid {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding-bottom: 20px;
+  scrollbar-width: thin;
+  scrollbar-color: #ccc transparent;
+  scroll-snap-type: x mandatory;
+}
+.watch-shop-grid::-webkit-scrollbar {
+  height: 6px;
+}
+.watch-shop-grid::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 10px;
+}
+.watch-shop-card {
+  flex: 0 0 240px;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  border: 1px solid #eaeaea;
+  display: flex;
+  flex-direction: column;
+  scroll-snap-align: start;
+}
+.ws-video-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 9/16;
+  background: #000;
+  overflow: hidden;
+}
+.ws-poster {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  object-fit: cover;
+  z-index: 1;
+  transition: opacity 0.3s ease;
+}
+.ws-video-element, .ws-youtube-player {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  object-fit: cover;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.ws-product-info {
+  padding: 12px;
+  background: #fff;
+}
+.ws-product-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.ws-product-thumb {
+  width: 40px; height: 40px;
+  border-radius: 6px;
+  object-fit: cover;
+  background: #f4f4f4;
+}
+.ws-product-details {
+  display: flex;
+  flex-direction: column;
+}
+.ws-product-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #333;
+  line-height: 1.2;
+}
+.ws-product-price {
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 4px;
+}
+.ws-buy-btn {
+  display: block;
+  width: 100%;
+  text-align: center;
+  background: #000;
+  color: #fff;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.ws-buy-btn:hover {
+  background: var(--color-terracotta);
+}
+
+@media (max-width: 768px) {
+  .watch-shop-card {
+    flex: 0 0 200px;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Watch & Shop",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Watch & Shop"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "video",
+      "name": "Video Card",
+      "limit": 8,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "poster",
+          "label": "Thumbnail / Poster Image",
+          "info": "Image shown before video plays on hover."
+        },
+        {
+          "type": "video",
+          "id": "mp4_video",
+          "label": "MP4 Video",
+          "info": "Upload an MP4 for best auto-play hover experience."
+        },
+        {
+          "type": "video_url",
+          "id": "youtube_url",
+          "accept": ["youtube"],
+          "label": "YouTube URL",
+          "info": "Fallback if MP4 is not provided."
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Linked Product"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Watch & Shop",
+      "blocks": [
+        { "type": "video" },
+        { "type": "video" },
+        { "type": "video" },
+        { "type": "video" }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -8,10 +8,10 @@
     
     <!-- Hero Banner -->
     <div class="contact-hero">
-      <span class="badge badge-category">CUSTOMER CARE & CONSULTATION</span>
-      <h1 class="contact-title">We’re Here to Help Your Wellness Journey</h1>
+      <span class="badge badge-category">{{ section.settings.eyebrow | default: 'CUSTOMER CARE & CONSULTATION' }}</span>
+      <h1 class="contact-title">{{ section.settings.heading | default: 'We’re Here to Help Your Wellness Journey' }}</h1>
       <p class="contact-subtitle">
-        Have a question about our Ayurvedic formulations, order status, or need personalized herb guidance? Contact our specialist team.
+        {{ section.settings.subheading | default: 'Have a question about our Ayurvedic formulations, order status, or need personalized herb guidance? Contact our specialist team.' }}
       </p>
     </div>
 
@@ -20,87 +20,109 @@
       
       <!-- Contact Cards Info -->
       <div class="contact-info-cards">
-        <div class="info-card">
-          <div class="card-icon">📞</div>
-          <div class="card-text">
-            <h3 class="info-card-title">Call & WhatsApp Support</h3>
-            <p class="info-card-detail">+91 98765 43210</p>
-            <p class="info-card-sub">Mon to Sat: 9:00 AM – 7:00 PM IST</p>
+        {% for block in section.blocks %}
+          <div class="info-card{% if block.settings.is_highlighted %} ayush-card{% endif %}" {{ block.shopify_attributes }}>
+            <div class="card-icon">{{ block.settings.icon }}</div>
+            <div class="card-text">
+              <h3 class="info-card-title">{{ block.settings.title }}</h3>
+              {% if block.settings.detail != blank %}
+                <p class="info-card-detail">{{ block.settings.detail }}</p>
+              {% endif %}
+              {% if block.settings.sub_detail != blank %}
+                <p class="info-card-sub">{{ block.settings.sub_detail }}</p>
+              {% endif %}
+            </div>
           </div>
-        </div>
-
-        <div class="info-card">
-          <div class="card-icon">✉️</div>
-          <div class="card-text">
-            <h3 class="info-card-title">Email Us</h3>
-            <p class="info-card-detail">support@ayova.com</p>
-            <p class="info-card-sub">We reply within 24 business hours</p>
+        {% else %}
+          <div class="info-card">
+            <div class="card-icon">📞</div>
+            <div class="card-text">
+              <h3 class="info-card-title">Call & WhatsApp Support</h3>
+              <p class="info-card-detail">+91 98765 43210</p>
+              <p class="info-card-sub">Mon to Sat: 9:00 AM – 7:00 PM IST</p>
+            </div>
           </div>
-        </div>
-
-        <div class="info-card">
-          <div class="card-icon">🏢</div>
-          <div class="card-text">
-            <h3 class="info-card-title">Ayova Herbal Labs</h3>
-            <p class="info-card-detail">Plot 45, Herbal Science Park, Sector 18</p>
-            <p class="info-card-sub">Gurugram, Haryana – 122015, India</p>
+          <div class="info-card">
+            <div class="card-icon">✉️</div>
+            <div class="card-text">
+              <h3 class="info-card-title">Email Us</h3>
+              <p class="info-card-detail">support@ayova.com</p>
+              <p class="info-card-sub">We reply within 24 business hours</p>
+            </div>
           </div>
-        </div>
-
-        <div class="info-card ayush-card">
-          <div class="card-icon">🌿</div>
-          <div class="card-text">
-            <h3 class="info-card-title">Doctor Consultation</h3>
-            <p class="info-card-sub">Free consultation with licensed Ayurvedic Vaidyas on all orders above Rs. 999.</p>
+          <div class="info-card">
+            <div class="card-icon">🏢</div>
+            <div class="card-text">
+              <h3 class="info-card-title">Ayova Herbal Labs</h3>
+              <p class="info-card-detail">Plot 45, Herbal Science Park, Sector 18</p>
+              <p class="info-card-sub">Gurugram, Haryana – 122015, India</p>
+            </div>
           </div>
-        </div>
+          <div class="info-card ayush-card">
+            <div class="card-icon">🌿</div>
+            <div class="card-text">
+              <h3 class="info-card-title">Doctor Consultation</h3>
+              <p class="info-card-sub">Free consultation with licensed Ayurvedic Vaidyas on all orders above Rs. 999.</p>
+            </div>
+          </div>
+        {% endfor %}
       </div>
 
       <!-- Contact Inquiry Form -->
       <div class="contact-form-card">
-        <h2 class="form-title">Send Us a Message</h2>
-        <p class="form-desc">Fill in the details below and our team will get back to you shortly.</p>
+        <h2 class="form-title">{{ section.settings.form_title | default: 'Send Us a Message' }}</h2>
+        <p class="form-desc">{{ section.settings.form_desc | default: 'Fill in the details below and our team will get back to you shortly.' }}</p>
 
-        <form class="contact-form" onsubmit="event.preventDefault(); alert('Thank you! Your message has been sent to Ayova Support.');">
+        {% form 'contact', class: 'contact-form' %}
+          {%- if form.posted_successfully? -%}
+            <div style="background: #e6f4ea; color: #1e4620; padding: 12px; border-radius: 4px; margin-bottom: 20px;">
+              Thank you! Your message has been sent to Ayova Support.
+            </div>
+          {%- elsif form.errors -%}
+            <div style="background: #fce8e6; color: #c5221f; padding: 12px; border-radius: 4px; margin-bottom: 20px;">
+              {{ form.errors | default_errors }}
+            </div>
+          {%- endif -%}
+
           <div class="form-row-2">
             <div class="form-field">
-              <label class="field-label">YOUR FULL NAME</label>
-              <input type="text" placeholder="e.g. Rahul Sharma" required class="field-input">
+              <label class="field-label" for="ContactForm-name">YOUR FULL NAME</label>
+              <input type="text" id="ContactForm-name" name="contact[name]" placeholder="e.g. Rahul Sharma" required class="field-input">
             </div>
             <div class="form-field">
-              <label class="field-label">EMAIL ADDRESS</label>
-              <input type="email" placeholder="you@example.com" required class="field-input">
+              <label class="field-label" for="ContactForm-email">EMAIL ADDRESS</label>
+              <input type="email" id="ContactForm-email" name="contact[email]" placeholder="you@example.com" required class="field-input">
             </div>
           </div>
 
           <div class="form-row-2">
             <div class="form-field">
-              <label class="field-label">PHONE NUMBER</label>
-              <input type="tel" placeholder="+91 98765 43210" class="field-input">
+              <label class="field-label" for="ContactForm-phone">PHONE NUMBER</label>
+              <input type="tel" id="ContactForm-phone" name="contact[phone]" placeholder="+91 98765 43210" class="field-input">
             </div>
             <div class="form-field">
-              <label class="field-label">ORDER ID (OPTIONAL)</label>
-              <input type="text" placeholder="e.g. #AYV-10492" class="field-input">
+              <label class="field-label" for="ContactForm-order">ORDER ID (OPTIONAL)</label>
+              <input type="text" id="ContactForm-order" name="contact[order_id]" placeholder="e.g. #AYV-10492" class="field-input">
             </div>
           </div>
 
           <div class="form-field">
-            <label class="field-label">SUBJECT / WELLNESS CATEGORY</label>
-            <select class="field-input">
-              <option>General Inquiry</option>
-              <option>Order & Shipping Status</option>
-              <option>Product & Dosage Guidance</option>
-              <option>Refund or Replacement</option>
+            <label class="field-label" for="ContactForm-subject">SUBJECT / WELLNESS CATEGORY</label>
+            <select id="ContactForm-subject" name="contact[subject]" class="field-input">
+              <option value="General Inquiry">General Inquiry</option>
+              <option value="Order & Shipping Status">Order & Shipping Status</option>
+              <option value="Product & Dosage Guidance">Product & Dosage Guidance</option>
+              <option value="Refund or Replacement">Refund or Replacement</option>
             </select>
           </div>
 
           <div class="form-field">
-            <label class="field-label">YOUR MESSAGE</label>
-            <textarea rows="5" placeholder="How can we assist you today?" required class="field-input"></textarea>
+            <label class="field-label" for="ContactForm-body">YOUR MESSAGE</label>
+            <textarea id="ContactForm-body" name="contact[body]" rows="5" placeholder="How can we assist you today?" required class="field-input"></textarea>
           </div>
 
           <button type="submit" class="btn btn-primary btn-submit-contact">Send Message →</button>
-        </form>
+        {% endform %}
       </div>
 
     </div>
@@ -259,10 +281,121 @@
 {% schema %}
 {
   "name": "Main Contact Section",
-  "settings": [],
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow Text",
+      "default": "CUSTOMER CARE & CONSULTATION"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "We’re Here to Help Your Wellness Journey"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Have a question about our Ayurvedic formulations, order status, or need personalized herb guidance? Contact our specialist team."
+    },
+    {
+      "type": "text",
+      "id": "form_title",
+      "label": "Form Title",
+      "default": "Send Us a Message"
+    },
+    {
+      "type": "textarea",
+      "id": "form_desc",
+      "label": "Form Description",
+      "default": "Fill in the details below and our team will get back to you shortly."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "contact_card",
+      "name": "Contact Card",
+      "settings": [
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Icon (Emoji)",
+          "default": "📞"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Call Support"
+        },
+        {
+          "type": "text",
+          "id": "detail",
+          "label": "Detail Text",
+          "default": "+91 98765 43210"
+        },
+        {
+          "type": "text",
+          "id": "sub_detail",
+          "label": "Sub-detail Text",
+          "default": "Mon to Sat: 9:00 AM – 7:00 PM IST"
+        },
+        {
+          "type": "checkbox",
+          "id": "is_highlighted",
+          "label": "Highlight Card (Green style)",
+          "default": false
+        }
+      ]
+    }
+  ],
   "presets": [
     {
-      "name": "Main Contact Section"
+      "name": "Main Contact Section",
+      "blocks": [
+        {
+          "type": "contact_card",
+          "settings": {
+            "icon": "📞",
+            "title": "Call & WhatsApp Support",
+            "detail": "+91 98765 43210",
+            "sub_detail": "Mon to Sat: 9:00 AM – 7:00 PM IST",
+            "is_highlighted": false
+          }
+        },
+        {
+          "type": "contact_card",
+          "settings": {
+            "icon": "✉️",
+            "title": "Email Us",
+            "detail": "support@ayova.com",
+            "sub_detail": "We reply within 24 business hours",
+            "is_highlighted": false
+          }
+        },
+        {
+          "type": "contact_card",
+          "settings": {
+            "icon": "🏢",
+            "title": "Ayova Herbal Labs",
+            "detail": "Plot 45, Herbal Science Park, Sector 18",
+            "sub_detail": "Gurugram, Haryana – 122015, India",
+            "is_highlighted": false
+          }
+        },
+        {
+          "type": "contact_card",
+          "settings": {
+            "icon": "🌿",
+            "title": "Doctor Consultation",
+            "detail": "",
+            "sub_detail": "Free consultation with licensed Ayurvedic Vaidyas on all orders above Rs. 999.",
+            "is_highlighted": true
+          }
+        }
+      ]
     }
   ]
 }
