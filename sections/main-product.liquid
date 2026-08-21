@@ -62,22 +62,54 @@
         </div>
 
         <!-- Image Navigation Pills -->
-        <div class="gallery-pills">
-          {% assign pill_count = 0 %}
-          {% for block in section.blocks %}
-            {% if block.type == 'gallery_pill' %}
-              <button class="gallery-pill {% if pill_count == 0 %}active{% endif %}" {{ block.shopify_attributes }}>{{ block.settings.title }}</button>
-              {% assign pill_count = pill_count | plus: 1 %}
-            {% endif %}
-          {% endfor %}
+        <div class="gallery-pills-wrapper">
+          <div class="gallery-pills">
+            {% assign pill_count = 0 %}
+            {% for block in section.blocks %}
+              {% if block.type == 'gallery_pill' %}
+                <button class="gallery-pill {% if pill_count == 0 %}active{% endif %}" onclick="showGalleryPillContent({{ forloop.index0 }})" {{ block.shopify_attributes }}>{{ block.settings.title }}</button>
+                {% assign pill_count = pill_count | plus: 1 %}
+              {% endif %}
+            {% endfor %}
 
-          {% if pill_count == 0 %}
-            <button class="gallery-pill active">Front View</button>
-            <button class="gallery-pill">Label Detail</button>
-            <button class="gallery-pill">Lifestyle</button>
-            <button class="gallery-pill">Benefits</button>
-          {% endif %}
+            {% if pill_count == 0 %}
+              <button class="gallery-pill active">Front View</button>
+              <button class="gallery-pill">Label Detail</button>
+              <button class="gallery-pill">Lifestyle</button>
+              <button class="gallery-pill">Benefits</button>
+            {% endif %}
+          </div>
+          
+          <div class="gallery-pill-contents">
+            {% assign pill_count = 0 %}
+            {% for block in section.blocks %}
+              {% if block.type == 'gallery_pill' %}
+                <div class="gallery-pill-content {% if pill_count == 0 %}active{% endif %}" id="pill-content-{{ forloop.index0 }}">
+                  {% if block.settings.description != blank %}
+                    {{ block.settings.description }}
+                  {% endif %}
+                </div>
+                {% assign pill_count = pill_count | plus: 1 %}
+              {% endif %}
+            {% endfor %}
+          </div>
         </div>
+
+        <script>
+          function showGalleryPillContent(index) {
+            const pills = document.querySelectorAll('.gallery-pills-wrapper .gallery-pill');
+            const contents = document.querySelectorAll('.gallery-pills-wrapper .gallery-pill-content');
+            
+            pills.forEach((el, i) => {
+              if(i === index) el.classList.add('active');
+              else el.classList.remove('active');
+            });
+            contents.forEach((el, i) => {
+              if(i === index) el.classList.add('active');
+              else el.classList.remove('active');
+            });
+          }
+        </script>
       </div>
 
       <!-- Right Column: Product Details & Purchase Form -->
@@ -249,17 +281,24 @@
       <div class="product-tabs" data-tabs>
         <div class="tab-nav">
           <button class="tab-btn active" data-tab="overview">OVERVIEW</button>
-          <button class="tab-btn" data-tab="benefits">BENEFITS</button>
-          <button class="tab-btn" data-tab="ingredients">INGREDIENTS</button>
-          <button class="tab-btn" data-tab="how-to-use">HOW TO USE</button>
-          <button class="tab-btn" data-tab="faq">FAQ</button>
+          {% for block in section.blocks %}
+            {% if block.type == 'product_tab' %}
+              <button class="tab-btn" data-tab="tab-{{ block.id }}" {{ block.shopify_attributes }}>{{ block.settings.title }}</button>
+            {% endif %}
+          {% endfor %}
         </div>
 
         <div class="tab-content active" data-tab-content="overview">
           <div class="overview-grid">
             <div class="overview-left">
-              <h3>Daily liver support, without unnecessary complexity.</h3>
-              <p>Ayova Milk Thistle combines a concentrated 30:1 extract standardized to 80% Silymarin. This single-ingredient formula is designed to support healthy liver function, antioxidant protection and the body's natural detox pathways.</p>
+              {% if product.description != blank %}
+                <div class="product-description rte">
+                  {{ product.description }}
+                </div>
+              {% else %}
+                <h3>Daily liver support, without unnecessary complexity.</h3>
+                <p>Ayova Milk Thistle combines a concentrated 30:1 extract standardized to 80% Silymarin. This single-ingredient formula is designed to support healthy liver function, antioxidant protection and the body's natural detox pathways.</p>
+              {% endif %}
               
               <div class="stats-boxes">
                 <div class="stat-box">
@@ -289,18 +328,15 @@
           </div>
         </div>
 
-        <div class="tab-content" data-tab-content="benefits">
-          <p>Benefits content goes here...</p>
-        </div>
-        <div class="tab-content" data-tab-content="ingredients">
-          <p>Ingredients content goes here...</p>
-        </div>
-        <div class="tab-content" data-tab-content="how-to-use">
-          <p>How to use content goes here...</p>
-        </div>
-        <div class="tab-content" data-tab-content="faq">
-          <p>FAQ content goes here...</p>
-        </div>
+        {% for block in section.blocks %}
+          {% if block.type == 'product_tab' %}
+            <div class="tab-content" data-tab-content="tab-{{ block.id }}" {{ block.shopify_attributes }}>
+              <div class="rte">
+                {{ block.settings.content }}
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
       </div>
     </div>
 
@@ -1026,6 +1062,8 @@
 .product-trust-block {
   display: flex;
   justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
   background: #f1f5f8;
   padding: 16px;
   border-radius: 4px;
@@ -1064,6 +1102,21 @@
   .trust-feat {
     width: calc(50% - 8px);
   }
+}
+
+.gallery-pill-content {
+  display: none;
+  margin-top: 15px;
+  font-size: 0.9rem;
+  color: #444;
+  line-height: 1.5;
+  padding: 12px 15px;
+  background: #fcfcfc;
+  border-radius: 8px;
+  border: 1px solid #e5e5e5;
+}
+.gallery-pill-content.active {
+  display: block;
 }
 </style>
 
@@ -1158,6 +1211,28 @@
           "id": "title",
           "label": "Pill Name",
           "default": "Front View"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Pill Description"
+        }
+      ]
+    },
+    {
+      "type": "product_tab",
+      "name": "Product Tab",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Tab Title",
+          "default": "NEW TAB"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Tab Content"
         }
       ]
     }

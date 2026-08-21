@@ -27,13 +27,75 @@
           "settings": {
             "title": "Benefits"
           }
+        },
+        "tab_1": {
+          "type": "product_tab",
+          "settings": {
+            "title": "BENEFITS",
+            "content": "<p>Benefits content goes here...</p>"
+          }
+        },
+        "tab_2": {
+          "type": "product_tab",
+          "settings": {
+            "title": "INGREDIENTS",
+            "content": "<p>Ingredients content goes here...</p>"
+          }
+        },
+        "tab_3": {
+          "type": "product_tab",
+          "settings": {
+            "title": "HOW TO USE",
+            "content": "<p>How to use content goes here...</p>"
+          }
+        },
+        "tab_4": {
+          "type": "product_tab",
+          "settings": {
+            "title": "FAQ",
+            "content": "<p>FAQ content goes here...</p>"
+          }
         }
       },
       "block_order": [
         "pill_1",
         "pill_2",
         "pill_3",
-        "pill_4"
+        "pill_4",
+        "tab_1",
+        "tab_2",
+        "tab_3",
+        "tab_4"
+      ]
+    },
+    "watch_and_shop": {
+      "type": "watch-and-shop",
+      "settings": {
+        "title": "Discover & Shop"
+      },
+      "blocks": {
+        "video_1": {
+          "type": "video",
+          "settings": {}
+        },
+        "video_2": {
+          "type": "video",
+          "settings": {}
+        },
+        "video_3": {
+          "type": "video",
+          "settings": {}
+        },
+        "video_4": {
+          "type": "video",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "video_1",
+        "video_2",
+        "video_3",
+        "video_4"
       ]
     },
     "bestsellers_carousel": {
@@ -43,6 +105,7 @@
   },
   "order": [
     "main_product",
+    "watch_and_shop",
     "bestsellers_carousel"
   ]
 }
