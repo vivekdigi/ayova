@@ -2,7 +2,39 @@
   "sections": {
     "main_product": {
       "type": "main-product",
-      "settings": {}
+      "settings": {},
+      "blocks": {
+        "pill_1": {
+          "type": "gallery_pill",
+          "settings": {
+            "title": "Front View"
+          }
+        },
+        "pill_2": {
+          "type": "gallery_pill",
+          "settings": {
+            "title": "Label Detail"
+          }
+        },
+        "pill_3": {
+          "type": "gallery_pill",
+          "settings": {
+            "title": "Lifestyle"
+          }
+        },
+        "pill_4": {
+          "type": "gallery_pill",
+          "settings": {
+            "title": "Benefits"
+          }
+        }
+      },
+      "block_order": [
+        "pill_1",
+        "pill_2",
+        "pill_3",
+        "pill_4"
+      ]
     },
     "bestsellers_carousel": {
       "type": "bestsellers-carousel",
