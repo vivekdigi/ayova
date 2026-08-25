@@ -32,7 +32,7 @@
     <!-- Carousel Slider -->
     <div class="ayova-carousel-wrapper" data-ayova-carousel data-items-per-view="{{ items_desktop }}" data-gap="18" style="position: relative;">
       
-      <button type="button" class="ayova-overlay-btn ws-prev" aria-label="Previous">←</button>
+      <button type="button" class="ayova-overlay-btn ws-prev" data-carousel-prev aria-label="Previous">←</button>
 
       <div class="ayova-carousel-track" id="wellness-track-{{ section.id }}" style="scrollbar-width: none; -ms-overflow-style: none;">
         <style>#wellness-track-{{ section.id }}::-webkit-scrollbar { display: none; }</style>
@@ -210,23 +210,12 @@
 
       </div>
 
-      <button type="button" class="ayova-overlay-btn ws-next" aria-label="Next">→</button>
+      <button type="button" class="ayova-overlay-btn ws-next" data-carousel-next aria-label="Next">→</button>
     </div>
   </div>
 </section>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const track = document.getElementById('wellness-track-{{ section.id }}');
-  const prevBtn = track.parentElement.querySelector('.ws-prev');
-  const nextBtn = track.parentElement.querySelector('.ws-next');
 
-  if(prevBtn && nextBtn && track) {
-    prevBtn.addEventListener('click', () => track.scrollBy({ left: -300, behavior: 'smooth' }));
-    nextBtn.addEventListener('click', () => track.scrollBy({ left: 300, behavior: 'smooth' }));
-  }
-});
-</script>
 
 <style>
 .ayova-overlay-btn {

@@ -128,6 +128,11 @@
             <span class="rating-stars-new">★★★★★</span>
             <span class="rating-text-new">4.9 • <span class="verified-text">1,248 verified reviews</span></span>
           </div>
+
+          <div class="live-orders-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#e74c3c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+            <span id="liveOrderCount">1000</span> orders received today!
+          </div>
         </div>
 
         <div class="product-price-box-new">
@@ -170,7 +175,7 @@
         </div>
 
         <!-- Add to Cart Form -->
-        <form action="/cart/add" method="post" enctype="multipart/form-data" class="product-form" data-product-form>
+        <form action="/cart/add" method="post" enctype="multipart/form-data" class="product-form" data-product-form onsubmit="event.preventDefault(); var btn = event.submitter || this.querySelector('button[type=submit]'); if(btn.dataset.added === 'true') { window.location.href='/cart'; return; } btn.innerHTML = 'Adding...'; btn.disabled = true; fetch('/cart/add.js', { method: 'POST', body: new FormData(this) }).then(res=>res.json()).then(data=>{ btn.innerHTML = 'View Cart'; btn.disabled = false; btn.dataset.added = 'true'; }).catch(err => { btn.innerHTML = 'Error'; btn.disabled = false; });">
           <!-- Choose Pack / Variants -->
           <div class="variant-picker-new">
             <h4 class="variant-label-new">SELECT SIZE</h4>
@@ -247,7 +252,7 @@
               ADD TO CART
             </button>
             
-            <button type="button" class="btn-buy-now">
+            <button type="submit" class="btn-buy-now">
               BUY NOW
             </button>
           </div>
@@ -281,16 +286,24 @@
       <div class="product-tabs" data-tabs>
         <div class="tab-nav">
           <button class="tab-btn active" data-tab="overview">OVERVIEW</button>
-          {% for block in section.blocks %}
-            {% if block.type == 'product_tab' %}
-              <button class="tab-btn" data-tab="tab-{{ block.id }}" {{ block.shopify_attributes }}>{{ block.settings.title }}</button>
-            {% endif %}
-          {% endfor %}
+          
+          {% if product.metafields.custom.benefits_tab != blank %}
+            <button class="tab-btn" data-tab="mf-benefits">BENEFITS</button>
+          {% endif %}
+          {% if product.metafields.custom.ingredients_tabs != blank %}
+            <button class="tab-btn" data-tab="mf-ingredients">INGREDIENTS</button>
+          {% endif %}
+          {% if product.metafields.custom.how_to_use != blank %}
+            <button class="tab-btn" data-tab="mf-how-to-use">HOW TO USE</button>
+          {% endif %}
+
+
+
         </div>
 
-        <div class="tab-content active" data-tab-content="overview">
-          <div class="overview-grid">
-            <div class="overview-left">
+        <div class="overview-grid">
+          <div class="overview-left">
+            <div class="tab-content active" data-tab-content="overview">
               {% if product.description != blank %}
                 <div class="product-description rte">
                   {{ product.description }}
@@ -315,28 +328,46 @@
                 </div>
               </div>
             </div>
+
+            {% if product.metafields.custom.benefits_tab != blank %}
+              <div class="tab-content" data-tab-content="mf-benefits">
+                <div class="rte">
+                  {{ product.metafields.custom.benefits_tab | metafield_tag }}
+                </div>
+              </div>
+            {% endif %}
             
-            <div class="overview-right">
-              <h3>Made for your daily routine</h3>
-              <ul class="routine-list">
-                <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D35F3C" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> One capsule daily after a meal</li>
-                <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D35F3C" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> No added fillers or complex blends</li>
-                <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D35F3C" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Suitable for vegetarian lifestyles</li>
-                <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D35F3C" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Easy to follow 60-day supply</li>
-              </ul>
-            </div>
+            {% if product.metafields.custom.ingredients_tabs != blank %}
+              <div class="tab-content" data-tab-content="mf-ingredients">
+                <div class="rte">
+                  {{ product.metafields.custom.ingredients_tabs | metafield_tag }}
+                </div>
+              </div>
+            {% endif %}
+            
+            {% if product.metafields.custom.how_to_use != blank %}
+              <div class="tab-content" data-tab-content="mf-how-to-use">
+                <div class="rte">
+                  {{ product.metafields.custom.how_to_use | metafield_tag }}
+                </div>
+              </div>
+            {% endif %}
+            
+
+
+
+          </div>
+          
+          <div class="overview-right">
+            <h3>Made for your daily routine</h3>
+            <ul class="routine-list">
+              <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D35F3C" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> One capsule daily after a meal</li>
+              <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D35F3C" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> No added fillers or complex blends</li>
+              <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D35F3C" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Suitable for vegetarian lifestyles</li>
+              <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D35F3C" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Easy to follow 60-day supply</li>
+            </ul>
           </div>
         </div>
-
-        {% for block in section.blocks %}
-          {% if block.type == 'product_tab' %}
-            <div class="tab-content" data-tab-content="tab-{{ block.id }}" {{ block.shopify_attributes }}>
-              <div class="rte">
-                {{ block.settings.content }}
-              </div>
-            </div>
-          {% endif %}
-        {% endfor %}
       </div>
     </div>
 
@@ -903,6 +934,7 @@
   background: transparent;
   border-radius: 0;
   overflow: visible;
+  align-items: start;
 }
 
 @media (max-width: 900px) {
@@ -989,6 +1021,7 @@
 .overview-right h3 {
   font-size: 1.6rem;
   margin-bottom: 30px;
+  color: #fff;
 }
 
 .routine-list {
@@ -1153,8 +1186,7 @@
 
 {% if product.metafields.custom.product_video != blank %}
   <div class="floating-product-video" id="floatingProductVideo">
-    <button class="close-video-btn" onclick="document.getElementById('floatingProductVideo').style.display='none'">×</button>
-    {{ product.metafields.custom.product_video | video_tag: autoplay: true, loop: true, muted: true, controls: false }}
+    {{ product.metafields.custom.product_video.value | video_tag: autoplay: true, loop: true, muted: true, controls: true }}
   </div>
   <style>
     .floating-product-video {
@@ -1177,79 +1209,50 @@
       height: 100%;
       object-fit: cover;
     }
-    .close-video-btn {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      background: rgba(0,0,0,0.5);
-      color: #fff;
-      border: none;
-      border-radius: 50%;
-      width: 24px;
-      height: 24px;
-      font-size: 16px;
-      line-height: 1;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 10;
-    }
   </style>
 {% endif %}
 
 {% schema %}
 {
-  "name": "Main Product View",
+  "name": "Main Product",
   "settings": [
-    {
-      "type": "header",
-      "content": "Promo Offers"
-    },
     {
       "type": "text",
       "id": "promo_1_text",
-      "label": "Promo Box 1 Text",
+      "label": "Promo Text 1",
       "default": "Get a Free Wellness Sipper worth Rs. 300 if your cart has 'Ayova Milk Thistle' and your cart value is ₹999 or above"
     },
     {
       "type": "text",
       "id": "promo_2_text",
-      "label": "Promo Box 2 Text",
+      "label": "Promo Text 2",
       "default": "Get a FREE Ayova Herbal Tea (worth ₹499) on orders of ₹1495 or more!"
     },
     {
-      "type": "header",
-      "content": "Product Benefits Grid"
+      "type": "text",
+      "id": "shipping_text",
+      "label": "Shipping Notice",
+      "default": "Free shipping above ₹499 - COD available"
     },
     {
       "type": "text",
       "id": "feature_1_text",
-      "label": "Feature 1 Text",
+      "label": "Feature 1",
       "default": "Contains pure Ayurvedic herbs and standardized extracts that support your everyday wellness"
     },
     {
       "type": "text",
       "id": "feature_2_text",
-      "label": "Feature 2 Text",
+      "label": "Feature 2",
       "default": "Authentic classical formulation made in India, customized for optimal bioavailability"
     },
     {
       "type": "text",
       "id": "feature_3_text",
-      "label": "Feature 3 Text",
+      "label": "Feature 3",
       "default": "Scientifically backed botanicals to help you achieve your health goals naturally"
     },
-    {
-      "type": "header",
-      "content": "Shipping & Payment"
-    },
-    {
-      "type": "text",
-      "id": "shipping_text",
-      "label": "Shipping Notice Text",
-      "default": "Free shipping above ₹499 - COD available"
-    },
+
     {
       "type": "header",
       "content": "Trust Badges"
@@ -1328,3 +1331,116 @@
   ]
 }
 {% endschema %}
+
+<!-- Fake Order Toast Popup -->
+<div class="order-toast-popup" id="orderToastPopup">
+  <div class="toast-img">
+    <img src="{{ product.featured_image | image_url: width: 60 }}" alt="">
+  </div>
+  <div class="toast-text">
+    <strong>Someone from Mumbai</strong>
+    <span>Just bought {{ product.title | truncate: 20 }}</span>
+    <small>A few seconds ago</small>
+  </div>
+</div>
+
+<style>
+.live-orders-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #fdf3f2;
+  border: 1px solid #fadbd8;
+  color: #e74c3c;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+.order-toast-popup {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  width: 300px;
+  transform: translateY(100px);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 9999;
+  border: 1px solid #eaeaea;
+}
+.order-toast-popup.show {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+}
+.toast-img img {
+  width: 48px;
+  height: 48px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+.toast-text {
+  display: flex;
+  flex-direction: column;
+}
+.toast-text strong {
+  font-size: 0.85rem;
+  color: var(--color-forest-dark);
+}
+.toast-text span {
+  font-size: 0.8rem;
+  color: #555;
+  margin-top: 2px;
+}
+.toast-text small {
+  font-size: 0.7rem;
+  color: #888;
+  margin-top: 4px;
+}
+@media (max-width: 768px) {
+  .order-toast-popup {
+    bottom: 80px; /* Above mobile actions if any */
+  }
+}
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Live Orders Counter
+    let baseOrders = parseInt(localStorage.getItem('fakeOrdersCount')) || 1000;
+    const orderCountEl = document.getElementById('liveOrderCount');
+    
+    if (orderCountEl) {
+      orderCountEl.innerText = baseOrders;
+    }
+    
+    setInterval(() => {
+      baseOrders += 2;
+      localStorage.setItem('fakeOrdersCount', baseOrders);
+      if (orderCountEl) {
+        orderCountEl.innerText = baseOrders;
+      }
+    }, 60000); // Every 1 minute
+
+    // Order Received Toast
+    const toast = document.getElementById('orderToastPopup');
+    if(toast) {
+      setInterval(() => {
+        toast.classList.add('show');
+        setTimeout(() => {
+          toast.classList.remove('show');
+        }, 5000); // Hide after 5 seconds
+      }, 60000); // Show every 1 minute
+    }
+  });
+</script>

@@ -11,12 +11,16 @@
       <p class="footer-top-subheading">{{ section.settings.marketplace_subheading | default: 'Your wellness essentials, wherever you shop.' }}</p>
       <div class="marketplace-logos">
         {% if section.settings.show_blinkit %}
-          <a href="{{ section.settings.blinkit_url }}" class="marketplace-logo marketplace-logo-blinkit" target="_blank" rel="noopener" aria-label="Shop on Blinkit">
-            <span>blinkit</span>
+          <a href="{{ section.settings.blinkit_url }}" class="marketplace-logo {% if section.settings.blinkit_logo == blank %}marketplace-logo-blinkit{% endif %}" target="_blank" rel="noopener" aria-label="Shop on Blinkit">
+            {% if section.settings.blinkit_logo != blank %}
+              <img src="{{ section.settings.blinkit_logo | image_url: width: 200 }}" alt="Blinkit" width="100" height="30" style="width: auto; height: 30px;">
+            {% else %}
+              <span>blinkit</span>
+            {% endif %}
           </a>
         {% endif %}
         {% if section.settings.show_amazon %}
-          <a href="{{ section.settings.amazon_url }}" class="marketplace-logo marketplace-logo-amazon" target="_blank" rel="noopener" aria-label="Shop on Amazon">
+          <a href="{{ section.settings.amazon_url }}" class="marketplace-logo {% if section.settings.amazon_logo == blank %}marketplace-logo-amazon{% endif %}" target="_blank" rel="noopener" aria-label="Shop on Amazon">
             {% if section.settings.amazon_logo != blank %}
               <img src="{{ section.settings.amazon_logo | image_url: width: 200 }}" alt="Amazon" width="100" height="30" style="width: auto; height: 30px;">
             {% else %}
@@ -25,7 +29,7 @@
           </a>
         {% endif %}
         {% if section.settings.show_flipkart %}
-          <a href="{{ section.settings.flipkart_url }}" class="marketplace-logo marketplace-logo-flipkart" target="_blank" rel="noopener" aria-label="Shop on Flipkart">
+          <a href="{{ section.settings.flipkart_url }}" class="marketplace-logo {% if section.settings.flipkart_logo == blank %}marketplace-logo-flipkart{% endif %}" target="_blank" rel="noopener" aria-label="Shop on Flipkart">
             {% if section.settings.flipkart_logo != blank %}
               <img src="{{ section.settings.flipkart_logo | image_url: width: 200 }}" alt="Flipkart" width="90" height="28" style="width: auto; height: 28px;">
             {% else %}
@@ -111,7 +115,7 @@
               <a href="/pages/faq">FAQs</a>
               <a href="/pages/track-order">Track Your Order</a>
               <a href="/pages/shipping">Shipping & Delivery</a>
-              <a href="/pages/returns">Returns & Refunds</a>
+              <a href="/pages/returns">Return Policy</a>
               <a href="/pages/contact">Contact Us</a>
             {% endif %}
           </div>
@@ -155,7 +159,7 @@
         <p class="footer-proudly">{{ section.settings.proudly_text | default: 'Proudly serving customers across India' }}</p>
         <div class="footer-legal-links">
           {% if section.settings.terms_url != blank %}
-            <a href="{{ section.settings.terms_url }}">Terms of Use</a>
+            <a href="{{ section.settings.terms_url }}">Terms of Services</a>
           {% endif %}
           {% if section.settings.privacy_url != blank %}
             <a href="{{ section.settings.privacy_url }}">Privacy Policy</a>
@@ -205,6 +209,11 @@
       "type": "url",
       "id": "blinkit_url",
       "label": "Blinkit URL"
+    },
+    {
+      "type": "image_picker",
+      "id": "blinkit_logo",
+      "label": "Blinkit Logo Image"
     },
     {
       "type": "checkbox",
@@ -342,7 +351,7 @@
     {
       "type": "url",
       "id": "terms_url",
-      "label": "Terms of Use URL"
+      "label": "Terms of Services URL"
     },
     {
       "type": "url",

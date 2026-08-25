@@ -18,13 +18,13 @@
               {% endif %}
 
               {% if block.settings.mp4_video != blank %}
-                <video class="ws-video-element" autoplay muted loop playsinline>
+                <video class="ws-video-element" autoplay muted loop controls playsinline>
                   {% for source in block.settings.mp4_video.sources %}
                     <source src="{{ source.url }}" type="{{ source.mime_type }}">
                   {% endfor %}
                 </video>
               {% elsif block.settings.youtube_url != blank %}
-                <iframe class="ws-youtube-player" src="https://www.youtube.com/embed/{{ block.settings.youtube_url.id }}?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&loop=1&playlist={{ block.settings.youtube_url.id }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe class="ws-youtube-player" src="https://www.youtube.com/embed/{{ block.settings.youtube_url.id }}?autoplay=1&mute=1&controls=1&showinfo=0&rel=0&loop=1&playlist={{ block.settings.youtube_url.id }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
               {% endif %}
 
             </div>
@@ -44,7 +44,7 @@
                     </span>
                   </div>
                 </div>
-                <form method="post" action="/cart/add" class="ws-add-to-cart-form">
+                <form method="post" action="/cart/add" class="ws-add-to-cart-form" onsubmit="event.preventDefault(); var btn = this.querySelector('button'); if(btn.dataset.added === 'true') { window.location.href='/cart'; return; } btn.innerHTML = 'Adding...'; btn.disabled = true; fetch('/cart/add.js', { method: 'POST', body: new FormData(this) }).then(res=>res.json()).then(data=>{ btn.innerHTML = 'View Cart'; btn.disabled = false; btn.dataset.added = 'true'; }).catch(err => { btn.innerHTML = 'Buy Now'; btn.disabled = false; });">
                   <input type="hidden" name="id" value="{{ block.settings.product.selected_or_first_available_variant.id }}">
                   <button type="submit" class="ws-buy-btn">Buy Now</button>
                 </form>

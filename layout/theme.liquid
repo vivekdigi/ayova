@@ -6,6 +6,15 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="{{ settings.color_primary | default: '#173E34' }}">
   <link rel="canonical" href="{{ canonical_url }}">
+  <meta name="google-site-verification" content="googlec901714615899e5a.html" />
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-W2HRNQ8K');</script>
+  <!-- End Google Tag Manager -->
 
   {%- if settings.favicon != blank -%}
     <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
@@ -52,6 +61,10 @@
 </head>
 
 <body class="ayova-template-{{ template.name | handle }}">
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W2HRNQ8K"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
   <!-- Skip to Content (Accessibility) -->
   <a class="skip-to-content" href="#MainContent">Skip to content</a>
 
@@ -68,5 +81,71 @@
   <!-- Theme Scripts (deferred) -->
   <script src="{{ 'carousel.js' | asset_url }}" defer></script>
   <script src="{{ 'theme.js' | asset_url }}" defer></script>
+
+  <!-- WhatsApp & Call Widget -->
+  <style>
+    .floating-widgets {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .floating-widgets a {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      text-align: center;
+      color: white;
+      font-size: 24px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-decoration: none;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+
+    }
+    .floating-widgets .whatsapp-widget{
+      animation: bounce01 2s infinite;
+    }
+
+    .whatsapp-widget {
+      background-color: #25d366;
+    }
+
+    .call-widget {
+      background-color: #007bff;
+    }
+      @keyframes bounce01 {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-8px);
+      }
+    }
+
+    .floating-widgets svg {
+      pointer-events: none;
+    }
+  </style>
+
+  <div class="floating-widgets">
+    <!-- WhatsApp -->
+    <a href="https://wa.me/9111452527" target="_blank" class="whatsapp-widget" aria-label="WhatsApp">
+      <svg width="30px" height="30px" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" stroke-width="3" stroke="#ffffff" fill="none">
+        <path d="M35.66,35.67a16.71,16.71,0,0,1-7.75-6.78.82.82,0,0,1,.12-.95l1.55-1.69a.8.8,0,0,0,.15-.87l-2.44-4.65S26.21,19.08,24,20.5c0,0-5.81,4.54-2.1,10.78s7.2,8.35,10.34,9.88c2.73,1.33,8.64,3.1,12.21-3.39,0,0,1.25-2,0-2.51-.57-.23-3.68-1.77-5-2.41a.82.82,0,0,0-1,.22l-1.86,2.35A.81.81,0,0,1,35.66,35.67Z"/><path d="M8.86,53.49l4-11.2a23,23,0,1,1,8.64,8.8Z" stroke-linecap="round"/>
+      </svg>
+    </a>
+    <!-- Phone Call -->
+    <a href="tel:9111452527" class="call-widget" aria-label="Call">
+      <svg width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3.833 4h4.49L9.77 7.618l-2.325 1.55A1 1 0 0 0 7 10c.003.094 0 .001 0 .001v.021a2.026 2.026 0 0 0 .006.134c.006.082.016.193.035.33.039.27.114.642.26 1.08.294.88.87 2.019 1.992 3.141 1.122 1.122 2.261 1.698 3.14 1.992.439.146.81.22 1.082.26a4.43 4.43 0 0 0 .463.04l.013.001h.008s.112-.006.001 0a1 1 0 0 0 .894-.553l.67-1.34 4.436.74v4.32c-2.111.305-7.813.606-12.293-3.874C3.227 11.813 3.527 6.11 3.833 4zm5.24 6.486l1.807-1.204a2 2 0 0 0 .747-2.407L10.18 3.257A2 2 0 0 0 8.323 2H3.781c-.909 0-1.764.631-1.913 1.617-.34 2.242-.801 8.864 4.425 14.09 5.226 5.226 11.848 4.764 14.09 4.425.986-.15 1.617-1.004 1.617-1.913v-4.372a2 2 0 0 0-1.671-1.973l-4.436-.739a2 2 0 0 0-2.118 1.078l-.346.693a4.71 4.71 0 0 1-.363-.105c-.62-.206-1.481-.63-2.359-1.508-.878-.878-1.302-1.739-1.508-2.36a4.59 4.59 0 0 1-.125-.447z" fill="#ffffff"/>
+      </svg>
+    </a>
+  </div>
 </body>
 </html>

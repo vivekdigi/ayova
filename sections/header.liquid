@@ -4,21 +4,58 @@
   Announcement bar with dynamic blocks
 {% endcomment %}
 
-<header class="ayova-header-wrapper" data-header>
+<header class="ayova-header-wrapper {% if section.settings.enable_sticky %}ayova-header-wrapper--sticky{% endif %}" data-header>
   <!-- Announcement Bar — Figma: 34px, #285044 -->
   {% if section.settings.show_announcement %}
     <div class="announcement-bar" style="background-color: {{ section.settings.announcement_bg | default: '#285044' }}; color: {{ section.settings.announcement_text_color | default: '#FFFFFF' }};">
-      <div class="container announcement-content">
-        {% for block in section.blocks %}
-          {% if block.type == 'announcement' %}
-            {% unless forloop.first %}
-              <span class="announcement-divider">•</span>
-            {% endunless %}
-            <span {{ block.shopify_attributes }}>{{ block.settings.text }}</span>
-          {% endif %}
-        {% endfor %}
+      <div class="announcement-marquee">
+        {% capture marquee_content %}
+          {% for block in section.blocks %}
+            {% if block.type == 'announcement' %}
+              <span class="marquee-item" {{ block.shopify_attributes }}>{{ block.settings.text }}</span>
+              <span class="announcement-divider" style="margin: 0 15px;">•</span>
+            {% endif %}
+          {% endfor %}
+        {% endcapture %}
+        
+        <div class="marquee-track">
+          {{ marquee_content }}
+          {{ marquee_content }}
+          {{ marquee_content }}
+          {{ marquee_content }}
+        </div>
       </div>
     </div>
+    <style>
+      .announcement-bar {
+        overflow: hidden;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        height: 34px;
+      }
+      .announcement-marquee {
+        width: 100%;
+        overflow: hidden;
+      }
+      .marquee-track {
+        display: inline-flex;
+        align-items: center;
+        animation: scroll-marquee 25s linear infinite;
+      }
+      .marquee-track:hover {
+        animation-play-state: paused;
+      }
+      .marquee-item {
+        font-size: 0.85rem;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+      }
+      @keyframes scroll-marquee {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+      }
+    </style>
   {% endif %}
 
   <!-- Main Header — Figma: 80px height -->
@@ -67,6 +104,37 @@
 
       <!-- Header Utilities — Figma: Search, Account, Wishlist icons + Cart pill -->
       <div class="header-utilities">
+        <!-- Marketplace Buttons -->
+        <div class="header-marketplace-buttons">
+          {% if section.settings.blinkit_url != blank %}
+            <a href="{{ section.settings.blinkit_url }}" class="marketplace-btn btn-blinkit" target="_blank">
+              {% if section.settings.blinkit_logo != blank %}
+                <img src="{{ section.settings.blinkit_logo | image_url: height: 32 }}" alt="Blinkit" style="height: 20px; width: auto;">
+              {% else %}
+                blinkit
+              {% endif %}
+            </a>
+          {% endif %}
+          {% if section.settings.amazon_url != blank %}
+            <a href="{{ section.settings.amazon_url }}" class="marketplace-btn btn-amazon" target="_blank">
+              {% if section.settings.amazon_logo != blank %}
+                <img src="{{ section.settings.amazon_logo | image_url: height: 32 }}" alt="Amazon" style="height: 20px; width: auto;">
+              {% else %}
+                amazon
+              {% endif %}
+            </a>
+          {% endif %}
+          {% if section.settings.flipkart_url != blank %}
+            <a href="{{ section.settings.flipkart_url }}" class="marketplace-btn btn-flipkart" target="_blank">
+              {% if section.settings.flipkart_logo != blank %}
+                <img src="{{ section.settings.flipkart_logo | image_url: height: 32 }}" alt="Flipkart" style="height: 20px; width: auto;">
+              {% else %}
+                Flipkart
+              {% endif %}
+            </a>
+          {% endif %}
+        </div>
+
         <!-- Search -->
         <button type="button" class="utility-icon-btn" aria-label="Search" data-search-toggle>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -280,6 +348,43 @@
       "id": "enable_sticky",
       "label": "Sticky Header",
       "default": true
+    },
+    {
+      "type": "header",
+      "content": "Marketplace Buttons"
+    },
+    {
+      "type": "url",
+      "id": "blinkit_url",
+      "label": "Blinkit URL",
+      "default": "/"
+    },
+    {
+      "type": "image_picker",
+      "id": "blinkit_logo",
+      "label": "Blinkit Custom Logo"
+    },
+    {
+      "type": "url",
+      "id": "amazon_url",
+      "label": "Amazon URL",
+      "default": "/"
+    },
+    {
+      "type": "image_picker",
+      "id": "amazon_logo",
+      "label": "Amazon Custom Logo"
+    },
+    {
+      "type": "url",
+      "id": "flipkart_url",
+      "label": "Flipkart URL",
+      "default": "/"
+    },
+    {
+      "type": "image_picker",
+      "id": "flipkart_logo",
+      "label": "Flipkart Custom Logo"
     }
   ],
   "blocks": [
