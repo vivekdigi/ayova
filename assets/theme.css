@@ -1130,9 +1130,14 @@ h6 {
 }
 
 /* 🛒 PRODUCT CARD (Figma: 310x690px) */
+.swiper-slide {
+  height: auto;
+}
+
 .ayova-product-card {
   width: 100%;
   max-width: 310px;
+  height: 100%;
   margin: 0 auto;
   background: var(--color-bg-white);
   border: 1px solid var(--color-border-default);
@@ -1269,7 +1274,7 @@ h6 {
 .card-price-row {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   padding-top: 8px;
   margin-top: auto;
 }
@@ -1279,6 +1284,7 @@ h6 {
   font-weight: 700;
   font-size: 16px;
   color: var(--color-text-heading);
+  white-space: nowrap;
 }
 
 .price-compare {
@@ -1287,6 +1293,7 @@ h6 {
   font-size: 13px;
   color: var(--color-text-muted);
   text-decoration: line-through;
+  white-space: nowrap;
 }
 
 .price-save-badge {
@@ -1297,6 +1304,7 @@ h6 {
   /* Green from Centrum screenshot */
   text-transform: uppercase;
   margin-left: 4px;
+  white-space: nowrap;
 }
 
 .price-gst {
