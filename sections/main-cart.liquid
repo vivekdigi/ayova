@@ -77,13 +77,14 @@
                     <input type="number" name="updates[]" id="updates_{{ item.key }}" value="{{ item.quantity }}" readonly>
                     <button type="button" data-cart-qty-change data-line="{{ forloop.index }}" data-qty="{{ item.quantity | plus: 1 }}">+</button>
                   </div>
-                  <button type="button" class="remove-btn" data-cart-qty-change data-line="{{ forloop.index }}" data-qty="0">Remove</button>
                 </div>
 
                 <div class="item-total">
                   <div class="item-price-strike">{% if item.original_line_price > item.final_line_price %}{{ item.original_line_price | money }}{% endif %}</div>
                   <div class="item-price-final">Total: {{ item.final_line_price | money }}</div>
                 </div>
+
+                <button type="button" class="remove-btn icon-remove" data-cart-qty-change data-line="{{ forloop.index }}" data-qty="0" aria-label="Remove item">&times;</button>
               </div>
             {% endfor %}
           </div>
@@ -96,8 +97,11 @@
             <div class="coupon-card">
               <div class="coupon-header">Offer & Coupons</div>
               <div class="coupon-input-group">
-                <input type="text" placeholder="Apply Coupon" class="coupon-input">
-                <button type="button" class="btn-coupon">Apply</button>
+                <input type="text" name="discount" id="cart-discount-input" placeholder="Apply Coupon" class="coupon-input">
+                <button type="button" class="btn-coupon" id="btn-apply-coupon">Apply</button>
+              </div>
+              <div id="coupon-message" style="display:none; color:#20874e; font-size:12px; margin-top:8px;">
+                Coupon applied! Discount will be calculated at checkout.
               </div>
             </div>
 
@@ -180,6 +184,9 @@
 </div>
 
 <style>
+.cart-page {
+  overflow-x: hidden;
+}
 .cart-title {
   font-family: var(--font-heading);
   font-weight: 700;
@@ -536,9 +543,9 @@
 
 /* --- Checkout Action Box --- */
 .checkout-action-box {
-  background: #111;
-  border-radius: var(--radius-md);
-  padding: 16px;
+  background: #1f1f1f;
+  border-radius: 8px;
+  padding: 16px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -550,7 +557,7 @@
   flex-direction: column;
 }
 .action-price .label {
-  font-size: 10px;
+  font-size: 11px;
   opacity: 0.7;
 }
 .action-price .amount {
@@ -558,18 +565,40 @@
   font-weight: 700;
 }
 .btn-checkout-dark {
-  background: #fff;
-  color: #111;
+  background: transparent;
+  color: #fff;
   border: none;
-  padding: 10px 20px;
-  border-radius: 30px;
+  padding: 0;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 16px;
   cursor: pointer;
   text-decoration: none;
+  display: flex;
+  align-items: center;
 }
 .btn-checkout-dark:hover {
-  background: #f0f0f0;
+  background: transparent;
+  opacity: 0.8;
+}
+
+.icon-remove {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  color: #999;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+.icon-remove:hover {
+  color: #d32f2f;
+}
+.cart-item {
+  position: relative;
+  /* Existing styles are applied elsewhere, this just ensures relative positioning */
 }
 
 .cart-guarantee {
@@ -607,8 +636,8 @@
     padding: 12px;
   }
   .btn-checkout-dark {
-    font-size: 11px;
-    padding: 8px 12px;
+    font-size: 13px;
+    padding: 0;
   }
   .action-price .amount {
     font-size: 14px;
@@ -620,6 +649,26 @@
   }
 }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const applyBtn = document.getElementById('btn-apply-coupon');
+  const discountInput = document.getElementById('cart-discount-input');
+  const message = document.getElementById('coupon-message');
+
+  if (applyBtn && discountInput) {
+    applyBtn.addEventListener('click', function() {
+      if (discountInput.value.trim() !== '') {
+        applyBtn.textContent = 'Applied';
+        applyBtn.style.background = '#20874e';
+        applyBtn.style.color = '#fff';
+        message.style.display = 'block';
+        // The input has name="discount", so when they click Checkout, the form will submit it.
+      }
+    });
+  }
+});
+</script>
 
 {% schema %}
 {

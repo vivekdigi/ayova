@@ -1815,7 +1815,9 @@ h6 {
 }
 
 .footer-brand-logo img {
-  mix-blend-mode: multiply;
+  background: #ffffff;
+  padding: 8px 12px;
+  border-radius: 6px;
 }
 
 .marketplace-logo-blinkit {
