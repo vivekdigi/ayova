@@ -286,16 +286,9 @@
       <div class="product-tabs" data-tabs>
         <div class="tab-nav">
           <button class="tab-btn active" data-tab="overview">OVERVIEW</button>
-          
-          {% if product.metafields.custom.benefits_tab != blank %}
-            <button class="tab-btn" data-tab="mf-benefits">BENEFITS</button>
-          {% endif %}
-          {% if product.metafields.custom.ingredients_tabs != blank %}
-            <button class="tab-btn" data-tab="mf-ingredients">INGREDIENTS</button>
-          {% endif %}
-          {% if product.metafields.custom.how_to_use != blank %}
-            <button class="tab-btn" data-tab="mf-how-to-use">HOW TO USE</button>
-          {% endif %}
+          <button class="tab-btn" data-tab="mf-benefits">BENEFITS</button>
+          <button class="tab-btn" data-tab="mf-ingredients">INGREDIENTS</button>
+          <button class="tab-btn" data-tab="mf-how-to-use">HOW TO USE</button>
 
 
 
@@ -329,29 +322,35 @@
               </div>
             </div>
 
-            {% if product.metafields.custom.benefits_tab != blank %}
-              <div class="tab-content" data-tab-content="mf-benefits">
-                <div class="rte">
+            <div class="tab-content" data-tab-content="mf-benefits">
+              <div class="rte">
+                {% if product.metafields.custom.benefits_tab != blank %}
                   {{ product.metafields.custom.benefits_tab | metafield_tag }}
-                </div>
+                {% else %}
+                  <p>Experience the natural benefits of Ayova wellness products, formulated to support your everyday health and vitality.</p>
+                {% endif %}
               </div>
-            {% endif %}
+            </div>
             
-            {% if product.metafields.custom.ingredients_tabs != blank %}
-              <div class="tab-content" data-tab-content="mf-ingredients">
-                <div class="rte">
+            <div class="tab-content" data-tab-content="mf-ingredients">
+              <div class="rte">
+                {% if product.metafields.custom.ingredients_tabs != blank %}
                   {{ product.metafields.custom.ingredients_tabs | metafield_tag }}
-                </div>
+                {% else %}
+                  <p>Formulated with pure, authentic Ayurvedic herbs and standardized botanical extracts. No hidden fillers or artificial blends.</p>
+                {% endif %}
               </div>
-            {% endif %}
+            </div>
             
-            {% if product.metafields.custom.how_to_use != blank %}
-              <div class="tab-content" data-tab-content="mf-how-to-use">
-                <div class="rte">
+            <div class="tab-content" data-tab-content="mf-how-to-use">
+              <div class="rte">
+                {% if product.metafields.custom.how_to_use != blank %}
                   {{ product.metafields.custom.how_to_use | metafield_tag }}
-                </div>
+                {% else %}
+                  <p>Take one capsule daily after a meal, or as directed by your healthcare professional. Consistency is key for optimal results.</p>
+                {% endif %}
               </div>
-            {% endif %}
+            </div>
             
 
 

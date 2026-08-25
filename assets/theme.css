@@ -2878,9 +2878,9 @@ h6 {
 
 .search-panel-input {
   flex: 1;
-  border: none;
-  outline: none;
-  box-shadow: none;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
   -webkit-appearance: none;
   appearance: none;
   font-size: 1rem;
@@ -2889,8 +2889,26 @@ h6 {
   font-family: var(--font-body);
 }
 
+.search-panel-input:focus {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 .search-panel-input::placeholder {
   color: #a0b0a8;
+}
+
+.search-panel-input::-webkit-search-decoration,
+.search-panel-input::-webkit-search-cancel-button,
+.search-panel-input::-webkit-search-results-button,
+.search-panel-input::-webkit-search-results-decoration,
+.form-input::-webkit-search-decoration,
+.form-input::-webkit-search-cancel-button,
+.form-input::-webkit-search-results-button,
+.form-input::-webkit-search-results-decoration {
+  -webkit-appearance: none !important;
+  display: none !important;
 }
 
 .search-clear-btn {

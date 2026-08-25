@@ -111,8 +111,10 @@
           return;
         }
 
+        var apiQuery = q.split(/\s+/).join(' AND ');
+
         searchDebounce = setTimeout(function() {
-          fetch('/search/suggest.json?q=' + encodeURIComponent(q) + '&resources[type]=product&resources[limit]=8')
+          fetch('/search/suggest.json?q=' + encodeURIComponent(apiQuery) + '&resources[type]=product&resources[limit]=8&resources[options][fields]=title,variants.title')
             .then(function(res) { return res.json(); })
             .then(function(data) {
               var products = data.resources && data.resources.results && data.resources.results.products || [];

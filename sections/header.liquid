@@ -223,7 +223,7 @@
         <button type="button" class="search-close-btn" data-search-close aria-label="Close search">✕</button>
       </div>
 
-      <form action="{{ routes.search_url }}" method="get" role="search" class="search-panel-form">
+      <form action="{{ routes.search_url }}" method="get" role="search" class="search-panel-form" onsubmit="this.q.value = this.q.value.trim().split(/\s+/).join(' AND ');">
         <div class="search-panel-input-wrap">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7A857F" stroke-width="2">
             <circle cx="11" cy="11" r="8"></circle>
@@ -233,6 +233,7 @@
           <button type="button" class="search-clear-btn" id="searchClearBtn" aria-label="Clear">✕</button>
         </div>
         <input type="hidden" name="type" value="product">
+        <input type="hidden" name="options[fields]" value="title,variants.title">
       </form>
 
       <!-- Live Results (shown while typing) -->

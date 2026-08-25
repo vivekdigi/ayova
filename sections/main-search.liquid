@@ -7,7 +7,7 @@
     <div class="wellness-header-centered">
       <h1 class="section-title">
         {% if search.performed %}
-          Search Results for "{{ search.terms | escape }}"
+          Search Results for "{{ search.terms | escape | replace: ' AND ', ' ' }}"
         {% else %}
           Search Ayova
         {% endif %}
@@ -16,8 +16,10 @@
     </div>
 
     <div class="search-form-wrapper text-center" style="max-width: 600px; margin: 0 auto 40px;">
-      <form action="{{ routes.search_url }}" method="get" class="search-bar-form" style="display: flex; gap: 10px;">
-        <input type="search" name="q" value="{{ search.terms | escape }}" placeholder="Search products or health goals..." class="form-input" style="flex: 1; padding: 12px 18px; border-radius: 30px; border: 1px solid var(--color-sage-border);">
+      <form action="{{ routes.search_url }}" method="get" class="search-bar-form" style="display: flex; gap: 10px;" onsubmit="this.q.value = this.q.value.trim().split(/\s+/).join(' AND ');">
+        <input type="search" name="q" value="{{ search.terms | escape | replace: ' AND ', ' ' }}" placeholder="Search products or health goals..." class="form-input" style="flex: 1; padding: 12px 18px; border-radius: 30px; border: 1px solid var(--color-sage-border);">
+        <input type="hidden" name="type" value="product">
+        <input type="hidden" name="options[fields]" value="title,variants.title">
         <button type="submit" class="btn btn-primary" style="border-radius: 30px; padding: 12px 24px;">Search</button>
       </form>
     </div>
@@ -27,7 +29,7 @@
         <div class="search-results-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px;">
           {% for item in search.results %}
             {% if item.object_type == 'product' %}
-              {% render 'product-card', card_product: item %}
+              {% render 'product-card', product: item %}
             {% endif %}
           {% endfor %}
         </div>
