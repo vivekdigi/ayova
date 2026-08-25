@@ -205,7 +205,7 @@
 .milestone-track-container {
   position: relative;
   min-height: 80px;
-  width: 90%;
+  width: 75%;
   margin: 0 auto;
 }
 .milestone-track-bg {
@@ -408,6 +408,49 @@
   opacity: 0.9;
 }
 
+@media (max-width: 768px) {
+  .cart-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .cart-item {
+    grid-template-columns: 60px 1fr;
+    grid-template-rows: auto auto;
+    row-gap: 12px;
+  }
+  .item-img {
+    width: 60px;
+    height: 60px;
+    grid-row: span 2;
+  }
+  .item-info {
+    grid-column: 2;
+  }
+  .item-qty-row {
+    grid-column: 2;
+    display: flex;
+    justify-content: flex-start;
+    gap: 16px;
+    align-items: center;
+  }
+  .item-total {
+    grid-column: 1 / -1;
+    text-align: right;
+    border-top: 1px dashed var(--color-sage-border);
+    padding-top: 12px;
+    margin-top: 8px;
+  }
+  .milestone-track-container {
+    width: 70%;
+  }
+  .milestone-point {
+    width: 90px;
+  }
+  .point-label {
+    font-size: 10px;
+  }
+}
+
 .summary-line-title {
   font-weight: 700;
   font-size: 14px;
@@ -546,10 +589,34 @@
   }
   .item-qty-row {
     grid-column: 2 / -1;
+    display: flex;
+    justify-content: flex-start;
+    gap: 16px;
+    align-items: center;
   }
   .item-total {
     grid-column: 2 / -1;
     text-align: left;
+  }
+  .item-title {
+    font-size: 0.9rem; /* Smaller title */
+  }
+  
+  /* Make checkout box smaller */
+  .checkout-action-box {
+    padding: 12px;
+  }
+  .btn-checkout-dark {
+    font-size: 11px;
+    padding: 8px 12px;
+  }
+  .action-price .amount {
+    font-size: 14px;
+  }
+  
+  /* Fix Milestone Text */
+  .milestone-text-top {
+    font-size: 12px;
   }
 }
 </style>

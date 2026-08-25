@@ -1182,6 +1182,31 @@
 .gallery-pill-content.active {
   display: block;
 }
+
+@media (max-width: 768px) {
+  .gallery-inner {
+    flex-direction: column-reverse;
+    padding: 16px;
+  }
+  .gallery-vertical-thumbs {
+    flex-direction: row;
+    width: 100%;
+    overflow-x: auto;
+    align-items: center;
+  }
+  .thumbs-list {
+    flex-direction: row;
+  }
+  .product-title-new {
+    font-size: 1.8rem;
+  }
+  .price-large-new {
+    font-size: 1.8rem;
+  }
+  .variant-options-grid {
+    grid-template-columns: 1fr;
+  }
+}
 </style>
 
 {% if product.metafields.custom.product_video != blank %}

@@ -70,8 +70,8 @@
             {% assign custom_logo_width = section.settings.logo_width | default: 97 %}
             {% if custom_logo != blank %}
               <img
-                src="{{ custom_logo | image_url: width: custom_logo_width }}"
-                srcset="{{ custom_logo | image_url: width: custom_logo_width }} 1x, {{ custom_logo | image_url: width: custom_logo_width | times: 2 }} 2x"
+                src="{{ custom_logo | image_url: width: 600 }}"
+                srcset="{{ custom_logo | image_url: width: 600 }} 1x, {{ custom_logo | image_url: width: 1200 }} 2x"
                 alt="{{ custom_logo.alt | default: shop.name | escape }}"
                 width="{{ custom_logo_width }}"
                 height="{{ custom_logo_width | divided_by: 2 }}"

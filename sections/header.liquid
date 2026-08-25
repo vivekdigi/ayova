@@ -68,13 +68,13 @@
         {% if custom_logo != blank %}
           {% assign custom_logo_width_2x = custom_logo_width | times: 2 %}
           <img
-            src="{{ custom_logo | image_url: width: custom_logo_width }}"
-            srcset="{{ custom_logo | image_url: width: custom_logo_width }} 1x, {{ custom_logo | image_url: width: custom_logo_width_2x }} 2x"
+            src="{{ custom_logo | image_url: width: 600 }}"
+            srcset="{{ custom_logo | image_url: width: 600 }} 1x, {{ custom_logo | image_url: width: 1200 }} 2x"
             alt="{{ custom_logo.alt | default: shop.name | escape }}"
             width="{{ custom_logo_width }}"
             height="{{ custom_logo_width | divided_by: 2 }}"
             loading="eager"
-            style="width: {{ custom_logo_width }}px; height: auto;"
+            style="width: {{ custom_logo_width }}px; height: auto; max-width: 100%; object-fit: contain;"
           >
         {% else %}
           <span class="logo-text">
