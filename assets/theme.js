@@ -126,7 +126,7 @@
                     '<div class="search-pop-info">' +
                       '<span class="search-pop-cat">' + (p.product_type || 'PRODUCT') + '</span>' +
                       '<span class="search-pop-name">' + p.title + '</span>' +
-                      '<span class="search-pop-price">' + (p.price ? (p.price / 100).toLocaleString('en-IN', {style:'currency', currency:'INR', maximumFractionDigits:0}) : '') + '</span>' +
+                      '<span class="search-pop-price">' + (p.price ? Number(p.price).toLocaleString('en-IN', {style:'currency', currency:'INR', maximumFractionDigits:0}) : '') + '</span>' +
                       '<div class="search-pop-stars">★★★★★</div>' +
                     '</div>' +
                     '<span class="search-pop-btn">VIEW PRODUCT →</span>' +
