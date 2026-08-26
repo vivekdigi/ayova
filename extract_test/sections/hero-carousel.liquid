@@ -7,7 +7,7 @@
 <section class="ayova-hero-section" style="background: {{ section.settings.background_color | default: '#FAF8F2' }};">
   {% if section.settings.show_leaf_decorations %}
     <!-- Decorative Palm Leaves (Bottom Left) -->
-    <div class="hero-leaf-left" aria-hidden="true">
+    <div class="hero-leaf-left" aria-hidden="true" style="display: none;">
       <svg width="220" height="240" viewBox="0 0 200 220" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M10 210C35 150 75 90 150 40M150 40C120 40 85 60 50 110M150 40C140 70 120 115 80 160M150 40C165 65 170 100 155 140M150 40C120 25 80 25 30 50M150 40C175 25 190 20 195 10" stroke="#7A9A8B" stroke-width="3" stroke-linecap="round" opacity="0.45"/>
         <path d="M-10 190C15 130 55 70 130 20M130 20C100 20 65 40 30 90M130 20C120 50 100 95 60 140" stroke="#5A7D6E" stroke-width="2.5" stroke-linecap="round" opacity="0.35"/>
@@ -15,7 +15,7 @@
     </div>
 
     <!-- Decorative Palm Leaves (Top Right) -->
-    <div class="hero-leaf-right" aria-hidden="true">
+    <div class="hero-leaf-right" aria-hidden="true" style="display: none;">
       <svg width="240" height="220" viewBox="0 0 220 200" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M210 10C160 35 100 75 40 150M40 150C40 120 60 85 110 50M40 150C70 140 115 120 160 80M40 150C65 165 100 170 140 155M40 150C25 120 25 80 50 30" stroke="#7A9A8B" stroke-width="3" stroke-linecap="round" opacity="0.45"/>
         <path d="M190 -10C140 15 80 55 20 130M20 130C20 100 40 65 90 30" stroke="#5A7D6E" stroke-width="2.5" stroke-linecap="round" opacity="0.35"/>
@@ -23,7 +23,7 @@
     </div>
   {% endif %}
 
-  <div class="ayova-carousel-wrapper hero-carousel-container" data-ayova-carousel {% if section.settings.autoplay %}data-autoplay{% endif %} data-items-per-view="1">
+  <div class="ayova-carousel-wrapper hero-carousel-container" data-ayova-carousel {% if section.settings.autoplay %}data-autoplay{% endif %} data-items-per-view="1" data-gap="0">
     <div class="ayova-carousel-track">
 
       {% if section.blocks.size > 0 %}
@@ -31,56 +31,61 @@
           {% assign highlight = block.settings.highlight_text | default: "Modern Wellness." %}
           {% assign span_tag = '<span class="highlight-text">' | append: highlight | append: '</span>' %}
           <div class="ayova-carousel-slide hero-slide" {{ block.shopify_attributes }}>
-            <div class="container hero-slide-grid">
-              <div class="hero-content">
-                {% if block.settings.subtag != blank %}
-                  <span class="hero-sub-tag">{{ block.settings.subtag }}</span>
-                {% endif %}
-                
-                <h1 class="hero-title">
-                  {% if block.settings.title != blank %}
-                    {{ block.settings.title | replace: highlight, span_tag }}
-                  {% else %}
-                    Rooted in Ayurveda. <br>Made for <span class="highlight-text">Modern Wellness.</span>
-                  {% endif %}
-                </h1>
+              {% assign has_content = false %}
+              {% if block.settings.title != blank or block.settings.subtag != blank or block.settings.description != blank or block.settings.button_text != blank or block.settings.secondary_button_text != blank %}
+                {% assign has_content = true %}
+              {% endif %}
+              
+              <div class="{% if has_content %}container {% endif %}hero-slide-grid{% if has_content == false %} hero-slide-grid--image-only{% endif %}">
+                {% if has_content %}
+                  <div class="hero-content">
+                    {% if block.settings.subtag != blank %}
+                      <span class="hero-sub-tag">{{ block.settings.subtag }}</span>
+                    {% endif %}
+                    
+                    {% if block.settings.title != blank %}
+                      <h1 class="hero-title">
+                        {{ block.settings.title | replace: highlight, span_tag }}
+                      </h1>
+                    {% endif %}
 
-                {% if block.settings.description != blank %}
-                  <p class="hero-description">{{ block.settings.description }}</p>
-                {% endif %}
+                    {% if block.settings.description != blank %}
+                      <p class="hero-description">{{ block.settings.description }}</p>
+                    {% endif %}
 
-                <div class="hero-actions">
-                  {% if block.settings.button_text != blank %}
-                    <a href="{{ block.settings.button_link | default: '/collections/all' }}" class="btn btn-primary btn-hero-pill">
-                      {{ block.settings.button_text }}
-                    </a>
-                  {% endif %}
+                    <div class="hero-actions">
+                      {% if block.settings.button_text != blank %}
+                        <a href="{{ block.settings.button_link | default: '/collections/all' }}" class="btn btn-primary btn-hero-pill">
+                          {{ block.settings.button_text }}
+                        </a>
+                      {% endif %}
 
-                  {% if block.settings.secondary_button_text != blank %}
-                    <a href="{{ block.settings.secondary_button_link | default: '/pages/about' }}" class="btn btn-outline btn-hero-pill">
-                      {{ block.settings.secondary_button_text }}
-                    </a>
-                  {% endif %}
-                </div>
-              </div>
-
-              <div class="hero-image-container">
-                <div class="hero-image-wrapper">
-                  {% if block.settings.image != blank %}
-                    <img src="{{ block.settings.image | image_url: width: 900 }}" alt="{{ block.settings.title | escape }}" class="hero-img">
-                  {% else %}
-                    <img src="{{ block.settings.image_url | default: 'https://images.unsplash.com/photo-1617897903246-719242758050?w=900&auto=format&fit=crop&q=80' }}" alt="Ayova Formulations" class="hero-img">
-                  {% endif %}
-                </div>
-
-                {% if block.settings.floating_badge != blank %}
-                  <div class="hero-floating-badge">
-                    <span class="badge-icon">+</span>
-                    <span class="badge-text">{{ block.settings.floating_badge }}</span>
+                      {% if block.settings.secondary_button_text != blank %}
+                        <a href="{{ block.settings.secondary_button_link | default: '/pages/about' }}" class="btn btn-outline btn-hero-pill">
+                          {{ block.settings.secondary_button_text }}
+                        </a>
+                      {% endif %}
+                    </div>
                   </div>
                 {% endif %}
+
+                <div class="hero-image-container">
+                  <div class="hero-image-wrapper">
+                    {% if block.settings.image != blank %}
+                      <img src="{{ block.settings.image | image_url: width: 2000 }}" alt="{{ block.settings.title | escape }}" class="hero-img">
+                    {% else %}
+                      <img src="{{ block.settings.image_url | default: 'https://images.unsplash.com/photo-1617897903246-719242758050?w=900&auto=format&fit=crop&q=80' }}" alt="Ayova Formulations" class="hero-img">
+                    {% endif %}
+                  </div>
+
+                  {% if block.settings.floating_badge != blank %}
+                    <div class="hero-floating-badge">
+                      <span class="badge-icon">+</span>
+                      <span class="badge-text">{{ block.settings.floating_badge }}</span>
+                    </div>
+                  {% endif %}
+                </div>
               </div>
-            </div>
           </div>
         {% endfor %}
 
@@ -176,7 +181,7 @@
 <style>
 .ayova-hero-section {
   position: relative;
-  padding: 56px 0 64px;
+  padding: 0;
   overflow: hidden;
   background-color: #FAF8F2;
 }
@@ -206,6 +211,21 @@
   z-index: 2;
 }
 
+.hero-carousel-controls {
+  position: absolute;
+  bottom: 24px;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  pointer-events: none; /* Let clicks pass through if dots aren't clicked */
+}
+
+.ayova-carousel-dots {
+  pointer-events: auto;
+}
+
 .hero-slide {
   width: 100% !important;
 }
@@ -215,6 +235,23 @@
   grid-template-columns: 1.05fr 1fr;
   align-items: center;
   gap: 48px;
+}
+
+.hero-slide-grid--image-only {
+  grid-template-columns: 1fr;
+  gap: 0;
+  width: 100%;
+}
+
+.hero-slide-grid--image-only .hero-image-wrapper {
+  max-width: 100%;
+  border-radius: 0;
+}
+
+.hero-slide-grid--image-only .hero-img {
+  width: 100%;
+  max-height: none;
+  object-fit: cover;
 }
 
 .hero-content {
@@ -451,7 +488,8 @@
 
 @media (max-width: 768px) {
   .ayova-hero-section {
-    padding: 36px 0 44px;
+    padding: 0;
+    margin-top: 50px;
   }
   .hero-slide-grid {
     grid-template-columns: 1fr;
