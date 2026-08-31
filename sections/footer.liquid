@@ -43,6 +43,7 @@
 
   <div class="container" style="padding: 0;">
     <!-- Trust Benefits Bar — Figma: #132820 bg, border-radius 16px -->
+    {% comment %}
     <div class="trust-badges-bar">
       {% for block in section.blocks %}
         {% if block.type == 'trust_badge' %}
@@ -56,6 +57,7 @@
         {% endif %}
       {% endfor %}
     </div>
+    {% endcomment %}
 
     <div class="footer-main">
       <!-- Divider -->

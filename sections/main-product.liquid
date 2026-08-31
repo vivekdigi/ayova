@@ -129,10 +129,12 @@
             <span class="rating-text-new">4.9 • <span class="verified-text">1,248 verified reviews</span></span>
           </div>
 
+          {% comment %}
           <div class="live-orders-badge">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#e74c3c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
             <span id="liveOrderCount">1000</span> orders received today!
           </div>
+          {% endcomment %}
         </div>
 
         <div class="product-price-box-new">
@@ -1210,13 +1212,21 @@
 
 {% if product.metafields.custom.product_video != blank %}
   <div class="floating-product-video" id="floatingProductVideo">
-    {{ product.metafields.custom.product_video.value | video_tag: autoplay: true, loop: true, muted: true, controls: true }}
+    <button type="button" class="floating-video-toggle" id="floatingVideoToggle" aria-label="Minimize video">−</button>
+    <div class="floating-video-sound-toggle">
+      <button type="button" id="floatingSoundBtn" aria-label="Toggle Sound">🔇</button>
+    </div>
+    <video class="floating-video-element" autoplay muted loop playsinline controlsList="nodownload" oncontextmenu="return false;" disablePictureInPicture style="cursor: pointer;">
+      {% for source in product.metafields.custom.product_video.value.sources %}
+        <source src="{{ source.url }}" type="{{ source.mime_type }}">
+      {% endfor %}
+    </video>
   </div>
   <style>
     .floating-product-video {
       position: fixed;
       bottom: 20px;
-      right: 20px;
+      left: 20px;
       width: 160px;
       border-radius: 12px;
       overflow: hidden;
@@ -1227,13 +1237,110 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: all 0.3s ease;
+    }
+    .floating-product-video.minimized {
+      width: 80px;
+      border-radius: 50%;
+      aspect-ratio: 1/1;
+    }
+    .floating-product-video.minimized video {
+      border-radius: 50%;
+    }
+    .floating-video-toggle {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      width: 24px;
+      height: 24px;
+      background: rgba(0,0,0,0.5);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      line-height: 1;
+      z-index: 10;
+    }
+    .floating-video-toggle:hover {
+      background: rgba(0,0,0,0.8);
     }
     .floating-product-video video {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      transition: all 0.3s ease;
+    }
+    .floating-video-sound-toggle {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      z-index: 10;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .floating-product-video:hover .floating-video-sound-toggle {
+      opacity: 1;
+    }
+    #floatingSoundBtn {
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+    #floatingSoundBtn:hover {
+      background: rgba(0,0,0,0.8);
     }
   </style>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var videoContainer = document.getElementById('floatingProductVideo');
+      var toggleBtn = document.getElementById('floatingVideoToggle');
+      var soundBtn = document.getElementById('floatingSoundBtn');
+      var videoEl = document.querySelector('.floating-video-element');
+      
+      if(videoContainer && toggleBtn) {
+        toggleBtn.addEventListener('click', function() {
+          videoContainer.classList.toggle('minimized');
+          if(videoContainer.classList.contains('minimized')) {
+            toggleBtn.innerHTML = '+';
+            toggleBtn.setAttribute('aria-label', 'Maximize video');
+          } else {
+            toggleBtn.innerHTML = '−';
+            toggleBtn.setAttribute('aria-label', 'Minimize video');
+          }
+        });
+      }
+      
+      if(soundBtn && videoEl) {
+        soundBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          videoEl.muted = !videoEl.muted;
+          this.innerHTML = videoEl.muted ? '🔇' : '🔊';
+        });
+      }
+      
+      if(videoEl) {
+        videoEl.addEventListener('click', function() {
+          if (videoEl.paused) {
+            videoEl.play();
+          } else {
+            videoEl.pause();
+          }
+        });
+      }
+    });
+  </script>
 {% endif %}
 
 {% schema %}
