@@ -4,7 +4,12 @@
   Announcement bar with dynamic blocks
 {% endcomment %}
 
-<header class="ayova-header-wrapper {% if section.settings.enable_sticky %}ayova-header-wrapper--sticky{% endif %}" data-header>
+{% assign has_marketplace_buttons = false %}
+{% if section.settings.blinkit_url != blank or section.settings.amazon_url != blank or section.settings.flipkart_url != blank %}
+  {% assign has_marketplace_buttons = true %}
+{% endif %}
+
+<header class="ayova-header-wrapper {% if section.settings.enable_sticky %}ayova-header-wrapper--sticky{% endif %} {% if has_marketplace_buttons %}has-marketplace-bar{% endif %}" data-header>
   <!-- Announcement Bar — Figma: 34px, #285044 -->
   {% if section.settings.show_announcement %}
     <div class="announcement-bar" style="background-color: {{ section.settings.announcement_bg | default: '#285044' }}; color: {{ section.settings.announcement_text_color | default: '#FFFFFF' }};">
