@@ -5,7 +5,12 @@
     {% endif %}
 
     <div class="ws-slider-wrapper">
-      <button class="ws-nav-btn ws-prev" aria-label="Previous">←</button>
+      <button class="ws-nav-btn ws-prev" type="button" aria-label="Previous">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+
       <div class="watch-shop-grid" id="ws-grid-{{ section.id }}">
         {% for block in section.blocks %}
           <div class="watch-shop-card" {{ block.shopify_attributes }}>
@@ -19,13 +24,28 @@
 
               {% if block.settings.mp4_video != blank %}
                 <div class="ws-custom-controls">
-                  <button type="button" class="ws-sound-toggle" aria-label="Toggle Sound">🔇</button>
+                  <button type="button" class="ws-sound-toggle" aria-label="Toggle Sound" title="Toggle Sound">
+                    <svg class="ws-icon-mute" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                      <line x1="23" y1="9" x2="17" y2="15"></line>
+                      <line x1="17" y1="9" x2="23" y2="15"></line>
+                    </svg>
+                    <svg class="ws-icon-unmute" style="display: none;" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                      <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                    </svg>
+                  </button>
                 </div>
-                <video class="ws-video-element" autoplay muted loop playsinline controlsList="nodownload" oncontextmenu="return false;" disablePictureInPicture style="cursor: pointer;">
+                <video class="ws-video-element" autoplay muted loop playsinline controlsList="nodownload" oncontextmenu="return false;" disablePictureInPicture>
                   {% for source in block.settings.mp4_video.sources %}
                     <source src="{{ source.url }}" type="{{ source.mime_type }}">
                   {% endfor %}
                 </video>
+                <div class="ws-play-indicator" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                    <polygon points="6 4 20 12 6 20 6 4"></polygon>
+                  </svg>
+                </div>
               {% elsif block.settings.youtube_url != blank %}
                 <iframe class="ws-youtube-player" src="https://www.youtube.com/embed/{{ block.settings.youtube_url.id }}?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&loop=1&playlist={{ block.settings.youtube_url.id }}&modestbranding=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
               {% endif %}
@@ -35,10 +55,10 @@
             <div class="ws-product-info">
               {% if block.settings.product != blank %}
                 <div class="ws-product-header">
-                  <img src="{{ block.settings.product.featured_image | image_url: width: 60 }}" alt="{{ block.settings.product.title }}" class="ws-product-thumb">
+                  <img src="{{ block.settings.product.featured_image | image_url: width: 80 }}" alt="{{ block.settings.product.title }}" class="ws-product-thumb" loading="lazy">
                   <div class="ws-product-details">
-                    <a href="{{ block.settings.product.url }}" class="ws-product-title" style="text-decoration: none; color: inherit;">
-                      {{ block.settings.custom_title | default: block.settings.product.title | truncate: 35 }}
+                    <a href="{{ block.settings.product.url }}" class="ws-product-title" title="{{ block.settings.custom_title | default: block.settings.product.title }}">
+                      {{ block.settings.custom_title | default: block.settings.product.title }}
                     </a>
                     <span class="ws-product-price">
                       {% if block.settings.custom_price != blank %}
@@ -64,7 +84,12 @@
           </div>
         {% endfor %}
       </div>
-      <button class="ws-nav-btn ws-next" aria-label="Next">→</button>
+
+      <button class="ws-nav-btn ws-next" type="button" aria-label="Next">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
     </div>
   </div>
 </div>
@@ -72,219 +97,440 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   const grid = document.getElementById('ws-grid-{{ section.id }}');
-  const prevBtn = grid.parentElement.querySelector('.ws-prev');
-  const nextBtn = grid.parentElement.querySelector('.ws-next');
+  if (!grid) return;
 
-  if(prevBtn && nextBtn && grid) {
-    prevBtn.addEventListener('click', () => {
-      grid.scrollBy({ left: -300, behavior: 'smooth' });
-    });
-    nextBtn.addEventListener('click', () => {
-      grid.scrollBy({ left: 300, behavior: 'smooth' });
-    });
+  const sliderWrapper = grid.closest('.ws-slider-wrapper');
+  const prevBtn = sliderWrapper ? sliderWrapper.querySelector('.ws-prev') : null;
+  const nextBtn = sliderWrapper ? sliderWrapper.querySelector('.ws-next') : null;
+
+  function updateArrows() {
+    if (!prevBtn || !nextBtn) return;
+    if (window.innerWidth <= 768) {
+      prevBtn.style.display = 'none';
+      nextBtn.style.display = 'none';
+      return;
+    }
+    const canScroll = grid.scrollWidth > grid.clientWidth + 8;
+    if (canScroll) {
+      prevBtn.style.display = 'flex';
+      nextBtn.style.display = 'flex';
+      prevBtn.style.opacity = grid.scrollLeft > 10 ? '1' : '0.4';
+      prevBtn.style.pointerEvents = grid.scrollLeft > 10 ? 'auto' : 'none';
+      const maxScroll = grid.scrollWidth - grid.clientWidth - 10;
+      nextBtn.style.opacity = grid.scrollLeft < maxScroll ? '1' : '0.4';
+      nextBtn.style.pointerEvents = grid.scrollLeft < maxScroll ? 'auto' : 'none';
+    } else {
+      prevBtn.style.display = 'none';
+      nextBtn.style.display = 'none';
+    }
   }
 
-  const soundToggles = document.querySelectorAll('.ws-sound-toggle');
+  if (prevBtn && nextBtn) {
+    prevBtn.addEventListener('click', () => {
+      grid.scrollBy({ left: -190, behavior: 'smooth' });
+    });
+    nextBtn.addEventListener('click', () => {
+      grid.scrollBy({ left: 190, behavior: 'smooth' });
+    });
+    grid.addEventListener('scroll', updateArrows, { passive: true });
+    window.addEventListener('resize', updateArrows);
+    setTimeout(updateArrows, 300);
+  }
+
+  // Sound toggle button logic
+  const soundToggles = grid.querySelectorAll('.ws-sound-toggle');
   soundToggles.forEach(toggle => {
     toggle.addEventListener('click', function(e) {
       e.preventDefault();
-      const video = this.closest('.ws-video-container').querySelector('video');
+      e.stopPropagation();
+      const container = this.closest('.ws-video-container');
+      const video = container ? container.querySelector('video') : null;
       if (video) {
         video.muted = !video.muted;
-        this.innerHTML = video.muted ? '🔇' : '🔊';
+        const muteIcon = this.querySelector('.ws-icon-mute');
+        const unmuteIcon = this.querySelector('.ws-icon-unmute');
+        if (muteIcon && unmuteIcon) {
+          muteIcon.style.display = video.muted ? 'block' : 'none';
+          unmuteIcon.style.display = video.muted ? 'none' : 'block';
+        }
       }
     });
   });
 
-  const videos = document.querySelectorAll('.ws-video-element');
-  videos.forEach(video => {
-    video.addEventListener('click', function() {
+  // Play / Pause on video container click
+  const videoContainers = grid.querySelectorAll('.ws-video-container');
+  videoContainers.forEach(container => {
+    const video = container.querySelector('video');
+    if (!video) return;
+
+    container.addEventListener('click', function(e) {
+      if (e.target.closest('.ws-custom-controls')) return;
       if (video.paused) {
         video.play();
+        container.classList.remove('is-paused');
       } else {
         video.pause();
+        container.classList.add('is-paused');
       }
     });
+
+    video.addEventListener('play', () => container.classList.remove('is-paused'));
+    video.addEventListener('pause', () => container.classList.add('is-paused'));
   });
 });
 </script>
 
 <style>
-.ws-custom-controls {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 5;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-.ws-video-container:hover .ws-custom-controls {
-  opacity: 1;
-}
-.ws-sound-toggle {
-  background: rgba(0,0,0,0.6);
-  color: #fff;
-  border: none;
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-}
-.ws-sound-toggle:hover {
-  background: rgba(0,0,0,0.8);
-}
-.ws-slider-wrapper {
-  position: relative;
-}
-.ws-nav-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 40px;
-  height: 40px;
-  background: #fff;
-  border: 1px solid #eaeaea;
-  border-radius: 50%;
-  font-size: 1.2rem;
-  color: #333;
-  cursor: pointer;
-  z-index: 10;
-  display: none !important;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  transition: background 0.2s, color 0.2s;
-}
-.ws-nav-btn:hover {
-  background: var(--color-forest-dark, #1a3c34);
-  color: #fff;
-}
-.ws-prev { left: 10px; }
-.ws-next { right: 10px; }
-
-@media (max-width: 768px) {
-  .ws-prev, .ws-next { display: none !important; }
-}
-
 .watch-and-shop-section {
   background: #fff;
-  padding: 40px 0;
+  padding: 28px 0 36px;
 }
+
 .watch-shop-title {
   text-align: center;
   font-family: var(--font-heading);
-  font-size: 1.8rem;
+  font-size: 1.5rem;
   font-weight: 700;
-  color: var(--color-forest-dark);
-  margin-bottom: 40px;
+  color: var(--color-forest-dark, #12251E);
+  margin: 0 0 18px;
+  letter-spacing: -0.01em;
 }
+
+.ws-slider-wrapper {
+  position: relative;
+  max-width: 100%;
+}
+
+.ws-nav-btn {
+  position: absolute;
+  top: 45%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 50%;
+  color: #202824;
+  cursor: pointer;
+  z-index: 10;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: background 0.2s, color 0.2s, transform 0.15s, opacity 0.2s;
+  padding: 0;
+}
+
+.ws-nav-btn:hover {
+  background: var(--color-forest-primary, #173E34);
+  color: #fff;
+  transform: translateY(-50%) scale(1.06);
+}
+
+.ws-prev { left: -16px; }
+.ws-next { right: -16px; }
+
 .watch-shop-grid {
   display: flex;
   gap: 16px;
   overflow-x: auto;
-  padding-bottom: 20px;
+  padding: 4px 2px 14px;
   scroll-snap-type: x mandatory;
-  justify-content: center; /* Center if there are exactly 4 or less */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
 }
+
 .watch-shop-grid::-webkit-scrollbar {
-  display: none; /* Chrome, Safari and Opera */
+  display: none;
 }
+
+@media (min-width: 992px) {
+  .watch-shop-grid {
+    justify-content: center;
+    gap: 16px;
+  }
+}
+
 .watch-shop-card {
-  flex: 0 0 calc(25% - 12px); /* 4 items per row */
-  min-width: 240px;
-  max-width: 300px;
+  flex: 0 0 172px;
+  width: 172px;
+  min-width: 165px;
+  max-width: 180px;
   background: #fff;
-  border-radius: 12px;
+  border-radius: 14px;
   overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-  border: 1px solid #eaeaea;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.07);
   display: flex;
   flex-direction: column;
   scroll-snap-align: start;
+  transition: transform 0.25s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.25s cubic-bezier(0.2, 0, 0, 1);
 }
+
+.watch-shop-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.11);
+}
+
 .ws-video-container {
   position: relative;
   width: 100%;
-  aspect-ratio: 9/16;
-  background: #000;
+  aspect-ratio: 9/15.5;
+  max-height: 295px;
+  background: #0f1613;
   overflow: hidden;
+  cursor: pointer;
 }
+
 .ws-poster {
   position: absolute;
-  top: 0; left: 0; width: 100%; height: 100%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   z-index: 1;
 }
-.ws-video-element, .ws-youtube-player {
+
+.ws-video-element,
+.ws-youtube-player {
   position: absolute;
-  top: 0; left: 0; width: 100%; height: 100%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   z-index: 2;
 }
+
+.ws-custom-controls {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 6;
+  pointer-events: auto;
+}
+
+.ws-sound-toggle {
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, transform 0.15s;
+  padding: 0;
+}
+
+.ws-sound-toggle:hover {
+  background: rgba(0, 0, 0, 0.72);
+  transform: scale(1.08);
+}
+
+.ws-play-indicator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.85);
+  width: 40px;
+  height: 40px;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.ws-video-container.is-paused .ws-play-indicator {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -50%) scale(1);
+}
+
 .ws-product-info {
-  padding: 12px;
-  background: #fff;
+  padding: 8px 10px 10px;
+  background: #ffffff;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
   justify-content: space-between;
+  gap: 7px;
 }
+
 .ws-product-header {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 12px;
+  gap: 8px;
+  min-width: 0;
 }
+
 .ws-product-thumb {
-  width: 40px; height: 40px;
+  width: 32px;
+  height: 32px;
   border-radius: 6px;
   object-fit: cover;
-  background: #f4f4f4;
+  background: #f7f6f1;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  flex-shrink: 0;
 }
+
 .ws-product-details {
   display: flex;
   flex-direction: column;
+  min-width: 0;
+  flex: 1;
 }
+
 .ws-product-title {
-  font-size: 0.85rem;
+  font-size: 0.76rem;
   font-weight: 600;
-  color: #333;
-  line-height: 1.2;
+  color: #202824;
+  line-height: 1.25;
+  text-decoration: none;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.15s;
 }
+
+.ws-product-title:hover {
+  color: var(--color-terracotta, #D96C3F);
+}
+
 .ws-product-price {
   font-size: 0.8rem;
-  color: #666;
-  margin-top: 4px;
+  font-weight: 700;
+  color: var(--color-forest-primary, #173E34);
+  margin-top: 1px;
+  line-height: 1;
 }
+
 .ws-buy-btn {
   display: block;
   width: 100%;
   text-align: center;
-  background: #000;
-  color: #fff;
-  padding: 10px;
+  background: var(--color-forest-primary, #173E34);
+  color: #ffffff;
+  padding: 6px 8px;
   border-radius: 6px;
-  font-size: 0.9rem;
-  font-weight: 700;
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
   text-decoration: none;
   border: none;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.2s ease, transform 0.12s ease;
   margin-top: auto;
+  line-height: 1.2;
 }
+
 .ws-buy-btn:hover {
-  background: var(--color-terracotta);
+  background: var(--color-terracotta, #D96C3F);
+}
+
+.ws-buy-btn:active {
+  transform: scale(0.98);
+}
+
+/* ── Mobile & Tablet Responsiveness ── */
+@media (max-width: 991px) {
+  .watch-shop-grid {
+    justify-content: flex-start;
+    padding-left: 16px;
+    padding-right: 16px;
+    margin: 0 -16px;
+    width: calc(100% + 32px);
+  }
 }
 
 @media (max-width: 768px) {
+  .watch-and-shop-section {
+    padding: 24px 0 28px;
+  }
+
+  .watch-shop-title {
+    font-size: 1.35rem;
+    margin-bottom: 16px;
+  }
+
+  .ws-nav-btn {
+    display: none !important;
+  }
+
+  .watch-shop-grid {
+    gap: 12px;
+    padding: 2px 14px 12px;
+    margin: 0 -14px;
+    width: calc(100% + 28px);
+  }
+
   .watch-shop-card {
-    flex: 0 0 70%;
+    flex: 0 0 162px;
+    width: 162px;
+    min-width: 152px;
+    max-width: 172px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+  }
+
+  .ws-product-info {
+    padding: 8px 9px 9px;
+    gap: 6px;
+  }
+
+  .ws-product-thumb {
+    width: 32px;
+    height: 32px;
+  }
+
+  .ws-product-title {
+    font-size: 0.74rem;
+  }
+
+  .ws-product-price {
+    font-size: 0.78rem;
+  }
+
+  .ws-buy-btn {
+    padding: 6px 8px;
+    font-size: 0.74rem;
+    border-radius: 5px;
+  }
+}
+
+@media (max-width: 390px) {
+  .watch-shop-card {
+    flex: 0 0 148px;
+    width: 148px;
+    min-width: 140px;
+    max-width: 155px;
+  }
+
+  .ws-sound-toggle {
+    width: 26px;
+    height: 26px;
+  }
+
+  .ws-sound-toggle svg {
+    width: 12px;
+    height: 12px;
   }
 }
 </style>

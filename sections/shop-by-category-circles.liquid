@@ -6,7 +6,7 @@
 
     <div class="shop-circles-grid">
       {% for block in section.blocks %}
-        <a href="{{ block.settings.link | default: '#' }}" class="shop-circle-item" {{ block.shopify_attributes }}>
+        <div class="shop-circle-item" {{ block.shopify_attributes }}>
           <div class="shop-circle-img-wrap" style="border-color: {{ block.settings.border_color }};">
             {% if block.settings.image != blank %}
               <img src="{{ block.settings.image | image_url: width: 300 }}" alt="{{ block.settings.title | escape }}" class="shop-circle-img" loading="lazy">
@@ -15,7 +15,7 @@
             {% endif %}
           </div>
           <span class="shop-circle-label">{{ block.settings.title | escape }}</span>
-        </a>
+        </div>
       {% endfor %}
     </div>
   </div>
@@ -46,10 +46,13 @@
   align-items: center;
   text-decoration: none;
   gap: 12px;
-  transition: transform 0.2s ease;
+  cursor: default;
+  outline: none;
+  user-select: none;
 }
-.shop-circle-item:hover {
-  transform: translateY(-5px);
+.shop-circle-item:focus,
+.shop-circle-item:focus-visible {
+  outline: none;
 }
 .shop-circle-img-wrap {
   width: 120px;
