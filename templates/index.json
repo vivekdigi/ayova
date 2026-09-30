@@ -1,71 +1,758 @@
 {
-  "sections": {
-    "hero_carousel": {
-      "type": "hero-carousel",
-      "settings": {}
+    "sections": {
+        "hero_carousel": {
+            "type": "hero-carousel",
+            "blocks": {
+                "slide_w9UNRA": {
+                    "type": "slide",
+                    "settings": {
+                        "subtag": "",
+                        "title": "",
+                        "highlight_text": "",
+                        "description": "",
+                        "button_text": "",
+                        "button_link": "",
+                        "secondary_button_text": "",
+                        "secondary_button_link": "",
+                        "image": "shopify:\/\/shop_images\/Artboard_2.jpg",
+                        "image_url": "",
+                        "floating_badge": "+ Digestive Support"
+                    }
+                },
+                "slide_mrfhfD": {
+                    "type": "slide",
+                    "settings": {
+                        "subtag": "",
+                        "title": "",
+                        "highlight_text": "",
+                        "description": "",
+                        "button_text": "",
+                        "button_link": "",
+                        "secondary_button_text": "",
+                        "secondary_button_link": "",
+                        "image": "shopify:\/\/shop_images\/Artboard_7.jpg",
+                        "image_url": "",
+                        "floating_badge": ""
+                    }
+                },
+                "slide_fFawyq": {
+                    "type": "slide",
+                    "settings": {
+                        "subtag": "",
+                        "title": "",
+                        "highlight_text": "",
+                        "description": "",
+                        "button_text": "",
+                        "button_link": "",
+                        "secondary_button_text": "",
+                        "secondary_button_link": "",
+                        "image": "shopify:\/\/shop_images\/thistle_banner.jpg",
+                        "image_url": "",
+                        "floating_badge": "+ Digestive Support"
+                    }
+                },
+                "slide_xie6QW": {
+                    "type": "slide",
+                    "settings": {
+                        "subtag": "",
+                        "title": "",
+                        "highlight_text": "",
+                        "description": "",
+                        "button_text": "",
+                        "button_link": "",
+                        "secondary_button_text": "",
+                        "secondary_button_link": "",
+                        "image": "shopify:\/\/shop_images\/Artboard_4.jpg",
+                        "image_url": "",
+                        "floating_badge": "+ Digestive Support"
+                    }
+                }
+            },
+            "block_order": [
+                "slide_w9UNRA",
+                "slide_mrfhfD",
+                "slide_fFawyq",
+                "slide_xie6QW"
+            ],
+            "settings": {
+                "autoplay": true
+            }
+        },
+        "17873130600db44ceb": {
+            "type": "_blocks",
+            "blocks": {
+                "ai_gen_block_f384f50_yrJjhk": {
+                    "type": "ai_gen_block_f384f50",
+                    "settings": {
+                        "title": "Better Nutrition. Welcome to Ayova Organics.",
+                        "text_alignment": "center",
+                        "desktop_width_percent": 100,
+                        "heading_size": 36,
+                        "mobile_heading_size": 28,
+                        "text_color": "#1d1d1d",
+                        "letter_spacing": 0,
+                        "padding_top": 24,
+                        "padding_bottom": 24,
+                        "mobile_padding_top": 20,
+                        "mobile_padding_bottom": 20
+                    },
+                    "blocks": {}
+                }
+            },
+            "block_order": [
+                "ai_gen_block_f384f50_yrJjhk"
+            ],
+            "settings": {}
+        },
+        "watch_and_shop": {
+            "type": "watch-and-shop",
+            "blocks": {
+                "video_dBPiNb": {
+                    "type": "video",
+                    "settings": {
+                        "mp4_video": "shopify:\/\/files\/videos\/Glutathione Tablets-amazon-add.mp4",
+                        "youtube_url": "",
+                        "product": "glutathione-tablet",
+                        "custom_title": "",
+                        "custom_price": ""
+                    }
+                },
+                "video_pRgpWE": {
+                    "type": "video",
+                    "settings": {
+                        "mp4_video": "shopify:\/\/files\/videos\/WhatsApp Video 2026-08-27 at 15.39.19.mp4",
+                        "youtube_url": "",
+                        "product": "liver-care-syrup",
+                        "custom_title": "",
+                        "custom_price": ""
+                    }
+                },
+                "video_XGC3WW": {
+                    "type": "video",
+                    "settings": {
+                        "mp4_video": "shopify:\/\/files\/videos\/ayova -silajit-tablet-final-1-1.mp4",
+                        "youtube_url": "",
+                        "product": "shilajit-ashwagandha-capsule",
+                        "custom_title": "",
+                        "custom_price": ""
+                    }
+                },
+                "video_FfWnDY": {
+                    "type": "video",
+                    "settings": {
+                        "mp4_video": "shopify:\/\/files\/videos\/liver-syrup-final-1.mp4",
+                        "youtube_url": "",
+                        "product": "liver-care-syrup",
+                        "custom_title": "",
+                        "custom_price": ""
+                    }
+                },
+                "video_cGdz4R": {
+                    "type": "video",
+                    "settings": {
+                        "mp4_video": "shopify:\/\/files\/videos\/Glutathione Tablets-amazon-add.mp4",
+                        "youtube_url": "",
+                        "product": "glutathione-tablet",
+                        "custom_title": "",
+                        "custom_price": ""
+                    }
+                }
+            },
+            "block_order": [
+                "video_dBPiNb",
+                "video_pRgpWE",
+                "video_XGC3WW",
+                "video_FfWnDY",
+                "video_cGdz4R"
+            ],
+            "custom_css": [
+                ".ai-title-section-arxhgvlozujvodhr1zaigenblockf384f50yrjjhk__title {padding-top: 20px !important;}"
+            ],
+            "settings": {
+                "title": ""
+            }
+        },
+        "shop_by_circles": {
+            "type": "shop-by-category-circles",
+            "blocks": {
+                "category_wWUPhg": {
+                    "type": "category",
+                    "settings": {
+                        "image": "shopify:\/\/shop_images\/5a272a50-3bae-4ac5-bfdd-432692dcd1f9.jpg",
+                        "title": "Women",
+                        "link": "",
+                        "border_color": "#264232"
+                    }
+                },
+                "category_4qY3t4": {
+                    "type": "category",
+                    "settings": {
+                        "image": "shopify:\/\/shop_images\/71f76971-b7a4-41d8-8736-5569b802061f.jpg",
+                        "title": "Men",
+                        "link": "",
+                        "border_color": "#264232"
+                    }
+                },
+                "category_Jd8hFN": {
+                    "type": "category",
+                    "settings": {
+                        "image": "shopify:\/\/shop_images\/81ecebbe-f3a9-4634-a7d7-81bd857258ed.jpg",
+                        "title": "50+",
+                        "link": "",
+                        "border_color": "#264232"
+                    }
+                },
+                "category_ay4GCp": {
+                    "type": "category",
+                    "settings": {
+                        "image": "shopify:\/\/shop_images\/Gemini_Generated_Image_yisd96yisd96yisd_85ff67a8-13a2-4676-b52c-3ce59e7e388c.png",
+                        "title": "Children",
+                        "link": "",
+                        "border_color": "#264232"
+                    }
+                }
+            },
+            "block_order": [
+                "category_wWUPhg",
+                "category_4qY3t4",
+                "category_Jd8hFN",
+                "category_ay4GCp"
+            ],
+            "custom_css": [
+                ".shop-circles-title {font-weight: 600 !important;}"
+            ],
+            "settings": {
+                "title": "Find Your"
+            }
+        },
+        "bestsellers_carousel": {
+            "type": "bestsellers-carousel",
+            "blocks": {
+                "product_item_AQPrHw": {
+                    "type": "product_item",
+                    "settings": {
+                        "product": "shilajit-ashwagandha-capsule",
+                        "title": "Milk Thistle",
+                        "short_description": "Supports daily energy, stamina, strength, and overall wellness for everyday life.",
+                        "category": "LIVER HEALTH",
+                        "pack_size": "60 capsules",
+                        "price": "Rs. 389.00",
+                        "compare_price": "Rs. 619.00",
+                        "badge": "BESTSELLER",
+                        "reviews": "205",
+                        "per_count_text": "",
+                        "image_url": ""
+                    }
+                },
+                "product_item_xVG38i": {
+                    "type": "product_item",
+                    "settings": {
+                        "product": "milk-thistle-capsule",
+                        "title": "Milk Thistle",
+                        "short_description": "Supports daily wellness, liver health, and overall body balance.",
+                        "category": "LIVER HEALTH",
+                        "pack_size": "60 capsules",
+                        "price": "Rs. 389.00",
+                        "compare_price": "Rs. 619.00",
+                        "badge": "BESTSELLER",
+                        "reviews": "205",
+                        "per_count_text": "",
+                        "image_url": ""
+                    }
+                },
+                "product_item_qfFTrF": {
+                    "type": "product_item",
+                    "settings": {
+                        "product": "veg-omega-3-6-7-9-capsule",
+                        "title": "Milk Thistle",
+                        "short_description": "",
+                        "category": "LIVER HEALTH",
+                        "pack_size": "60 capsules",
+                        "price": "Rs. 389.00",
+                        "compare_price": "Rs. 619.00",
+                        "badge": "BESTSELLER",
+                        "reviews": "205",
+                        "per_count_text": "",
+                        "image_url": ""
+                    }
+                },
+                "product_item_86A4Nc": {
+                    "type": "product_item",
+                    "settings": {
+                        "product": "glutathione-tablet",
+                        "title": "",
+                        "short_description": "Supports healthy skin, and overall daily wellness.",
+                        "category": "",
+                        "pack_size": "",
+                        "price": "",
+                        "compare_price": "",
+                        "badge": "",
+                        "reviews": "",
+                        "per_count_text": "",
+                        "image_url": ""
+                    }
+                },
+                "product_item_DCCzP7": {
+                    "type": "product_item",
+                    "settings": {
+                        "product": "berberine-capsule",
+                        "title": "",
+                        "short_description": "95% Berberine with Black Pepper and overall wellness support.",
+                        "category": "",
+                        "pack_size": "",
+                        "price": "",
+                        "compare_price": "",
+                        "badge": "",
+                        "reviews": "",
+                        "per_count_text": "",
+                        "image_url": ""
+                    }
+                }
+            },
+            "block_order": [
+                "product_item_AQPrHw",
+                "product_item_xVG38i",
+                "product_item_qfFTrF",
+                "product_item_86A4Nc",
+                "product_item_DCCzP7"
+            ],
+            "settings": {
+                "badge_text": "",
+                "show_per_count": true,
+                "title": "Best Sellers",
+                "subtitle": "Explore the Ayova formulations most trusted by our wellness community.",
+                "header_alignment": "center",
+                "collection": "herbal-supplements",
+                "products_to_show": 8,
+                "items_per_view": 4
+            }
+        },
+        "ayurvedic_formulations": {
+            "type": "ayurvedic-formulations",
+            "blocks": {
+                "product_item_AnL8Ka": {
+                    "type": "product_item",
+                    "settings": {
+                        "product": "shilajit-ashwagandha-capsule",
+                        "title": "Triphala",
+                        "short_description": "",
+                        "category": "LIVER HEALTH",
+                        "pack_size": "60 capsules",
+                        "price": "Rs. 389.00",
+                        "compare_price": "Rs. 619.00",
+                        "badge": "",
+                        "reviews": "205",
+                        "per_count_text": "",
+                        "image_url": ""
+                    }
+                },
+                "product_item_chRhT3": {
+                    "type": "product_item",
+                    "settings": {
+                        "product": "pcos-pcod-capsule",
+                        "title": "Triphala 2",
+                        "short_description": "",
+                        "category": "LIVER HEALTH",
+                        "pack_size": "60 capsules",
+                        "price": "Rs. 389.00",
+                        "compare_price": "Rs. 619.00",
+                        "badge": "",
+                        "reviews": "205",
+                        "per_count_text": "",
+                        "image_url": ""
+                    }
+                },
+                "product_item_9KEAUk": {
+                    "type": "product_item",
+                    "settings": {
+                        "product": "vitamin-d3-k2-tablet",
+                        "title": "Triphala",
+                        "short_description": "",
+                        "category": "LIVER HEALTH",
+                        "pack_size": "90 Tablets",
+                        "price": "Rs. 389.00",
+                        "compare_price": "Rs. 619.00",
+                        "badge": "",
+                        "reviews": "205",
+                        "per_count_text": "",
+                        "image_url": ""
+                    }
+                },
+                "product_item_8wQTDa": {
+                    "type": "product_item",
+                    "settings": {
+                        "product": "multivitamin-gummies",
+                        "title": "Triphala",
+                        "short_description": "",
+                        "category": "",
+                        "pack_size": "30 Gummies",
+                        "price": "Rs. 389.00",
+                        "compare_price": "Rs. 619.00",
+                        "badge": "",
+                        "reviews": "205",
+                        "per_count_text": "",
+                        "image_url": ""
+                    }
+                },
+                "product_item_9W84Fk": {
+                    "type": "product_item",
+                    "settings": {
+                        "product": "milk-thistle-capsule",
+                        "title": "Triphala",
+                        "short_description": "",
+                        "category": "LIVER HEALTH",
+                        "pack_size": "60 capsules",
+                        "price": "Rs. 389.00",
+                        "compare_price": "Rs. 619.00",
+                        "badge": "",
+                        "reviews": "205",
+                        "per_count_text": "",
+                        "image_url": ""
+                    }
+                },
+                "product_item_L6YepP": {
+                    "type": "product_item",
+                    "settings": {
+                        "product": "liver-care-syrup",
+                        "title": "Triphala",
+                        "short_description": "",
+                        "category": "LIVER HEALTH",
+                        "pack_size": "60 capsules",
+                        "price": "Rs. 389.00",
+                        "compare_price": "Rs. 619.00",
+                        "badge": "",
+                        "reviews": "205",
+                        "per_count_text": "",
+                        "image_url": ""
+                    }
+                },
+                "product_item_4MtK8Q": {
+                    "type": "product_item",
+                    "settings": {
+                        "product": "berberine-capsule",
+                        "title": "Triphala",
+                        "short_description": "",
+                        "category": "LIVER HEALTH",
+                        "pack_size": "60 capsules",
+                        "price": "Rs. 389.00",
+                        "compare_price": "Rs. 619.00",
+                        "badge": "",
+                        "reviews": "205",
+                        "per_count_text": "",
+                        "image_url": ""
+                    }
+                }
+            },
+            "block_order": [
+                "product_item_AnL8Ka",
+                "product_item_chRhT3",
+                "product_item_9KEAUk",
+                "product_item_8wQTDa",
+                "product_item_9W84Fk",
+                "product_item_L6YepP",
+                "product_item_4MtK8Q"
+            ],
+            "settings": {
+                "badge_text": "",
+                "show_per_count": true,
+                "title": "Shop Our Most-Loved Ayurvedic Formulations",
+                "subtitle": "Pure standardized extracts & authentic classical formulations for maximum bioavailability",
+                "header_alignment": "center",
+                "collection": "",
+                "products_to_show": 8,
+                "items_per_view": 4
+            }
+        },
+        "combo_kits": {
+            "type": "combo-kits",
+            "blocks": {
+                "combo_BHKzdj": {
+                    "type": "combo",
+                    "settings": {
+                        "product": "combo-test",
+                        "badge": "SAVE 20%",
+                        "tag": "LIVER & GUT WELLNESS",
+                        "title": "Liver Detox Kit",
+                        "short_description": "",
+                        "pack_size": "2 Pack Combo",
+                        "reviews": "205",
+                        "price": "749.00",
+                        "compare_price": "998.00",
+                        "per_count_text": "",
+                        "custom_image": "shopify:\/\/shop_images\/productcomb10_Artboard1.png",
+                        "image": "https:\/\/iksd81-d2.myshopify.com\/cdn\/shop\/files\/Front-Image.png?v=1787046323&width=280"
+                    }
+                },
+                "combo_jwi4Nt": {
+                    "type": "combo",
+                    "settings": {
+                        "product": "ayova-beauty-glow-combo-glutathione-tablets-sea-buckthorn-juice",
+                        "badge": "SAVE 20%",
+                        "tag": "LIVER & GUT WELLNESS",
+                        "title": "Liver Detox Kit",
+                        "short_description": "",
+                        "pack_size": "2 Pack Combo",
+                        "reviews": "205",
+                        "price": "749.00",
+                        "compare_price": "998.00",
+                        "per_count_text": "",
+                        "custom_image": "shopify:\/\/shop_images\/productcomb8_Artboard1.png",
+                        "image": "https:\/\/iksd81-d2.myshopify.com\/cdn\/shop\/files\/Front-Image.png?v=1787046323&width=280"
+                    }
+                },
+                "combo_CHNCmb": {
+                    "type": "combo",
+                    "settings": {
+                        "product": "ayova-healthy-bones-combo-vitamin-d3-k2-magnesium-glycinate",
+                        "badge": "SAVE 20%",
+                        "tag": "",
+                        "title": "",
+                        "short_description": "",
+                        "pack_size": "2 Pack Combo",
+                        "reviews": "186",
+                        "price": "539",
+                        "compare_price": "699",
+                        "per_count_text": "",
+                        "custom_image": "shopify:\/\/shop_images\/productcomb3_Artboard1.png",
+                        "image": "https:\/\/iksd81-d2.myshopify.com\/cdn\/shop\/files\/Front-Image.png?v=1787046323&width=280"
+                    }
+                }
+            },
+            "block_order": [
+                "combo_BHKzdj",
+                "combo_jwi4Nt",
+                "combo_CHNCmb"
+            ],
+            "settings": {
+                "badge_text": "",
+                "show_per_count": true,
+                "title": "Complete Care COMBOS",
+                "subtitle": "Curated multi-product kits designed by doctors for holistic healing",
+                "header_alignment": "center",
+                "items_per_view": 3
+            }
+        },
+        "shop_by_wellness": {
+            "type": "shop-by-wellness",
+            "blocks": {
+                "wellness_goal_by3C6X": {
+                    "type": "wellness_goal",
+                    "settings": {
+                        "collection": "best-seller",
+                        "title": "Shilajit Ashwagandha",
+                        "tag": "",
+                        "meta_text": "",
+                        "image": "shopify:\/\/shop_images\/Front_1.jpg",
+                        "fallback_image_url": "",
+                        "link": ""
+                    }
+                },
+                "wellness_goal_aFAHkG": {
+                    "type": "wellness_goal",
+                    "settings": {
+                        "collection": "best-seller",
+                        "title": "Pcos\/Pcod Balance",
+                        "tag": "",
+                        "meta_text": "6 PRODUCTS",
+                        "image": "shopify:\/\/shop_images\/Front_13.png",
+                        "fallback_image_url": "",
+                        "link": ""
+                    }
+                },
+                "wellness_goal_W66rgp": {
+                    "type": "wellness_goal",
+                    "settings": {
+                        "collection": "herbal-supplements",
+                        "title": "Veg Omega 3,6,7,9",
+                        "tag": "",
+                        "meta_text": "6 PRODUCTS",
+                        "image": "shopify:\/\/shop_images\/firstfrontimage_837d577b-e57d-4893-9085-3b8b5df214e1.jpg",
+                        "fallback_image_url": "",
+                        "link": ""
+                    }
+                },
+                "wellness_goal_9t3AbQ": {
+                    "type": "wellness_goal",
+                    "settings": {
+                        "collection": "best-seller",
+                        "title": "Multivitamin Gummies",
+                        "tag": "",
+                        "meta_text": "6 PRODUCTS",
+                        "fallback_image_url": "",
+                        "link": ""
+                    }
+                },
+                "wellness_goal_XYgAnB": {
+                    "type": "wellness_goal",
+                    "settings": {
+                        "collection": "herbal-supplements",
+                        "title": "Milk Thistle",
+                        "tag": "DETOX",
+                        "meta_text": "6 PRODUCTS",
+                        "image": "shopify:\/\/shop_images\/MilkThistle60capsulebottle.jpg",
+                        "fallback_image_url": "",
+                        "link": "shopify:\/\/collections\/herbal-supplements"
+                    }
+                }
+            },
+            "block_order": [
+                "wellness_goal_by3C6X",
+                "wellness_goal_aFAHkG",
+                "wellness_goal_W66rgp",
+                "wellness_goal_9t3AbQ",
+                "wellness_goal_XYgAnB"
+            ],
+            "settings": {
+                "badge_text": "",
+                "title": "Shop by Wellness Goal",
+                "subtitle": "Choose practical support for your everyday wellness routine.",
+                "header_alignment": "center",
+                "card_style": "figma",
+                "items_per_view": 6
+            }
+        },
+        "marquee_strip": {
+            "type": "marquee-strip",
+            "settings": {
+                "btn_text": "Explore All Products →",
+                "btn_url": "https:\/\/ayovaorganics.com\/collections\/all"
+            }
+        },
+        "testimonials_carousel": {
+            "type": "testimonials-carousel",
+            "blocks": {
+                "testimonial_ExxpJ7": {
+                    "type": "testimonial",
+                    "settings": {
+                        "review_title": "Simple and easy to add to my routine",
+                        "image": "shopify:\/\/shop_images\/review_1.jpg",
+                        "quote": "I wanted something easy to include in my daily routine, and this has been convenient to use. The ordering experience was smooth, and the product arrived properly packed.",
+                        "name": "Anita SHARMA",
+                        "product": "Verified Buyer"
+                    }
+                },
+                "testimonial_Gwggfe": {
+                    "type": "testimonial",
+                    "settings": {
+                        "review_title": "The support team was genuinely helpful",
+                        "image": "shopify:\/\/shop_images\/review_2.jpg",
+                        "quote": "I had questions before ordering and received a thoughtful response. The probiotic has now become part of my morning routine.",
+                        "name": "Amit Varma",
+                        "product": "Verified Buyer"
+                    }
+                },
+                "testimonial_hChqaU": {
+                    "type": "testimonial",
+                    "settings": {
+                        "review_title": "",
+                        "image": "shopify:\/\/shop_images\/review_3.jpg",
+                        "quote": "I wanted something uncomplicated. The clear dosage guidance, clean ingredients and quick delivery made Ayova an easy repeat purchase.",
+                        "name": "ROHAN",
+                        "product": "Verified Buyer"
+                    }
+                }
+            },
+            "block_order": [
+                "testimonial_ExxpJ7",
+                "testimonial_Gwggfe",
+                "testimonial_hChqaU"
+            ],
+            "settings": {
+                "badge_text": "",
+                "title": "Real stories. Real wellness journeys.",
+                "subtitle": "Thousands of verified buyers trust Ayova for their daily health transformation",
+                "header_alignment": "center",
+                "items_per_view": 3
+            }
+        },
+        "blog_posts": {
+            "type": "blog-posts",
+            "blocks": {
+                "story_4ThMnm": {
+                    "type": "story",
+                    "settings": {
+                        "category": "30-DAY JOURNEY",
+                        "title": "My 30-day liver wellness routine",
+                        "author": "Divya • Delhi",
+                        "product": "Milk Thistle 800mg User",
+                        "custom_image": "shopify:\/\/shop_images\/ChatGPT_Image_Aug_20_2026_01_17_20_PM.png",
+                        "image": "https:\/\/iksd81-d2.myshopify.com\/cdn\/shop\/files\/Front-Image.png?v=1787046323&width=280",
+                        "url": ""
+                    }
+                },
+                "story_XAtWyf": {
+                    "type": "story",
+                    "settings": {
+                        "category": "30-DAY JOURNEY",
+                        "title": "My 30-day liver wellness routine",
+                        "author": "Divya • Delhi",
+                        "product": "Milk Thistle 800mg User",
+                        "custom_image": "shopify:\/\/shop_images\/ChatGPT_Image_Aug_20_2026_01_17_20_PM.png",
+                        "image": "https:\/\/iksd81-d2.myshopify.com\/cdn\/shop\/files\/Front-Image.png?v=1787046323&width=280",
+                        "url": ""
+                    }
+                },
+                "story_MAkggT": {
+                    "type": "story",
+                    "settings": {
+                        "category": "30-DAY JOURNEY",
+                        "title": "My 30-day liver wellness routine",
+                        "author": "Divya • Delhi",
+                        "product": "Milk Thistle 800mg User",
+                        "custom_image": "shopify:\/\/shop_images\/ChatGPT_Image_Aug_20_2026_01_17_20_PM.png",
+                        "image": "https:\/\/iksd81-d2.myshopify.com\/cdn\/shop\/files\/Front-Image.png?v=1787046323&width=280",
+                        "url": ""
+                    }
+                },
+                "story_EqRmRG": {
+                    "type": "story",
+                    "settings": {
+                        "category": "30-DAY JOURNEY",
+                        "title": "My 30-day liver wellness routine",
+                        "author": "Divya • Delhi",
+                        "product": "Milk Thistle 800mg User",
+                        "image": "",
+                        "url": ""
+                    }
+                }
+            },
+            "block_order": [
+                "story_4ThMnm",
+                "story_XAtWyf",
+                "story_MAkggT",
+                "story_EqRmRG"
+            ],
+            "settings": {
+                "badge_text": "",
+                "title": "See why customers keep choosing Ayova.",
+                "subtitle": "Real stories from real users sharing their wellness results with Ayova",
+                "header_alignment": "center",
+                "items_per_view": 3
+            }
+        },
+        "doctor_consultation": {
+            "type": "doctor-consultation",
+            "settings": {
+                "title": "Our experts are here to guide you every step of the way.",
+                "image": "shopify:\/\/shop_images\/tcreate-an-female-dr-image-expert-consulnt.png",
+                "description": "Our experts are here to guide you every step of the way.",
+                "consult_link": "",
+                "whatsapp_number": "+91 91114-53531"
+            }
+        }
     },
-    "watch_and_shop": {
-      "type": "watch-and-shop",
-      "settings": {}
-    },
-    "shop_by_circles": {
-      "type": "shop-by-category-circles",
-      "settings": {}
-    },
-    "shop_by_wellness": {
-      "type": "shop-by-wellness",
-      "settings": {}
-    },
-    "bestsellers_carousel": {
-      "type": "bestsellers-carousel",
-      "settings": {}
-    },
-    "ayurvedic_formulations": {
-      "type": "ayurvedic-formulations",
-      "settings": {}
-    },
-    "combo_kits": {
-      "type": "combo-kits",
-      "settings": {}
-    },
-    "marquee_strip": {
-      "type": "marquee-strip",
-      "settings": {}
-    },
-    "testimonials_carousel": {
-      "type": "testimonials-carousel",
-      "settings": {}
-    },
-    "video_testimonials": {
-      "type": "video-testimonials",
-      "settings": {}
-    },
-    "blog_posts": {
-      "type": "blog-posts",
-      "settings": {}
-    },
-    "doctor_consultation": {
-      "type": "doctor-consultation",
-      "settings": {}
-    },
-    "trust_badges": {
-      "type": "trust-badges",
-      "settings": {}
-    }
-  },
-  "order": [
-    "hero_carousel",
-    "watch_and_shop",
-    "shop_by_circles",
-    "shop_by_wellness",
-    "bestsellers_carousel",
-    "ayurvedic_formulations",
-    "combo_kits",
-    "marquee_strip",
-    "testimonials_carousel",
-    "video_testimonials",
-    "blog_posts",
-    "doctor_consultation",
-    "trust_badges"
-  ]
+    "order": [
+        "hero_carousel",
+        "17873130600db44ceb",
+        "watch_and_shop",
+        "shop_by_circles",
+        "bestsellers_carousel",
+        "ayurvedic_formulations",
+        "combo_kits",
+        "shop_by_wellness",
+        "marquee_strip",
+        "testimonials_carousel",
+        "blog_posts",
+        "doctor_consultation"
+    ]
 }

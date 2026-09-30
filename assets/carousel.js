@@ -10,11 +10,19 @@ class AyovaCarousel {
 
     this.section = this.container.closest('section') || this.container;
     this.track = this.container.querySelector('.ayova-carousel-track');
-    this.slides = Array.from(this.track?.children || []);
-    if (!this.track || this.slides.length === 0) return;
+    if (!this.track) return;
 
-    this.prevBtn = this.container.querySelector('[data-carousel-prev]') || this.section.querySelector('[data-carousel-prev]');
-    this.nextBtn = this.container.querySelector('[data-carousel-next]') || this.section.querySelector('[data-carousel-next]');
+    // Filter to only actual slide elements, ignoring <style>, <script>, etc.
+    const children = Array.from(this.track.children || []);
+    this.slides = children.filter(child => {
+      const tag = child.tagName.toLowerCase();
+      return tag !== 'style' && tag !== 'script' && tag !== 'template';
+    });
+    if (this.slides.length === 0) return;
+
+    const outer = this.container.closest('.ayova-carousel-outer');
+    this.prevBtn = this.container.querySelector('[data-carousel-prev]') || outer?.querySelector('[data-carousel-prev]') || this.section.querySelector('[data-carousel-prev]');
+    this.nextBtn = this.container.querySelector('[data-carousel-next]') || outer?.querySelector('[data-carousel-next]') || this.section.querySelector('[data-carousel-next]');
     this.dotsContainer = this.container.querySelector('[data-carousel-dots]') || this.section.querySelector('[data-carousel-dots]');
 
     this.currentIndex = 0;
@@ -164,34 +172,42 @@ class AyovaCarousel {
   prev() {
     if (this.currentIndex > 0) {
       this.currentIndex--;
-    } else {
-      this.currentIndex = this.maxIndex;
+      this.update();
     }
-    this.update();
   }
 
   next() {
     if (this.currentIndex < this.maxIndex) {
       this.currentIndex++;
-    } else {
-      this.currentIndex = 0;
+      this.update();
     }
-    this.update();
   }
 
   update() {
     if (!this.slides[0]) return;
     const slideWidth = parseFloat(this.slides[0].style.width) || 300;
+    
+    // Clamp currentIndex safely
+    this.currentIndex = Math.max(0, Math.min(this.currentIndex, this.maxIndex));
+
     const moveX = (slideWidth + this.gap) * this.currentIndex;
     this.track.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
     this.track.style.transform = `translateX(-${moveX}px)`;
 
     // Update Buttons
+    const atStart = this.currentIndex <= 0;
+    const atEnd = this.currentIndex >= this.maxIndex;
+    const noScroll = this.maxIndex <= 0;
+
     if (this.prevBtn) {
-      this.prevBtn.disabled = this.currentIndex === 0;
+      this.prevBtn.disabled = atStart || noScroll;
+      this.prevBtn.style.opacity = (atStart || noScroll) ? '0.35' : '1';
+      this.prevBtn.style.pointerEvents = (atStart || noScroll) ? 'none' : 'auto';
     }
     if (this.nextBtn) {
-      this.nextBtn.disabled = this.currentIndex === this.maxIndex;
+      this.nextBtn.disabled = atEnd || noScroll;
+      this.nextBtn.style.opacity = (atEnd || noScroll) ? '0.35' : '1';
+      this.nextBtn.style.pointerEvents = (atEnd || noScroll) ? 'none' : 'auto';
     }
 
     // Update Dots
@@ -204,7 +220,13 @@ class AyovaCarousel {
   }
 
   startAutoPlay() {
-    this.timer = setInterval(() => this.next(), this.autoPlayInterval);
+    this.timer = setInterval(() => {
+      if (this.currentIndex < this.maxIndex) {
+        this.next();
+      } else {
+        this.goTo(0);
+      }
+    }, this.autoPlayInterval);
   }
 
   stopAutoPlay() {
@@ -218,4 +240,3 @@ document.addEventListener('DOMContentLoaded', () => {
     new AyovaCarousel(el);
   });
 });
-

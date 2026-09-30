@@ -15,14 +15,8 @@
         {% for block in section.blocks %}
           <div class="watch-shop-card" {{ block.shopify_attributes }}>
             <div class="ws-video-container">
-              
-              {% if block.settings.poster != blank %}
-                <img src="{{ block.settings.poster | image_url: width: 400 }}" alt="Poster" class="ws-poster">
-              {% else %}
-                {{ 'image' | placeholder_svg_tag: 'ws-poster placeholder-svg' }}
-              {% endif %}
-
               {% if block.settings.mp4_video != blank %}
+                {% assign video_poster = block.settings.poster | default: block.settings.mp4_video.preview_image %}
                 <div class="ws-custom-controls">
                   <button type="button" class="ws-sound-toggle" aria-label="Toggle Sound" title="Toggle Sound">
                     <svg class="ws-icon-mute" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -36,9 +30,20 @@
                     </svg>
                   </button>
                 </div>
-                <video class="ws-video-element" autoplay muted loop playsinline controlsList="nodownload" oncontextmenu="return false;" disablePictureInPicture>
+                <video
+                  class="ws-video-element"
+                  autoplay
+                  muted
+                  loop
+                  playsinline
+                  preload="auto"
+                  {% if video_poster != blank %}poster="{{ video_poster | image_url: width: 400 }}"{% endif %}
+                  controlsList="nodownload"
+                  oncontextmenu="return false;"
+                  disablePictureInPicture
+                >
                   {% for source in block.settings.mp4_video.sources %}
-                    <source src="{{ source.url }}" type="{{ source.mime_type }}">
+                    <source src="{{ source.url }}#t=0.001" type="{{ source.mime_type }}">
                   {% endfor %}
                 </video>
                 <div class="ws-play-indicator" aria-hidden="true">
@@ -91,6 +96,23 @@
         </svg>
       </button>
     </div>
+
+    <!-- Centered Glossy Carousel Controls for Mobile -->
+    <div class="ws-carousel-controls" aria-label="Carousel navigation">
+      <button class="ws-nav-btn ws-nav-btn--inline ws-prev" type="button" aria-label="Previous">
+        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+
+      <div class="ws-carousel-dots ayova-carousel-dots" id="ws-dots-{{ section.id }}"></div>
+
+      <button class="ws-nav-btn ws-nav-btn--inline ws-next" type="button" aria-label="Next">
+        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    </div>
   </div>
 </div>
 
@@ -99,43 +121,118 @@ document.addEventListener('DOMContentLoaded', function() {
   const grid = document.getElementById('ws-grid-{{ section.id }}');
   if (!grid) return;
 
-  const sliderWrapper = grid.closest('.ws-slider-wrapper');
-  const prevBtn = sliderWrapper ? sliderWrapper.querySelector('.ws-prev') : null;
-  const nextBtn = sliderWrapper ? sliderWrapper.querySelector('.ws-next') : null;
+  const sectionEl = grid.closest('.watch-and-shop-section') || grid.parentElement;
+  const prevBtns = sectionEl ? sectionEl.querySelectorAll('.ws-prev') : [];
+  const nextBtns = sectionEl ? sectionEl.querySelectorAll('.ws-next') : [];
+  const dotsContainer = document.getElementById('ws-dots-{{ section.id }}');
+  const cards = grid.querySelectorAll('.watch-shop-card');
 
-  function updateArrows() {
-    if (!prevBtn || !nextBtn) return;
-    if (window.innerWidth <= 768) {
-      prevBtn.style.display = 'none';
-      nextBtn.style.display = 'none';
+  function getStepSize() {
+    const isMobile = window.innerWidth <= 768;
+    const card = cards[0];
+    const cardWidth = card ? card.offsetWidth : 162;
+    const gap = isMobile ? 12 : 16;
+    const singleStep = cardWidth + gap;
+    return isMobile ? (singleStep * 2) : 190;
+  }
+
+  function renderDots() {
+    if (!dotsContainer || !cards.length) return;
+    dotsContainer.innerHTML = '';
+    const isMobile = window.innerWidth <= 768;
+    const moveCount = isMobile ? 2 : 1;
+    const totalDots = Math.ceil(cards.length / moveCount);
+    const maxScroll = grid.scrollWidth - grid.clientWidth;
+
+    if (totalDots <= 1) {
+      dotsContainer.style.display = 'none';
       return;
     }
-    const canScroll = grid.scrollWidth > grid.clientWidth + 8;
-    if (canScroll) {
-      prevBtn.style.display = 'flex';
-      nextBtn.style.display = 'flex';
-      prevBtn.style.opacity = grid.scrollLeft > 10 ? '1' : '0.4';
-      prevBtn.style.pointerEvents = grid.scrollLeft > 10 ? 'auto' : 'none';
-      const maxScroll = grid.scrollWidth - grid.clientWidth - 10;
-      nextBtn.style.opacity = grid.scrollLeft < maxScroll ? '1' : '0.4';
-      nextBtn.style.pointerEvents = grid.scrollLeft < maxScroll ? 'auto' : 'none';
-    } else {
-      prevBtn.style.display = 'none';
-      nextBtn.style.display = 'none';
+    dotsContainer.style.display = 'flex';
+
+    for (let i = 0; i < totalDots; i++) {
+      const dot = document.createElement('button');
+      dot.type = 'button';
+      dot.className = 'ayova-carousel-dot' + (i === 0 ? ' active' : '');
+      dot.setAttribute('aria-label', `Page ${i + 1}`);
+      dot.addEventListener('click', () => {
+        const step = getStepSize();
+        const targetScroll = Math.min(maxScroll, i * step);
+        grid.scrollTo({ left: targetScroll, behavior: 'smooth' });
+      });
+      dotsContainer.appendChild(dot);
     }
   }
 
-  if (prevBtn && nextBtn) {
-    prevBtn.addEventListener('click', () => {
-      grid.scrollBy({ left: -190, behavior: 'smooth' });
+  function updateActiveDot() {
+    const dots = dotsContainer ? dotsContainer.querySelectorAll('.ayova-carousel-dot') : [];
+    if (!dots.length || !cards.length) return;
+    const scrollLeft = grid.scrollLeft;
+    const maxScroll = grid.scrollWidth - grid.clientWidth;
+    const step = getStepSize();
+
+    let activeIndex;
+    if (scrollLeft >= maxScroll - 10) {
+      activeIndex = dots.length - 1;
+    } else {
+      activeIndex = Math.min(dots.length - 1, Math.max(0, Math.round(scrollLeft / step)));
+    }
+
+    dots.forEach((dot, idx) => {
+      dot.classList.toggle('active', idx === activeIndex);
     });
-    nextBtn.addEventListener('click', () => {
-      grid.scrollBy({ left: 190, behavior: 'smooth' });
-    });
-    grid.addEventListener('scroll', updateArrows, { passive: true });
-    window.addEventListener('resize', updateArrows);
-    setTimeout(updateArrows, 300);
   }
+
+  function updateArrows() {
+    const atStart = grid.scrollLeft <= 10;
+    const maxScroll = grid.scrollWidth - grid.clientWidth - 10;
+    const atEnd = grid.scrollLeft >= maxScroll;
+
+    prevBtns.forEach(btn => {
+      btn.style.opacity = atStart ? '0.35' : '1';
+      btn.style.pointerEvents = atStart ? 'none' : 'auto';
+    });
+
+    nextBtns.forEach(btn => {
+      btn.style.opacity = atEnd ? '0.35' : '1';
+      btn.style.pointerEvents = atEnd ? 'none' : 'auto';
+    });
+  }
+
+  prevBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const step = getStepSize();
+      grid.scrollBy({ left: -step, behavior: 'smooth' });
+    });
+  });
+
+  nextBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const step = getStepSize();
+      grid.scrollBy({ left: step, behavior: 'smooth' });
+    });
+  });
+
+  grid.addEventListener('scroll', () => {
+    updateArrows();
+    updateActiveDot();
+  }, { passive: true });
+
+  let resizeTimeout;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      renderDots();
+      updateArrows();
+      updateActiveDot();
+    }, 100);
+  });
+
+  renderDots();
+  setTimeout(() => {
+    updateArrows();
+    updateActiveDot();
+  }, 300);
 
   // Sound toggle button logic
   const soundToggles = grid.querySelectorAll('.ws-sound-toggle');
@@ -177,21 +274,39 @@ document.addEventListener('DOMContentLoaded', function() {
     video.addEventListener('play', () => container.classList.remove('is-paused'));
     video.addEventListener('pause', () => container.classList.add('is-paused'));
   });
+
+  // Ensure videos play directly without blank thumbnail delay
+  const allVideos = grid.querySelectorAll('.ws-video-element');
+  allVideos.forEach(v => {
+    v.muted = true;
+    const playPromise = v.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        const startOnInteraction = () => {
+          v.play().catch(() => {});
+          window.removeEventListener('touchstart', startOnInteraction);
+          window.removeEventListener('scroll', startOnInteraction);
+        };
+        window.addEventListener('touchstart', startOnInteraction, { passive: true, once: true });
+        window.addEventListener('scroll', startOnInteraction, { passive: true, once: true });
+      });
+    }
+  });
 });
 </script>
 
 <style>
 .watch-and-shop-section {
   background: #fff;
-  padding: 28px 0 36px;
+  /* padding: 28px 0 36px; */
 }
 
 .watch-shop-title {
   text-align: center;
   font-family: var(--font-heading);
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--color-forest-dark, #12251E);
+  font-size: 32PX;
+  font-weight: 600;
+  /* color: var(--color-forest-dark, #12251E); */
   margin: 0 0 18px;
   letter-spacing: -0.01em;
 }
@@ -449,6 +564,86 @@ document.addEventListener('DOMContentLoaded', function() {
   transform: scale(0.98);
 }
 
+/* Glossy Carousel Controls (Center Aligned, Compact, Glassmorphism) */
+.ws-carousel-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 14px auto 0;
+  padding: 5px 12px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(23, 62, 52, 0.1);
+  border-radius: 9999px;
+  box-shadow: 0 4px 16px rgba(23, 62, 52, 0.08), 
+              0 1px 3px rgba(0, 0, 0, 0.04), 
+              inset 0 1px 1px rgba(255, 255, 255, 0.95);
+  width: fit-content;
+}
+
+.ws-nav-btn--inline {
+  position: static !important;
+  transform: none !important;
+  width: 26px !important;
+  height: 26px !important;
+  min-width: 26px;
+  border-radius: 50% !important;
+  background: linear-gradient(145deg, #ffffff 0%, #f0f3ef 100%) !important;
+  border: 1px solid rgba(23, 62, 52, 0.12) !important;
+  color: var(--color-forest-primary, #173E34) !important;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08), inset 0 1px 1px rgba(255, 255, 255, 1) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer;
+  padding: 0 !important;
+  transition: all 0.2s cubic-bezier(0.2, 0, 0, 1) !important;
+}
+
+.ws-nav-btn--inline:hover {
+  background: var(--color-forest-primary, #173E34) !important;
+  color: #ffffff !important;
+  transform: scale(1.08) !important;
+}
+
+.ws-nav-btn--inline:active {
+  transform: scale(0.92) !important;
+}
+
+.ws-carousel-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 0;
+  padding: 0 2px;
+}
+
+.ws-carousel-dots .ayova-carousel-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #C4CFC9;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ws-carousel-dots .ayova-carousel-dot.active {
+  background: var(--color-forest-primary, #173E34);
+  width: 18px;
+  border-radius: 6px;
+}
+
+@media (min-width: 992px) {
+  .ws-carousel-controls {
+    display: none;
+  }
+}
+
 /* ── Mobile & Tablet Responsiveness ── */
 @media (max-width: 991px) {
   .watch-shop-grid {
@@ -462,7 +657,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 @media (max-width: 768px) {
   .watch-and-shop-section {
-    padding: 24px 0 28px;
+    padding: 0px 0 28px;
   }
 
   .watch-shop-title {
@@ -470,8 +665,13 @@ document.addEventListener('DOMContentLoaded', function() {
     margin-bottom: 16px;
   }
 
-  .ws-nav-btn {
+  /* Hide floating edge buttons on mobile */
+  .ws-slider-wrapper > .ws-nav-btn {
     display: none !important;
+  }
+
+  .ws-carousel-controls {
+    display: flex;
   }
 
   .watch-shop-grid {

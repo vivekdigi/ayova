@@ -1,11 +1,1 @@
-{
-  "sections": {
-    "main_about": {
-      "type": "main-about",
-      "settings": {}
-    }
-  },
-  "order": [
-    "main_about"
-  ]
-}
+{"sections":{"main_about":{"type":"main-about","settings":{"hero_eyebrow":"OUR STORY","hero_title":"Wellness made cleaner,\ncleaner and more trustworthy.","hero_desc":"Ayova was founded with one simple belief — that wellness products should work, be honest about what's inside, and be accessible to everyone in India.","hero_btn_label":"Explore Our Products","hero_btn_link":"","hero_image":"shopify:\/\/shop_images\/6273d63c08decd47fdfd2d54f376cc3c2b2ccad5_1.png","story_eyebrow":"BORN FROM A SIMPLE PROBLEM","story_title":"Born from a simple wellness problem.","story_text":"<p>Our founder spent years struggling to find supplements he could actually trust. The market was flooded with products that were under-dosed, filled with synthetic binders, and impossible to verify.<\/p><p>Ayova was built to be different. We work directly with certified Ayurvedic formulators, use only standardized botanical extracts, and publish every ingredient with its exact potency — no hidden proprietary blends, no marketing fictions.<\/p>","story_image":"shopify:\/\/shop_images\/Gemini_Generated_Image_j1tslqj1tslqj1ts.png","mission_quote":"We decided to build a wellness brand people could understand, question and trust.","mission_author":"Ayova Founders","values_eyebrow":"WHY WE'RE DIFFERENT","values_title":"The Ayova Standard"}}},"order":["main_about"]}
