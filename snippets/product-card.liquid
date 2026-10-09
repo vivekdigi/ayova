@@ -166,10 +166,26 @@
     {% endif %}
 
     <!-- Add to Cart Button — Figma: #285044, border-radius 11px -->
-    {% if card_amazon_link != blank %}
-      <a href="{{ card_amazon_link }}" target="_blank" rel="noopener noreferrer" class="btn-add-cart" style="text-decoration:none; display:flex; align-items:center; justify-content:center; text-align:center; box-sizing:border-box;">
-        Add to Cart
-      </a>
+    {%- assign redirect_enabled = product.metafields.custom.enable_redirect.value -%}
+    {%- assign card_flipkart_link = product.metafields.custom.flipkart_link.value | default: product.metafields.custom.flipkart_link -%}
+    {% if redirect_enabled == true or redirect_enabled == "true" or redirect_enabled == "True" %}
+      {% if card_flipkart_link != blank %}
+        <a href="{{ card_flipkart_link }}" target="_blank" rel="noopener noreferrer" class="btn-add-cart" style="text-decoration:none; display:flex; align-items:center; justify-content:center; text-align:center; box-sizing:border-box;">
+          Add to Cart
+        </a>
+      {% elsif card_amazon_link != blank %}
+        <a href="{{ card_amazon_link }}" target="_blank" rel="noopener noreferrer" class="btn-add-cart" style="text-decoration:none; display:flex; align-items:center; justify-content:center; text-align:center; box-sizing:border-box;">
+          Add to Cart
+        </a>
+      {% elsif product != blank %}
+        <form method="post" action="/cart/add" class="product-form" data-product-form onsubmit="event.preventDefault(); var btn = event.submitter || this.querySelector('button[type=submit]'); if(btn.dataset.added === 'true') { window.location.href='/cart'; return; } btn.innerHTML = 'Adding...'; btn.disabled = true; fetch('/cart/add.js', { method: 'POST', body: new FormData(this) }).then(res=>res.json()).then(data=>{ btn.innerHTML = 'View Cart'; btn.disabled = false; btn.dataset.added = 'true'; }).catch(err => { btn.innerHTML = 'Error'; btn.disabled = false; });">
+          <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+          <input type="hidden" name="quantity" value="1">
+          <button type="submit" name="add" class="btn-add-cart" data-add-to-cart>
+            Add to Cart
+          </button>
+        </form>
+      {% endif %}
     {% elsif product != blank %}
       <form method="post" action="/cart/add" onsubmit="event.preventDefault(); var btn = this.querySelector('button'); if(btn.dataset.added === 'true') { window.location.href='/cart'; return; } btn.innerHTML = 'Adding...'; btn.disabled = true; fetch('/cart/add.js', { method: 'POST', body: new FormData(this) }).then(res=>res.json()).then(data=>{ btn.innerHTML = 'View Cart'; btn.disabled = false; btn.dataset.added = 'true'; }).catch(err => { btn.innerHTML = 'Add to Cart'; btn.disabled = false; });">
         <input type="hidden" name="id" value="{{ card_first_variant.id }}">
