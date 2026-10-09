@@ -46,8 +46,10 @@
       {%- endif -%}
     {%- endfor -%}
   {%- endif -%}
-  {%- if card_amazon_link != blank and card_amazon_link contains 'http://' == false and card_amazon_link contains 'https://' == false -%}
-    {%- assign card_amazon_link = 'https://' | append: card_amazon_link -%}
+  {%- if card_amazon_link != blank -%}
+    {%- unless card_amazon_link contains 'http://' or card_amazon_link contains 'https://' -%}
+      {%- assign card_amazon_link = 'https://' | append: card_amazon_link -%}
+    {%- endunless -%}
   {%- endif -%}
 {% else %}
   {%- assign card_title = title | default: 'Product Name' -%}

@@ -244,11 +244,19 @@
 
           <!-- Quantity and Buttons -->
           {%- assign amazon_link = product.metafields.custom.amazon_link.value | default: product.metafields.custom.amazon_link -%}
-          {% if amazon_link != blank %}
-            <div class="purchase-actions-row">
-              <a href="{{ amazon_link }}" target="_blank" rel="noopener noreferrer" class="btn-buy-now" style="width: 100%; text-decoration: none; display: flex; align-items: center; justify-content: center;">
-                BUY ON AMAZON
-              </a>
+          {%- assign flipkart_link = product.metafields.custom.flipkart_link.value | default: product.metafields.custom.flipkart_link -%}
+          {% if amazon_link != blank or flipkart_link != blank %}
+            <div class="purchase-actions-row" style="flex-wrap: wrap; gap: 10px;">
+              {% if amazon_link != blank %}
+                <a href="{{ amazon_link }}" target="_blank" rel="noopener noreferrer" class="btn-buy-now amazon-btn" style="flex: 1; min-width: 45%; text-decoration: none; display: flex; align-items: center; justify-content: center; background-color: #FFD814; color: #0F1111; margin-bottom: 10px; border: none; border-radius: 30px; font-weight: 600; font-size: 14px; padding: 10px 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: background 0.2s;">
+                  BUY ON AMAZON
+                </a>
+              {% endif %}
+              {% if flipkart_link != blank %}
+                <a href="{{ flipkart_link }}" target="_blank" rel="noopener noreferrer" class="btn-buy-now flipkart-btn" style="flex: 1; min-width: 45%; text-decoration: none; display: flex; align-items: center; justify-content: center; background-color: #FF9F00; color: #fff; margin-bottom: 10px; border: none; border-radius: 30px; font-weight: 600; font-size: 14px; padding: 10px 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: background 0.2s;">
+                  BUY ON FLIPKART
+                </a>
+              {% endif %}
             </div>
           {% else %}
             <div class="purchase-actions-row">
