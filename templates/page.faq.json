@@ -1,1 +1,103 @@
-{"sections":{"main_faq":{"type":"main-faq","blocks":{"faq_item_tR3zjc":{"type":"faq_item","settings":{"question":"What is your question?","answer":"<p>Provide the answer here.<\/p>"}},"faq_item_63Pp7q":{"type":"faq_item","settings":{"question":"What is your question?","answer":"<p>Provide the answer here.<\/p>"}},"faq_item_UFdffn":{"type":"faq_item","settings":{"question":"What is your question?","answer":"<p>Provide the answer here.<\/p>"}},"faq_item_zP96fD":{"type":"faq_item","settings":{"question":"What is your question?","answer":"<p>Provide the answer here.<\/p>"}},"faq_item_nyj63f":{"type":"faq_item","settings":{"question":"What is your question?","answer":"<p>Provide the answer here.<\/p>"}},"faq_item_XfHN4e":{"type":"faq_item","settings":{"question":"What is your question?","answer":"<p>Provide the answer here.<\/p>"}},"faq_item_YJLXX6":{"type":"faq_item","settings":{"question":"What is your question?","answer":"<p>Provide the answer here.<\/p>"}},"faq_item_Lk8eY8":{"type":"faq_item","settings":{"question":"What is your question?","answer":"<p>Provide the answer here.<\/p>"}},"faq_item_bKHLJL":{"type":"faq_item","settings":{"question":"What is your question?","answer":"<p>Provide the answer here.<\/p>"}},"faq_item_Urgx8J":{"type":"faq_item","settings":{"question":"What is your question?","answer":"<p>Provide the answer here.<\/p>"}}},"block_order":["faq_item_tR3zjc","faq_item_63Pp7q","faq_item_UFdffn","faq_item_zP96fD","faq_item_nyj63f","faq_item_XfHN4e","faq_item_YJLXX6","faq_item_Lk8eY8","faq_item_bKHLJL","faq_item_Urgx8J"],"settings":{"hero_eyebrow":"FREQUENTLY ASKED QUESTIONS","hero_title":"Everything you may want to know\nbefore you order.","hero_subtitle":"We've answered the most common questions about our products, ingredients, and delivery.","cta_title":"Still have a question?","cta_text":"Our wellness experts are happy to help you find the right product for your needs.","cta_button_label":"Contact Us","cta_link":""}},"main_faq_KYYAwC":{"type":"main-faq","name":"FAQ Page","settings":{"hero_eyebrow":"FREQUENTLY ASKED QUESTIONS","hero_title":"Everything you may want to know\nbefore you order.","hero_subtitle":"We've answered the most common questions about our products, ingredients, and delivery.","cta_title":"Still have a question?","cta_text":"Our wellness experts are happy to help you find the right product for your needs.","cta_button_label":"Contact Us","cta_link":""}}},"order":["main_faq","main_faq_KYYAwC"]}
+{
+  "sections": {
+    "main_faq": {
+      "type": "main-faq",
+      "blocks": {
+        "faq_item_tR3zjc": {
+          "type": "faq_item",
+          "settings": {
+            "question": "What is your question?",
+            "answer": "<p>Provide the answer here.<\/p>"
+          }
+        },
+        "faq_item_63Pp7q": {
+          "type": "faq_item",
+          "settings": {
+            "question": "What is your question?",
+            "answer": "<p>Provide the answer here.<\/p>"
+          }
+        },
+        "faq_item_UFdffn": {
+          "type": "faq_item",
+          "settings": {
+            "question": "What is your question?",
+            "answer": "<p>Provide the answer here.<\/p>"
+          }
+        },
+        "faq_item_zP96fD": {
+          "type": "faq_item",
+          "settings": {
+            "question": "What is your question?",
+            "answer": "<p>Provide the answer here.<\/p>"
+          }
+        },
+        "faq_item_nyj63f": {
+          "type": "faq_item",
+          "settings": {
+            "question": "What is your question?",
+            "answer": "<p>Provide the answer here.<\/p>"
+          }
+        },
+        "faq_item_XfHN4e": {
+          "type": "faq_item",
+          "settings": {
+            "question": "What is your question?",
+            "answer": "<p>Provide the answer here.<\/p>"
+          }
+        },
+        "faq_item_YJLXX6": {
+          "type": "faq_item",
+          "settings": {
+            "question": "What is your question?",
+            "answer": "<p>Provide the answer here.<\/p>"
+          }
+        },
+        "faq_item_Lk8eY8": {
+          "type": "faq_item",
+          "settings": {
+            "question": "What is your question?",
+            "answer": "<p>Provide the answer here.<\/p>"
+          }
+        },
+        "faq_item_bKHLJL": {
+          "type": "faq_item",
+          "settings": {
+            "question": "What is your question?",
+            "answer": "<p>Provide the answer here.<\/p>"
+          }
+        },
+        "faq_item_Urgx8J": {
+          "type": "faq_item",
+          "settings": {
+            "question": "What is your question?",
+            "answer": "<p>Provide the answer here.<\/p>"
+          }
+        }
+      },
+      "block_order": [
+        "faq_item_tR3zjc",
+        "faq_item_63Pp7q",
+        "faq_item_UFdffn",
+        "faq_item_zP96fD",
+        "faq_item_nyj63f",
+        "faq_item_XfHN4e",
+        "faq_item_YJLXX6",
+        "faq_item_Lk8eY8",
+        "faq_item_bKHLJL",
+        "faq_item_Urgx8J"
+      ],
+      "settings": {
+        "hero_eyebrow": "FREQUENTLY ASKED QUESTIONS",
+        "hero_title": "Everything you may want to know\nbefore you order.",
+        "hero_subtitle": "We've answered the most common questions about our products, ingredients, and delivery.",
+        "cta_title": "Still have a question?",
+        "cta_text": "Our wellness experts are happy to help you find the right product for your needs.",
+        "cta_button_label": "Contact Us",
+        "cta_link": ""
+      }
+    }
+  },
+  "order": [
+    "main_faq"
+  ]
+}

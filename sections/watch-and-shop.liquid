@@ -59,6 +59,35 @@
             
             <div class="ws-product-info">
               {% if block.settings.product != blank %}
+                {%- assign ws_prod = block.settings.product -%}
+                {%- assign ws_amazon_link = ws_prod.metafields.custom.amazon_link.value | default: ws_prod.metafields.custom.amazon_link -%}
+                {%- if ws_amazon_link == blank -%}
+                  {%- assign ws_amazon_link = ws_prod.metafields.custom.amazon_url.value | default: ws_prod.metafields.custom.amazon_url -%}
+                {%- endif -%}
+                {%- if ws_amazon_link == blank -%}
+                  {%- assign ws_amazon_link = ws_prod.metafields.custom.amazon_product_link.value | default: ws_prod.metafields.custom.amazon_product_link -%}
+                {%- endif -%}
+                {%- if ws_amazon_link == blank -%}
+                  {%- assign ws_amazon_link = ws_prod.metafields.custom.amazon.value | default: ws_prod.metafields.custom.amazon -%}
+                {%- endif -%}
+                {%- if ws_amazon_link == blank and ws_prod.tags != blank -%}
+                  {%- for tag in ws_prod.tags -%}
+                    {%- assign tag_lower = tag | downcase -%}
+                    {%- if tag_lower contains 'amazon:' -%}
+                      {%- assign ws_amazon_link = tag | remove_first: 'amazon:' | strip -%}
+                      {%- break -%}
+                    {%- elsif tag_lower contains 'amazon_link:' -%}
+                      {%- assign ws_amazon_link = tag | remove_first: 'amazon_link:' | strip -%}
+                      {%- break -%}
+                    {%- elsif tag_lower contains 'amazon_url:' -%}
+                      {%- assign ws_amazon_link = tag | remove_first: 'amazon_url:' | strip -%}
+                      {%- break -%}
+                    {%- endif -%}
+                  {%- endfor -%}
+                {%- endif -%}
+                {%- if ws_amazon_link != blank and ws_amazon_link contains 'http://' == false and ws_amazon_link contains 'https://' == false -%}
+                  {%- assign ws_amazon_link = 'https://' | append: ws_amazon_link -%}
+                {%- endif -%}
                 <div class="ws-product-header">
                   <img src="{{ block.settings.product.featured_image | image_url: width: 80 }}" alt="{{ block.settings.product.title }}" class="ws-product-thumb" loading="lazy">
                   <div class="ws-product-details">
@@ -74,7 +103,11 @@
                     </span>
                   </div>
                 </div>
-                <a href="{{ block.settings.product.url }}" class="ws-buy-btn">Buy Now</a>
+                {% if ws_amazon_link != blank %}
+                  <a href="{{ ws_amazon_link }}" target="_blank" rel="noopener noreferrer" class="ws-buy-btn">Buy Now</a>
+                {% else %}
+                  <a href="{{ block.settings.product.url }}" class="ws-buy-btn">Buy Now</a>
+                {% endif %}
               {% else %}
                 <div class="ws-product-header">
                   <div class="ws-product-thumb placeholder-svg"></div>
@@ -349,7 +382,6 @@ document.addEventListener('DOMContentLoaded', function() {
   display: flex;
   gap: 16px;
   overflow-x: auto;
-  padding: 4px 2px 14px;
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -676,7 +708,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   .watch-shop-grid {
     gap: 12px;
-    padding: 2px 14px 12px;
+    padding: 0 14px;
     margin: 0 -14px;
     width: calc(100% + 28px);
   }

@@ -21,6 +21,34 @@
   {%- assign card_type = product.type -%}
   {%- assign card_vendor = product.vendor -%}
   {%- assign card_first_variant = product.first_available_variant | default: product.selected_or_first_available_variant -%}
+  {%- assign card_amazon_link = product.metafields.custom.amazon_link.value | default: product.metafields.custom.amazon_link -%}
+  {%- if card_amazon_link == blank -%}
+    {%- assign card_amazon_link = product.metafields.custom.amazon_url.value | default: product.metafields.custom.amazon_url -%}
+  {%- endif -%}
+  {%- if card_amazon_link == blank -%}
+    {%- assign card_amazon_link = product.metafields.custom.amazon_product_link.value | default: product.metafields.custom.amazon_product_link -%}
+  {%- endif -%}
+  {%- if card_amazon_link == blank -%}
+    {%- assign card_amazon_link = product.metafields.custom.amazon.value | default: product.metafields.custom.amazon -%}
+  {%- endif -%}
+  {%- if card_amazon_link == blank and product.tags != blank -%}
+    {%- for tag in product.tags -%}
+      {%- assign tag_lower = tag | downcase -%}
+      {%- if tag_lower contains 'amazon:' -%}
+        {%- assign card_amazon_link = tag | remove_first: 'amazon:' | strip -%}
+        {%- break -%}
+      {%- elsif tag_lower contains 'amazon_link:' -%}
+        {%- assign card_amazon_link = tag | remove_first: 'amazon_link:' | strip -%}
+        {%- break -%}
+      {%- elsif tag_lower contains 'amazon_url:' -%}
+        {%- assign card_amazon_link = tag | remove_first: 'amazon_url:' | strip -%}
+        {%- break -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+  {%- if card_amazon_link != blank and card_amazon_link contains 'http://' == false and card_amazon_link contains 'https://' == false -%}
+    {%- assign card_amazon_link = 'https://' | append: card_amazon_link -%}
+  {%- endif -%}
 {% else %}
   {%- assign card_title = title | default: 'Product Name' -%}
   {%- assign card_url = url | default: '#' -%}
@@ -136,7 +164,11 @@
     {% endif %}
 
     <!-- Add to Cart Button — Figma: #285044, border-radius 11px -->
-    {% if product != blank %}
+    {% if card_amazon_link != blank %}
+      <a href="{{ card_amazon_link }}" target="_blank" rel="noopener noreferrer" class="btn-add-cart" style="text-decoration:none; display:flex; align-items:center; justify-content:center; text-align:center; box-sizing:border-box;">
+        Add to Cart
+      </a>
+    {% elsif product != blank %}
       <form method="post" action="/cart/add" onsubmit="event.preventDefault(); var btn = this.querySelector('button'); if(btn.dataset.added === 'true') { window.location.href='/cart'; return; } btn.innerHTML = 'Adding...'; btn.disabled = true; fetch('/cart/add.js', { method: 'POST', body: new FormData(this) }).then(res=>res.json()).then(data=>{ btn.innerHTML = 'View Cart'; btn.disabled = false; btn.dataset.added = 'true'; }).catch(err => { btn.innerHTML = 'Add to Cart'; btn.disabled = false; });">
         <input type="hidden" name="id" value="{{ card_first_variant.id }}">
         <input type="hidden" name="quantity" value="1">

@@ -304,6 +304,10 @@ h6 {
   border: none;
   cursor: pointer;
   transition: background var(--transition-fast);
+  text-decoration: none;
+  display: block;
+  text-align: center;
+  box-sizing: border-box;
 }
 
 .btn-add-cart:hover {
@@ -978,7 +982,7 @@ h6 {
 /* ── WELLNESS GOALS SECTION (Figma: 346px, padding 22px 80px 24px) ────────── */
 .shop-wellness-section {
   background-color: var(--color-bg-white);
-  padding: 22px var(--container-padding) 24px;
+  padding: 20px var(--container-padding) 20px;
 }
 
 .wellness-header {
@@ -1351,8 +1355,8 @@ h6 {
   margin-bottom: 8px;
 }
 
-.card-info > form,
-.card-info > .btn-add-cart {
+.card-info>form,
+.card-info>.btn-add-cart {
   margin-top: auto;
   padding-top: 8px;
 }
@@ -1419,24 +1423,64 @@ h6 {
   min-height: 2.6em;
 }
 
+.testimonial-quote-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 4px;
+}
+
 .testimonial-quote {
   font-family: var(--font-accent);
   font-size: 14px;
   color: var(--color-text-dark);
   line-height: 1.6;
-  flex-grow: 1;
+  margin: 0;
   display: -webkit-box;
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  min-height: 6.4em;
+  max-height: calc(1.6em * 4);
+}
+
+.testimonial-quote.is-expanded {
+  display: block;
+  -webkit-line-clamp: unset;
+  max-height: none;
+  overflow: visible;
+}
+
+.testimonial-read-more {
+  background: none;
+  border: none;
+  border-bottom: none;
+  outline: none;
+  box-shadow: none;
+  padding: 0;
+  margin-top: 6px;
+  font-family: var(--font-accent);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-forest-primary);
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: color var(--transition-fast, 0.2s ease);
+}
+
+.testimonial-read-more:hover,
+.testimonial-read-more:focus {
+  text-decoration: none;
+  color: var(--color-forest-mid);
+  outline: none;
 }
 
 .testimonial-divider {
   width: 100%;
   height: 1px;
   background: #E8E0D1;
+  margin-top: auto;
 }
 
 .testimonial-author {
@@ -1530,7 +1574,8 @@ h6 {
 /* ── DOCTOR CONSULTATION (Figma: 432px) ───────────────────────────────────── */
 .doctor-consultation-section {
   background-color: var(--color-bg-white);
-  padding: 40px var(--container-padding);
+  /*padding: 20px var(--container-padding); */
+  padding-bottom: 40px;
 }
 
 .doctor-banner {
@@ -1683,7 +1728,7 @@ h6 {
 .ayova-marquee-section {
   background: var(--color-terracotta);
   color: var(--color-bg-white);
-  padding: 14px 0;
+  padding: 20px 0;
   overflow: hidden;
   position: relative;
   white-space: nowrap;
@@ -2551,7 +2596,7 @@ h6 {
 /* ── FAQ PAGE (Figma) ─────────────────────────────────────────────────────── */
 .faq-section {
   padding: 40px var(--container-padding);
-  min-height: 1173px;
+  /* min-height: 1173px; */
 }
 
 .faq-item {
@@ -2569,6 +2614,7 @@ h6 {
   font-family: var(--font-heading);
   font-weight: 600;
   font-size: 16px;
+  line-height: 1.4;
   color: var(--color-text-heading);
   background: var(--color-bg-white);
   border: none;
@@ -2583,15 +2629,17 @@ h6 {
 }
 
 .faq-answer {
-  padding: 0 24px 18px;
+  padding: 0 24px;
   font-size: 15px;
   line-height: 1.6;
   color: var(--color-text-body);
   display: none;
 }
 
-.faq-item.active .faq-answer {
+.faq-item.active .faq-answer,
+.faq-item.open .faq-answer {
   display: block;
+  padding: 0 24px 18px;
 }
 
 .faq-toggle-icon {
@@ -2631,8 +2679,12 @@ h6 {
 
 .blog-image-wrapper {
   position: relative;
-  height: 220px;
+
+  width: 100%;
+  aspect-ratio: 350 / 200;
+  height: auto;
   overflow: hidden;
+  background-color: var(--color-bg-sage, #EEF3EF);
 }
 
 .blog-category {
@@ -2654,6 +2706,8 @@ h6 {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
+  display: block;
   transition: transform var(--transition-slow);
 }
 
@@ -3554,4 +3608,321 @@ h6 {
 .blog-section .wellness-header-centered .badge,
 .blog-section .wellness-header-row .badge {
   display: none !important;
+}
+
+/* ==========================================================================
+   AYOVA LUXURY SCROLL REVEAL TRANSITIONS & BACKGROUND GRAPHICS
+   ========================================================================== */
+
+/* ── 1. Scroll Reveal System ─────────────────────────────────────────────── */
+.ayova-scroll-anim-ready .ayova-reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: calc(var(--reveal-delay, 0ms) + (var(--reveal-index, 0) * 75ms));
+  will-change: opacity, transform;
+}
+
+.ayova-scroll-anim-ready .ayova-reveal.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Variant: Zoom & Elevation Reveal (for hero banners, doctor consultation) */
+.ayova-scroll-anim-ready .ayova-reveal-zoom {
+  opacity: 0;
+  transform: translateY(24px) scale(0.97);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ayova-scroll-anim-ready .ayova-reveal-zoom.is-revealed {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Variant: Soft Header Reveal */
+.ayova-scroll-anim-ready .ayova-reveal-header {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ayova-scroll-anim-ready .ayova-reveal-header.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Clear will-change after reveal */
+.ayova-scroll-anim-ready .ayova-reveal.is-revealed {
+  will-change: auto;
+}
+
+/* Accessibility: Honor reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+
+  .ayova-scroll-anim-ready .ayova-reveal,
+  .ayova-scroll-anim-ready .ayova-reveal-zoom,
+  .ayova-scroll-anim-ready .ayova-reveal-header {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* ── 2. Ayurvedic Ambient Background Mesh Gradients ──────────────────────── */
+.formulations-section {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 55% 45% at 8% 25%, rgba(23, 62, 52, 0.04) 0%, transparent 70%),
+    radial-gradient(ellipse 45% 40% at 92% 75%, rgba(217, 108, 63, 0.035) 0%, transparent 65%),
+    linear-gradient(180deg, #FFFFFF 0%, #FAFAF7 100%);
+}
+
+.bestsellers-section {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 50% 50% at 90% 15%, rgba(23, 62, 52, 0.035) 0%, transparent 65%),
+    radial-gradient(ellipse 45% 45% at 10% 85%, rgba(217, 108, 63, 0.03) 0%, transparent 60%),
+    linear-gradient(180deg, #FAFAF7 0%, #FFFFFF 100%);
+}
+
+.combo-kits-section {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 60% 50% at 85% 20%, rgba(217, 108, 63, 0.04) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 45% at 15% 80%, rgba(23, 62, 52, 0.04) 0%, transparent 60%),
+    linear-gradient(180deg, #FBF9F4 0%, #F8F5EE 100%);
+}
+
+.shop-wellness-section {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 50% 40% at 50% 0%, rgba(23, 62, 52, 0.03) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 40% at 90% 90%, rgba(217, 108, 63, 0.03) 0%, transparent 60%),
+    #FFFFFF;
+}
+
+.testimonials-section {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 50% 50% at 12% 30%, rgba(23, 62, 52, 0.035) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 45% at 88% 70%, rgba(217, 108, 63, 0.03) 0%, transparent 60%),
+    linear-gradient(180deg, #FAF7F2 0%, #FFFFFF 100%);
+}
+
+.doctor-consultation-section {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 55% 55% at 20% 40%, rgba(23, 62, 52, 0.04) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 50% at 85% 65%, rgba(217, 108, 63, 0.035) 0%, transparent 65%),
+    #FAF9F6;
+}
+
+.video-testimonials-section {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 50% 45% at 85% 15%, rgba(23, 62, 52, 0.03) 0%, transparent 60%),
+    radial-gradient(ellipse 45% 45% at 10% 85%, rgba(217, 108, 63, 0.025) 0%, transparent 60%),
+    #FAFAF8;
+}
+
+.shop-by-circles-section {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(23, 62, 52, 0.025) 0%, transparent 65%),
+    #FFFFFF;
+}
+
+/* Ensure foreground content stays cleanly above background graphics */
+.bestsellers-section>.container,
+.formulations-section>.container,
+.combo-kits-section>.container,
+.shop-wellness-section>.container,
+.testimonials-section>.container,
+.doctor-consultation-section>.container,
+.video-testimonials-section>.container,
+.shop-by-circles-section>.container {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── 3. Ayurvedic Botanical Vector Watermarks (Fine-Line SVG) ────────────── */
+
+/* Sacred Lotus Motif Watermark in Formulations & Bestsellers */
+.formulations-section::before,
+.bestsellers-section::after {
+  content: '';
+  position: absolute;
+  width: 320px;
+  height: 320px;
+  pointer-events: none;
+  background-repeat: no-repeat;
+  background-size: contain;
+  opacity: 0.045;
+  z-index: 0;
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.formulations-section::before {
+  bottom: -40px;
+  left: -40px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 240' fill='none' stroke='%23173E34' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M120 40 C110 80 110 130 120 160 C130 130 130 80 120 40 Z'/%3E%3Cpath d='M120 80 C95 90 75 120 85 155 C105 155 115 145 120 140'/%3E%3Cpath d='M120 80 C145 90 165 120 155 155 C135 155 125 145 120 140'/%3E%3Cpath d='M110 105 C75 115 50 145 60 170 C85 175 105 160 115 155'/%3E%3Cpath d='M130 105 C165 115 190 145 180 170 C155 175 135 160 125 155'/%3E%3Cpath d='M50 175 C80 190 160 190 190 175'/%3E%3Cpath d='M70 185 C100 198 140 198 170 185'/%3E%3Ccircle cx='120' cy='32' r='2.5' fill='%23173E34'/%3E%3Ccircle cx='120' cy='22' r='1.8' fill='%23173E34'/%3E%3C/svg%3E");
+}
+
+.bestsellers-section::after {
+  top: -30px;
+  right: -30px;
+  transform: rotate(25deg);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 240' fill='none' stroke='%23D96C3F' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M120 40 C110 80 110 130 120 160 C130 130 130 80 120 40 Z'/%3E%3Cpath d='M120 80 C95 90 75 120 85 155 C105 155 115 145 120 140'/%3E%3Cpath d='M120 80 C145 90 165 120 155 155 C135 155 125 145 120 140'/%3E%3Cpath d='M110 105 C75 115 50 145 60 170 C85 175 105 160 115 155'/%3E%3Cpath d='M130 105 C165 115 190 145 180 170 C155 175 135 160 125 155'/%3E%3Cpath d='M50 175 C80 190 160 190 190 175'/%3E%3Cpath d='M70 185 C100 198 140 198 170 185'/%3E%3Ccircle cx='120' cy='32' r='2.5' fill='%23D96C3F'/%3E%3Ccircle cx='120' cy='22' r='1.8' fill='%23D96C3F'/%3E%3C/svg%3E");
+}
+
+/* Herbal Branch / Medicinal Foliage Motif Watermark in Combo Kits & Doctor Consultation */
+.combo-kits-section::before,
+.doctor-consultation-section::after {
+  content: '';
+  position: absolute;
+  width: 280px;
+  height: 340px;
+  pointer-events: none;
+  background-repeat: no-repeat;
+  background-size: contain;
+  opacity: 0.04;
+  z-index: 0;
+}
+
+.combo-kits-section::before {
+  top: 10px;
+  left: -20px;
+  transform: rotate(-10deg);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 240' fill='none' stroke='%23173E34' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M40 220 Q90 150 100 20 Q120 100 160 180'/%3E%3Cpath d='M75 165 C60 150 55 125 70 120 C85 125 80 155 75 165 Z'/%3E%3Cpath d='M88 135 C105 125 125 130 125 150 C110 160 95 148 88 135 Z'/%3E%3Cpath d='M96 100 C80 85 80 65 95 62 C108 70 102 92 96 100 Z'/%3E%3Cpath d='M100 65 C115 55 130 60 132 75 C120 85 108 75 100 65 Z'/%3E%3Cpath d='M100 20 C95 30 92 40 100 45 C108 40 105 30 100 20 Z'/%3E%3C/svg%3E");
+}
+
+.doctor-consultation-section::after {
+  bottom: -30px;
+  right: -20px;
+  transform: rotate(15deg) scaleX(-1);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 240' fill='none' stroke='%23173E34' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M40 220 Q90 150 100 20 Q120 100 160 180'/%3E%3Cpath d='M75 165 C60 150 55 125 70 120 C85 125 80 155 75 165 Z'/%3E%3Cpath d='M88 135 C105 125 125 130 125 150 C110 160 95 148 88 135 Z'/%3E%3Cpath d='M96 100 C80 85 80 65 95 62 C108 70 102 92 96 100 Z'/%3E%3Cpath d='M100 65 C115 55 130 60 132 75 C120 85 108 75 100 65 Z'/%3E%3Cpath d='M100 20 C95 30 92 40 100 45 C108 40 105 30 100 20 Z'/%3E%3C/svg%3E");
+}
+
+/* Sacred Vedic Wellness Sun Ring in Shop by Wellness & Testimonials */
+.shop-wellness-section::before,
+.testimonials-section::before {
+  content: '';
+  position: absolute;
+  width: 380px;
+  height: 380px;
+  pointer-events: none;
+  background-repeat: no-repeat;
+  background-size: contain;
+  opacity: 0.035;
+  z-index: 0;
+}
+
+.shop-wellness-section::before {
+  top: -80px;
+  left: -80px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200' fill='none' stroke='%23173E34' stroke-width='1' stroke-linecap='round' stroke-dasharray='3 3'%3E%3Ccircle cx='100' cy='100' r='90' stroke-width='0.8'/%3E%3Ccircle cx='100' cy='100' r='75' stroke-dasharray='none' stroke-width='1'/%3E%3Ccircle cx='100' cy='100' r='60' stroke-width='0.8'/%3E%3Ccircle cx='100' cy='100' r='45' stroke-dasharray='none' stroke-width='1'/%3E%3Cpath d='M100 10 L100 24 M100 176 L100 190 M10 100 L24 100 M176 100 L190 100 M36 36 L46 46 M154 154 L164 164 M36 164 L46 154 M154 46 L164 36' stroke='%23D96C3F' stroke-width='1.2' stroke-dasharray='none'/%3E%3C/svg%3E");
+}
+
+.testimonials-section::before {
+  bottom: -100px;
+  right: -100px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200' fill='none' stroke='%23D96C3F' stroke-width='1' stroke-linecap='round' stroke-dasharray='3 3'%3E%3Ccircle cx='100' cy='100' r='90' stroke-width='0.8'/%3E%3Ccircle cx='100' cy='100' r='75' stroke-dasharray='none' stroke-width='1'/%3E%3Ccircle cx='100' cy='100' r='60' stroke-width='0.8'/%3E%3Ccircle cx='100' cy='100' r='45' stroke-dasharray='none' stroke-width='1'/%3E%3Cpath d='M100 10 L100 24 M100 176 L100 190 M10 100 L24 100 M176 100 L190 100 M36 36 L46 46 M154 154 L164 164 M36 164 L46 154 M154 46 L164 36' stroke='%23173E34' stroke-width='1.2' stroke-dasharray='none'/%3E%3C/svg%3E");
+}
+
+/* ── 4. Doctor Consultation Banner Elevation ─────────────────────────────── */
+.doctor-banner {
+  background:
+    radial-gradient(ellipse at 95% 20%, rgba(217, 108, 63, 0.05) 0%, transparent 60%),
+    radial-gradient(ellipse at 50% 90%, rgba(23, 62, 52, 0.04) 0%, transparent 65%),
+    #FFFFFF;
+  border: 1px solid rgba(23, 62, 52, 0.1);
+  box-shadow: 0 16px 40px -8px rgba(20, 36, 28, 0.09), 0 4px 12px rgba(0, 0, 0, 0.03);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.doctor-banner:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 22px 48px -10px rgba(20, 36, 28, 0.13), 0 6px 16px rgba(0, 0, 0, 0.04);
+}
+
+.doctor-content {
+  position: relative;
+}
+
+.doctor-content::after {
+  content: '';
+  position: absolute;
+  bottom: 16px;
+  right: 20px;
+  width: 90px;
+  height: 90px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='none' stroke='%23173E34' stroke-width='1.2'%3E%3Ccircle cx='50' cy='50' r='44' stroke-dasharray='2 2'/%3E%3Ccircle cx='50' cy='50' r='36'/%3E%3Cpath d='M50 22 L50 78 M22 50 L78 50 M30 30 L70 70 M30 70 L70 30' stroke-width='0.8'/%3E%3Ccircle cx='50' cy='50' r='8' fill='%23173E34' fill-opacity='0.08'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.08;
+  pointer-events: none;
+}
+
+/* ── 5. Enhanced Interactive Card Micro-Interactions ─────────────────────── */
+.ayova-product-card {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.3s ease;
+}
+
+.ayova-product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 30px -4px rgba(23, 62, 52, 0.11), 0 4px 10px rgba(0, 0, 0, 0.03);
+  border-color: #B5C9BF;
+}
+
+.shop-circle-item {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.shop-circle-item:hover {
+  transform: translateY(-4px);
+}
+
+.shop-circle-img-wrap {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.shop-circle-item:hover .shop-circle-img-wrap {
+  transform: scale(1.04);
+  box-shadow: 0 8px 24px rgba(23, 62, 52, 0.12);
+}
+
+.testimonial-card {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.testimonial-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px -4px rgba(23, 62, 52, 0.09);
+}
+
+.watch-shop-card {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.watch-shop-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px -2px rgba(0, 0, 0, 0.12);
 }

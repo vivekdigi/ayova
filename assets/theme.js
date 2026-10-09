@@ -329,6 +329,102 @@
     });
   }
 
+  /* ── Scroll Reveal Animations ─────────────────────────────────── */
+  function initScrollAnimations() {
+    if (!('IntersectionObserver' in window)) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    document.documentElement.classList.add('ayova-scroll-anim-ready');
+
+    var revealSelectors = [
+      '.wellness-header-centered',
+      '.wellness-header-row',
+      '.section-header',
+      '.shop-circles-title',
+      '.ayova-carousel-slide',
+      '.shop-circle-item',
+      '.doctor-banner',
+      '.watch-shop-card',
+      '.video-testimonial-card',
+      '.testimonial-card',
+      '.blog-card',
+      '[data-reveal]'
+    ];
+
+    var elements = document.querySelectorAll(revealSelectors.join(', '));
+    if (!elements.length) return;
+
+    elements.forEach(function(el) {
+      if (!el.classList.contains('ayova-reveal')) {
+        el.classList.add('ayova-reveal');
+
+        if (el.classList.contains('doctor-banner')) {
+          el.classList.add('ayova-reveal-zoom');
+        } else if (el.classList.contains('wellness-header-centered') || el.classList.contains('wellness-header-row') || el.classList.contains('section-header')) {
+          el.classList.add('ayova-reveal-header');
+        }
+
+        // Stagger within parent track / row
+        var parent = el.parentElement;
+        if (parent) {
+          var siblings = Array.prototype.filter.call(parent.children, function(child) {
+            return child.matches && child.matches(revealSelectors.join(', '));
+          });
+          if (siblings.length > 1) {
+            var index = siblings.indexOf(el);
+            if (index !== -1) {
+              el.style.setProperty('--reveal-index', index % 6);
+            }
+          }
+        }
+      }
+    });
+
+    var observer = new IntersectionObserver(function(entries, obs) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-revealed');
+          obs.unobserve(entry.target);
+        }
+      });
+    }, {
+      root: null,
+      rootMargin: '0px 0px -40px 0px',
+      threshold: 0.08
+    });
+
+    elements.forEach(function(el) {
+      var rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        setTimeout(function() {
+          el.classList.add('is-revealed');
+        }, 50);
+      } else {
+        observer.observe(el);
+      }
+    });
+
+    // When carousel enters viewport, ensure all child slides ripple in
+    var carouselObserver = new IntersectionObserver(function(entries, obs) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.querySelectorAll('.ayova-reveal').forEach(function(slide) {
+            slide.classList.add('is-revealed');
+          });
+          obs.unobserve(entry.target);
+        }
+      });
+    }, {
+      root: null,
+      rootMargin: '0px 0px -30px 0px',
+      threshold: 0.05
+    });
+
+    document.querySelectorAll('.ayova-carousel-outer, .ws-slider-wrapper, .shop-circles-grid').forEach(function(trackWrap) {
+      carouselObserver.observe(trackWrap);
+    });
+  }
+
   /* ── Initialize All ───────────────────────────────────────────── */
   document.addEventListener('DOMContentLoaded', function() {
     initMobileMenu();
@@ -341,6 +437,7 @@
     initProductTabs();
     initStickyHeader();
     initCartQuantity();
+    initScrollAnimations();
   });
 
 })();

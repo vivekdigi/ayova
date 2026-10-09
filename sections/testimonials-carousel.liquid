@@ -45,7 +45,13 @@
                 </div>
                 <div class="testimonial-rating" style="color: #FFC107;">★★★★★</div>
                 <h3 class="testimonial-title">{{ block.settings.review_title | default: "Liver wellness that fits my routine" }}</h3>
-                <p class="testimonial-quote">"{{ block.settings.quote | default: "The capsules are easy to take and the packaging feels very trustworthy. I have been consistent for six weeks and feel noticeably lighter after meals." }}"</p>
+                <div class="testimonial-quote-wrap">
+                  {% assign quote_text = block.settings.quote | default: "The capsules are easy to take and the packaging feels very trustworthy. I have been consistent for six weeks and feel noticeably lighter after meals." %}
+                  <p class="testimonial-quote">"{{ quote_text }}"</p>
+                  {% if quote_text.size > 115 %}
+                    <button type="button" class="testimonial-read-more" aria-label="Read full review">Read more</button>
+                  {% endif %}
+                </div>
                 <div class="testimonial-divider"></div>
                 <div class="testimonial-author">
                   {% if block.settings.image != blank %}
@@ -69,7 +75,10 @@
               </div>
               <div class="testimonial-rating" style="color: #FFC107;">★★★★★</div>
               <h3 class="testimonial-title">Liver wellness that fits my routine</h3>
-              <p class="testimonial-quote">"The capsules are easy to take and the packaging feels very trustworthy. I have been consistent for six weeks and feel noticeably lighter after meals."</p>
+              <div class="testimonial-quote-wrap">
+                <p class="testimonial-quote">"The capsules are easy to take and the packaging feels very trustworthy. I have been consistent for six weeks and feel noticeably lighter after meals."</p>
+                <button type="button" class="testimonial-read-more" aria-label="Read full review">Read more</button>
+              </div>
               <div class="testimonial-divider"></div>
               <div class="testimonial-author">
                 <h4 class="author-name">PRIYA</h4>
@@ -85,7 +94,10 @@
               </div>
               <div class="testimonial-rating" style="color: #FFC107;">★★★★★</div>
               <h3 class="testimonial-title">A simple daily wellness upgrade</h3>
-              <p class="testimonial-quote">"I wanted something uncomplicated. The clear dosage guidance, clean ingredients, and quick delivery made Ayova an easy repeat purchase."</p>
+              <div class="testimonial-quote-wrap">
+                <p class="testimonial-quote">"I wanted something uncomplicated. The clear dosage guidance, clean ingredients, and quick delivery made Ayova an easy repeat purchase."</p>
+                <button type="button" class="testimonial-read-more" aria-label="Read full review">Read more</button>
+              </div>
               <div class="testimonial-divider"></div>
               <div class="testimonial-author">
                 <h4 class="author-name">ROHAN</h4>
@@ -101,7 +113,10 @@
               </div>
               <div class="testimonial-rating" style="color: #FFC107;">★★★★★</div>
               <h3 class="testimonial-title">The support team was genuinely helpful</h3>
-              <p class="testimonial-quote">"I had questions before ordering and received a thoughtful response. The probiotics has now become part of my morning routine."</p>
+              <div class="testimonial-quote-wrap">
+                <p class="testimonial-quote">"I had questions before ordering and received a thoughtful response. The probiotics has now become part of my morning routine."</p>
+                <button type="button" class="testimonial-read-more" aria-label="Read full review">Read more</button>
+              </div>
               <div class="testimonial-divider"></div>
               <div class="testimonial-author">
                 <h4 class="author-name">NEHA</h4>
@@ -117,6 +132,27 @@
     </div>
   </div>
 </section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.testimonials-section').forEach(function(section) {
+      section.addEventListener('click', function(e) {
+        if (e.target && e.target.classList.contains('testimonial-read-more')) {
+          e.preventDefault();
+          var btn = e.target;
+          var wrap = btn.closest('.testimonial-quote-wrap');
+          if (wrap) {
+            var quote = wrap.querySelector('.testimonial-quote');
+            if (quote) {
+              quote.classList.toggle('is-expanded');
+              btn.textContent = quote.classList.contains('is-expanded') ? 'Read less' : 'Read more';
+            }
+          }
+        }
+      });
+    });
+  });
+</script>
 
 {% schema %}
 {
