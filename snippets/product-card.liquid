@@ -170,27 +170,27 @@
     {%- assign card_flipkart_link = product.metafields.custom.flipkart_link.value | default: product.metafields.custom.flipkart_link -%}
     {% if redirect_enabled == true or redirect_enabled == "true" or redirect_enabled == "True" %}
       {% if card_amazon_link != blank %}
-        <a href="{{ card_amazon_link }}" target="_blank" rel="noopener noreferrer" class="btn-add-cart" style="text-decoration:none; display:flex; align-items:center; justify-content:center; text-align:center; box-sizing:border-box;">
+        <a href="{{ card_amazon_link }}" target="_blank" rel="noopener noreferrer" class="btn-add-cart" style="text-decoration:none; display:flex; align-items:center; justify-content:center; text-align:center; box-sizing:border-box; width:100%;">
           Add to Cart
         </a>
       {% elsif card_flipkart_link != blank %}
-        <a href="{{ card_flipkart_link }}" target="_blank" rel="noopener noreferrer" class="btn-add-cart" style="text-decoration:none; display:flex; align-items:center; justify-content:center; text-align:center; box-sizing:border-box;">
+        <a href="{{ card_flipkart_link }}" target="_blank" rel="noopener noreferrer" class="btn-add-cart" style="text-decoration:none; display:flex; align-items:center; justify-content:center; text-align:center; box-sizing:border-box; width:100%;">
           Add to Cart
         </a>
       {% elsif product != blank %}
-        <form method="post" action="/cart/add" class="product-form" data-product-form onsubmit="event.preventDefault(); var btn = event.submitter || this.querySelector('button[type=submit]'); if(btn.dataset.added === 'true') { window.location.href='/cart'; return; } btn.innerHTML = 'Adding...'; btn.disabled = true; fetch('/cart/add.js', { method: 'POST', body: new FormData(this) }).then(res=>res.json()).then(data=>{ btn.innerHTML = 'View Cart'; btn.disabled = false; btn.dataset.added = 'true'; }).catch(err => { btn.innerHTML = 'Error'; btn.disabled = false; });">
+        <form method="post" action="/cart/add" class="product-form" data-product-form style="width:100%; margin-top:auto; display:flex; justify-content:center;" onsubmit="event.preventDefault(); var btn = event.submitter || this.querySelector('button[type=submit]'); if(btn.dataset.added === 'true') { window.location.href='/cart'; return; } btn.innerHTML = 'Adding...'; btn.disabled = true; fetch('/cart/add.js', { method: 'POST', body: new FormData(this) }).then(res=>res.json()).then(data=>{ btn.innerHTML = 'View Cart'; btn.disabled = false; btn.dataset.added = 'true'; }).catch(err => { btn.innerHTML = 'Error'; btn.disabled = false; });">
           <input type="hidden" name="id" value="{{ product.variants.first.id }}">
           <input type="hidden" name="quantity" value="1">
-          <button type="submit" name="add" class="btn-add-cart" data-add-to-cart>
+          <button type="submit" name="add" class="btn-add-cart" data-add-to-cart style="display:flex; align-items:center; justify-content:center; text-align:center; width:100%;">
             Add to Cart
           </button>
         </form>
       {% endif %}
     {% elsif product != blank %}
-      <form method="post" action="/cart/add" onsubmit="event.preventDefault(); var btn = this.querySelector('button'); if(btn.dataset.added === 'true') { window.location.href='/cart'; return; } btn.innerHTML = 'Adding...'; btn.disabled = true; fetch('/cart/add.js', { method: 'POST', body: new FormData(this) }).then(res=>res.json()).then(data=>{ btn.innerHTML = 'View Cart'; btn.disabled = false; btn.dataset.added = 'true'; }).catch(err => { btn.innerHTML = 'Add to Cart'; btn.disabled = false; });">
+      <form method="post" action="/cart/add" style="width:100%; margin-top:auto; display:flex; justify-content:center;" onsubmit="event.preventDefault(); var btn = this.querySelector('button'); if(btn.dataset.added === 'true') { window.location.href='/cart'; return; } btn.innerHTML = 'Adding...'; btn.disabled = true; fetch('/cart/add.js', { method: 'POST', body: new FormData(this) }).then(res=>res.json()).then(data=>{ btn.innerHTML = 'View Cart'; btn.disabled = false; btn.dataset.added = 'true'; }).catch(err => { btn.innerHTML = 'Add to Cart'; btn.disabled = false; });">
         <input type="hidden" name="id" value="{{ card_first_variant.id }}">
         <input type="hidden" name="quantity" value="1">
-        <button type="submit" class="btn-add-cart" {% unless card_available %}disabled{% endunless %}>
+        <button type="submit" class="btn-add-cart" style="display:flex; align-items:center; justify-content:center; text-align:center; width:100%;" {% unless card_available %}disabled{% endunless %}>
           {% if card_available %}
             Add to Cart
           {% else %}
@@ -199,7 +199,7 @@
         </button>
       </form>
     {% else %}
-      <button type="button" class="btn-add-cart">Add to Cart</button>
+      <button type="button" class="btn-add-cart" style="display:flex; align-items:center; justify-content:center; text-align:center; width:100%;">Add to Cart</button>
     {% endif %}
   </div>
 </div>

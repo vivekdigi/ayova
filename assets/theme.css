@@ -298,6 +298,7 @@ h6 {
   font-family: var(--font-accent);
   font-weight: 600;
   font-size: 14px;
+  line-height: 1.2;
   background-color: var(--color-forest-mid);
   color: var(--color-bg-white);
   border-radius: var(--radius-btn);
@@ -305,8 +306,11 @@ h6 {
   cursor: pointer;
   transition: background var(--transition-fast);
   text-decoration: none;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
+  margin: 0 auto;
   box-sizing: border-box;
 }
 
@@ -1357,8 +1361,12 @@ h6 {
 
 .card-info>form,
 .card-info>.btn-add-cart {
+  width: 100%;
   margin-top: auto;
   padding-top: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* ── BESTSELLERS SECTION (Figma: 876px, #FFFFFF) ──────────────────────────── */
