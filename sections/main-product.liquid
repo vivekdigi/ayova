@@ -256,7 +256,8 @@
                 <a href="{{ flipkart_link }}" target="_blank" rel="noopener noreferrer" class="btn-buy-now flipkart-btn" style="flex: 1; min-width: 45%; text-decoration: none; display: flex; align-items: center; justify-content: center; background-color: #FF9F00; color: #fff; margin-bottom: 10px; border: none; border-radius: 30px; font-weight: 600; font-size: 14px; padding: 10px 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: background 0.2s;">
                   BUY ON FLIPKART
                 </a>
-              {% elsif amazon_link != blank %}
+              {% endif %}
+              {% if amazon_link != blank %}
                 <a href="{{ amazon_link }}" target="_blank" rel="noopener noreferrer" class="btn-buy-now amazon-btn" style="flex: 1; min-width: 45%; text-decoration: none; display: flex; align-items: center; justify-content: center; background-color: #FFD814; color: #0F1111; margin-bottom: 10px; border: none; border-radius: 30px; font-weight: 600; font-size: 14px; padding: 10px 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: background 0.2s;">
                   BUY ON AMAZON
                 </a>
