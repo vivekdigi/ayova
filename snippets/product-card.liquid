@@ -169,12 +169,12 @@
     {%- assign redirect_enabled = product.metafields.custom.enable_redirect.value -%}
     {%- assign card_flipkart_link = product.metafields.custom.flipkart_link.value | default: product.metafields.custom.flipkart_link -%}
     {% if redirect_enabled == true or redirect_enabled == "true" or redirect_enabled == "True" %}
-      {% if card_flipkart_link != blank %}
-        <a href="{{ card_flipkart_link }}" target="_blank" rel="noopener noreferrer" class="btn-add-cart" style="text-decoration:none; display:flex; align-items:center; justify-content:center; text-align:center; box-sizing:border-box;">
+      {% if card_amazon_link != blank %}
+        <a href="{{ card_amazon_link }}" target="_blank" rel="noopener noreferrer" class="btn-add-cart" style="text-decoration:none; display:flex; align-items:center; justify-content:center; text-align:center; box-sizing:border-box;">
           Add to Cart
         </a>
-      {% elsif card_amazon_link != blank %}
-        <a href="{{ card_amazon_link }}" target="_blank" rel="noopener noreferrer" class="btn-add-cart" style="text-decoration:none; display:flex; align-items:center; justify-content:center; text-align:center; box-sizing:border-box;">
+      {% elsif card_flipkart_link != blank %}
+        <a href="{{ card_flipkart_link }}" target="_blank" rel="noopener noreferrer" class="btn-add-cart" style="text-decoration:none; display:flex; align-items:center; justify-content:center; text-align:center; box-sizing:border-box;">
           Add to Cart
         </a>
       {% elsif product != blank %}
