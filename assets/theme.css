@@ -294,11 +294,13 @@ h6 {
 /* Add to Cart Button — Figma: full width, #285044, border-radius 11px */
 .btn-add-cart {
   width: 100%;
-  padding: 13px;
+  height: 46px;
+  min-height: 46px;
+  padding: 0 16px;
   font-family: var(--font-accent);
   font-weight: 600;
   font-size: 14px;
-  line-height: 1.2;
+  line-height: 1;
   background-color: var(--color-forest-mid);
   color: var(--color-bg-white);
   border-radius: var(--radius-btn);
@@ -316,6 +318,15 @@ h6 {
 
 .btn-add-cart:hover {
   background-color: var(--color-forest-primary);
+}
+
+.btn-add-cart span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  text-align: center;
+  transform: translateY(1px);
 }
 
 /* ── Badge / Pill — Figma ─────────────────────────────────────────────────── */
