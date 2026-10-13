@@ -291,7 +291,7 @@ h6 {
   box-shadow: var(--shadow-md);
 }
 
-/* Add to Cart Button — Figma: full width, #285044, border-radius 11px */
+/* Add to Cart Button — Highlighted: full width, #173E34, border-radius 11px */
 .btn-add-cart {
   width: 100%;
   height: 46px;
@@ -301,12 +301,13 @@ h6 {
   font-weight: 600;
   font-size: 14px;
   line-height: 1;
-  background-color: var(--color-forest-mid);
+  background-color: var(--color-forest-primary);
   color: var(--color-bg-white);
   border-radius: var(--radius-btn);
   border: none;
   cursor: pointer;
-  transition: background var(--transition-fast);
+  box-shadow: 0 2px 6px rgba(23, 62, 52, 0.16);
+  transition: all var(--transition-fast);
   text-decoration: none;
   display: flex;
   align-items: center;
@@ -317,7 +318,22 @@ h6 {
 }
 
 .btn-add-cart:hover {
-  background-color: var(--color-forest-primary);
+  background-color: var(--color-forest-deep, #14332B);
+  box-shadow: 0 4px 12px rgba(23, 62, 52, 0.28);
+  transform: translateY(-1px);
+}
+
+.btn-add-cart:focus,
+.btn-add-cart:focus-visible {
+  outline: 2px solid var(--color-forest-primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px rgba(23, 62, 52, 0.25);
+  background-color: var(--color-forest-deep, #14332B);
+}
+
+.btn-add-cart:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(23, 62, 52, 0.2);
 }
 
 .btn-add-cart span {
@@ -1937,14 +1953,31 @@ h6 {
 }
 
 .marketplace-logo-amazon {
-  background: #ffffff;
-  border: 1px solid #E6E6E6;
+  background: #FFFDF8;
+  border: 1px solid #FF9900;
   text-align: center;
+  transition: all 0.2s ease;
+}
+
+.marketplace-logo-amazon:hover {
+  background: #FFF9EE;
+  border-color: #FF9900;
+  box-shadow: 0 4px 12px rgba(255, 153, 0, 0.22);
+  transform: translateY(-2px);
 }
 
 .marketplace-logo-flipkart {
-  background: #ffffff;
-  border: 1px solid #E6E6E6;
+  width: 80px;
+  background: #F8FBFF;
+  border: 1px solid #2874F0;
+  transition: all 0.2s ease;
+}
+
+.marketplace-logo-flipkart:hover {
+  background: #F0F6FF;
+  border-color: #2874F0;
+  box-shadow: 0 4px 12px rgba(40, 116, 240, 0.22);
+  transform: translateY(-2px);
 }
 
 /* Certifications bar */
@@ -3418,6 +3451,13 @@ h6 {
     font-weight: 700;
   }
 
+  .marketplace-logo-flipkart {
+    flex: 0 0 auto;
+    width: 58px;
+    max-width: 58px;
+    min-width: 50px;
+  }
+
   .footer-certifications {
     flex-wrap: wrap;
     height: auto;
@@ -3574,15 +3614,27 @@ h6 {
 }
 
 .btn-amazon {
-  background-color: #FFFFFF;
+  background-color: #FFFDF8;
   color: #000;
-  border: 1px solid #ddd;
+  border: 1px solid #FF9900;
+}
+
+.btn-amazon:hover {
+  background-color: #FFF9EE;
+  border-color: #FF9900;
+  box-shadow: 0 2px 8px rgba(255, 153, 0, 0.2);
 }
 
 .btn-flipkart {
-  background-color: #FFFFFF;
+  background-color: #F8FBFF;
   color: #000;
-  border: 1px solid #ddd;
+  border: 1px solid #2874F0;
+}
+
+.btn-flipkart:hover {
+  background-color: #F0F6FF;
+  border-color: #2874F0;
+  box-shadow: 0 2px 8px rgba(40, 116, 240, 0.2);
 }
 
 /* Mobile Responsive Adjustments */
@@ -3998,15 +4050,35 @@ h6 {
   box-sizing: border-box;
 }
 
+.ayova-marketplace-btn.ayova-mkt-amazon {
+  border-color: #FF9900;
+  background: #FFFDF8;
+}
+
+.ayova-marketplace-btn.ayova-mkt-flipkart {
+  border-color: #2874F0;
+  background: #F8FBFF;
+}
+
 .ayova-marketplace-btn:hover {
   transform: translateY(-1px);
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
-  border-color: #D6DED9;
-  background: #FFFFFF;
+}
+
+.ayova-marketplace-btn.ayova-mkt-amazon:hover {
+  border-color: #FF9900;
+  background: #FFF9EE;
+  box-shadow: 0 3px 8px rgba(255, 153, 0, 0.18);
+}
+
+.ayova-marketplace-btn.ayova-mkt-flipkart:hover {
+  border-color: #2874F0;
+  background: #F0F6FF;
+  box-shadow: 0 3px 8px rgba(40, 116, 240, 0.18);
 }
 
 .ayova-mkt-logo {
-  height: 20px;
+  height: 18px;
   width: auto;
   max-width: 72px;
   object-fit: contain;
@@ -4157,6 +4229,16 @@ h6 {
   flex-shrink: 0;
   box-sizing: border-box;
   transition: all 0.2s ease;
+}
+
+.ayova-marketplace-bar--sticky .ayova-marketplace-btn.ayova-mkt-amazon {
+  border-color: #FF9900;
+  background: #FFFDF8;
+}
+
+.ayova-marketplace-bar--sticky .ayova-marketplace-btn.ayova-mkt-flipkart {
+  border-color: #2874F0;
+  background: #F8FBFF;
 }
 
 .ayova-marketplace-bar--sticky .ayova-mkt-logo {

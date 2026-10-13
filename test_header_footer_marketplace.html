@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ayova Header & Footer Marketplace Buttons Test</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/theme.css">
+  <style>
+    body {
+      background-color: #F8F9F8;
+      font-family: 'Montserrat', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .test-section {
+      padding: 40px 20px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .test-heading {
+      font-size: 18px;
+      font-weight: 700;
+      color: #173E34;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #E2E6DF;
+    }
+    .demo-header-bar {
+      background: #FFFFFF;
+      padding: 16px 24px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .demo-footer-bar {
+      background: #132820;
+      padding: 30px 24px;
+      border-radius: 12px;
+      color: #FFFFFF;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="test-section">
+    <div class="test-heading">1. Header Marketplace Buttons</div>
+    <div class="demo-header-bar">
+      <div style="font-weight: 700; font-size: 20px; color: #173E34;">AYOVA</div>
+      <div class="header-marketplace-buttons">
+        <a href="#" class="marketplace-btn btn-blinkit">blinkit</a>
+        <a href="#" class="marketplace-btn btn-amazon">
+          <img src="assets/amazon.svg" alt="Amazon" style="height: 18px; width: auto;">
+        </a>
+        <a href="#" class="marketplace-btn btn-flipkart">
+          <img src="assets/flipkart_wvl.svg" alt="Flipkart" style="height: 18px; width: auto;">
+        </a>
+      </div>
+    </div>
+
+    <div style="height: 40px;"></div>
+
+    <div class="test-heading">2. Footer Marketplace Logos (Dark Background)</div>
+    <div class="demo-footer-bar">
+      <h3 style="margin-top: 0; font-size: 16px; letter-spacing: 0.05em; color: #ECD9B9;">SHOP AYOVA EVERYWHERE</h3>
+      <p style="color: #CFD9D1; font-size: 13px; margin-bottom: 20px;">Your wellness essentials, wherever you shop.</p>
+      
+      <div style="color: #48BB78; font-weight: 600; font-size: 13px; margin-bottom: 8px;">✓ Result with theme.css (Flipkart width: 80px by default):</div>
+      <div class="marketplace-logos" style="margin-bottom: 24px;">
+        <a href="#" class="marketplace-logo marketplace-logo-blinkit"><span>blinkit</span></a>
+        <a href="#" class="marketplace-logo marketplace-logo-amazon"><img src="assets/amazon.svg" alt="Amazon" style="height: 24px; width: auto;"></a>
+        <a href="#" class="marketplace-logo marketplace-logo-flipkart"><img src="flipkart_wvl.svg" alt="Flipkart" style="height: 28px; width: 28px; object-fit: contain;"></a>
+      </div>
+    </div>
+
+    <div style="height: 40px;"></div>
+
+    <div class="test-heading">3. Product Card Marketplace Buttons (For Comparison - 3rd Pic)</div>
+    <div style="background: #FFFFFF; padding: 20px; border-radius: 12px; max-width: 300px; margin: 0 auto; box-shadow: 0 2px 10px rgba(0,0,0,0.06);">
+      <button class="btn-add-cart" style="margin-bottom: 12px;">Add to Cart</button>
+      <div class="ayova-marketplace-bar">
+        <span class="ayova-marketplace-label">Buy now</span>
+        <div class="ayova-marketplace-links">
+          <a href="#" class="ayova-marketplace-btn ayova-mkt-amazon">
+            <img src="assets/amazon.svg" alt="Amazon" class="ayova-mkt-logo">
+          </a>
+          <a href="#" class="ayova-marketplace-btn ayova-mkt-flipkart">
+            <img src="assets/flipkart_wvl.svg" alt="Flipkart" class="ayova-mkt-logo">
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
