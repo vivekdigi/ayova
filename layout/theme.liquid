@@ -55,6 +55,26 @@
       --font-body: '{{ settings.body_font_family | default: "Montserrat" }}', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-accent: '{{ settings.accent_font_family | default: "Inter" }}', -apple-system, BlinkMacSystemFont, sans-serif;
     }
+    .btn-add-cart {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      text-align: center !important;
+      height: 46px !important;
+      min-height: 46px !important;
+      padding: 0 16px !important;
+      line-height: 1 !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
+    .btn-add-cart span {
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      line-height: 1 !important;
+      text-align: center !important;
+      transform: translateY(1px) !important;
+    }
   </style>
 
   {{ content_for_header }}
@@ -133,6 +153,25 @@
 
     .floating-widgets svg {
       pointer-events: none;
+    }
+
+    @media (max-width: 768px) {
+      .floating-widgets {
+        bottom: auto;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 10px;
+        gap: 8px;
+        z-index: 990;
+      }
+      .floating-widgets a {
+        width: 44px;
+        height: 44px;
+      }
+      .floating-widgets a svg {
+        width: 24px;
+        height: 24px;
+      }
     }
   </style>
 

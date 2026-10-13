@@ -106,14 +106,10 @@
                   </div>
                 </div>
                 {%- assign redirect_enabled = ws_prod.metafields.custom.enable_redirect.value -%}
-                {% if redirect_enabled == true or redirect_enabled == "true" or redirect_enabled == "True" %}
-                  {% if ws_flipkart_link != blank %}
-                    <a href="{{ ws_flipkart_link }}" target="_blank" rel="noopener noreferrer" class="ws-buy-btn">Buy Now</a>
-                  {% elsif ws_amazon_link != blank %}
-                    <a href="{{ ws_amazon_link }}" target="_blank" rel="noopener noreferrer" class="ws-buy-btn">Buy Now</a>
-                  {% else %}
-                    <a href="{{ block.settings.product.url }}" class="ws-buy-btn">Buy Now</a>
-                  {% endif %}
+                {% if ws_amazon_link != blank %}
+                  <a href="{{ ws_amazon_link }}" target="_blank" rel="noopener noreferrer" class="ws-buy-btn">BUY ON AMAZON</a>
+                {% elsif ws_flipkart_link != blank and redirect_enabled == true or redirect_enabled == "true" or redirect_enabled == "True" and ws_flipkart_link != blank %}
+                  <a href="{{ ws_flipkart_link }}" target="_blank" rel="noopener noreferrer" class="ws-buy-btn">Buy Now</a>
                 {% else %}
                   <a href="{{ block.settings.product.url }}" class="ws-buy-btn">Buy Now</a>
                 {% endif %}

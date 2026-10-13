@@ -120,10 +120,6 @@
           {% endif %}
           <h1 class="product-title-new">{{ product.title }}</h1>
           
-          {% if product.description != blank %}
-            <div class="product-subtitle">{{ product.description | strip_html | truncatewords: 25 }}</div>
-          {% endif %}
-          
           <div class="product-reviews-row-new">
             <span class="rating-stars-new">★★★★★</span>
             <span class="rating-text-new">4.9 • <span class="verified-text">1,248 verified reviews</span></span>
@@ -137,21 +133,29 @@
           {% endcomment %}
         </div>
 
-        <div class="product-price-box-new">
-          <span class="price-large-new">{{ product.price | money }}</span>
-          {% if product.compare_at_price > product.price %}
-            <span class="price-compare-new">{{ product.compare_at_price | money }}</span>
-            <span class="price-discount-new">{{ product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price | round }}% OFF</span>
-          {% endif %}
-        </div>
-        
-        {% if product.metafields.custom.per_count_price != blank %}
-          <div class="product-per-count-price" style="font-size: 0.9rem; color: #666; margin-top: 4px; margin-bottom: 8px;">
-            ({{ product.metafields.custom.per_count_price }})
+        <div class="product-price-wrapper">
+          <div class="product-price-box-new">
+            {% if product.compare_at_price > product.price %}
+              <span class="price-mrp-wrap">MRP : <span class="price-compare-new">{{ product.compare_at_price | money }}</span></span>
+            {% endif %}
+            <span class="price-large-new">{{ product.price | money }}</span>
+            {% if product.compare_at_price > product.price %}
+              <span class="price-discount-new">{{ product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price | round }}% OFF</span>
+            {% endif %}
           </div>
-        {% endif %}
+          
+          {% if product.metafields.custom.per_count_price != blank %}
+            <div class="product-per-count-price" style="font-size: 0.9rem; color: #666; margin-top: 4px; margin-bottom: 4px;">
+              ({{ product.metafields.custom.per_count_price }})
+            </div>
+          {% endif %}
 
-        <div class="gst-label-new">Inclusive of all taxes</div>
+          <div class="gst-label-new">Inclusive of all taxes</div>
+        </div>
+
+        {% if product.description != blank %}
+          <div class="product-subtitle">{{ product.description | strip_html | truncatewords: 35 }}</div>
+        {% endif %}
 
         <!-- Feature List -->
         <div class="why-love-it">
@@ -244,21 +248,73 @@
 
           <!-- Quantity and Buttons -->
           {%- assign amazon_link = product.metafields.custom.amazon_link.value | default: product.metafields.custom.amazon_link -%}
-          {%- assign flipkart_link = product.metafields.custom.flipkart_link.value | default: product.metafields.custom.flipkart_link -%}
-          {%- assign redirect_enabled = product.metafields.custom.enable_redirect.value -%}
-          {%- assign redirect_active = false -%}
-          {%- if redirect_enabled == true or redirect_enabled == "true" or redirect_enabled == "True" -%}
-            {%- assign redirect_active = true -%}
+          {%- if amazon_link == blank -%}
+            {%- assign amazon_link = product.metafields.custom.amazon_url.value | default: product.metafields.custom.amazon_url -%}
           {%- endif -%}
-          {% if redirect_active == true and amazon_link != blank or redirect_active == true and flipkart_link != blank %}
-            <div class="purchase-actions-row" style="flex-wrap: wrap; gap: 10px;">
+          {%- if amazon_link == blank -%}
+            {%- assign amazon_link = product.metafields.custom.amazon_product_link.value | default: product.metafields.custom.amazon_product_link -%}
+          {%- endif -%}
+          {%- if amazon_link == blank -%}
+            {%- assign amazon_link = product.metafields.custom.amazon.value | default: product.metafields.custom.amazon -%}
+          {%- endif -%}
+          {%- if amazon_link == blank and product.tags != blank -%}
+            {%- for tag in product.tags -%}
+              {%- assign tag_lower = tag | downcase -%}
+              {%- if tag_lower contains 'amazon:' -%}
+                {%- assign amazon_link = tag | remove_first: 'amazon:' | strip -%}
+                {%- break -%}
+              {%- elsif tag_lower contains 'amazon_link:' -%}
+                {%- assign amazon_link = tag | remove_first: 'amazon_link:' | strip -%}
+                {%- break -%}
+              {%- elsif tag_lower contains 'amazon_url:' -%}
+                {%- assign amazon_link = tag | remove_first: 'amazon_url:' | strip -%}
+                {%- break -%}
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endif -%}
+          {%- if amazon_link != blank -%}
+            {%- unless amazon_link contains 'http://' or amazon_link contains 'https://' -%}
+              {%- assign amazon_link = 'https://' | append: amazon_link -%}
+            {%- endunless -%}
+          {%- endif -%}
+
+          {%- assign flipkart_link = product.metafields.custom.flipkart_link.value | default: product.metafields.custom.flipkart_link -%}
+          {%- if flipkart_link == blank -%}
+            {%- assign flipkart_link = product.metafields.custom.flipkart_url.value | default: product.metafields.custom.flipkart_url -%}
+          {%- endif -%}
+          {%- if flipkart_link == blank -%}
+            {%- assign flipkart_link = product.metafields.custom.flipkart.value | default: product.metafields.custom.flipkart -%}
+          {%- endif -%}
+          {%- if flipkart_link == blank and product.tags != blank -%}
+            {%- for tag in product.tags -%}
+              {%- assign tag_lower = tag | downcase -%}
+              {%- if tag_lower contains 'flipkart:' -%}
+                {%- assign flipkart_link = tag | remove_first: 'flipkart:' | strip -%}
+                {%- break -%}
+              {%- elsif tag_lower contains 'flipkart_link:' -%}
+                {%- assign flipkart_link = tag | remove_first: 'flipkart_link:' | strip -%}
+                {%- break -%}
+              {%- elsif tag_lower contains 'flipkart_url:' -%}
+                {%- assign flipkart_link = tag | remove_first: 'flipkart_url:' | strip -%}
+                {%- break -%}
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endif -%}
+          {%- if flipkart_link != blank -%}
+            {%- unless flipkart_link contains 'http://' or flipkart_link contains 'https://' -%}
+              {%- assign flipkart_link = 'https://' | append: flipkart_link -%}
+            {%- endunless -%}
+          {%- endif -%}
+
+          {% if flipkart_link != blank or amazon_link != blank %}
+            <div class="purchase-actions-row redirect-row">
               {% if flipkart_link != blank %}
-                <a href="{{ flipkart_link }}" target="_blank" rel="noopener noreferrer" class="btn-buy-now flipkart-btn" style="flex: 1; min-width: 45%; text-decoration: none; display: flex; align-items: center; justify-content: center; background-color: #FF9F00; color: #fff; margin-bottom: 10px; border: none; border-radius: 30px; font-weight: 600; font-size: 14px; padding: 10px 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: background 0.2s;">
+                <a href="{{ flipkart_link }}" target="_blank" rel="noopener noreferrer" class="btn-buy-now flipkart-btn">
                   BUY ON FLIPKART
                 </a>
               {% endif %}
               {% if amazon_link != blank %}
-                <a href="{{ amazon_link }}" target="_blank" rel="noopener noreferrer" class="btn-buy-now amazon-btn" style="flex: 1; min-width: 45%; text-decoration: none; display: flex; align-items: center; justify-content: center; background-color: #FFD814; color: #0F1111; margin-bottom: 10px; border: none; border-radius: 30px; font-weight: 600; font-size: 14px; padding: 10px 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: background 0.2s;">
+                <a href="{{ amazon_link }}" target="_blank" rel="noopener noreferrer" class="btn-buy-now amazon-btn">
                   BUY ON AMAZON
                 </a>
               {% endif %}
@@ -406,14 +462,38 @@
       
       const input = this.querySelector('input');
       const priceElement = document.querySelector('.price-large-new');
+      const compareElement = document.querySelector('.price-compare-new');
+      const mrpWrap = document.querySelector('.price-mrp-wrap');
+      const discountElement = document.querySelector('.price-discount-new');
       
       if (input && input.dataset.price) {
-        const price = (parseInt(input.dataset.price) / 100).toLocaleString('en-IN', {
+        const priceNum = parseInt(input.dataset.price);
+        const compareNum = input.dataset.compare ? parseInt(input.dataset.compare) : 0;
+        const price = (priceNum / 100).toLocaleString('en-IN', {
           style: 'currency',
           currency: 'INR',
           maximumFractionDigits: 0
         });
         if(priceElement) priceElement.textContent = price;
+
+        if (compareNum > priceNum) {
+          const comparePrice = (compareNum / 100).toLocaleString('en-IN', {
+            style: 'currency',
+            currency: 'INR',
+            maximumFractionDigits: 0
+          });
+          if(compareElement) compareElement.textContent = comparePrice;
+          if(mrpWrap) mrpWrap.style.display = 'inline-flex';
+          
+          const discountPct = Math.round(((compareNum - priceNum) * 100) / compareNum);
+          if(discountElement) {
+            discountElement.textContent = discountPct + '% OFF';
+            discountElement.style.display = 'inline-block';
+          }
+        } else {
+          if(mrpWrap) mrpWrap.style.display = 'none';
+          if(discountElement) discountElement.style.display = 'none';
+        }
       }
     });
   });
@@ -666,39 +746,59 @@
   font-weight: 400;
 }
 
+.product-price-wrapper {
+  margin-bottom: 20px;
+}
+
 .product-price-box-new {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 12px;
+  flex-wrap: wrap;
+}
+
+.price-mrp-wrap {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #7A857F;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
 }
 
 .price-large-new {
   font-family: var(--font-heading);
-  font-size: 2.2rem;
-  font-weight: 700;
-  color: var(--color-forest-dark);
+  font-size: 2.1rem;
+  font-weight: 800;
+  color: #111111;
+  line-height: 1;
 }
 
 .price-compare-new {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   color: #7A857F;
   text-decoration: line-through;
+  font-weight: 500;
 }
 
 .price-discount-new {
-  background: var(--color-terracotta-light);
-  color: var(--color-terracotta);
-  font-size: 0.85rem;
-  font-weight: 600;
-  padding: 4px 12px;
-  border-radius: 20px;
+  background: #0d5438;
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 12px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  line-height: 1.2;
 }
 
 .gst-label-new {
   font-size: 0.85rem;
   color: #7A857F;
-  margin-bottom: 24px;
-  padding-bottom: 24px;
+  margin-top: 4px;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
   border-bottom: 1px solid var(--color-sage-border);
 }
 
@@ -830,6 +930,59 @@
 }
 
 .btn-add-cart-new:hover, .btn-buy-now:hover {
+  opacity: 0.9;
+}
+
+.purchase-actions-row.redirect-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  width: 100%;
+}
+
+.purchase-actions-row .flipkart-btn,
+.purchase-actions-row .amazon-btn {
+  flex: 1;
+  min-width: 140px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 30px;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  padding: 0 16px;
+  border: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: opacity 0.2s, transform 0.15s, background-color 0.2s;
+}
+
+.purchase-actions-row .flipkart-btn {
+  background-color: #FF9F00;
+  color: #ffffff;
+}
+
+.purchase-actions-row .amazon-btn {
+  background-color: #FFD814;
+  color: #0F1111;
+}
+
+.purchase-actions-row .flipkart-btn:hover {
+  background-color: #f29600;
+  color: #ffffff;
+}
+
+.purchase-actions-row .amazon-btn:hover {
+  background-color: #f7ca00;
+  color: #0F1111;
+}
+
+.purchase-actions-row .flipkart-btn:active,
+.purchase-actions-row .amazon-btn:active {
+  transform: scale(0.98);
   opacity: 0.9;
 }
 
@@ -1207,27 +1360,311 @@
 }
 
 @media (max-width: 768px) {
+  .section-padding.product-page {
+    padding-top: 10px;
+  }
+  .product-main-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .product-gallery-wrapper {
+    display: contents;
+  }
+  .product-details-wrapper {
+    display: contents;
+  }
+
+  .details-header {
+    order: 1;
+    margin-bottom: 6px;
+  }
+  .product-title-new {
+    font-size: 1.35rem;
+    line-height: 1.25;
+    margin-bottom: 6px;
+  }
+  .product-reviews-row-new {
+    margin-bottom: 6px;
+  }
+
   .gallery-inner {
-    flex-direction: column-reverse;
-    padding: 16px;
+    order: 2;
+    flex-direction: column;
+    padding: 10px;
+    gap: 8px;
+    border-radius: 14px;
+    margin-bottom: 8px;
+  }
+  .main-image-box {
+    padding: 10px;
+    max-height: 290px;
+    border-radius: 10px;
+  }
+  .main-image-box img {
+    max-height: 210px;
+    width: auto;
+    max-width: 100%;
+    margin: 4px 0;
+  }
+  .main-image-text {
+    display: none;
   }
   .gallery-vertical-thumbs {
     flex-direction: row;
     width: 100%;
     overflow-x: auto;
     align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .gallery-vertical-thumbs .thumb-nav-btn,
+  .gallery-vertical-thumbs .thumb-count {
+    display: none;
   }
   .thumbs-list {
     flex-direction: row;
+    gap: 8px;
   }
-  .product-title-new {
-    font-size: 1.8rem;
+  .thumbs-list .thumb {
+    width: 44px;
+    height: 44px;
+    padding: 2px;
+    border-radius: 6px;
+  }
+
+  .product-price-wrapper {
+    order: 3;
+    margin-top: 4px;
+    margin-bottom: 8px;
+  }
+  .product-price-box-new {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .price-mrp-wrap {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #7A857F;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 4px;
+  }
+  .price-compare-new {
+    font-size: 0.95rem;
+    color: #7A857F;
+    text-decoration: line-through;
+    font-weight: 500;
   }
   .price-large-new {
-    font-size: 1.8rem;
+    font-size: 1.65rem;
+    font-weight: 800;
+    color: #111111;
+    line-height: 1;
   }
-  .variant-options-grid {
-    grid-template-columns: 1fr;
+  .price-discount-new {
+    background-color: #0d5438;
+    color: #ffffff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 10px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    line-height: 1.2;
+  }
+  .product-per-count-price {
+    margin-top: 2px !important;
+    margin-bottom: 2px !important;
+    font-size: 0.8rem !important;
+  }
+  .gst-label-new {
+    font-size: 0.75rem;
+    color: #7A857F;
+    margin-top: 2px;
+    margin-bottom: 6px;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
+  .product-subtitle {
+    order: 4;
+    font-size: 0.85rem;
+    line-height: 1.45;
+    color: #555555;
+    margin-top: 2px;
+    margin-bottom: 12px;
+  }
+
+  .product-form {
+    order: 5;
+    display: flex;
+    flex-direction: column;
+  }
+  .variant-picker-new {
+    order: 1;
+    margin-bottom: 8px;
+  }
+  .product-trust-block {
+    order: 2;
+    margin-bottom: 8px;
+  }
+  .purchase-actions-row {
+    display: none !important;
+  }
+  .shipping-notice {
+    order: 3;
+    margin-top: 6px;
+    margin-bottom: 14px;
+  }
+  .product-promos {
+    order: 5;
+    margin: 10px 0;
+  }
+  .product-info-grid {
+    order: 6;
+  }
+
+  .why-love-it {
+    order: 7;
+    margin-top: 14px;
+    margin-bottom: 14px;
+  }
+
+  .gallery-pills-wrapper {
+    order: 8;
+    margin-top: 8px;
+    margin-bottom: 16px;
+  }
+  .gallery-pills {
+    margin-top: 0;
+    gap: 8px;
+  }
+  .gallery-pill {
+    padding: 6px 14px;
+    font-size: 0.8rem;
+  }
+
+  body {
+    padding-bottom: 64px;
+  }
+}
+
+/* Sticky Purchase Action Bar */
+.mobile-sticky-action-bar {
+  display: block;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-top: 1px solid #E2E6DF;
+  padding: 10px 16px;
+  padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  z-index: 999;
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.mobile-sticky-inner {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  max-width: 500px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.btn-sticky-action {
+  flex: 1;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-radius: 30px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  box-sizing: border-box;
+  padding: 0 12px;
+  letter-spacing: 0.02em;
+  transition: opacity 0.2s, transform 0.15s, background-color 0.2s;
+}
+
+.btn-sticky-action:active {
+  opacity: 0.85;
+  transform: scale(0.98);
+}
+
+.btn-sticky-action.flipkart-sticky {
+  background-color: #FF9F00;
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(255, 159, 0, 0.25);
+}
+
+.btn-sticky-action.flipkart-sticky:hover {
+  background-color: #f29600;
+  color: #ffffff;
+}
+
+.btn-sticky-action.amazon-sticky {
+  background-color: #FFD814;
+  color: #0F1111;
+  box-shadow: 0 2px 6px rgba(255, 216, 20, 0.25);
+}
+
+.btn-sticky-action.amazon-sticky:hover {
+  background-color: #f7ca00;
+  color: #0F1111;
+}
+
+.btn-sticky-action.add-cart-sticky {
+  background-color: var(--color-forest-primary, #285044);
+  color: #ffffff;
+}
+
+.btn-sticky-action.buy-now-sticky {
+  background-color: var(--color-terracotta, #D96C3F);
+  color: #ffffff;
+}
+
+@media (min-width: 769px) {
+  .mobile-sticky-action-bar {
+    padding: 12px 24px;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+    transform: translateY(100%);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+  }
+
+  .mobile-sticky-action-bar.is-sticky-visible {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .mobile-sticky-inner {
+    max-width: 520px;
+    gap: 14px;
+  }
+
+  .btn-sticky-action {
+    height: 48px;
+    font-size: 0.88rem;
+    padding: 0 16px;
+  }
+
+  .btn-sticky-action:hover {
+    opacity: 0.92;
+    transform: translateY(-1px);
   }
 }
 </style>
@@ -1249,11 +1686,11 @@
       position: fixed;
       bottom: 20px;
       left: 20px;
-      width: 160px;
-      border-radius: 12px;
+      width: 110px;
+      border-radius: 10px;
       overflow: hidden;
       z-index: 9999;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.25);
       background: #000;
       aspect-ratio: 9/16;
       display: flex;
@@ -1262,7 +1699,8 @@
       transition: all 0.3s ease;
     }
     .floating-product-video.minimized {
-      width: 80px;
+      width: 56px;
+      height: 56px;
       border-radius: 50%;
       aspect-ratio: 1/1;
     }
@@ -1271,11 +1709,11 @@
     }
     .floating-video-toggle {
       position: absolute;
-      top: 5px;
-      right: 5px;
-      width: 24px;
-      height: 24px;
-      background: rgba(0,0,0,0.5);
+      top: 4px;
+      right: 4px;
+      width: 20px;
+      height: 20px;
+      background: rgba(0,0,0,0.55);
       color: #fff;
       border: none;
       border-radius: 50%;
@@ -1283,12 +1721,12 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 16px;
+      font-size: 13px;
       line-height: 1;
       z-index: 10;
     }
     .floating-video-toggle:hover {
-      background: rgba(0,0,0,0.8);
+      background: rgba(0,0,0,0.85);
     }
     .floating-product-video video {
       width: 100%;
@@ -1298,8 +1736,8 @@
     }
     .floating-video-sound-toggle {
       position: absolute;
-      bottom: 10px;
-      right: 10px;
+      bottom: 6px;
+      right: 6px;
       z-index: 10;
       opacity: 0;
       transition: opacity 0.3s ease;
@@ -1312,16 +1750,48 @@
       color: #fff;
       border: none;
       border-radius: 50%;
-      width: 32px;
-      height: 32px;
+      width: 26px;
+      height: 26px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 16px;
+      font-size: 13px;
     }
     #floatingSoundBtn:hover {
-      background: rgba(0,0,0,0.8);
+      background: rgba(0,0,0,0.85);
+    }
+    @media (max-width: 768px) {
+      .floating-product-video {
+        bottom: 75px;
+        left: 14px;
+        width: 65px;
+        height: 65px;
+        border-radius: 50%;
+        aspect-ratio: 1/1;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+      }
+      .floating-product-video video {
+        border-radius: 50%;
+      }
+      .floating-product-video.expanded {
+        width: 140px;
+        height: auto;
+        aspect-ratio: 9/16;
+        border-radius: 12px;
+      }
+      .floating-product-video.expanded video {
+        border-radius: 12px;
+      }
+      .floating-product-video.minimized {
+        width: 65px;
+        height: 65px;
+        border-radius: 50%;
+        aspect-ratio: 1/1;
+      }
+      .floating-video-sound-toggle {
+        display: none;
+      }
     }
   </style>
   <script>
@@ -1332,12 +1802,20 @@
       var videoEl = document.querySelector('.floating-video-element');
       
       if(videoContainer && toggleBtn) {
-        toggleBtn.addEventListener('click', function() {
+        if (window.innerWidth <= 768) {
+          videoContainer.classList.add('minimized');
+          toggleBtn.innerHTML = '+';
+          toggleBtn.setAttribute('aria-label', 'Maximize video');
+        }
+        toggleBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
           videoContainer.classList.toggle('minimized');
           if(videoContainer.classList.contains('minimized')) {
+            videoContainer.classList.remove('expanded');
             toggleBtn.innerHTML = '+';
             toggleBtn.setAttribute('aria-label', 'Maximize video');
           } else {
+            videoContainer.classList.add('expanded');
             toggleBtn.innerHTML = '−';
             toggleBtn.setAttribute('aria-label', 'Minimize video');
           }
@@ -1364,6 +1842,53 @@
     });
   </script>
 {% endif %}
+
+<!-- Sticky Purchase Action Bar -->
+<div class="mobile-sticky-action-bar" id="mobileStickyActionBar">
+  <div class="mobile-sticky-inner">
+    {% if flipkart_link != blank or amazon_link != blank %}
+      {% if flipkart_link != blank %}
+        <a href="{{ flipkart_link }}" target="_blank" rel="noopener noreferrer" class="btn-sticky-action flipkart-sticky">
+          BUY ON FLIPKART
+        </a>
+      {% endif %}
+      {% if amazon_link != blank %}
+        <a href="{{ amazon_link }}" target="_blank" rel="noopener noreferrer" class="btn-sticky-action amazon-sticky">
+          BUY ON AMAZON
+        </a>
+      {% endif %}
+    {% else %}
+      <button type="button" class="btn-sticky-action add-cart-sticky" onclick="var f=document.querySelector('.product-form'); if(f){ var b=f.querySelector('button[name=add]'); if(b) b.click(); else f.querySelector('button[type=submit]').click(); }">
+        ADD TO CART
+      </button>
+      <button type="button" class="btn-sticky-action buy-now-sticky" onclick="var f=document.querySelector('.product-form'); if(f){ var buyBtn=f.querySelector('.btn-buy-now') || f.querySelector('.btn-buy-now-new'); if(buyBtn) buyBtn.click(); else { var b=f.querySelector('button[name=add]'); if(b) b.click(); else f.submit(); } }">
+        BUY NOW
+      </button>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var stickyBar = document.getElementById('mobileStickyActionBar');
+    var purchaseRow = document.querySelector('.purchase-actions-row');
+    if (stickyBar && purchaseRow) {
+      function checkStickyVisibility() {
+        if (window.innerWidth > 768) {
+          var rect = purchaseRow.getBoundingClientRect();
+          if (rect.bottom < 0) {
+            stickyBar.classList.add('is-sticky-visible');
+          } else {
+            stickyBar.classList.remove('is-sticky-visible');
+          }
+        }
+      }
+      window.addEventListener('scroll', checkStickyVisibility, { passive: true });
+      window.addEventListener('resize', checkStickyVisibility);
+      checkStickyVisibility();
+    }
+  });
+</script>
 
 {% schema %}
 {
