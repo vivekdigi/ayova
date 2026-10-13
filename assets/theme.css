@@ -3945,3 +3945,124 @@ h6 {
   transform: translateY(-4px);
   box-shadow: 0 10px 24px -2px rgba(0, 0, 0, 0.12);
 }
+
+/* ── 6. Marketplace Buy Now / Affiliate Logo Buttons ─────────────────────── */
+.card-action-wrapper {
+  margin-top: auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 8px;
+}
+
+.ayova-marketplace-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin-top: 10px;
+  padding: 4px 0 2px;
+  box-sizing: border-box;
+}
+
+.ayova-marketplace-label {
+  font-family: var(--font-accent, 'Inter', sans-serif);
+  font-size: 12px;
+  font-weight: 600;
+  color: #55625B;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}
+
+.ayova-marketplace-links {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ayova-marketplace-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  padding: 4px 10px;
+  background: #FFFFFF;
+  border: 1px solid #D6DED9;
+  border-radius: 8px;
+  text-decoration: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+}
+
+.ayova-marketplace-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+}
+
+.ayova-marketplace-btn.ayova-mkt-amazon:hover {
+  border-color: #FF9900;
+  background: #FFFDF8;
+}
+
+.ayova-marketplace-btn.ayova-mkt-flipkart:hover {
+  border-color: #2874F0;
+  background: #F8FBFF;
+}
+
+.ayova-mkt-logo {
+  height: 16px;
+  width: auto;
+  max-width: 72px;
+  object-fit: contain;
+  display: block;
+}
+
+/* Product Detail Page (PDP) variant */
+.ayova-marketplace-bar--pdp {
+  justify-content: flex-start;
+  margin-top: 14px;
+  padding: 10px 14px;
+  background: #F8FAF9;
+  border: 1px dashed #D0DDD6;
+  border-radius: 10px;
+  gap: 12px;
+}
+
+.ayova-marketplace-bar--pdp .ayova-marketplace-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #285044;
+}
+
+.ayova-marketplace-bar--pdp .ayova-marketplace-btn {
+  height: 36px;
+  padding: 5px 14px;
+}
+
+.ayova-marketplace-bar--pdp .ayova-mkt-logo {
+  height: 18px;
+  max-width: 85px;
+}
+
+/* Watch and Shop variant */
+.ayova-marketplace-bar--ws {
+  margin-top: 6px;
+  gap: 6px;
+}
+
+.ayova-marketplace-bar--ws .ayova-marketplace-label {
+  font-size: 11px;
+}
+
+.ayova-marketplace-bar--ws .ayova-marketplace-btn {
+  height: 28px;
+  padding: 3px 8px;
+}
+
+.ayova-marketplace-bar--ws .ayova-mkt-logo {
+  height: 14px;
+  max-width: 58px;
+}

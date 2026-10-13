@@ -217,5 +217,33 @@
         "default": "page"
       }
     ]
+  },
+  {
+    "name": "Marketplace Logos & Buttons",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Amazon & Flipkart Buy Now Buttons"
+      },
+      {
+        "type": "text",
+        "id": "marketplace_buy_label",
+        "label": "Buy Now Label Text",
+        "default": "Buy now",
+        "info": "Text displayed beside Amazon & Flipkart logo buttons (e.g. 'Buy now' or 'Buy on')"
+      },
+      {
+        "type": "image_picker",
+        "id": "amazon_logo",
+        "label": "Amazon Logo",
+        "info": "Upload custom Amazon logo image. If left blank, default Amazon SVG logo is used."
+      },
+      {
+        "type": "image_picker",
+        "id": "flipkart_logo",
+        "label": "Flipkart Logo",
+        "info": "Upload custom Flipkart logo image. If left blank, default Flipkart SVG logo is used."
+      }
+    ]
   }
 ]

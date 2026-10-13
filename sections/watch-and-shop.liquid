@@ -90,6 +90,35 @@
                   {%- assign ws_amazon_link = 'https://' | append: ws_amazon_link -%}
                   {%- endunless -%}
                 {%- endif -%}
+
+                {%- assign ws_flipkart_link = ws_prod.metafields.custom.flipkart_link.value | default: ws_prod.metafields.custom.flipkart_link -%}
+                {%- if ws_flipkart_link == blank -%}
+                  {%- assign ws_flipkart_link = ws_prod.metafields.custom.flipkart_url.value | default: ws_prod.metafields.custom.flipkart_url -%}
+                {%- endif -%}
+                {%- if ws_flipkart_link == blank -%}
+                  {%- assign ws_flipkart_link = ws_prod.metafields.custom.flipkart.value | default: ws_prod.metafields.custom.flipkart -%}
+                {%- endif -%}
+                {%- if ws_flipkart_link == blank and ws_prod.tags != blank -%}
+                  {%- for tag in ws_prod.tags -%}
+                    {%- assign tag_lower = tag | downcase -%}
+                    {%- if tag_lower contains 'flipkart:' -%}
+                      {%- assign ws_flipkart_link = tag | remove_first: 'flipkart:' | strip -%}
+                      {%- break -%}
+                    {%- elsif tag_lower contains 'flipkart_link:' -%}
+                      {%- assign ws_flipkart_link = tag | remove_first: 'flipkart_link:' | strip -%}
+                      {%- break -%}
+                    {%- elsif tag_lower contains 'flipkart_url:' -%}
+                      {%- assign ws_flipkart_link = tag | remove_first: 'flipkart_url:' | strip -%}
+                      {%- break -%}
+                    {%- endif -%}
+                  {%- endfor -%}
+                {%- endif -%}
+                {%- if ws_flipkart_link != blank -%}
+                  {%- unless ws_flipkart_link contains 'http://' or ws_flipkart_link contains 'https://' -%}
+                    {%- assign ws_flipkart_link = 'https://' | append: ws_flipkart_link -%}
+                  {%- endunless -%}
+                {%- endif -%}
+
                 <div class="ws-product-header">
                   <img src="{{ block.settings.product.featured_image | image_url: width: 80 }}" alt="{{ block.settings.product.title }}" class="ws-product-thumb" loading="lazy">
                   <div class="ws-product-details">
@@ -105,13 +134,26 @@
                     </span>
                   </div>
                 </div>
-                {%- assign redirect_enabled = ws_prod.metafields.custom.enable_redirect.value -%}
-                {% if ws_amazon_link != blank %}
-                  <a href="{{ ws_amazon_link }}" target="_blank" rel="noopener noreferrer" class="ws-buy-btn">BUY ON AMAZON</a>
-                {% elsif ws_flipkart_link != blank and redirect_enabled == true or redirect_enabled == "true" or redirect_enabled == "True" and ws_flipkart_link != blank %}
-                  <a href="{{ ws_flipkart_link }}" target="_blank" rel="noopener noreferrer" class="ws-buy-btn">Buy Now</a>
+
+                {%- assign ws_redirect_val = ws_prod.metafields.custom.enable_redirect.value | default: ws_prod.metafields.custom.enable_redirect -%}
+                {%- assign ws_is_redirect_true = false -%}
+                {%- if ws_redirect_val == true or ws_redirect_val == 'true' or ws_redirect_val == 'True' or ws_redirect_val == 1 or ws_redirect_val == '1' -%}
+                  {%- assign ws_is_redirect_true = true -%}
+                {%- endif -%}
+
+                {% if ws_is_redirect_true %}
+                  {% if ws_amazon_link != blank %}
+                    <a href="{{ ws_amazon_link }}" target="_blank" rel="noopener noreferrer" class="ws-buy-btn">BUY ON AMAZON</a>
+                  {% elsif ws_flipkart_link != blank %}
+                    <a href="{{ ws_flipkart_link }}" target="_blank" rel="noopener noreferrer" class="ws-buy-btn">BUY ON FLIPKART</a>
+                  {% else %}
+                    <a href="{{ block.settings.product.url }}" class="ws-buy-btn">Buy Now</a>
+                  {% endif %}
                 {% else %}
                   <a href="{{ block.settings.product.url }}" class="ws-buy-btn">Buy Now</a>
+                  {%- if ws_amazon_link != blank or ws_flipkart_link != blank -%}
+                    {%- render 'marketplace-buttons', amazon_link: ws_amazon_link, flipkart_link: ws_flipkart_link, context: 'watch-shop' -%}
+                  {%- endif -%}
                 {% endif %}
 
               {% else %}

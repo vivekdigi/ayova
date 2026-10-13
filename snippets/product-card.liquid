@@ -51,6 +51,34 @@
       {%- assign card_amazon_link = 'https://' | append: card_amazon_link -%}
     {%- endunless -%}
   {%- endif -%}
+
+  {%- assign card_flipkart_link = product.metafields.custom.flipkart_link.value | default: product.metafields.custom.flipkart_link -%}
+  {%- if card_flipkart_link == blank -%}
+    {%- assign card_flipkart_link = product.metafields.custom.flipkart_url.value | default: product.metafields.custom.flipkart_url -%}
+  {%- endif -%}
+  {%- if card_flipkart_link == blank -%}
+    {%- assign card_flipkart_link = product.metafields.custom.flipkart.value | default: product.metafields.custom.flipkart -%}
+  {%- endif -%}
+  {%- if card_flipkart_link == blank and product.tags != blank -%}
+    {%- for tag in product.tags -%}
+      {%- assign tag_lower = tag | downcase -%}
+      {%- if tag_lower contains 'flipkart:' -%}
+        {%- assign card_flipkart_link = tag | remove_first: 'flipkart:' | strip -%}
+        {%- break -%}
+      {%- elsif tag_lower contains 'flipkart_link:' -%}
+        {%- assign card_flipkart_link = tag | remove_first: 'flipkart_link:' | strip -%}
+        {%- break -%}
+      {%- elsif tag_lower contains 'flipkart_url:' -%}
+        {%- assign card_flipkart_link = tag | remove_first: 'flipkart_url:' | strip -%}
+        {%- break -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+  {%- if card_flipkart_link != blank -%}
+    {%- unless card_flipkart_link contains 'http://' or card_flipkart_link contains 'https://' -%}
+      {%- assign card_flipkart_link = 'https://' | append: card_flipkart_link -%}
+    {%- endunless -%}
+  {%- endif -%}
 {% else %}
   {%- assign card_title = title | default: 'Product Name' -%}
   {%- assign card_url = url | default: '#' -%}
@@ -68,6 +96,12 @@
   {%- if card_amazon_link != blank -%}
     {%- unless card_amazon_link contains 'http://' or card_amazon_link contains 'https://' -%}
       {%- assign card_amazon_link = 'https://' | append: card_amazon_link -%}
+    {%- endunless -%}
+  {%- endif -%}
+  {%- assign card_flipkart_link = flipkart_link | default: flipkart_url -%}
+  {%- if card_flipkart_link != blank -%}
+    {%- unless card_flipkart_link contains 'http://' or card_flipkart_link contains 'https://' -%}
+      {%- assign card_flipkart_link = 'https://' | append: card_flipkart_link -%}
     {%- endunless -%}
   {%- endif -%}
 {% endif %}
@@ -171,21 +205,43 @@
       </div>
     {% endif %}
 
-    <!-- Add to Cart Button — Figma: #285044, border-radius 11px -->
-    {%- assign redirect_enabled = product.metafields.custom.enable_redirect.value -%}
-    {%- assign card_flipkart_link = product.metafields.custom.flipkart_link.value | default: product.metafields.custom.flipkart_link -%}
-    {% if card_amazon_link != blank %}
-      <a href="{{ card_amazon_link }}" target="_blank" rel="noopener noreferrer" class="btn-add-cart" style="text-decoration:none; display:flex; align-items:center; justify-content:center; text-align:center; box-sizing:border-box; width:100%; height:46px; padding:0 16px; line-height:1;"><span style="display:inline-flex; align-items:center; justify-content:center; line-height:1; transform:translateY(1px); letter-spacing:0.02em;">BUY ON AMAZON</span></a>
-    {% elsif card_flipkart_link != blank and redirect_enabled == true or redirect_enabled == "true" or redirect_enabled == "True" and card_flipkart_link != blank %}
-      <a href="{{ card_flipkart_link }}" target="_blank" rel="noopener noreferrer" class="btn-add-cart" style="text-decoration:none; display:flex; align-items:center; justify-content:center; text-align:center; box-sizing:border-box; width:100%; height:46px; padding:0 16px; line-height:1;"><span style="display:inline-flex; align-items:center; justify-content:center; line-height:1; transform:translateY(1px);">Add to Cart</span></a>
-    {% elsif product != blank %}
-      <form method="post" action="/cart/add" style="width:100%; margin-top:auto; display:flex; justify-content:center;" onsubmit="event.preventDefault(); var btn = this.querySelector('button'); if(btn.dataset.added === 'true') { window.location.href='/cart'; return; } btn.innerHTML = '<span>Adding...</span>'; btn.disabled = true; fetch('/cart/add.js', { method: 'POST', body: new FormData(this) }).then(res=>res.json()).then(data=>{ btn.innerHTML = '<span>View Cart</span>'; btn.disabled = false; btn.dataset.added = 'true'; }).catch(err => { btn.innerHTML = '<span>Add to Cart</span>'; btn.disabled = false; });">
-        <input type="hidden" name="id" value="{{ card_first_variant.id }}">
-        <input type="hidden" name="quantity" value="1">
-        <button type="submit" class="btn-add-cart" style="display:flex; align-items:center; justify-content:center; text-align:center; width:100%; height:46px; padding:0 16px; line-height:1;" {% unless card_available %}disabled{% endunless %}><span style="display:inline-flex; align-items:center; justify-content:center; line-height:1; transform:translateY(1px);">{% if card_available %}Add to Cart{% else %}Sold Out{% endif %}</span></button>
-      </form>
-    {% else %}
-      <button type="button" class="btn-add-cart" style="display:flex; align-items:center; justify-content:center; text-align:center; width:100%; height:46px; padding:0 16px; line-height:1;"><span style="display:inline-flex; align-items:center; justify-content:center; line-height:1; transform:translateY(1px);">Add to Cart</span></button>
-    {% endif %}
+    <!-- Add to Cart Button & Marketplace Row -->
+    {%- assign redirect_val = product.metafields.custom.enable_redirect.value | default: product.metafields.custom.enable_redirect -%}
+    {%- assign is_redirect_true = false -%}
+    {%- if redirect_val == true or redirect_val == 'true' or redirect_val == 'True' or redirect_val == 1 or redirect_val == '1' -%}
+      {%- assign is_redirect_true = true -%}
+    {%- endif -%}
+
+    <div class="card-action-wrapper">
+      {% if is_redirect_true %}
+        {% if card_amazon_link != blank %}
+          <a href="{{ card_amazon_link }}" target="_blank" rel="noopener noreferrer" class="btn-add-cart" style="text-decoration:none; display:flex; align-items:center; justify-content:center; text-align:center; box-sizing:border-box; width:100%; height:46px; padding:0 16px; line-height:1;"><span style="display:inline-flex; align-items:center; justify-content:center; line-height:1; transform:translateY(1px); letter-spacing:0.02em;">BUY ON AMAZON</span></a>
+        {% elsif card_flipkart_link != blank %}
+          <a href="{{ card_flipkart_link }}" target="_blank" rel="noopener noreferrer" class="btn-add-cart" style="text-decoration:none; display:flex; align-items:center; justify-content:center; text-align:center; box-sizing:border-box; width:100%; height:46px; padding:0 16px; line-height:1;"><span style="display:inline-flex; align-items:center; justify-content:center; line-height:1; transform:translateY(1px); letter-spacing:0.02em;">BUY ON FLIPKART</span></a>
+        {% elsif product != blank %}
+          <form method="post" action="/cart/add" style="width:100%; margin:0; display:flex; justify-content:center;" onsubmit="event.preventDefault(); var btn = this.querySelector('button'); if(btn.dataset.added === 'true') { window.location.href='/cart'; return; } btn.innerHTML = '<span>Adding...</span>'; btn.disabled = true; fetch('/cart/add.js', { method: 'POST', body: new FormData(this) }).then(res=>res.json()).then(data=>{ btn.innerHTML = '<span>View Cart</span>'; btn.disabled = false; btn.dataset.added = 'true'; }).catch(err => { btn.innerHTML = '<span>Add to Cart</span>'; btn.disabled = false; });">
+            <input type="hidden" name="id" value="{{ card_first_variant.id }}">
+            <input type="hidden" name="quantity" value="1">
+            <button type="submit" class="btn-add-cart" style="display:flex; align-items:center; justify-content:center; text-align:center; width:100%; height:46px; padding:0 16px; line-height:1;" {% unless card_available %}disabled{% endunless %}><span style="display:inline-flex; align-items:center; justify-content:center; line-height:1; transform:translateY(1px);">{% if card_available %}Add to Cart{% else %}Sold Out{% endif %}</span></button>
+          </form>
+        {% else %}
+          <button type="button" class="btn-add-cart" style="display:flex; align-items:center; justify-content:center; text-align:center; width:100%; height:46px; padding:0 16px; line-height:1;"><span style="display:inline-flex; align-items:center; justify-content:center; line-height:1; transform:translateY(1px);">Add to Cart</span></button>
+        {% endif %}
+      {% else %}
+        {% if product != blank %}
+          <form method="post" action="/cart/add" style="width:100%; margin:0; display:flex; justify-content:center;" onsubmit="event.preventDefault(); var btn = this.querySelector('button'); if(btn.dataset.added === 'true') { window.location.href='/cart'; return; } btn.innerHTML = '<span>Adding...</span>'; btn.disabled = true; fetch('/cart/add.js', { method: 'POST', body: new FormData(this) }).then(res=>res.json()).then(data=>{ btn.innerHTML = '<span>View Cart</span>'; btn.disabled = false; btn.dataset.added = 'true'; }).catch(err => { btn.innerHTML = '<span>Add to Cart</span>'; btn.disabled = false; });">
+            <input type="hidden" name="id" value="{{ card_first_variant.id }}">
+            <input type="hidden" name="quantity" value="1">
+            <button type="submit" class="btn-add-cart" style="display:flex; align-items:center; justify-content:center; text-align:center; width:100%; height:46px; padding:0 16px; line-height:1;" {% unless card_available %}disabled{% endunless %}><span style="display:inline-flex; align-items:center; justify-content:center; line-height:1; transform:translateY(1px);">{% if card_available %}Add to Cart{% else %}Sold Out{% endif %}</span></button>
+          </form>
+        {% else %}
+          <button type="button" class="btn-add-cart" style="display:flex; align-items:center; justify-content:center; text-align:center; width:100%; height:46px; padding:0 16px; line-height:1;"><span style="display:inline-flex; align-items:center; justify-content:center; line-height:1; transform:translateY(1px);">Add to Cart</span></button>
+        {% endif %}
+
+        {% if card_amazon_link != blank or card_flipkart_link != blank %}
+          {% render 'marketplace-buttons', amazon_link: card_amazon_link, flipkart_link: card_flipkart_link %}
+        {% endif %}
+      {% endif %}
+    </div>
   </div>
 </div>

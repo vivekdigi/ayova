@@ -1,0 +1,66 @@
+{% comment %}
+  Marketplace Logo Buttons Snippet (Amazon & Flipkart)
+  Usage:
+    {% render 'marketplace-buttons', amazon_link: card_amazon_link, flipkart_link: card_flipkart_link %}
+    {% render 'marketplace-buttons', amazon_link: amazon_link, flipkart_link: flipkart_link, context: 'product-page' %}
+{% endcomment %}
+
+{%- assign m_amazon = amazon_link -%}
+{%- assign m_flipkart = flipkart_link -%}
+
+{%- if m_amazon == blank and product != blank -%}
+  {%- assign m_amazon = product.metafields.custom.amazon_link.value | default: product.metafields.custom.amazon_link -%}
+  {%- if m_amazon == blank -%}
+    {%- assign m_amazon = product.metafields.custom.amazon_url.value | default: product.metafields.custom.amazon_url -%}
+  {%- endif -%}
+{%- endif -%}
+
+{%- if m_flipkart == blank and product != blank -%}
+  {%- assign m_flipkart = product.metafields.custom.flipkart_link.value | default: product.metafields.custom.flipkart_link -%}
+  {%- if m_flipkart == blank -%}
+    {%- assign m_flipkart = product.metafields.custom.flipkart_url.value | default: product.metafields.custom.flipkart_url -%}
+  {%- endif -%}
+{%- endif -%}
+
+{%- if m_amazon != blank -%}
+  {%- unless m_amazon contains 'http://' or m_amazon contains 'https://' -%}
+    {%- assign m_amazon = 'https://' | append: m_amazon -%}
+  {%- endunless -%}
+{%- endif -%}
+
+{%- if m_flipkart != blank -%}
+  {%- unless m_flipkart contains 'http://' or m_flipkart contains 'https://' -%}
+    {%- assign m_flipkart = 'https://' | append: m_flipkart -%}
+  {%- endunless -%}
+{%- endif -%}
+
+{%- if m_amazon != blank or m_flipkart != blank -%}
+  {%- assign mkt_label = label_text | default: settings.marketplace_buy_label | default: 'Buy now' -%}
+  {%- assign mkt_amazon_logo = settings.amazon_logo -%}
+  {%- assign mkt_flipkart_logo = settings.flipkart_logo -%}
+
+  <div class="ayova-marketplace-bar{% if context == 'product-page' %} ayova-marketplace-bar--pdp{% elsif context == 'watch-shop' %} ayova-marketplace-bar--ws{% endif %}">
+    <span class="ayova-marketplace-label">{{ mkt_label }}</span>
+    <div class="ayova-marketplace-links">
+      {%- if m_amazon != blank -%}
+        <a href="{{ m_amazon }}" target="_blank" rel="noopener noreferrer" class="ayova-marketplace-btn ayova-mkt-amazon" title="Buy on Amazon" aria-label="Buy on Amazon">
+          {%- if mkt_amazon_logo != blank -%}
+            <img src="{{ mkt_amazon_logo | image_url: height: 40 }}" alt="Amazon" class="ayova-mkt-logo" width="75" height="18" loading="lazy">
+          {%- else -%}
+            <img src="{{ 'amazon.svg' | asset_url }}" alt="Amazon" class="ayova-mkt-logo" width="75" height="18" loading="lazy">
+          {%- endif -%}
+        </a>
+      {%- endif -%}
+
+      {%- if m_flipkart != blank -%}
+        <a href="{{ m_flipkart }}" target="_blank" rel="noopener noreferrer" class="ayova-marketplace-btn ayova-mkt-flipkart" title="Buy on Flipkart" aria-label="Buy on Flipkart">
+          {%- if mkt_flipkart_logo != blank -%}
+            <img src="{{ mkt_flipkart_logo | image_url: height: 40 }}" alt="Flipkart" class="ayova-mkt-logo" width="75" height="18" loading="lazy">
+          {%- else -%}
+            <img src="{{ 'flipkart_wvl.svg' | asset_url }}" alt="Flipkart" class="ayova-mkt-logo" width="75" height="18" loading="lazy">
+          {%- endif -%}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+{%- endif -%}

@@ -306,7 +306,13 @@
             {%- endunless -%}
           {%- endif -%}
 
-          {% if flipkart_link != blank or amazon_link != blank %}
+          {%- assign redirect_val = product.metafields.custom.enable_redirect.value | default: product.metafields.custom.enable_redirect -%}
+          {%- assign is_redirect_true = false -%}
+          {%- if redirect_val == true or redirect_val == 'true' or redirect_val == 'True' or redirect_val == 1 or redirect_val == '1' -%}
+            {%- assign is_redirect_true = true -%}
+          {%- endif -%}
+
+          {% if is_redirect_true and (flipkart_link != blank or amazon_link != blank) %}
             <div class="purchase-actions-row redirect-row">
               {% if flipkart_link != blank %}
                 <a href="{{ flipkart_link }}" target="_blank" rel="noopener noreferrer" class="btn-buy-now flipkart-btn">
@@ -335,6 +341,10 @@
                 BUY NOW
               </button>
             </div>
+
+            {%- if amazon_link != blank or flipkart_link != blank -%}
+              {% render 'marketplace-buttons', amazon_link: amazon_link, flipkart_link: flipkart_link, context: 'product-page' %}
+            {%- endif -%}
           {% endif %}
           
           <div class="shipping-notice">
@@ -1846,7 +1856,7 @@
 <!-- Sticky Purchase Action Bar -->
 <div class="mobile-sticky-action-bar" id="mobileStickyActionBar">
   <div class="mobile-sticky-inner">
-    {% if flipkart_link != blank or amazon_link != blank %}
+    {% if is_redirect_true and (flipkart_link != blank or amazon_link != blank) %}
       {% if flipkart_link != blank %}
         <a href="{{ flipkart_link }}" target="_blank" rel="noopener noreferrer" class="btn-sticky-action flipkart-sticky">
           BUY ON FLIPKART
