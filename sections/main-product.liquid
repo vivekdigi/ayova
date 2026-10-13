@@ -312,7 +312,12 @@
             {%- assign is_redirect_true = true -%}
           {%- endif -%}
 
-          {% if is_redirect_true and (flipkart_link != blank or amazon_link != blank) %}
+          {%- assign has_redirect_link = false -%}
+          {%- if flipkart_link != blank or amazon_link != blank -%}
+            {%- assign has_redirect_link = true -%}
+          {%- endif -%}
+
+          {% if is_redirect_true and has_redirect_link %}
             <div class="purchase-actions-row redirect-row">
               {% if flipkart_link != blank %}
                 <a href="{{ flipkart_link }}" target="_blank" rel="noopener noreferrer" class="btn-buy-now flipkart-btn">
@@ -1856,7 +1861,7 @@
 <!-- Sticky Purchase Action Bar -->
 <div class="mobile-sticky-action-bar" id="mobileStickyActionBar">
   <div class="mobile-sticky-inner">
-    {% if is_redirect_true and (flipkart_link != blank or amazon_link != blank) %}
+    {% if is_redirect_true and has_redirect_link %}
       {% if flipkart_link != blank %}
         <a href="{{ flipkart_link }}" target="_blank" rel="noopener noreferrer" class="btn-sticky-action flipkart-sticky">
           BUY ON FLIPKART
