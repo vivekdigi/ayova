@@ -1529,6 +1529,11 @@
   .purchase-actions-row {
     display: none !important;
   }
+  .btn-add-cart-new,
+  .btn-buy-now {
+    height: 40px;
+    font-size: 0.85rem;
+  }
   .shipping-notice {
     order: 3;
     margin-top: 6px;
@@ -1563,7 +1568,7 @@
   }
 
   body {
-    padding-bottom: 64px;
+    padding-bottom: 95px;
   }
 }
 
@@ -1578,7 +1583,7 @@
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-top: 1px solid #E2E6DF;
-  padding: 10px 16px;
+  padding: 8px 14px 10px;
   padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
   z-index: 999;
   box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08);
@@ -1586,7 +1591,7 @@
 
 .mobile-sticky-inner {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   align-items: center;
   justify-content: center;
   max-width: 500px;
@@ -1596,19 +1601,19 @@
 
 .btn-sticky-action {
   flex: 1;
-  height: 44px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  border-radius: 30px;
-  font-size: 0.82rem;
+  border-radius: 22px;
+  font-size: 0.76rem;
   font-weight: 700;
   text-decoration: none;
   border: none;
   cursor: pointer;
   box-sizing: border-box;
-  padding: 0 12px;
+  padding: 0 10px;
   letter-spacing: 0.02em;
   transition: opacity 0.2s, transform 0.15s, background-color 0.2s;
 }
@@ -1675,6 +1680,7 @@
     height: 48px;
     font-size: 0.88rem;
     padding: 0 16px;
+    border-radius: 30px;
   }
 
   .btn-sticky-action:hover {
@@ -1699,7 +1705,7 @@
   <style>
     .floating-product-video {
       position: fixed;
-      bottom: 20px;
+      bottom: 85px;
       left: 20px;
       width: 110px;
       border-radius: 10px;
@@ -1778,7 +1784,7 @@
     }
     @media (max-width: 768px) {
       .floating-product-video {
-        bottom: 75px;
+        bottom: calc(115px + env(safe-area-inset-bottom, 0px));
         left: 14px;
         width: 65px;
         height: 65px;
@@ -1881,6 +1887,14 @@
       </button>
     {% endif %}
   </div>
+
+  {% unless is_redirect_true and has_redirect_link %}
+    {%- if amazon_link != blank or flipkart_link != blank -%}
+      <div class="mobile-sticky-marketplace">
+        {% render 'marketplace-buttons', amazon_link: amazon_link, flipkart_link: flipkart_link, context: 'sticky-bar' %}
+      </div>
+    {%- endif -%}
+  {% endunless %}
 </div>
 
 <script>

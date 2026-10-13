@@ -1177,7 +1177,7 @@ h6 {
 /* Card Image — Figma: 278x360px area, bg #EEF3EF, border-radius 22px */
 .card-image-wrapper {
   position: relative;
-  margin: 16px;
+  margin: 5px;
   height: 360px;
   background: var(--color-bg-sage);
   border-radius: var(--radius-xl);
@@ -1246,7 +1246,7 @@ h6 {
   padding: 14px 18px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
   flex-grow: 1;
 }
 
@@ -3953,10 +3953,11 @@ h6 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 8px;
+  padding-top: 0px;
 }
 
 .ayova-marketplace-bar {
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3971,7 +3972,7 @@ h6 {
   font-family: var(--font-accent, 'Inter', sans-serif);
   font-size: 12px;
   font-weight: 600;
-  color: #55625B;
+  color: #285044;
   white-space: nowrap;
   letter-spacing: 0.01em;
 }
@@ -4000,20 +4001,12 @@ h6 {
 .ayova-marketplace-btn:hover {
   transform: translateY(-1px);
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
-}
-
-.ayova-marketplace-btn.ayova-mkt-amazon:hover {
-  border-color: #FF9900;
-  background: #FFFDF8;
-}
-
-.ayova-marketplace-btn.ayova-mkt-flipkart:hover {
-  border-color: #2874F0;
-  background: #F8FBFF;
+  border-color: #D6DED9;
+  background: #FFFFFF;
 }
 
 .ayova-mkt-logo {
-  height: 16px;
+  height: 20px;
   width: auto;
   max-width: 72px;
   object-fit: contain;
@@ -4049,20 +4042,162 @@ h6 {
 
 /* Watch and Shop variant */
 .ayova-marketplace-bar--ws {
-  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 6px;
+  width: 100%;
+  margin-top: 6px;
+  padding: 2px 0 0;
+  box-sizing: border-box;
 }
 
 .ayova-marketplace-bar--ws .ayova-marketplace-label {
   font-size: 11px;
+  font-weight: 600;
+  color: #285044;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.ayova-marketplace-bar--ws .ayova-marketplace-links {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
 }
 
 .ayova-marketplace-bar--ws .ayova-marketplace-btn {
   height: 28px;
   padding: 3px 8px;
+  flex-shrink: 0;
 }
 
 .ayova-marketplace-bar--ws .ayova-mkt-logo {
   height: 14px;
+  width: auto;
   max-width: 58px;
+  object-fit: contain;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .ayova-marketplace-bar--ws {
+    gap: 5px;
+    margin-top: 2px;
+  }
+
+  .ayova-marketplace-bar--ws .ayova-marketplace-label {
+    font-size: 10.5px;
+  }
+
+  .ayova-marketplace-bar--ws .ayova-marketplace-links {
+    gap: 5px;
+  }
+
+  .ayova-marketplace-bar--ws .ayova-marketplace-btn {
+    height: 25px;
+    padding: 2px 7px;
+    border-radius: 6px;
+  }
+
+  .ayova-marketplace-bar--ws .ayova-mkt-logo {
+    height: 12px;
+    max-width: 48px;
+  }
+}
+
+/* Sticky Action Bar Marketplace Variant (Mobile PDP) */
+.mobile-sticky-marketplace {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 7px;
+}
+
+.ayova-marketplace-bar--sticky {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.ayova-marketplace-bar--sticky .ayova-marketplace-label {
+  font-family: var(--font-accent, 'Inter', sans-serif);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #285044;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.ayova-marketplace-bar--sticky .ayova-marketplace-links {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.ayova-marketplace-bar--sticky .ayova-marketplace-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 34px;
+  padding: 4px 14px;
+  background: #FFFFFF;
+  border: 1.5px solid #D6DED9;
+  border-radius: 8px;
+  text-decoration: none;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  flex-shrink: 0;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.ayova-marketplace-bar--sticky .ayova-mkt-logo {
+  height: 18px;
+  width: auto;
+  max-width: 72px;
+  object-fit: contain;
+  display: block;
+}
+
+/* Hide sticky marketplace bar on desktop */
+@media (min-width: 769px) {
+  .mobile-sticky-marketplace {
+    display: none !important;
+  }
+}
+
+/* On mobile, hide the original in-page PDP marketplace bar */
+@media (max-width: 768px) {
+  .ayova-marketplace-bar--pdp {
+    display: none !important;
+  }
+}
+
+/* AI Title Section Mobile Spacing */
+@media screen and (max-width: 749px) {
+
+  [class*="ai-title-section"][class*="__title"],
+  .ai-title-section-arxhgvlozujvodhr1zaigenblockf384f50yrjjhk__title {
+    margin-top: 20px !important;
+    margin-bottom: 20px !important;
+  }
+}
+
+/* PDP Floating Video Bottom Clearance */
+.floating-product-video {
+  bottom: 85px;
+}
+
+@media (max-width: 768px) {
+  .floating-product-video {
+    bottom: calc(115px + env(safe-area-inset-bottom, 0px)) !important;
+  }
 }

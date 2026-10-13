@@ -39,7 +39,7 @@
   {%- assign mkt_amazon_logo = settings.amazon_logo -%}
   {%- assign mkt_flipkart_logo = settings.flipkart_logo -%}
 
-  <div class="ayova-marketplace-bar{% if context == 'product-page' %} ayova-marketplace-bar--pdp{% elsif context == 'watch-shop' %} ayova-marketplace-bar--ws{% endif %}">
+  <div class="ayova-marketplace-bar{% if context == 'product-page' %} ayova-marketplace-bar--pdp{% elsif context == 'watch-shop' %} ayova-marketplace-bar--ws{% elsif context == 'sticky-bar' %} ayova-marketplace-bar--sticky{% endif %}">
     <span class="ayova-marketplace-label">{{ mkt_label }}</span>
     <div class="ayova-marketplace-links">
       {%- if m_amazon != blank -%}
