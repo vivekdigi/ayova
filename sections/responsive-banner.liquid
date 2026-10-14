@@ -51,25 +51,33 @@
     Supports: custom.product_banner, custom.product_banners, custom.desktop_banners, custom.banners
   endcomment
   if total_slides == 0 and is_product_page
-    assign file_list = nil
-    if product.metafields.custom.product_banner.value.first != blank
-      assign file_list = product.metafields.custom.product_banner.value
-    elsif product.metafields.custom.product_banners.value.first != blank
-      assign file_list = product.metafields.custom.product_banners.value
-    elsif product.metafields.custom.desktop_banners.value.first != blank
-      assign file_list = product.metafields.custom.desktop_banners.value
-    elsif product.metafields.custom.desktop_banner.value.first != blank
-      assign file_list = product.metafields.custom.desktop_banner.value
-    elsif product.metafields.custom.banners.value.first != blank
-      assign file_list = product.metafields.custom.banners.value
-    elsif product.metafields.custom.banner.value.first != blank
-      assign file_list = product.metafields.custom.banner.value
-    elsif product.metafields.custom.banner_images.value.first != blank
-      assign file_list = product.metafields.custom.banner_images.value
+    assign potential_list = product.metafields.custom.product_banner.value
+    if potential_list == blank
+      assign potential_list = product.metafields.custom.product_banners.value
+    endif
+    if potential_list == blank
+      assign potential_list = product.metafields.custom.desktop_banners.value
+    endif
+    if potential_list == blank
+      assign potential_list = product.metafields.custom.desktop_banner.value
+    endif
+    if potential_list == blank
+      assign potential_list = product.metafields.custom.banners.value
+    endif
+    if potential_list == blank
+      assign potential_list = product.metafields.custom.banner.value
     endif
 
-    if file_list != blank and file_list.size > 0
-      assign total_slides = file_list.size
+    assign list_item_count = 0
+    if potential_list != blank
+      for test_item in potential_list
+        assign list_item_count = list_item_count | plus: 1
+      endfor
+    endif
+
+    if list_item_count > 0
+      assign total_slides = list_item_count
+      assign file_list = potential_list
       assign slide_source = 'meta_list'
     endif
   endif
