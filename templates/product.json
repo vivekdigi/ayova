@@ -71,6 +71,13 @@
         "tab_4"
       ],
       "settings": {
+        "show_description": false,
+        "show_why_love_it": false,
+        "show_gallery_pills": false,
+        "show_product_tabs": false,
+        "show_promos": true,
+        "show_info_grid": true,
+        "show_trust_badges": true,
         "promo_1_text": "Get a Free Wellness Sipper worth Rs. 300 if your cart has 'Ayova Milk Thistle' and your cart value is \u20b9999 or above",
         "promo_2_text": "Get a FREE Ayova Herbal Tea (worth \u20b9499) on orders of \u20b91495 or more!",
         "shipping_text": "Free shipping above \u20b9499 - COD available",

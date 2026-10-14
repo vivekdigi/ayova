@@ -28,7 +28,7 @@
             
             <div class="thumbs-list">
               {% for image in product.images %}
-                <img src="{{ image | image_url: width: 200 }}" alt="{{ product.title | escape }}" class="thumb {% if forloop.first %}active{% endif %}" onclick="document.getElementById('mainProductImg').src=this.dataset.full; document.querySelectorAll('.thumbs-list .thumb').forEach(t=>t.classList.remove('active')); this.classList.add('active');" data-full="{{ image | image_url: width: 800 }}">
+                <img src="{{ image | image_url: width: 200 }}" alt="{{ product.title | escape }}" class="thumb {% if forloop.first %}active{% endif %}" onclick="document.getElementById('mainProductImg').src=this.dataset.full; document.querySelectorAll('.thumbs-list .thumb').forEach(t=>t.classList.remove('active')); this.classList.add('active');" data-full="{{ image | image_url: width: 800 }}" data-id="{{ image.id }}">
               {% endfor %}
             </div>
 
@@ -62,6 +62,7 @@
         </div>
 
         <!-- Image Navigation Pills -->
+        {% if section.settings.show_gallery_pills %}
         <div class="gallery-pills-wrapper">
           <div class="gallery-pills">
             {% assign pill_count = 0 %}
@@ -110,6 +111,7 @@
             });
           }
         </script>
+      {% endif %}
       </div>
 
       <!-- Right Column: Product Details & Purchase Form -->
@@ -153,11 +155,12 @@
           <div class="gst-label-new">Inclusive of all taxes</div>
         </div>
 
-        {% if product.description != blank %}
+        {% if section.settings.show_description and product.description != blank %}
           <div class="product-subtitle">{{ product.description | strip_html | truncatewords: 35 }}</div>
         {% endif %}
 
         <!-- Feature List -->
+        {% if section.settings.show_why_love_it %}
         <div class="why-love-it">
           <h4>Why you'll love it</h4>
           <ul class="feature-list">
@@ -179,21 +182,69 @@
             </li>
           </ul>
         </div>
+        {% endif %}
 
         <!-- Add to Cart Form -->
         <form action="/cart/add" method="post" enctype="multipart/form-data" class="product-form" data-product-form onsubmit="event.preventDefault(); var btn = event.submitter || this.querySelector('button[type=submit]'); if(btn.dataset.added === 'true') { window.location.href='/cart'; return; } btn.innerHTML = 'Adding...'; btn.disabled = true; fetch('/cart/add.js', { method: 'POST', body: new FormData(this) }).then(res=>res.json()).then(data=>{ btn.innerHTML = 'View Cart'; btn.disabled = false; btn.dataset.added = 'true'; }).catch(err => { btn.innerHTML = 'Error'; btn.disabled = false; });">
           <!-- Choose Pack / Variants -->
           <div class="variant-picker-new">
-            <h4 class="variant-label-new">SELECT SIZE</h4>
+            <h4 class="variant-label-new">Select a Pack</h4>
             
-            <div class="variant-options-grid pill-style">
+            <div class="variant-options-grid variant-cards-grid">
               {% if product.has_only_default_variant %}
                 <input type="hidden" name="id" value="{{ product.variants.first.id }}">
               {% else %}
                 {% for variant in product.variants %}
-                  <label class="variant-box pill-box {% if forloop.first %}active{% endif %}">
-                    <input type="radio" name="id" value="{{ variant.id }}" {% if forloop.first %}checked{% endif %} class="hidden-radio" data-price="{{ variant.price }}" data-compare="{{ variant.compare_at_price }}">
-                    <span class="box-title">{{ variant.title }}</span>
+                  {% assign is_bestseller = false %}
+                  {% if variant.title contains 'Pack of 2' or variant.title contains '2' and product.variants.size > 1 and forloop.index == 2 %}
+                    {% assign is_bestseller = true %}
+                  {% elsif forloop.index == 2 and product.variants.size > 1 %}
+                    {% assign is_bestseller = true %}
+                  {% endif %}
+                  {% assign var_image = variant.featured_image | default: variant.image %}
+
+                  <label class="variant-box variant-pack-card {% if forloop.first %}active{% endif %}" data-variant-id="{{ variant.id }}">
+                    <input type="radio" 
+                      name="id" 
+                      value="{{ variant.id }}" 
+                      {% if forloop.first %}checked{% endif %} 
+                      class="hidden-radio" 
+                      data-price="{{ variant.price }}" 
+                      data-compare="{{ variant.compare_at_price }}"
+                      {% if var_image != blank %}
+                        data-image="{{ var_image | image_url: width: 800 }}"
+                        data-image-id="{{ var_image.id }}"
+                      {% endif %}
+                    >
+
+                    <!-- Top Row: Subhead / Bestseller Badge + Radio Circle -->
+                    <div class="pack-card-header">
+                      {% if is_bestseller %}
+                        <span class="pack-badge-bestseller">BEST SELLER</span>
+                      {% else %}
+                        <span class="pack-subhead">{{ variant.title | upcase }}</span>
+                      {% endif %}
+                      <span class="pack-radio-circle"></span>
+                    </div>
+
+                    <div class="pack-card-divider"></div>
+
+                    <!-- Middle: Title -->
+                    <div class="pack-card-title">{{ variant.title }}</div>
+
+                    <!-- Price Row -->
+                    <div class="pack-card-prices">
+                      <span class="pack-price">{{ variant.price | money }}</span>
+                      {% if variant.compare_at_price > variant.price %}
+                        <span class="pack-compare-price">{{ variant.compare_at_price | money }}</span>
+                      {% endif %}
+                    </div>
+
+                    <!-- Bottom: Savings Pill -->
+                    {% if variant.compare_at_price > variant.price %}
+                      {% assign save_diff = variant.compare_at_price | minus: variant.price %}
+                      <div class="pack-savings-pill">Save {{ save_diff | money }}</div>
+                    {% endif %}
                   </label>
                 {% endfor %}
               {% endif %}
@@ -201,6 +252,7 @@
           </div>
 
           <!-- Promo Banners -->
+          {% if section.settings.show_promos %}
           <div class="product-promos">
             <div class="promo-box">
               🎁 {{ section.settings.promo_1_text | default: "Get a Free Wellness Sipper worth Rs. 300 if your cart has 'Ayova Milk Thistle' and your cart value is ₹999 or above" }} 🎁
@@ -209,8 +261,10 @@
               🎁 {{ section.settings.promo_2_text | default: "Get a FREE Ayova Herbal Tea (worth ₹499) on orders of ₹1495 or more!" }} 🎁
             </div>
           </div>
+          {% endif %}
 
           <!-- Product Info Grid -->
+          {% if section.settings.show_info_grid %}
           <div class="product-info-grid">
             <div class="info-item">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="4"></circle><line x1="4.93" y1="4.93" x2="9.17" y2="9.17"></line></svg>
@@ -225,8 +279,10 @@
               <p>{{ section.settings.feature_3_text | default: "Scientifically backed botanicals to help you achieve your health goals naturally" }}</p>
             </div>
           </div>
+          {% endif %}
 
           <!-- Trust Badges Block -->
+          {% if section.settings.show_trust_badges %}
           <div class="product-trust-block">
             <div class="trust-feat">
               <div class="tf-icon" style="background-color: #c94c66;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg></div>
@@ -245,6 +301,7 @@
               <span>{{ section.settings.trust_4_text }}</span>
             </div>
           </div>
+          {% endif %}
 
           <!-- Quantity and Buttons -->
           {%- assign amazon_link = product.metafields.custom.amazon_link.value | default: product.metafields.custom.amazon_link -%}
@@ -371,6 +428,7 @@
     </div>
 
     <!-- Product Details Tabs Section -->
+    {% if section.settings.show_product_tabs %}
     <div class="product-tabs-section">
       <div class="tabs-header-text">
         <h5 class="tabs-eyebrow">PRODUCT DETAILS</h5>
@@ -464,18 +522,24 @@
         </div>
       </div>
     </div>
+    {% endif %}
 
   </div>
 </div>
 
 <script>
-  // Simple variant box selector logic
+  // Variant pack card selector and image switcher
   document.querySelectorAll('.variant-box').forEach(box => {
-    box.addEventListener('click', function() {
+    box.addEventListener('click', function(e) {
       document.querySelectorAll('.variant-box').forEach(b => b.classList.remove('active'));
       this.classList.add('active');
       
-      const input = this.querySelector('input');
+      const input = this.querySelector('input[type="radio"]');
+      if (input) {
+        input.checked = true;
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+
       const priceElement = document.querySelector('.price-large-new');
       const compareElement = document.querySelector('.price-compare-new');
       const mrpWrap = document.querySelector('.price-mrp-wrap');
@@ -509,6 +573,25 @@
           if(mrpWrap) mrpWrap.style.display = 'none';
           if(discountElement) discountElement.style.display = 'none';
         }
+      }
+
+      // Switch variant image on PDP when variant has an image
+      if (input && input.dataset.image) {
+        const mainImg = document.getElementById('mainProductImg');
+        if (mainImg) {
+          mainImg.src = input.dataset.image;
+        }
+
+        const imageId = input.dataset.imageId;
+        const thumbs = document.querySelectorAll('.thumbs-list .thumb');
+        thumbs.forEach(thumb => {
+          const thumbMatch = (imageId && thumb.dataset.id === imageId) ||
+                             (thumb.dataset.full && thumb.dataset.full.includes(input.dataset.image.split('?')[0].split('/').pop()));
+          if (thumbMatch) {
+            thumbs.forEach(t => t.classList.remove('active'));
+            thumb.classList.add('active');
+          }
+        });
       }
     });
   });
@@ -838,49 +921,177 @@
   margin-bottom: 12px;
 }
 
-/* Variant Options */
+/* Variant Options — Design Type 1 (Select a Pack Cards) */
 .variant-picker-new {
   margin-bottom: 24px;
 }
 
 .variant-label-new {
-  font-size: 1.1rem;
-  color: var(--color-forest-dark);
-  margin-bottom: 12px;
+  font-family: var(--font-heading, 'Montserrat', sans-serif);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 14px;
+  text-transform: none;
+  letter-spacing: normal;
 }
 
-.variant-options-grid {
+.variant-cards-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
 }
 
-.variant-box {
-  border: 1px solid var(--color-sage-border);
+@media (max-width: 600px) {
+  .variant-cards-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+}
+
+.variant-pack-card {
+  position: relative;
+  background: #FFFFFF;
+  border: 1.5px solid #E5E7EB;
   border-radius: 12px;
-  padding: 16px 12px;
-  text-align: center;
+  padding: 12px 10px 14px;
   cursor: pointer;
-  background: #fff;
-  transition: all 0.2s;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  text-align: left;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  box-sizing: border-box;
+}
+
+.variant-pack-card:hover {
+  border-color: #9CA3AF;
+  transform: translateY(-1px);
+}
+
+.variant-pack-card.active {
+  background: #F9FAFB;
+  border-color: #0F3B4C !important;
+  box-shadow: 0 0 0 1px #0F3B4C, 0 2px 8px rgba(15, 59, 76, 0.12);
+}
+
+/* Card Header: Subhead / Badge + Radio */
+.pack-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 22px;
+  gap: 6px;
+}
+
+.pack-subhead {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #4B5563;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pack-badge-bestseller {
+  background: #003B64;
+  color: #FFFFFF;
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+/* Radio Circle */
+.pack-radio-circle {
+  width: 17px;
+  height: 17px;
+  min-width: 17px;
+  border: 1.5px solid #9CA3AF;
+  border-radius: 50%;
+  position: relative;
+  transition: all 0.2s ease;
+  background: #FFFFFF;
+  box-sizing: border-box;
+}
+
+.variant-pack-card.active .pack-radio-circle {
+  border-color: #0F3B4C;
+  background: #FFFFFF;
+}
+
+.variant-pack-card.active .pack-radio-circle::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #0F3B4C;
+}
+
+/* Divider Line */
+.pack-card-divider {
+  height: 1px;
+  background: #E5E7EB;
+  margin: 8px 0 10px;
+  width: 100%;
+}
+
+/* Card Title */
+.pack-card-title {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #1F2937;
+  line-height: 1.25;
+  margin-bottom: 6px;
+}
+
+/* Prices */
+.pack-card-prices {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 8px;
+}
+
+.pack-price {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.pack-compare-price {
+  font-size: 12px;
+  color: #9CA3AF;
+  text-decoration: line-through;
+}
+
+/* Savings Pill */
+.pack-savings-pill {
+  background: #EBF3FC;
+  color: #1D4ED8;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 7px;
+  border-radius: 4px;
+  display: inline-block;
+  align-self: flex-start;
+  margin-top: auto;
+  white-space: nowrap;
 }
 
 .hidden-radio {
   display: none;
-}
-
-.variant-box.active {
-  border-color: var(--color-forest-primary);
-  background: var(--color-sage-bg);
-}
-
-.box-title {
-  font-size: 0.95rem;
-  color: var(--color-forest-dark);
-  font-weight: 600;
 }
 
 .box-price {
@@ -1250,32 +1461,6 @@
     width: 100%;
     padding: 16px;
   }
-}
-.variant-label-new {
-  font-size: 1rem;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  margin-bottom: 15px;
-  font-weight: 700;
-  color: #000;
-}
-.pill-style {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-.pill-box {
-  background: #f1f4f6;
-  border: 1px solid #dcdcdc !important;
-  border-radius: 20px !important;
-  padding: 8px 16px !important;
-  min-width: auto !important;
-  text-align: center;
-}
-.pill-box.active {
-  background: #fff;
-  border-color: #f7ca2e !important;
-  box-shadow: inset 0 0 0 1px #f7ca2e;
 }
 
 .product-promos {
@@ -1874,6 +2059,63 @@
 {
   "name": "Main Product",
   "settings": [
+    {
+      "type": "header",
+      "content": "Section Visibility Toggles"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Show Product Description (short text under price)",
+      "default": false,
+      "info": "Displays the truncated product description below the price block."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_why_love_it",
+      "label": "Show 'Why you'll love it' Features List",
+      "default": false,
+      "info": "Shows the bullet points below the price."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_gallery_pills",
+      "label": "Show Gallery Pills (Front View, Label Detail, etc.)",
+      "default": false,
+      "info": "Shows the image navigation pill tabs and their descriptions below the product gallery."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_product_tabs",
+      "label": "Show Product Details Tabs (Overview, Benefits, Ingredients, How to Use)",
+      "default": false,
+      "info": "Shows the tabbed product details section below the purchase area."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_promos",
+      "label": "Show Promo Banners",
+      "default": true,
+      "info": "Shows the promotional offer banners (Free Sipper, Free Herbal Tea, etc.)."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_info_grid",
+      "label": "Show Product Info Grid (3 feature icons)",
+      "default": true,
+      "info": "Shows the 3-column feature icons with text."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_trust_badges",
+      "label": "Show Trust Badges (Free Delivery, Secure Payment, etc.)",
+      "default": true,
+      "info": "Shows the trust badge icons row."
+    },
+    {
+      "type": "header",
+      "content": "Promo \u0026 Feature Text"
+    },
     {
       "type": "text",
       "id": "promo_1_text",
