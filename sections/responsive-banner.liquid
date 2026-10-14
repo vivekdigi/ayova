@@ -232,9 +232,20 @@
 <section id="banner-{{ section.id }}" class="ayova-banner-section {% if section.settings.full_width %}ayova-banner-section--full{% else %}container{% endif %}" style="--p-top: {{ section.settings.padding_top }}px; --p-bottom: {{ section.settings.padding_bottom }}px; --m-top: {{ section.settings.margin_top }}px; --m-bottom: {{ section.settings.margin_bottom }}px;">
   <div class="ayova-banner-box {% if section.settings.border_radius > 0 %}ayova-banner-box--rounded{% endif %}" style="--border-rad: {{ section.settings.border_radius }}px;">
 
-    <div class="ayova-banner-slider-container" data-autoplay="{{ section.settings.slider_autoplay }}" data-speed="{{ section.settings.slider_speed | default: 5 | times: 1000 }}" data-total-slides="{{ total_slides }}">
+    {% assign is_slider = false %}
+    {% if section.settings.layout_mode == 'slider' %}
+      {% assign is_slider = true %}
+    {% endif %}
+
+    <div class="{% if is_slider %}ayova-banner-slider-container{% else %}ayova-banner-stack-container{% endif %}" 
+         style="--stack-gap: {{ section.settings.stack_gap | default: 16 }}px;"
+         {% if is_slider %}
+           data-autoplay="{{ section.settings.slider_autoplay }}" 
+           data-speed="{{ section.settings.slider_speed | default: 5 | times: 1000 }}" 
+           data-total-slides="{{ total_slides }}"
+         {% endif %}>
       
-      <div class="ayova-banner-track">
+      <div class="{% if is_slider %}ayova-banner-track{% else %}ayova-banner-stack{% endif %}">
 
         {% comment %} CASE 1: PRODUCT BLOCKS {% endcomment %}
         {% if slide_source == 'product_blocks' %}
@@ -431,8 +442,8 @@
 
       </div>
 
-      {% comment %} Slider Controls (when multiple slides exist) {% endcomment %}
-      {% if total_slides > 1 %}
+      {% comment %} Slider Controls (when in slider mode and multiple slides exist) {% endcomment %}
+      {% if is_slider and total_slides > 1 %}
         {% if section.settings.slider_show_arrows %}
           <button type="button" class="ayova-slider-btn ayova-slider-prev" aria-label="Previous banner">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
@@ -482,6 +493,40 @@
     border-radius: var(--border-rad, 16px);
   }
 
+  /* Vertical Stack Layout (One below another with gap) */
+  .ayova-banner-stack-container {
+    position: relative;
+    width: 100%;
+  }
+
+  .ayova-banner-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--stack-gap, 16px);
+    width: 100%;
+  }
+
+  .ayova-banner-stack .ayova-banner-slide {
+    width: 100%;
+    max-width: 100%;
+    flex: none;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ayova-banner-stack .ayova-banner-media-container {
+    width: 100%;
+    position: relative;
+  }
+
+  .ayova-banner-stack .ayova-banner-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+  }
+
+  /* Slider Container & Track */
   .ayova-banner-slider-container {
     position: relative;
     width: 100%;
@@ -495,7 +540,7 @@
     will-change: transform;
   }
 
-  .ayova-banner-slide {
+  .ayova-banner-slider-container .ayova-banner-slide {
     flex: 0 0 100%;
     width: 100%;
     max-width: 100%;
@@ -984,6 +1029,31 @@
       "label": "Hide if no product banner assigned",
       "default": false,
       "info": "On product pages, only show if this product has its own custom banners."
+    },
+    {
+      "type": "header",
+      "content": "Banner Layout"
+    },
+    {
+      "type": "select",
+      "id": "layout_mode",
+      "label": "Multiple Banners Layout",
+      "options": [
+        { "value": "stack", "label": "Vertical Stack (One below another)" },
+        { "value": "slider", "label": "Interactive Carousel / Slider" }
+      ],
+      "default": "stack",
+      "info": "Display multiple banners stacked one below another with a gap, or as a slider."
+    },
+    {
+      "type": "range",
+      "id": "stack_gap",
+      "min": 0,
+      "max": 48,
+      "step": 4,
+      "unit": "px",
+      "label": "Gap Between Banners",
+      "default": 16
     },
     {
       "type": "header",

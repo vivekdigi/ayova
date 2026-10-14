@@ -177,6 +177,8 @@
       "settings": {
         "enable_product_metafields": true,
         "hide_if_no_product_banner": false,
+        "layout_mode": "stack",
+        "stack_gap": 16,
         "full_width": true,
         "desktop_height": "adapt",
         "mobile_height": "adapt",
