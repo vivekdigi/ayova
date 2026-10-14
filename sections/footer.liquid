@@ -69,7 +69,7 @@
         <div class="footer-col">
           <a href="/" class="footer-brand-logo" aria-label="{{ shop.name }}" style="text-decoration:none; display:inline-block; margin-bottom:16px;">
             {% assign custom_logo = section.settings.logo | default: settings.logo %}
-            {% assign custom_logo_width = section.settings.logo_width | default: 97 %}
+            {% assign custom_logo_width = section.settings.logo_width | default: 95 %}
             {% if custom_logo != blank %}
               <img
                 src="{{ custom_logo | image_url: width: 600 }}"
@@ -78,7 +78,7 @@
                 width="{{ custom_logo_width }}"
                 height="{{ custom_logo_width | divided_by: 2 }}"
                 loading="lazy"
-                style="width: {{ custom_logo_width }}px; height: auto;"
+                style="width: {{ custom_logo_width }}px; max-width: 100%; height: auto; object-fit: contain; display: block;"
               >
             {% else %}
               <span class="logo-title" style="color: #FFFFFF; font-family: var(--font-heading); font-size: 1.5rem; font-weight: 700;">{{ shop.name | upcase }}</span>
@@ -156,7 +156,9 @@
 
       <!-- Bottom Bar -->
       <div class="footer-bottom">
-        <p class="footer-copyright">© {{ 'now' | date: '%Y' }} {{ shop.name }}. All Rights Reserved.</p>
+        {% assign current_year = 'now' | date: '%Y' %}
+        {% assign dynamic_copy = section.settings.copyright_text | default: '© [year] [shop_name]. All Rights Reserved.' | replace: '[year]', current_year | replace: '[shop_name]', shop.name %}
+        <p class="footer-copyright">{{ dynamic_copy }}</p>
         <p class="footer-proudly">{{ section.settings.proudly_text | default: 'Proudly serving customers across India' }}</p>
         <div class="footer-legal-links">
           {% if section.settings.terms_url != blank %}
@@ -336,6 +338,13 @@
     {
       "type": "header",
       "content": "Bottom Bar"
+    },
+    {
+      "type": "text",
+      "id": "copyright_text",
+      "label": "Copyright Text",
+      "default": "© [year] [shop_name]. All Rights Reserved.",
+      "info": "Use [year] for current year and [shop_name] for store name."
     },
     {
       "type": "text",
