@@ -47,7 +47,35 @@
   endif
 
   comment
-    Source 2: Product Metaobjects (via Product Metafield reference or list of metaobjects)
+    Source 2: Direct Product Metafield List of Files (list.file_reference)
+    Supports: custom.product_banner, custom.product_banners, custom.desktop_banners, custom.banners
+  endcomment
+  if total_slides == 0 and is_product_page
+    assign file_list = nil
+    if product.metafields.custom.product_banner.value.first != blank
+      assign file_list = product.metafields.custom.product_banner.value
+    elsif product.metafields.custom.product_banners.value.first != blank
+      assign file_list = product.metafields.custom.product_banners.value
+    elsif product.metafields.custom.desktop_banners.value.first != blank
+      assign file_list = product.metafields.custom.desktop_banners.value
+    elsif product.metafields.custom.desktop_banner.value.first != blank
+      assign file_list = product.metafields.custom.desktop_banner.value
+    elsif product.metafields.custom.banners.value.first != blank
+      assign file_list = product.metafields.custom.banners.value
+    elsif product.metafields.custom.banner.value.first != blank
+      assign file_list = product.metafields.custom.banner.value
+    elsif product.metafields.custom.banner_images.value.first != blank
+      assign file_list = product.metafields.custom.banner_images.value
+    endif
+
+    if file_list != blank and file_list.size > 0
+      assign total_slides = file_list.size
+      assign slide_source = 'meta_list'
+    endif
+  endif
+
+  comment
+    Source 3: Product Metaobjects (via Product Metafield reference or list of metaobjects)
   endcomment
   assign mo_ref = nil
   if total_slides == 0 and is_product_page
@@ -86,7 +114,7 @@
   endif
 
   comment
-    Source 3: Shop Metaobjects (Global metaobjects pointing to product reference)
+    Source 4: Shop Metaobjects (Global metaobjects pointing to product reference)
   endcomment
   if total_slides == 0 and is_product_page
     assign global_mo_count = 0
@@ -113,27 +141,6 @@
     if global_mo_count > 0
       assign total_slides = global_mo_count
       assign slide_source = 'shop_metaobjects'
-    endif
-  endif
-
-  comment
-    Source 4: Direct Product Metafield List of Files (list.file_reference)
-  endcomment
-  if total_slides == 0 and is_product_page
-    assign file_list = nil
-    if product.metafields.custom.desktop_banners.value != blank
-      assign file_list = product.metafields.custom.desktop_banners.value
-    elsif product.metafields.custom.banners.value != blank
-      assign file_list = product.metafields.custom.banners.value
-    elsif product.metafields.custom.product_banners.value != blank
-      assign file_list = product.metafields.custom.product_banners.value
-    elsif product.metafields.custom.banner_images.value != blank
-      assign file_list = product.metafields.custom.banner_images.value
-    endif
-
-    if file_list != blank and file_list.size > 0
-      assign total_slides = file_list.size
-      assign slide_source = 'meta_list'
     endif
   endif
 
