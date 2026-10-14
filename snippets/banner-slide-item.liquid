@@ -1,0 +1,162 @@
+{%- liquid
+  assign d_img = s_desk
+  if d_img.value != blank
+    assign d_img = d_img.value
+  endif
+  if d_img.preview_image != blank
+    assign d_img = d_img.preview_image
+  endif
+
+  assign m_img = s_mob
+  if m_img.value != blank
+    assign m_img = m_img.value
+  endif
+  if m_img.preview_image != blank
+    assign m_img = m_img.preview_image
+  endif
+  if m_img == blank
+    assign m_img = d_img
+  endif
+
+  assign d_src = ''
+  if d_img != blank
+    if d_img.width != blank
+      assign d_src = d_img | image_url: width: 1800
+    elsif d_img.url != blank
+      assign d_src = d_img.url
+    elsif d_img.src != blank
+      assign d_src = d_img.src
+    else
+      assign d_src = d_img | image_url: width: 1800
+      if d_src == blank
+        assign d_src = d_img
+      endif
+    endif
+  elsif s_desk_url != blank
+    assign d_src = s_desk_url
+  endif
+
+  assign m_src = ''
+  if m_img != blank
+    if m_img.width != blank
+      assign m_src = m_img | image_url: width: 750
+    elsif m_img.url != blank
+      assign m_src = m_img.url
+    elsif m_img.src != blank
+      assign m_src = m_img.src
+    else
+      assign m_src = m_img | image_url: width: 750
+      if m_src == blank
+        assign m_src = m_img
+      endif
+    endif
+  elsif s_mob_url != blank
+    assign m_src = s_mob_url
+  else
+    assign m_src = d_src
+  endif
+
+  assign is_active = false
+  if forloop.first or is_first
+    assign is_active = true
+  endif
+
+  assign slide_has_text = false
+  if s_heading != blank or s_badge != blank or s_subheading != blank or s_btn_text != blank
+    assign slide_has_text = true
+  endif
+
+  assign is_clickable_whole = false
+  if s_link != blank and slide_has_text == false
+    assign is_clickable_whole = true
+  endif
+-%}
+
+<div class="ayova-banner-slide {% if is_active %}active{% endif %}">
+  {% if is_clickable_whole %}
+    <a href="{{ s_link }}" class="ayova-banner-clickable-wrap" {% if section.settings.open_in_new_tab %}target="_blank" rel="noopener"{% endif %} aria-label="{{ s_heading | default: 'Banner' }}">
+  {% endif %}
+
+    <div class="ayova-banner-media-container height-desk-{{ section.settings.desktop_height }} height-mob-{{ section.settings.mobile_height }}">
+      
+      <!-- Responsive Picture Element -->
+      <picture class="ayova-banner-picture">
+        {% comment %} Mobile Source (max-width: 749px) {% endcomment %}
+        {% if m_img != blank and m_img.width != blank %}
+          <source media="(max-width: 749px)" srcset="{{ m_img | image_url: width: 450 }} 450w, {{ m_img | image_url: width: 750 }} 750w, {{ m_img | image_url: width: 1100 }} 1100w" sizes="100vw">
+        {% elsif m_src != blank %}
+          <source media="(max-width: 749px)" srcset="{{ m_src }}">
+        {% endif %}
+
+        {% comment %} Desktop Image {% endcomment %}
+        {% if d_img != blank and d_img.width != blank %}
+          <img 
+            src="{{ d_img | image_url: width: 1800 }}"
+            srcset="{{ d_img | image_url: width: 1000 }} 1000w, {{ d_img | image_url: width: 1500 }} 1500w, {{ d_img | image_url: width: 2000 }} 2000w, {{ d_img | image_url: width: 2600 }} 2600w"
+            sizes="{% if section.settings.full_width %}100vw{% else %}(min-width: 1200px) 1200px, 100vw{% endif %}"
+            alt="{{ s_heading | default: d_img.alt | default: 'Ayova Banner' | escape }}"
+            class="ayova-banner-img"
+            loading="{% if is_active %}eager{% else %}lazy{% endif %}"
+            width="{{ d_img.width | default: 1920 }}"
+            height="{{ d_img.height | default: 600 }}"
+          >
+        {% elsif d_src != blank %}
+          <img 
+            src="{{ d_src }}"
+            alt="{{ s_heading | default: 'Ayova Banner' | escape }}"
+            class="ayova-banner-img"
+            loading="{% if is_active %}eager{% else %}lazy{% endif %}"
+            width="1920"
+            height="600"
+          >
+        {% else %}
+          <div class="ayova-banner-placeholder">
+            <span>Upload Banner Image</span>
+          </div>
+        {% endif %}
+      </picture>
+
+      <!-- Color Overlay / Tint -->
+      {% if section.settings.overlay_opacity > 0 %}
+        <div class="ayova-banner-overlay" style="background-color: {{ section.settings.overlay_color | default: '#000000' }}; opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};"></div>
+      {% endif %}
+
+      <!-- Optional Text Content Layer -->
+      {% if slide_has_text %}
+        <div class="ayova-banner-content-wrapper pos-{{ section.settings.content_position }} text-{{ section.settings.text_alignment }}">
+          <div class="ayova-banner-content-inner" style="color: {{ section.settings.text_color | default: '#FFFFFF' }};">
+            
+            {% if s_badge != blank %}
+              <span class="ayova-banner-badge">{{ s_badge }}</span>
+            {% endif %}
+
+            {% if s_heading != blank %}
+              <h2 class="ayova-banner-heading size-{{ section.settings.heading_size | default: 'medium' }}" style="color: {{ section.settings.text_color | default: '#FFFFFF' }};">
+                {{ s_heading }}
+              </h2>
+            {% endif %}
+
+            {% if s_subheading != blank %}
+              <p class="ayova-banner-subheading" style="color: {{ section.settings.text_color | default: '#FFFFFF' }};">
+                {{ s_subheading }}
+              </p>
+            {% endif %}
+
+            {% if s_btn_text != blank %}
+              <div class="ayova-banner-buttons">
+                <a href="{{ s_btn_link | default: '#' }}" class="btn btn-banner btn-banner--{{ section.settings.button_1_style | default: 'primary' }}">
+                  {{ s_btn_text }}
+                </a>
+              </div>
+            {% endif %}
+
+          </div>
+        </div>
+      {% endif %}
+
+    </div>
+
+  {% if is_clickable_whole %}
+    </a>
+  {% endif %}
+</div>

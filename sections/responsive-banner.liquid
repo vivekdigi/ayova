@@ -1,145 +1,134 @@
-1{% comment %}
-  AYOVA RESPONSIVE BANNER SECTION (Desktop & Mobile)
-  - Separate desktop & mobile banners with full-width cover support
-  - Natural aspect ratio adaptation or fixed heights
-  - Optional dynamic text overlay, badges & buttons
-  - Usable anywhere: Default Product page (PDP), Homepage, Collections, etc.
+{% comment %}
+  AYOVA RESPONSIVE BANNER & SLIDER SECTION (Desktop & Mobile)
+  - Single Banner OR Interactive Carousel / Slider
+  - Multiple Upload Sources Supported:
+    1. Product Metafields:
+       - List of image files: product.metafields.custom.desktop_banners, banners, product_banners
+       - Numbered metafields: desktop_banner, desktop_banner_2, desktop_banner_3, desktop_banner_4, desktop_banner_5
+       - Single metafield: desktop_banner (with mobile fallback)
+    2. Theme Customizer Blocks:
+       - Multiple banner slides per product or general slides
+    3. Section Fallback Images:
+       - Used if no product-specific banners are found
+  - Features: Touch swipe, Autoplay, Glassmorphic navigation arrows, Dots, Responsive <picture> loading
 {% endcomment %}
 
 {% liquid
-  assign desktop_img = nil
-  assign mobile_img = nil
-  assign desktop_img_url = nil
-  assign mobile_img_url = nil
-  assign banner_link = section.settings.banner_link
-  assign found_product_banner = false
-  assign skip_section = false
+  assign is_product_page = false
+  if template.name == 'product' and product != blank
+    assign is_product_page = true
+  endif
+
+  assign total_slides = 0
+  assign slide_source = 'none'
 
   comment
-    1. Check for specific product match in Theme Customizer blocks
+    Check 1: Customizer Blocks matching this product
   endcomment
-  if product != blank and section.blocks.size > 0
+  assign product_blocks_count = 0
+  if is_product_page and section.blocks.size > 0
     for block in section.blocks
       if block.type == 'product_banner' and block.settings.product != blank
         if block.settings.product.handle == product.handle or block.settings.product.id == product.id
-          assign desktop_img = block.settings.desktop_image
-          assign mobile_img = block.settings.mobile_image | default: desktop_img
-          if block.settings.banner_link != blank
-            assign banner_link = block.settings.banner_link
-          endif
-          assign found_product_banner = true
-          break
+          assign product_blocks_count = product_blocks_count | plus: 1
         endif
       endif
     endfor
   endif
 
+  if product_blocks_count > 0
+    assign total_slides = product_blocks_count
+    assign slide_source = 'product_blocks'
+  endif
+
   comment
-    2. Check for Product Metafields if no block matched (e.g. desktop_banner, mobile_banner)
+    Check 2: Product Metafields (List or Numbered or Single)
   endcomment
-  if found_product_banner == false and product != blank
-    assign meta_desk = product.metafields.custom.desktop_banner.value | default: product.metafields.custom.desktop_banner
-    if meta_desk == blank
-      assign meta_desk = product.metafields.custom.banner.value | default: product.metafields.custom.banner
-    endif
-    if meta_desk == blank
-      assign meta_desk = product.metafields.custom.banner_image.value | default: product.metafields.custom.banner_image
-    endif
-    if meta_desk == blank
-      assign meta_desk = product.metafields.custom.desktop_banner_image.value | default: product.metafields.custom.desktop_banner_image
-    endif
-
-    assign meta_mob = product.metafields.custom.mobile_banner.value | default: product.metafields.custom.mobile_banner
-    if meta_mob == blank
-      assign meta_mob = product.metafields.custom.mobile_banner_image.value | default: product.metafields.custom.mobile_banner_image
-    endif
-    if meta_mob == blank
-      assign meta_mob = product.metafields.custom.banner_mobile.value | default: product.metafields.custom.banner_mobile
+  if total_slides == 0 and is_product_page
+    assign meta_list = nil
+    if product.metafields.custom.desktop_banners.value != blank
+      assign meta_list = product.metafields.custom.desktop_banners.value
+    elsif product.metafields.custom.banners.value != blank
+      assign meta_list = product.metafields.custom.banners.value
+    elsif product.metafields.custom.product_banners.value != blank
+      assign meta_list = product.metafields.custom.product_banners.value
+    elsif product.metafields.custom.banner_images.value != blank
+      assign meta_list = product.metafields.custom.banner_images.value
     endif
 
-    if meta_desk != blank or meta_mob != blank
-      if meta_desk != blank
-        assign desktop_img = meta_desk
-        assign mobile_img = meta_mob | default: meta_desk
-      else
-        assign desktop_img = meta_mob
-        assign mobile_img = meta_mob
+    if meta_list != blank
+      assign total_slides = meta_list.size
+      assign slide_source = 'meta_list'
+    else
+      assign m1 = product.metafields.custom.desktop_banner.value | default: product.metafields.custom.desktop_banner
+      if m1 == blank
+        assign m1 = product.metafields.custom.banner.value | default: product.metafields.custom.banner
       endif
-      assign found_product_banner = true
+      if m1 == blank
+        assign m1 = product.metafields.custom.banner_image.value | default: product.metafields.custom.banner_image
+      endif
+      if m1 == blank
+        assign m1 = product.metafields.custom.desktop_banner_image.value | default: product.metafields.custom.desktop_banner_image
+      endif
+
+      assign m2 = product.metafields.custom.desktop_banner_2.value | default: product.metafields.custom.desktop_banner_2
+      assign m3 = product.metafields.custom.desktop_banner_3.value | default: product.metafields.custom.desktop_banner_3
+      assign m4 = product.metafields.custom.desktop_banner_4.value | default: product.metafields.custom.desktop_banner_4
+      assign m5 = product.metafields.custom.desktop_banner_5.value | default: product.metafields.custom.desktop_banner_5
+
+      if m1 != blank
+        assign total_slides = 1
+        assign slide_source = 'meta_numbered'
+        if m2 != blank
+          assign total_slides = total_slides | plus: 1
+        endif
+        if m3 != blank
+          assign total_slides = total_slides | plus: 1
+        endif
+        if m4 != blank
+          assign total_slides = total_slides | plus: 1
+        endif
+        if m5 != blank
+          assign total_slides = total_slides | plus: 1
+        endif
+      endif
     endif
   endif
 
   comment
-    3. Fallback to Section Settings if no product-specific banner was found
+    Check 3: Generic Customizer Blocks (blocks with no product specified)
   endcomment
-  if found_product_banner == false
-    if template.name == 'product' and section.settings.hide_if_no_product_banner
+  if total_slides == 0 and section.blocks.size > 0
+    assign generic_blocks_count = 0
+    for block in section.blocks
+      if block.type == 'product_banner' and block.settings.product == blank and block.settings.desktop_image != blank
+        assign generic_blocks_count = generic_blocks_count | plus: 1
+      endif
+    endfor
+    if generic_blocks_count > 0
+      assign total_slides = generic_blocks_count
+      assign slide_source = 'generic_blocks'
+    endif
+  endif
+
+  comment
+    Check 4: Section Settings Fallback
+  endcomment
+  if total_slides == 0
+    if section.settings.desktop_image != blank or section.settings.desktop_image_url != blank
+      assign total_slides = 1
+      assign slide_source = 'section_settings'
+    endif
+  endif
+
+  comment
+    Check Hide condition
+  endcomment
+  assign skip_section = false
+  if is_product_page and section.settings.hide_if_no_product_banner
+    if slide_source != 'product_blocks' and slide_source != 'meta_list' and slide_source != 'meta_numbered'
       assign skip_section = true
-    else
-      assign desktop_img = section.settings.desktop_image
-      assign mobile_img = section.settings.mobile_image | default: desktop_img
-      assign desktop_img_url = section.settings.desktop_image_url
-      assign mobile_img_url = section.settings.mobile_image_url | default: desktop_img_url
     endif
-  endif
-
-  comment
-    4. Normalize Image Objects / Media / URLs
-  endcomment
-  if desktop_img.value != blank
-    assign desktop_img = desktop_img.value
-  endif
-  if desktop_img.preview_image != blank
-    assign desktop_img = desktop_img.preview_image
-  endif
-
-  if mobile_img.value != blank
-    assign mobile_img = mobile_img.value
-  endif
-  if mobile_img.preview_image != blank
-    assign mobile_img = mobile_img.preview_image
-  endif
-
-  assign desktop_src = ''
-  if desktop_img != blank
-    if desktop_img.width != blank
-      assign desktop_src = desktop_img | image_url: width: 1800
-    elsif desktop_img.url != blank
-      assign desktop_src = desktop_img.url
-    elsif desktop_img.src != blank
-      assign desktop_src = desktop_img.src
-    else
-      assign desktop_src = desktop_img | image_url: width: 1800
-      if desktop_src == blank
-        assign desktop_src = desktop_img
-      endif
-    endif
-  endif
-
-  assign mobile_src = ''
-  if mobile_img != blank
-    if mobile_img.width != blank
-      assign mobile_src = mobile_img | image_url: width: 750
-    elsif mobile_img.url != blank
-      assign mobile_src = mobile_img.url
-    elsif mobile_img.src != blank
-      assign mobile_src = mobile_img.src
-    else
-      assign mobile_src = mobile_img | image_url: width: 750
-      if mobile_src == blank
-        assign mobile_src = mobile_img
-      endif
-    endif
-  endif
-
-  assign has_heading = false
-  if section.settings.heading != blank or section.settings.badge_text != blank or section.settings.subheading != blank or section.settings.button_1_text != blank or section.settings.button_2_text != blank
-    assign has_heading = true
-  endif
-
-  assign is_link_whole_banner = false
-  if banner_link != blank and has_heading == false
-    assign is_link_whole_banner = true
   endif
 %}
 
@@ -148,119 +137,146 @@
 <section id="banner-{{ section.id }}" class="ayova-banner-section {% if section.settings.full_width %}ayova-banner-section--full{% else %}container{% endif %}" style="--p-top: {{ section.settings.padding_top }}px; --p-bottom: {{ section.settings.padding_bottom }}px; --m-top: {{ section.settings.margin_top }}px; --m-bottom: {{ section.settings.margin_bottom }}px;">
   <div class="ayova-banner-box {% if section.settings.border_radius > 0 %}ayova-banner-box--rounded{% endif %}" style="--border-rad: {{ section.settings.border_radius }}px;">
 
-    {% if is_link_whole_banner %}
-      <a href="{{ banner_link }}" class="ayova-banner-clickable-wrap" {% if section.settings.open_in_new_tab %}target="_blank" rel="noopener"{% endif %} aria-label="{{ section.settings.heading | default: 'Banner' }}">
-    {% endif %}
+    <div class="ayova-banner-slider-container" data-autoplay="{{ section.settings.slider_autoplay }}" data-speed="{{ section.settings.slider_speed | default: 5 | times: 1000 }}" data-total-slides="{{ total_slides }}">
+      
+      <div class="ayova-banner-track">
 
-      <div class="ayova-banner-media-container height-desk-{{ section.settings.desktop_height }} height-mob-{{ section.settings.mobile_height }}">
-        
-        <!-- Desktop & Mobile Picture Element -->
-        <picture class="ayova-banner-picture">
-          {% comment %} Mobile Source (max-width: 749px) {% endcomment %}
-          {% if mobile_img != blank %}
-            {% if mobile_img.width != blank %}
-              <source media="(max-width: 749px)" srcset="{{ mobile_img | image_url: width: 450 }} 450w, {{ mobile_img | image_url: width: 750 }} 750w, {{ mobile_img | image_url: width: 1100 }} 1100w" sizes="100vw">
-            {% elsif mobile_src != blank %}
-              <source media="(max-width: 749px)" srcset="{{ mobile_src }}">
+        {% comment %} CASE 1: PRODUCT BLOCKS {% endcomment %}
+        {% if slide_source == 'product_blocks' %}
+          {% for block in section.blocks %}
+            {% if block.type == 'product_banner' and block.settings.product != blank %}
+              {% if block.settings.product.handle == product.handle or block.settings.product.id == product.id %}
+                {% assign s_desk = block.settings.desktop_image %}
+                {% assign s_mob = block.settings.mobile_image | default: s_desk %}
+                {% assign s_link = block.settings.banner_link | default: section.settings.banner_link %}
+                {% assign s_heading = block.settings.heading | default: section.settings.heading %}
+                {% assign s_subheading = block.settings.subheading | default: section.settings.subheading %}
+                {% assign s_badge = section.settings.badge_text %}
+                {% assign s_btn_text = block.settings.button_text | default: section.settings.button_1_text %}
+                {% assign s_btn_link = block.settings.button_link | default: section.settings.button_1_link %}
+                {% render 'banner-slide-item', s_desk: s_desk, s_mob: s_mob, s_link: s_link, s_heading: s_heading, s_subheading: s_subheading, s_badge: s_badge, s_btn_text: s_btn_text, s_btn_link: s_btn_link, section: section, forloop: forloop %}
+              {% endif %}
             {% endif %}
-          {% elsif mobile_img_url != blank %}
-            <source media="(max-width: 749px)" srcset="{{ mobile_img_url }}">
+          {% endfor %}
+
+        {% comment %} CASE 2: METAFIELD LIST {% endcomment %}
+        {% elsif slide_source == 'meta_list' %}
+          {% assign mob_list = product.metafields.custom.mobile_banners.value | default: product.metafields.custom.banners_mobile.value %}
+          {% for img_item in meta_list %}
+            {% assign s_desk = img_item %}
+            {% assign s_mob = nil %}
+            {% if mob_list != blank and mob_list[forloop.index0] != blank %}
+              {% assign s_mob = mob_list[forloop.index0] %}
+            {% else %}
+              {% assign s_mob = s_desk %}
+            {% endif %}
+            {% assign s_link = section.settings.banner_link %}
+            {% assign s_heading = section.settings.heading %}
+            {% assign s_subheading = section.settings.subheading %}
+            {% assign s_badge = section.settings.badge_text %}
+            {% assign s_btn_text = section.settings.button_1_text %}
+            {% assign s_btn_link = section.settings.button_1_link %}
+            {% render 'banner-slide-item', s_desk: s_desk, s_mob: s_mob, s_link: s_link, s_heading: s_heading, s_subheading: s_subheading, s_badge: s_badge, s_btn_text: s_btn_text, s_btn_link: s_btn_link, section: section, forloop: forloop %}
+          {% endfor %}
+
+        {% comment %} CASE 3: NUMBERED METAFIELDS {% endcomment %}
+        {% elsif slide_source == 'meta_numbered' %}
+          {% assign mob_1 = product.metafields.custom.mobile_banner.value | default: product.metafields.custom.mobile_banner %}
+          {% assign s_mob_1 = mob_1 | default: m1 %}
+          {% render 'banner-slide-item', s_desk: m1, s_mob: s_mob_1, s_link: section.settings.banner_link, s_heading: section.settings.heading, s_subheading: section.settings.subheading, s_badge: section.settings.badge_text, s_btn_text: section.settings.button_1_text, s_btn_link: section.settings.button_1_link, section: section, is_first: true %}
+
+          {% if m2 != blank %}
+            {% assign mob_2 = product.metafields.custom.mobile_banner_2.value | default: product.metafields.custom.mobile_banner_2 %}
+            {% assign s_mob_2 = mob_2 | default: m2 %}
+            {% render 'banner-slide-item', s_desk: m2, s_mob: s_mob_2, s_link: section.settings.banner_link, s_heading: section.settings.heading, s_subheading: section.settings.subheading, s_badge: section.settings.badge_text, s_btn_text: section.settings.button_1_text, s_btn_link: section.settings.button_1_link, section: section %}
           {% endif %}
 
-          {% comment %} Desktop Image {% endcomment %}
-          {% if desktop_img != blank %}
-            {% if desktop_img.width != blank %}
-              <img 
-                src="{{ desktop_img | image_url: width: 1800 }}"
-                srcset="{{ desktop_img | image_url: width: 1000 }} 1000w, {{ desktop_img | image_url: width: 1500 }} 1500w, {{ desktop_img | image_url: width: 2000 }} 2000w, {{ desktop_img | image_url: width: 2600 }} 2600w"
-                sizes="{% if section.settings.full_width %}100vw{% else %}(min-width: 1200px) 1200px, 100vw{% endif %}"
-                alt="{{ section.settings.heading | default: desktop_img.alt | default: 'Ayova Banner' | escape }}"
-                class="ayova-banner-img"
-                loading="lazy"
-                width="{{ desktop_img.width | default: 1920 }}"
-                height="{{ desktop_img.height | default: 600 }}"
-              >
-            {% elsif desktop_src != blank %}
-              <img 
-                src="{{ desktop_src }}"
-                alt="{{ section.settings.heading | default: 'Ayova Banner' | escape }}"
-                class="ayova-banner-img"
-                loading="lazy"
-                width="1920"
-                height="600"
-              >
-            {% endif %}
-          {% elsif desktop_img_url != blank %}
-            <img 
-              src="{{ desktop_img_url }}" 
-              alt="{{ section.settings.heading | default: 'Ayova Banner' | escape }}" 
-              class="ayova-banner-img" 
-              loading="lazy"
-            >
-          {% else %}
-            <!-- Fallback Placeholder if no image is uploaded -->
-            <div class="ayova-banner-placeholder">
-              <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                <circle cx="8.5" cy="8.5" r="1.5"/>
-                <polyline points="21 15 16 10 5 21"/>
-              </svg>
-              <span>Upload Desktop Banner in Theme Editor or Product Metafields</span>
-            </div>
+          {% if m3 != blank %}
+            {% assign mob_3 = product.metafields.custom.mobile_banner_3.value | default: product.metafields.custom.mobile_banner_3 %}
+            {% assign s_mob_3 = mob_3 | default: m3 %}
+            {% render 'banner-slide-item', s_desk: m3, s_mob: s_mob_3, s_link: section.settings.banner_link, s_heading: section.settings.heading, s_subheading: section.settings.subheading, s_badge: section.settings.badge_text, s_btn_text: section.settings.button_1_text, s_btn_link: section.settings.button_1_link, section: section %}
           {% endif %}
-        </picture>
 
-        <!-- Color Overlay / Tint -->
-        {% if section.settings.overlay_opacity > 0 %}
-          <div class="ayova-banner-overlay" style="background-color: {{ section.settings.overlay_color | default: '#000000' }}; opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};"></div>
-        {% endif %}
+          {% if m4 != blank %}
+            {% assign mob_4 = product.metafields.custom.mobile_banner_4.value | default: product.metafields.custom.mobile_banner_4 %}
+            {% assign s_mob_4 = mob_4 | default: m4 %}
+            {% render 'banner-slide-item', s_desk: m4, s_mob: s_mob_4, s_link: section.settings.banner_link, s_heading: section.settings.heading, s_subheading: section.settings.subheading, s_badge: section.settings.badge_text, s_btn_text: section.settings.button_1_text, s_btn_link: section.settings.button_1_link, section: section %}
+          {% endif %}
 
-        <!-- Optional Text Content Layer -->
-        {% if has_heading %}
-          <div class="ayova-banner-content-wrapper pos-{{ section.settings.content_position }} text-{{ section.settings.text_alignment }}">
-            <div class="ayova-banner-content-inner" style="color: {{ section.settings.text_color | default: '#FFFFFF' }};">
-              
-              {% if section.settings.badge_text != blank %}
-                <span class="ayova-banner-badge">{{ section.settings.badge_text }}</span>
-              {% endif %}
+          {% if m5 != blank %}
+            {% assign mob_5 = product.metafields.custom.mobile_banner_5.value | default: product.metafields.custom.mobile_banner_5 %}
+            {% assign s_mob_5 = mob_5 | default: m5 %}
+            {% render 'banner-slide-item', s_desk: m5, s_mob: s_mob_5, s_link: section.settings.banner_link, s_heading: section.settings.heading, s_subheading: section.settings.subheading, s_badge: section.settings.badge_text, s_btn_text: section.settings.button_1_text, s_btn_link: section.settings.button_1_link, section: section %}
+          {% endif %}
 
-              {% if section.settings.heading != blank %}
-                <h2 class="ayova-banner-heading size-{{ section.settings.heading_size | default: 'medium' }}" style="color: {{ section.settings.text_color | default: '#FFFFFF' }};">
-                  {{ section.settings.heading }}
-                </h2>
-              {% endif %}
+        {% comment %} CASE 4: GENERIC BLOCKS {% endcomment %}
+        {% elsif slide_source == 'generic_blocks' %}
+          {% for block in section.blocks %}
+            {% if block.type == 'product_banner' and block.settings.product == blank and block.settings.desktop_image != blank %}
+              {% assign s_desk = block.settings.desktop_image %}
+              {% assign s_mob = block.settings.mobile_image | default: s_desk %}
+              {% assign s_link = block.settings.banner_link | default: section.settings.banner_link %}
+              {% assign s_heading = block.settings.heading | default: section.settings.heading %}
+              {% assign s_subheading = block.settings.subheading | default: section.settings.subheading %}
+              {% assign s_badge = section.settings.badge_text %}
+              {% assign s_btn_text = block.settings.button_text | default: section.settings.button_1_text %}
+              {% assign s_btn_link = block.settings.button_link | default: section.settings.button_1_link %}
+              {% render 'banner-slide-item', s_desk: s_desk, s_mob: s_mob, s_link: s_link, s_heading: s_heading, s_subheading: s_subheading, s_badge: s_badge, s_btn_text: s_btn_text, s_btn_link: s_btn_link, section: section, forloop: forloop %}
+            {% endif %}
+          {% endfor %}
 
-              {% if section.settings.subheading != blank %}
-                <p class="ayova-banner-subheading" style="color: {{ section.settings.text_color | default: '#FFFFFF' }};">
-                  {{ section.settings.subheading }}
-                </p>
-              {% endif %}
+        {% comment %} CASE 5: SECTION SETTINGS FALLBACK {% endcomment %}
+        {% elsif slide_source == 'section_settings' %}
+          {% assign s_desk = section.settings.desktop_image %}
+          {% assign s_mob = section.settings.mobile_image | default: s_desk %}
+          {% assign s_desk_url = section.settings.desktop_image_url %}
+          {% assign s_mob_url = section.settings.mobile_image_url | default: s_desk_url %}
+          {% assign s_link = section.settings.banner_link %}
+          {% assign s_heading = section.settings.heading %}
+          {% assign s_subheading = section.settings.subheading %}
+          {% assign s_badge = section.settings.badge_text %}
+          {% assign s_btn_text = section.settings.button_1_text %}
+          {% assign s_btn_link = section.settings.button_1_link %}
+          {% render 'banner-slide-item', s_desk: s_desk, s_mob: s_mob, s_desk_url: s_desk_url, s_mob_url: s_mob_url, s_link: s_link, s_heading: s_heading, s_subheading: s_subheading, s_badge: s_badge, s_btn_text: s_btn_text, s_btn_link: s_btn_link, section: section, is_first: true %}
 
-              {% if section.settings.button_1_text != blank or section.settings.button_2_text != blank %}
-                <div class="ayova-banner-buttons">
-                  {% if section.settings.button_1_text != blank %}
-                    <a href="{{ section.settings.button_1_link | default: '#' }}" class="btn btn-banner btn-banner--{{ section.settings.button_1_style | default: 'primary' }}">
-                      {{ section.settings.button_1_text }}
-                    </a>
-                  {% endif %}
-
-                  {% if section.settings.button_2_text != blank %}
-                    <a href="{{ section.settings.button_2_link | default: '#' }}" class="btn btn-banner btn-banner--{{ section.settings.button_2_style | default: 'outline' }}">
-                      {{ section.settings.button_2_text }}
-                    </a>
-                  {% endif %}
-                </div>
-              {% endif %}
-
+        {% else %}
+          <div class="ayova-banner-slide active">
+            <div class="ayova-banner-media-container height-desk-{{ section.settings.desktop_height }} height-mob-{{ section.settings.mobile_height }}">
+              <div class="ayova-banner-placeholder">
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                  <circle cx="8.5" cy="8.5" r="1.5"/>
+                  <polyline points="21 15 16 10 5 21"/>
+                </svg>
+                <span>Upload Banners in Theme Editor Blocks or Product Metafields</span>
+              </div>
             </div>
           </div>
         {% endif %}
 
       </div>
 
-    {% if is_link_whole_banner %}
-      </a>
-    {% endif %}
+      {% comment %} Slider Controls (when multiple slides exist) {% endcomment %}
+      {% if total_slides > 1 %}
+        {% if section.settings.slider_show_arrows %}
+          <button type="button" class="ayova-slider-btn ayova-slider-prev" aria-label="Previous banner">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+          <button type="button" class="ayova-slider-btn ayova-slider-next" aria-label="Next banner">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+        {% endif %}
+
+        {% if section.settings.slider_show_dots %}
+          <div class="ayova-slider-dots">
+            {% for i in (1..total_slides) %}
+              <button type="button" class="ayova-slider-dot {% if forloop.first %}active{% endif %}" data-slide-index="{{ forloop.index0 }}" aria-label="Go to banner slide {{ forloop.index }}"></button>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endif %}
+
+    </div>
 
   </div>
 </section>
@@ -291,6 +307,26 @@
     border-radius: var(--border-rad, 16px);
   }
 
+  .ayova-banner-slider-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .ayova-banner-track {
+    display: flex;
+    width: 100%;
+    transition: transform 0.55s cubic-bezier(0.25, 1, 0.5, 1);
+    will-change: transform;
+  }
+
+  .ayova-banner-slide {
+    flex: 0 0 100%;
+    width: 100%;
+    max-width: 100%;
+    position: relative;
+  }
+
   .ayova-banner-clickable-wrap {
     display: block;
     width: 100%;
@@ -310,49 +346,21 @@
   }
 
   /* Desktop Heights */
-  .height-desk-adapt {
-    height: auto;
-  }
-  .height-desk-small {
-    height: 380px;
-  }
-  .height-desk-medium {
-    height: 520px;
-  }
-  .height-desk-large {
-    height: 680px;
-  }
-  .height-desk-full {
-    height: 100vh;
-    min-height: 500px;
-  }
+  .height-desk-adapt { height: auto; }
+  .height-desk-small { height: 380px; }
+  .height-desk-medium { height: 520px; }
+  .height-desk-large { height: 680px; }
+  .height-desk-full { height: 100vh; min-height: 500px; }
 
   /* Mobile Heights */
   @media (max-width: 749px) {
-    .height-mob-adapt {
-      height: auto !important;
-    }
-    .height-mob-small {
-      height: 280px !important;
-    }
-    .height-mob-medium {
-      height: 400px !important;
-    }
-    .height-mob-large {
-      height: 520px !important;
-    }
-    .height-mob-square {
-      aspect-ratio: 1 / 1 !important;
-      height: auto !important;
-    }
-    .height-mob-portrait {
-      aspect-ratio: 4 / 5 !important;
-      height: auto !important;
-    }
-    .height-mob-full {
-      height: 100vh !important;
-      min-height: 400px !important;
-    }
+    .height-mob-adapt { height: auto !important; }
+    .height-mob-small { height: 280px !important; }
+    .height-mob-medium { height: 400px !important; }
+    .height-mob-large { height: 520px !important; }
+    .height-mob-square { aspect-ratio: 1 / 1 !important; height: auto !important; }
+    .height-mob-portrait { aspect-ratio: 4 / 5 !important; height: auto !important; }
+    .height-mob-full { height: 100vh !important; min-height: 400px !important; }
   }
 
   .ayova-banner-picture {
@@ -370,13 +378,11 @@
     transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
   }
 
-  /* When adapt height is active on desktop */
   .height-desk-adapt .ayova-banner-img {
     height: auto;
     object-fit: contain;
   }
 
-  /* When adapt height is active on mobile */
   @media (max-width: 749px) {
     .height-mob-adapt .ayova-banner-img {
       height: auto !important;
@@ -439,7 +445,6 @@
     pointer-events: auto;
   }
 
-  /* Positions */
   .pos-top-left { align-items: flex-start; justify-content: flex-start; }
   .pos-top-center { align-items: flex-start; justify-content: center; }
   .pos-top-right { align-items: flex-start; justify-content: flex-end; }
@@ -450,7 +455,6 @@
   .pos-bottom-center { align-items: flex-end; justify-content: center; }
   .pos-bottom-right { align-items: flex-end; justify-content: flex-end; }
 
-  /* Alignments */
   .text-left { text-align: left; }
   .text-center { text-align: center; }
   .text-right { text-align: right; }
@@ -500,13 +504,8 @@
     gap: 12px;
   }
 
-  .text-center .ayova-banner-buttons {
-    justify-content: center;
-  }
-
-  .text-right .ayova-banner-buttons {
-    justify-content: flex-end;
-  }
+  .text-center .ayova-banner-buttons { justify-content: center; }
+  .text-right .ayova-banner-buttons { justify-content: flex-end; }
 
   .btn-banner {
     display: inline-flex;
@@ -565,59 +564,309 @@
     background: rgba(255, 255, 255, 0.15);
     transform: translateY(-2px);
   }
+
+  /* Glassmorphic Navigation Arrows */
+  .ayova-slider-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    color: #173E34;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+  }
+
+  .ayova-slider-btn:hover {
+    background: #FFFFFF;
+    color: #D96C3F;
+    transform: translateY(-50%) scale(1.08);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+  }
+
+  .ayova-slider-prev { left: 16px; }
+  .ayova-slider-next { right: 16px; }
+
+  @media (max-width: 749px) {
+    .ayova-slider-btn {
+      width: 36px;
+      height: 36px;
+    }
+    .ayova-slider-prev { left: 10px; }
+    .ayova-slider-next { right: 10px; }
+  }
+
+  /* Modern Dots Navigation */
+  .ayova-slider-dots {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 10;
+    padding: 6px 12px;
+    background: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border-radius: 50px;
+  }
+
+  .ayova-slider-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50px;
+    background: rgba(255, 255, 255, 0.55);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .ayova-slider-dot.active {
+    width: 24px;
+    background: #FFFFFF;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  }
 </style>
+
+<script>
+  (function() {
+    function initBannerSlider(container) {
+      if (!container || container.dataset.sliderInitialized) return;
+      container.dataset.sliderInitialized = 'true';
+
+      const track = container.querySelector('.ayova-banner-track');
+      const slides = container.querySelectorAll('.ayova-banner-slide');
+      const prevBtn = container.querySelector('.ayova-slider-prev');
+      const nextBtn = container.querySelector('.ayova-slider-next');
+      const dots = container.querySelectorAll('.ayova-slider-dot');
+      
+      const total = slides.length;
+      if (total <= 1) return;
+
+      let currentIndex = 0;
+      let autoplayTimer = null;
+      const isAutoplay = container.dataset.autoplay === 'true';
+      const autoplaySpeed = parseInt(container.dataset.speed, 10) || 5000;
+
+      function updateSlide(index) {
+        if (index < 0) {
+          currentIndex = total - 1;
+        } else if (index >= total) {
+          currentIndex = 0;
+        } else {
+          currentIndex = index;
+        }
+
+        if (track) {
+          track.style.transform = 'translateX(-' + (currentIndex * 100) + '%)';
+        }
+
+        slides.forEach(function(slide, idx) {
+          if (idx === currentIndex) {
+            slide.classList.add('active');
+          } else {
+            slide.classList.remove('active');
+          }
+        });
+
+        dots.forEach(function(dot, idx) {
+          if (idx === currentIndex) {
+            dot.classList.add('active');
+          } else {
+            dot.classList.remove('active');
+          }
+        });
+      }
+
+      function nextSlide() {
+        updateSlide(currentIndex + 1);
+      }
+
+      function prevSlide() {
+        updateSlide(currentIndex - 1);
+      }
+
+      if (nextBtn) {
+        nextBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          nextSlide();
+          resetAutoplay();
+        });
+      }
+
+      if (prevBtn) {
+        prevBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          prevSlide();
+          resetAutoplay();
+        });
+      }
+
+      dots.forEach(function(dot) {
+        dot.addEventListener('click', function(e) {
+          e.preventDefault();
+          const targetIndex = parseInt(this.dataset.slideIndex, 10);
+          updateSlide(targetIndex);
+          resetAutoplay();
+        });
+      });
+
+      // Touch / Swipe Gesture Support
+      let touchStartX = 0;
+      let touchEndX = 0;
+
+      container.addEventListener('touchstart', function(e) {
+        touchStartX = e.changedTouches[0].screenX;
+      }, { passive: true });
+
+      container.addEventListener('touchend', function(e) {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+      }, { passive: true });
+
+      function handleSwipe() {
+        const diff = touchEndX - touchStartX;
+        if (Math.abs(diff) > 40) {
+          if (diff < 0) {
+            nextSlide();
+          } else {
+            prevSlide();
+          }
+          resetAutoplay();
+        }
+      }
+
+      // Autoplay with hover pause
+      function startAutoplay() {
+        if (!isAutoplay || total <= 1) return;
+        stopAutoplay();
+        autoplayTimer = setInterval(nextSlide, autoplaySpeed);
+      }
+
+      function stopAutoplay() {
+        if (autoplayTimer) {
+          clearInterval(autoplayTimer);
+          autoplayTimer = null;
+        }
+      }
+
+      function resetAutoplay() {
+        stopAutoplay();
+        startAutoplay();
+      }
+
+      container.addEventListener('mouseenter', stopAutoplay);
+      container.addEventListener('mouseleave', startAutoplay);
+
+      startAutoplay();
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.ayova-banner-slider-container').forEach(initBannerSlider);
+    });
+
+    // Re-init on Shopify theme customizer events
+    document.addEventListener('shopify:section:load', function(e) {
+      const container = e.target.querySelector('.ayova-banner-slider-container');
+      if (container) initBannerSlider(container);
+    });
+  })();
+</script>
 
 {% schema %}
 {
-  "name": "Responsive Banner",
+  "name": "Responsive Banner Slider",
   "tag": "section",
   "class": "section-responsive-banner",
   "settings": [
     {
       "type": "header",
-      "content": "Per-Product Banner Settings"
+      "content": "Product Metafield Settings"
     },
     {
       "type": "checkbox",
       "id": "enable_product_metafields",
       "label": "Auto-detect Product Metafields",
       "default": true,
-      "info": "Uses product.metafields.custom.desktop_banner & mobile_banner if present."
+      "info": "Uses product metafield list or single/numbered banners if present."
     },
     {
       "type": "checkbox",
       "id": "hide_if_no_product_banner",
       "label": "Hide if no product banner assigned",
       "default": false,
-      "info": "On product pages, only show if this product has its own custom banner uploaded (via blocks or metafield). Prevents showing general/wrong banners on other products."
+      "info": "On product pages, only show if this product has its own custom banners."
     },
     {
       "type": "header",
-      "content": "Default Desktop & Mobile Images (Fallback)"
+      "content": "Carousel / Slider Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "slider_autoplay",
+      "label": "Enable Autoplay",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "slider_speed",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "label": "Autoplay Speed (seconds)",
+      "default": 5
+    },
+    {
+      "type": "checkbox",
+      "id": "slider_show_arrows",
+      "label": "Show Navigation Arrows",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "slider_show_dots",
+      "label": "Show Navigation Dots",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Default Images (Fallback)"
     },
     {
       "type": "image_picker",
       "id": "desktop_image",
       "label": "Desktop Banner Image",
-      "info": "Recommended: 1920 x 650px or higher for crisp edge-to-edge cover."
+      "info": "Recommended: 1920 x 650px."
     },
     {
       "type": "image_picker",
       "id": "mobile_image",
       "label": "Mobile Banner Image (Optional)",
-      "info": "Recommended: 750 x 850px or 1080 x 1080px. Automatically falls back to desktop image if left blank."
+      "info": "Recommended: 750 x 850px. Falls back to desktop image if blank."
     },
     {
       "type": "text",
       "id": "desktop_image_url",
-      "label": "Desktop Image URL (Fallback)",
-      "info": "Optional direct image URL."
+      "label": "Desktop Image URL (Fallback)"
     },
     {
       "type": "text",
       "id": "mobile_image_url",
-      "label": "Mobile Image URL (Fallback)",
-      "info": "Optional direct mobile image URL."
+      "label": "Mobile Image URL (Fallback)"
     },
     {
       "type": "header",
@@ -627,8 +876,7 @@
       "type": "checkbox",
       "id": "full_width",
       "label": "Full Width (Edge-to-Edge)",
-      "default": true,
-      "info": "Covers all section width without margins."
+      "default": true
     },
     {
       "type": "select",
@@ -666,18 +914,16 @@
       "step": 2,
       "unit": "px",
       "label": "Banner Border Radius",
-      "default": 0,
-      "info": "Keep 0 for full-bleed edge-to-edge banners."
+      "default": 0
     },
     {
       "type": "header",
-      "content": "Entire Banner Link"
+      "content": "Entire Banner Link (Fallback)"
     },
     {
       "type": "url",
       "id": "banner_link",
-      "label": "Banner Link URL",
-      "info": "Makes the entire banner clickable (used when you upload a designed graphic banner without overlay text)."
+      "label": "Banner Link URL"
     },
     {
       "type": "checkbox",
@@ -762,8 +1008,7 @@
       "step": 5,
       "unit": "%",
       "label": "Overlay Dark Tint Opacity",
-      "default": 0,
-      "info": "Increase if text overlay needs more contrast against the image."
+      "default": 0
     },
     {
       "type": "color",
@@ -867,41 +1112,65 @@
   "blocks": [
     {
       "type": "product_banner",
-      "name": "Product Banner",
+      "name": "Banner Slide",
       "settings": [
         {
           "type": "product",
           "id": "product",
           "label": "Select Product",
-          "info": "This banner will show only on this product's page."
+          "info": "Leave blank to display on all products/pages."
         },
         {
           "type": "image_picker",
           "id": "desktop_image",
           "label": "Desktop Banner Image",
-          "info": "Recommended: 1920 x 600px or higher for crisp edge-to-edge cover."
+          "info": "Recommended: 1920 x 600px."
         },
         {
           "type": "image_picker",
           "id": "mobile_image",
           "label": "Mobile Banner Image (Optional)",
-          "info": "Recommended: 750 x 850px or square 1080 x 1080px. Automatically falls back to desktop image if left blank."
+          "info": "Recommended: 750 x 850px. Falls back to desktop image."
         },
         {
           "type": "url",
           "id": "banner_link",
           "label": "Banner Link URL (Optional)"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Slide Heading (Optional)"
+        },
+        {
+          "type": "text",
+          "id": "subheading",
+          "label": "Slide Subheading (Optional)"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Slide Button Text (Optional)"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Slide Button Link (Optional)"
         }
       ]
     }
   ],
   "presets": [
     {
-      "name": "Responsive Banner",
+      "name": "Responsive Banner Slider",
       "settings": {
         "full_width": true,
         "desktop_height": "adapt",
-        "mobile_height": "adapt"
+        "mobile_height": "adapt",
+        "slider_autoplay": true,
+        "slider_speed": 5,
+        "slider_show_arrows": true,
+        "slider_show_dots": true
       }
     }
   ]
