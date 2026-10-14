@@ -1,14 +1,19 @@
 {% comment %}
   AYOVA RESPONSIVE BANNER & SLIDER SECTION (Desktop & Mobile)
   - Single Banner OR Interactive Carousel / Slider
-  - Multiple Upload Sources Supported:
-    1. Product Metafields:
+  - Multiple Sources Supported:
+    1. Product Metaobjects (e.g. custom.product_banners, custom.banners, custom.banner_slider)
+       - List of Metaobjects (each entry = 1 slide with desktop/mobile image, link, text)
+       - Single Metaobject with 'images' list (list of files inside metaobject)
+    2. Global Metaobjects in shop.metaobjects (e.g. product_banner, product_banners, banner_slide)
+       - Metaobjects linking to product reference
+    3. Product Metafields:
        - List of image files: product.metafields.custom.desktop_banners, banners, product_banners
        - Numbered metafields: desktop_banner, desktop_banner_2, desktop_banner_3, desktop_banner_4, desktop_banner_5
        - Single metafield: desktop_banner (with mobile fallback)
-    2. Theme Customizer Blocks:
+    4. Theme Customizer Blocks:
        - Multiple banner slides per product or general slides
-    3. Section Fallback Images:
+    5. Section Fallback Images:
        - Used if no product-specific banners are found
   - Features: Touch swipe, Autoplay, Glassmorphic navigation arrows, Dots, Responsive <picture> loading
 {% endcomment %}
@@ -23,7 +28,7 @@
   assign slide_source = 'none'
 
   comment
-    Check 1: Customizer Blocks matching this product
+    Source 1: Customizer Blocks matching this product
   endcomment
   assign product_blocks_count = 0
   if is_product_page and section.blocks.size > 0
@@ -42,61 +47,136 @@
   endif
 
   comment
-    Check 2: Product Metafields (List or Numbered or Single)
+    Source 2: Product Metaobjects (via Product Metafield reference or list of metaobjects)
   endcomment
+  assign mo_ref = nil
   if total_slides == 0 and is_product_page
-    assign meta_list = nil
-    if product.metafields.custom.desktop_banners.value != blank
-      assign meta_list = product.metafields.custom.desktop_banners.value
-    elsif product.metafields.custom.banners.value != blank
-      assign meta_list = product.metafields.custom.banners.value
-    elsif product.metafields.custom.product_banners.value != blank
-      assign meta_list = product.metafields.custom.product_banners.value
-    elsif product.metafields.custom.banner_images.value != blank
-      assign meta_list = product.metafields.custom.banner_images.value
-    endif
+    assign mo_ref = product.metafields.custom.product_banners.value | default: product.metafields.custom.banners.value | default: product.metafields.custom.product_banner.value | default: product.metafields.custom.banner_slider.value | default: product.metafields.custom.banner_object.value | default: product.metafields.custom.banner.value
 
-    if meta_list != blank
-      assign total_slides = meta_list.size
-      assign slide_source = 'meta_list'
-    else
-      assign m1 = product.metafields.custom.desktop_banner.value | default: product.metafields.custom.desktop_banner
-      if m1 == blank
-        assign m1 = product.metafields.custom.banner.value | default: product.metafields.custom.banner
-      endif
-      if m1 == blank
-        assign m1 = product.metafields.custom.banner_image.value | default: product.metafields.custom.banner_image
-      endif
-      if m1 == blank
-        assign m1 = product.metafields.custom.desktop_banner_image.value | default: product.metafields.custom.desktop_banner_image
+    if mo_ref != blank
+      comment
+        Check if mo_ref is a List of Metaobjects
+      endcomment
+      if mo_ref.first != blank and mo_ref.size > 0
+        assign is_metaobject_list = false
+        for item in mo_ref
+          if item.desktop_image != blank or item.image != blank or item.desktop_banner != blank or item.banner != blank or item.file != blank
+            assign is_metaobject_list = true
+            break
+          endif
+        endfor
+
+        if is_metaobject_list
+          assign total_slides = mo_ref.size
+          assign slide_source = 'metaobject_list'
+        endif
       endif
 
-      assign m2 = product.metafields.custom.desktop_banner_2.value | default: product.metafields.custom.desktop_banner_2
-      assign m3 = product.metafields.custom.desktop_banner_3.value | default: product.metafields.custom.desktop_banner_3
-      assign m4 = product.metafields.custom.desktop_banner_4.value | default: product.metafields.custom.desktop_banner_4
-      assign m5 = product.metafields.custom.desktop_banner_5.value | default: product.metafields.custom.desktop_banner_5
-
-      if m1 != blank
-        assign total_slides = 1
-        assign slide_source = 'meta_numbered'
-        if m2 != blank
-          assign total_slides = total_slides | plus: 1
-        endif
-        if m3 != blank
-          assign total_slides = total_slides | plus: 1
-        endif
-        if m4 != blank
-          assign total_slides = total_slides | plus: 1
-        endif
-        if m5 != blank
-          assign total_slides = total_slides | plus: 1
+      comment
+        Check if mo_ref is a Single Metaobject containing a list of images (e.g. mo_ref.images or mo_ref.desktop_images)
+      endcomment
+      if total_slides == 0
+        assign mo_images_list = mo_ref.images.value | default: mo_ref.desktop_images.value | default: mo_ref.banners.value | default: mo_ref.desktop_banners.value | default: mo_ref.banner_images.value | default: mo_ref.files.value
+        if mo_images_list != blank and mo_images_list.size > 0
+          assign total_slides = mo_images_list.size
+          assign slide_source = 'metaobject_single_images'
         endif
       endif
     endif
   endif
 
   comment
-    Check 3: Generic Customizer Blocks (blocks with no product specified)
+    Source 3: Shop Metaobjects (Global metaobjects pointing to product reference)
+  endcomment
+  if total_slides == 0 and is_product_page
+    assign global_mo_count = 0
+    if shop.metaobjects.product_banner != blank
+      for entry in shop.metaobjects.product_banner.values
+        if entry.product.value.handle == product.handle or entry.product.value.id == product.id
+          assign global_mo_count = global_mo_count | plus: 1
+        endif
+      endfor
+    elsif shop.metaobjects.product_banners != blank
+      for entry in shop.metaobjects.product_banners.values
+        if entry.product.value.handle == product.handle or entry.product.value.id == product.id
+          assign global_mo_count = global_mo_count | plus: 1
+        endif
+      endfor
+    elsif shop.metaobjects.banner_slide != blank
+      for entry in shop.metaobjects.banner_slide.values
+        if entry.product.value.handle == product.handle or entry.product.value.id == product.id
+          assign global_mo_count = global_mo_count | plus: 1
+        endif
+      endfor
+    endif
+
+    if global_mo_count > 0
+      assign total_slides = global_mo_count
+      assign slide_source = 'shop_metaobjects'
+    endif
+  endif
+
+  comment
+    Source 4: Direct Product Metafield List of Files (list.file_reference)
+  endcomment
+  if total_slides == 0 and is_product_page
+    assign file_list = nil
+    if product.metafields.custom.desktop_banners.value != blank
+      assign file_list = product.metafields.custom.desktop_banners.value
+    elsif product.metafields.custom.banners.value != blank
+      assign file_list = product.metafields.custom.banners.value
+    elsif product.metafields.custom.product_banners.value != blank
+      assign file_list = product.metafields.custom.product_banners.value
+    elsif product.metafields.custom.banner_images.value != blank
+      assign file_list = product.metafields.custom.banner_images.value
+    endif
+
+    if file_list != blank and file_list.size > 0
+      assign total_slides = file_list.size
+      assign slide_source = 'meta_list'
+    endif
+  endif
+
+  comment
+    Source 5: Numbered or Single Product Metafields
+  endcomment
+  if total_slides == 0 and is_product_page
+    assign m1 = product.metafields.custom.desktop_banner.value | default: product.metafields.custom.desktop_banner
+    if m1 == blank
+      assign m1 = product.metafields.custom.banner.value | default: product.metafields.custom.banner
+    endif
+    if m1 == blank
+      assign m1 = product.metafields.custom.banner_image.value | default: product.metafields.custom.banner_image
+    endif
+    if m1 == blank
+      assign m1 = product.metafields.custom.desktop_banner_image.value | default: product.metafields.custom.desktop_banner_image
+    endif
+
+    assign m2 = product.metafields.custom.desktop_banner_2.value | default: product.metafields.custom.desktop_banner_2
+    assign m3 = product.metafields.custom.desktop_banner_3.value | default: product.metafields.custom.desktop_banner_3
+    assign m4 = product.metafields.custom.desktop_banner_4.value | default: product.metafields.custom.desktop_banner_4
+    assign m5 = product.metafields.custom.desktop_banner_5.value | default: product.metafields.custom.desktop_banner_5
+
+    if m1 != blank
+      assign total_slides = 1
+      assign slide_source = 'meta_numbered'
+      if m2 != blank
+        assign total_slides = total_slides | plus: 1
+      endif
+      if m3 != blank
+        assign total_slides = total_slides | plus: 1
+      endif
+      if m4 != blank
+        assign total_slides = total_slides | plus: 1
+      endif
+      if m5 != blank
+        assign total_slides = total_slides | plus: 1
+      endif
+    endif
+  endif
+
+  comment
+    Source 6: Generic Customizer Blocks (blocks with no product specified)
   endcomment
   if total_slides == 0 and section.blocks.size > 0
     assign generic_blocks_count = 0
@@ -112,7 +192,7 @@
   endif
 
   comment
-    Check 4: Section Settings Fallback
+    Source 7: Section Settings Fallback
   endcomment
   if total_slides == 0
     if section.settings.desktop_image != blank or section.settings.desktop_image_url != blank
@@ -126,7 +206,7 @@
   endcomment
   assign skip_section = false
   if is_product_page and section.settings.hide_if_no_product_banner
-    if slide_source != 'product_blocks' and slide_source != 'meta_list' and slide_source != 'meta_numbered'
+    if slide_source == 'generic_blocks' or slide_source == 'section_settings' or slide_source == 'none'
       assign skip_section = true
     endif
   endif
@@ -159,10 +239,90 @@
             {% endif %}
           {% endfor %}
 
-        {% comment %} CASE 2: METAFIELD LIST {% endcomment %}
+        {% comment %} CASE 2A: LIST OF METAOBJECTS (Each entry = 1 slide) {% endcomment %}
+        {% elsif slide_source == 'metaobject_list' %}
+          {% for slide_item in mo_ref %}
+            {% assign s_desk = slide_item.desktop_image.value | default: slide_item.desktop_image | default: slide_item.image.value | default: slide_item.image | default: slide_item.desktop_banner.value | default: slide_item.desktop_banner | default: slide_item.banner.value | default: slide_item.banner | default: slide_item.file.value | default: slide_item.file %}
+            {% assign s_mob = slide_item.mobile_image.value | default: slide_item.mobile_image | default: slide_item.mobile_banner.value | default: slide_item.mobile_banner | default: s_desk %}
+            {% assign s_link = slide_item.link.value | default: slide_item.link | default: slide_item.banner_link.value | default: slide_item.banner_link | default: slide_item.url.value | default: slide_item.url | default: section.settings.banner_link %}
+            {% assign s_heading = slide_item.heading.value | default: slide_item.heading | default: slide_item.title.value | default: slide_item.title | default: section.settings.heading %}
+            {% assign s_subheading = slide_item.subheading.value | default: slide_item.subheading | default: slide_item.subtitle.value | default: slide_item.subtitle | default: section.settings.subheading %}
+            {% assign s_badge = section.settings.badge_text %}
+            {% assign s_btn_text = slide_item.button_text.value | default: slide_item.button_text | default: section.settings.button_1_text %}
+            {% assign s_btn_link = slide_item.button_link.value | default: slide_item.button_link | default: section.settings.button_1_link %}
+            {% render 'banner-slide-item', s_desk: s_desk, s_mob: s_mob, s_link: s_link, s_heading: s_heading, s_subheading: s_subheading, s_badge: s_badge, s_btn_text: s_btn_text, s_btn_link: s_btn_link, section: section, forloop: forloop %}
+          {% endfor %}
+
+        {% comment %} CASE 2B: SINGLE METAOBJECT WITH IMAGES LIST {% endcomment %}
+        {% elsif slide_source == 'metaobject_single_images' %}
+          {% assign mo_mob_list = mo_ref.mobile_images.value | default: mo_ref.mobile_banners.value %}
+          {% for img_item in mo_images_list %}
+            {% assign s_desk = img_item %}
+            {% assign s_mob = nil %}
+            {% if mo_mob_list != blank and mo_mob_list[forloop.index0] != blank %}
+              {% assign s_mob = mo_mob_list[forloop.index0] %}
+            {% else %}
+              {% assign s_mob = s_desk %}
+            {% endif %}
+            {% assign s_link = mo_ref.link.value | default: mo_ref.link | default: mo_ref.banner_link.value | default: mo_ref.banner_link | default: section.settings.banner_link %}
+            {% assign s_heading = mo_ref.heading.value | default: mo_ref.heading | default: section.settings.heading %}
+            {% assign s_subheading = mo_ref.subheading.value | default: mo_ref.subheading | default: section.settings.subheading %}
+            {% assign s_badge = section.settings.badge_text %}
+            {% assign s_btn_text = section.settings.button_1_text %}
+            {% assign s_btn_link = section.settings.button_1_link %}
+            {% render 'banner-slide-item', s_desk: s_desk, s_mob: s_mob, s_link: s_link, s_heading: s_heading, s_subheading: s_subheading, s_badge: s_badge, s_btn_text: s_btn_text, s_btn_link: s_btn_link, section: section, forloop: forloop %}
+          {% endfor %}
+
+        {% comment %} CASE 3: GLOBAL SHOP METAOBJECTS (linking to product) {% endcomment %}
+        {% elsif slide_source == 'shop_metaobjects' %}
+          {% if shop.metaobjects.product_banner != blank %}
+            {% for entry in shop.metaobjects.product_banner.values %}
+              {% if entry.product.value.handle == product.handle or entry.product.value.id == product.id %}
+                {% assign s_desk = entry.desktop_image.value | default: entry.desktop_image | default: entry.image.value | default: entry.image | default: entry.banner.value | default: entry.banner | default: entry.file.value | default: entry.file %}
+                {% assign s_mob = entry.mobile_image.value | default: entry.mobile_image | default: entry.mobile_banner.value | default: entry.mobile_banner | default: s_desk %}
+                {% assign s_link = entry.link.value | default: entry.link | default: entry.banner_link.value | default: entry.banner_link | default: entry.url.value | default: entry.url | default: section.settings.banner_link %}
+                {% assign s_heading = entry.heading.value | default: entry.heading | default: entry.title.value | default: entry.title | default: section.settings.heading %}
+                {% assign s_subheading = entry.subheading.value | default: entry.subheading | default: section.settings.subheading %}
+                {% assign s_badge = section.settings.badge_text %}
+                {% assign s_btn_text = entry.button_text.value | default: entry.button_text | default: section.settings.button_1_text %}
+                {% assign s_btn_link = entry.button_link.value | default: entry.button_link | default: section.settings.button_1_link %}
+                {% render 'banner-slide-item', s_desk: s_desk, s_mob: s_mob, s_link: s_link, s_heading: s_heading, s_subheading: s_subheading, s_badge: s_badge, s_btn_text: s_btn_text, s_btn_link: s_btn_link, section: section, forloop: forloop %}
+              {% endif %}
+            {% endfor %}
+          {% elsif shop.metaobjects.product_banners != blank %}
+            {% for entry in shop.metaobjects.product_banners.values %}
+              {% if entry.product.value.handle == product.handle or entry.product.value.id == product.id %}
+                {% assign s_desk = entry.desktop_image.value | default: entry.desktop_image | default: entry.image.value | default: entry.image | default: entry.banner.value | default: entry.banner | default: entry.file.value | default: entry.file %}
+                {% assign s_mob = entry.mobile_image.value | default: entry.mobile_image | default: entry.mobile_banner.value | default: entry.mobile_banner | default: s_desk %}
+                {% assign s_link = entry.link.value | default: entry.link | default: entry.banner_link.value | default: entry.banner_link | default: entry.url.value | default: entry.url | default: section.settings.banner_link %}
+                {% assign s_heading = entry.heading.value | default: entry.heading | default: entry.title.value | default: entry.title | default: section.settings.heading %}
+                {% assign s_subheading = entry.subheading.value | default: entry.subheading | default: section.settings.subheading %}
+                {% assign s_badge = section.settings.badge_text %}
+                {% assign s_btn_text = entry.button_text.value | default: entry.button_text | default: section.settings.button_1_text %}
+                {% assign s_btn_link = entry.button_link.value | default: entry.button_link | default: section.settings.button_1_link %}
+                {% render 'banner-slide-item', s_desk: s_desk, s_mob: s_mob, s_link: s_link, s_heading: s_heading, s_subheading: s_subheading, s_badge: s_badge, s_btn_text: s_btn_text, s_btn_link: s_btn_link, section: section, forloop: forloop %}
+              {% endif %}
+            {% endfor %}
+          {% elsif shop.metaobjects.banner_slide != blank %}
+            {% for entry in shop.metaobjects.banner_slide.values %}
+              {% if entry.product.value.handle == product.handle or entry.product.value.id == product.id %}
+                {% assign s_desk = entry.desktop_image.value | default: entry.desktop_image | default: entry.image.value | default: entry.image | default: entry.banner.value | default: entry.banner | default: entry.file.value | default: entry.file %}
+                {% assign s_mob = entry.mobile_image.value | default: entry.mobile_image | default: entry.mobile_banner.value | default: entry.mobile_banner | default: s_desk %}
+                {% assign s_link = entry.link.value | default: entry.link | default: entry.banner_link.value | default: entry.banner_link | default: entry.url.value | default: entry.url | default: section.settings.banner_link %}
+                {% assign s_heading = entry.heading.value | default: entry.heading | default: entry.title.value | default: entry.title | default: section.settings.heading %}
+                {% assign s_subheading = entry.subheading.value | default: entry.subheading | default: section.settings.subheading %}
+                {% assign s_badge = section.settings.badge_text %}
+                {% assign s_btn_text = entry.button_text.value | default: entry.button_text | default: section.settings.button_1_text %}
+                {% assign s_btn_link = entry.button_link.value | default: entry.button_link | default: section.settings.button_1_link %}
+                {% render 'banner-slide-item', s_desk: s_desk, s_mob: s_mob, s_link: s_link, s_heading: s_heading, s_subheading: s_subheading, s_badge: s_badge, s_btn_text: s_btn_text, s_btn_link: s_btn_link, section: section, forloop: forloop %}
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+
+        {% comment %} CASE 4: DIRECT METAFIELD LIST OF FILES {% endcomment %}
         {% elsif slide_source == 'meta_list' %}
           {% assign mob_list = product.metafields.custom.mobile_banners.value | default: product.metafields.custom.banners_mobile.value %}
-          {% for img_item in meta_list %}
+          {% for img_item in file_list %}
             {% assign s_desk = img_item %}
             {% assign s_mob = nil %}
             {% if mob_list != blank and mob_list[forloop.index0] != blank %}
@@ -179,7 +339,7 @@
             {% render 'banner-slide-item', s_desk: s_desk, s_mob: s_mob, s_link: s_link, s_heading: s_heading, s_subheading: s_subheading, s_badge: s_badge, s_btn_text: s_btn_text, s_btn_link: s_btn_link, section: section, forloop: forloop %}
           {% endfor %}
 
-        {% comment %} CASE 3: NUMBERED METAFIELDS {% endcomment %}
+        {% comment %} CASE 5: NUMBERED METAFIELDS {% endcomment %}
         {% elsif slide_source == 'meta_numbered' %}
           {% assign mob_1 = product.metafields.custom.mobile_banner.value | default: product.metafields.custom.mobile_banner %}
           {% assign s_mob_1 = mob_1 | default: m1 %}
@@ -209,7 +369,7 @@
             {% render 'banner-slide-item', s_desk: m5, s_mob: s_mob_5, s_link: section.settings.banner_link, s_heading: section.settings.heading, s_subheading: section.settings.subheading, s_badge: section.settings.badge_text, s_btn_text: section.settings.button_1_text, s_btn_link: section.settings.button_1_link, section: section %}
           {% endif %}
 
-        {% comment %} CASE 4: GENERIC BLOCKS {% endcomment %}
+        {% comment %} CASE 6: GENERIC BLOCKS {% endcomment %}
         {% elsif slide_source == 'generic_blocks' %}
           {% for block in section.blocks %}
             {% if block.type == 'product_banner' and block.settings.product == blank and block.settings.desktop_image != blank %}
@@ -225,7 +385,7 @@
             {% endif %}
           {% endfor %}
 
-        {% comment %} CASE 5: SECTION SETTINGS FALLBACK {% endcomment %}
+        {% comment %} CASE 7: SECTION SETTINGS FALLBACK {% endcomment %}
         {% elsif slide_source == 'section_settings' %}
           {% assign s_desk = section.settings.desktop_image %}
           {% assign s_mob = section.settings.mobile_image | default: s_desk %}
@@ -248,7 +408,7 @@
                   <circle cx="8.5" cy="8.5" r="1.5"/>
                   <polyline points="21 15 16 10 5 21"/>
                 </svg>
-                <span>Upload Banners in Theme Editor Blocks or Product Metafields</span>
+                <span>Upload Banners in Metaobjects or Theme Editor Blocks</span>
               </div>
             </div>
           </div>
@@ -794,14 +954,14 @@
   "settings": [
     {
       "type": "header",
-      "content": "Product Metafield Settings"
+      "content": "Metaobject & Metafield Settings"
     },
     {
       "type": "checkbox",
       "id": "enable_product_metafields",
-      "label": "Auto-detect Product Metafields",
+      "label": "Auto-detect Metaobjects & Metafields",
       "default": true,
-      "info": "Uses product metafield list or single/numbered banners if present."
+      "info": "Automatically detects product metaobjects or metafield banner lists."
     },
     {
       "type": "checkbox",
