@@ -5,11 +5,7 @@
     {% endif %}
 
     <div class="ws-slider-wrapper">
-      <button class="ws-nav-btn ws-prev" type="button" aria-label="Previous">
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="15 18 9 12 15 6"></polyline>
-        </svg>
-      </button>
+      <button class="ayova-overlay-btn ws-nav-btn ws-prev" type="button" aria-label="Previous">←</button>
 
       <div class="watch-shop-grid" id="ws-grid-{{ section.id }}">
         {% for block in section.blocks %}
@@ -171,28 +167,14 @@
         {% endfor %}
       </div>
 
-      <button class="ws-nav-btn ws-next" type="button" aria-label="Next">
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="9 18 15 12 9 6"></polyline>
-        </svg>
-      </button>
+      <button class="ayova-overlay-btn ws-nav-btn ws-next" type="button" aria-label="Next">→</button>
     </div>
 
     <!-- Centered Glossy Carousel Controls for Mobile -->
     <div class="ws-carousel-controls" aria-label="Carousel navigation">
-      <button class="ws-nav-btn ws-nav-btn--inline ws-prev" type="button" aria-label="Previous">
-        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="15 18 9 12 15 6"></polyline>
-        </svg>
-      </button>
-
+      <button class="ayova-overlay-btn ws-nav-btn ws-nav-btn--inline ws-prev" type="button" aria-label="Previous">←</button>
       <div class="ws-carousel-dots ayova-carousel-dots" id="ws-dots-{{ section.id }}"></div>
-
-      <button class="ws-nav-btn ws-nav-btn--inline ws-next" type="button" aria-label="Next">
-        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="9 18 15 12 9 6"></polyline>
-        </svg>
-      </button>
+      <button class="ayova-overlay-btn ws-nav-btn ws-nav-btn--inline ws-next" type="button" aria-label="Next">→</button>
     </div>
   </div>
 </div>
@@ -209,11 +191,13 @@ document.addEventListener('DOMContentLoaded', function() {
   const cards = grid.querySelectorAll('.watch-shop-card');
 
   function getStepSize() {
-    const isMobile = window.innerWidth <= 768;
     const card = cards[0];
-    const cardWidth = card ? card.offsetWidth : (isMobile ? 205 : 184);
-    const gap = isMobile ? 12 : 16;
-    return cardWidth + gap;
+    if (card) {
+      const style = window.getComputedStyle(grid);
+      const gap = parseFloat(style.gap) || (window.innerWidth <= 768 ? 12 : 16);
+      return card.offsetWidth + gap;
+    }
+    return 260;
   }
 
   function renderDots() {
@@ -395,34 +379,73 @@ document.addEventListener('DOMContentLoaded', function() {
   max-width: 100%;
 }
 
-.ws-nav-btn {
+.ayova-overlay-btn.ws-nav-btn {
   position: absolute;
   top: 45%;
   transform: translateY(-50%);
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border: 1px solid #eaeaea;
   border-radius: 50%;
-  color: #202824;
+  font-size: 1.2rem;
+  line-height: 1;
+  color: #333333;
   cursor: pointer;
-  z-index: 10;
-  display: none;
+  z-index: 15;
+  display: flex !important;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   transition: background 0.2s, color 0.2s, transform 0.15s, opacity 0.2s;
   padding: 0;
 }
 
-.ws-nav-btn:hover {
-  background: var(--color-forest-primary, #173E34);
-  color: #fff;
+.ayova-overlay-btn.ws-nav-btn:hover {
+  background: var(--color-forest-dark, #1a3c34);
+  color: #ffffff;
   transform: translateY(-50%) scale(1.06);
 }
 
-.ws-prev { left: -16px; }
-.ws-next { right: -16px; }
+.ayova-overlay-btn.ws-nav-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.ws-slider-wrapper .ws-prev {
+  left: -20px;
+}
+
+.ws-slider-wrapper .ws-next {
+  right: -20px;
+}
+
+@media (min-width: 1200px) {
+  .ws-slider-wrapper .ws-prev {
+    left: -44px;
+  }
+  .ws-slider-wrapper .ws-next {
+    right: -44px;
+  }
+}
+
+@media (max-width: 768px) {
+  .ws-slider-wrapper .ws-prev {
+    left: 4px;
+    width: 36px;
+    height: 36px;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  }
+  .ws-slider-wrapper .ws-next {
+    right: 4px;
+    width: 36px;
+    height: 36px;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  }
+}
 
 .watch-shop-grid {
   display: flex;
@@ -432,6 +455,8 @@ document.addEventListener('DOMContentLoaded', function() {
   scrollbar-width: none;
   -ms-overflow-style: none;
   -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  padding: 8px 0;
 }
 
 .watch-shop-grid::-webkit-scrollbar {
@@ -440,8 +465,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
 @media (min-width: 992px) {
   .watch-shop-grid {
-    justify-content: center;
+    justify-content: flex-start;
     gap: 16px;
+  }
+  .watch-shop-card {
+    flex: 0 0 calc((100% - (3 * 16px)) / 4) !important;
+    width: calc((100% - (3 * 16px)) / 4) !important;
+    max-width: calc((100% - (3 * 16px)) / 4) !important;
+    min-width: calc((100% - (3 * 16px)) / 4) !important;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 991px) {
+  .watch-shop-grid {
+    justify-content: flex-start;
+    gap: 14px;
+  }
+  .watch-shop-card {
+    flex: 0 0 calc((100% - (2 * 14px)) / 3) !important;
+    width: calc((100% - (2 * 14px)) / 3) !important;
+    max-width: calc((100% - (2 * 14px)) / 3) !important;
+    min-width: calc((100% - (2 * 14px)) / 3) !important;
   }
 }
 
