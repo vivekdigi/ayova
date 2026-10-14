@@ -472,17 +472,17 @@
   #banner-{{ section.id }} {
     padding-top: var(--p-top, 0px);
     padding-bottom: var(--p-bottom, 0px);
-    margin-top: var(--m-top, 28px);
+    margin-top: var(--m-top, 8px);
     margin-bottom: var(--m-bottom, 28px);
   }
 
   @media (max-width: 768px) {
     #banner-{{ section.id }} {
-      margin-top: max(var(--m-top, 28px), 24px) !important;
-      margin-bottom: max(var(--m-bottom, 28px), 24px) !important;
+      margin-top: var(--m-top, 8px) !important;
+      margin-bottom: max(var(--m-bottom, 24px), 20px) !important;
     }
     .ayova-banner-stack {
-      gap: max(var(--stack-gap, 16px), 20px) !important;
+      gap: var(--stack-gap, 16px) !important;
     }
   }
 
@@ -1331,7 +1331,7 @@
       "step": 4,
       "unit": "px",
       "label": "Top Spacing (Margin)",
-      "default": 28
+      "default": 8
     },
     {
       "type": "range",
