@@ -1657,35 +1657,7 @@
 
 @media (min-width: 769px) {
   .mobile-sticky-action-bar {
-    padding: 12px 24px;
-    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
-    transform: translateY(100%);
-    opacity: 0;
-    pointer-events: none;
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
-  }
-
-  .mobile-sticky-action-bar.is-sticky-visible {
-    transform: translateY(0);
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  .mobile-sticky-inner {
-    max-width: 520px;
-    gap: 14px;
-  }
-
-  .btn-sticky-action {
-    height: 48px;
-    font-size: 0.88rem;
-    padding: 0 16px;
-    border-radius: 30px;
-  }
-
-  .btn-sticky-action:hover {
-    opacity: 0.92;
-    transform: translateY(-1px);
+    display: none !important;
   }
 }
 </style>
@@ -1705,7 +1677,7 @@
   <style>
     .floating-product-video {
       position: fixed;
-      bottom: 85px;
+      bottom: 24px;
       left: 20px;
       width: 110px;
       border-radius: 10px;
@@ -1897,27 +1869,6 @@
   {% endunless %}
 </div>
 
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    var stickyBar = document.getElementById('mobileStickyActionBar');
-    var purchaseRow = document.querySelector('.purchase-actions-row');
-    if (stickyBar && purchaseRow) {
-      function checkStickyVisibility() {
-        if (window.innerWidth > 768) {
-          var rect = purchaseRow.getBoundingClientRect();
-          if (rect.bottom < 0) {
-            stickyBar.classList.add('is-sticky-visible');
-          } else {
-            stickyBar.classList.remove('is-sticky-visible');
-          }
-        }
-      }
-      window.addEventListener('scroll', checkStickyVisibility, { passive: true });
-      window.addEventListener('resize', checkStickyVisibility);
-      checkStickyVisibility();
-    }
-  });
-</script>
 
 {% schema %}
 {

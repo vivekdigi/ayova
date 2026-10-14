@@ -54,6 +54,7 @@ class AyovaCarousel {
   }
 
   init() {
+    this.track.style.gap = `${this.gap}px`;
     this.updateSlideWidths();
     this.createDots();
     this.bindEvents();
@@ -65,12 +66,19 @@ class AyovaCarousel {
   }
 
   updateSlideWidths() {
-    const containerWidth = this.container.getBoundingClientRect().width;
+    const computedStyle = window.getComputedStyle(this.container);
+    const paddingLeft = parseFloat(computedStyle.paddingLeft) || 0;
+    const paddingRight = parseFloat(computedStyle.paddingRight) || 0;
+    const availableWidth = this.container.clientWidth - paddingLeft - paddingRight;
     this.itemsPerView = this.calculateItemsPerView();
     
+    // Ensure track gap matches this.gap
+    this.track.style.gap = `${this.gap}px`;
+
     // Calculate width taking gap into account
     const totalGapsWidth = Math.max(0, (this.itemsPerView - 1) * this.gap);
-    const slideWidth = Math.max(120, (containerWidth - totalGapsWidth) / this.itemsPerView);
+    // 6px safety buffer to ensure subpixel rounding, device pixel ratio scaling, and card borders never get clipped by overflow:hidden
+    const slideWidth = Math.max(120, Math.floor((availableWidth - totalGapsWidth - 6) / this.itemsPerView));
 
     this.slides.forEach(slide => {
       slide.style.width = `${slideWidth}px`;
@@ -103,14 +111,38 @@ class AyovaCarousel {
     if (this.nextBtn) this.nextBtn.addEventListener('click', () => this.next());
 
     let resizeTimeout;
-    window.addEventListener('resize', () => {
+    const onResize = () => {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(() => {
         this.updateSlideWidths();
         this.createDots();
         this.goTo(Math.min(this.currentIndex, this.maxIndex));
-      }, 100);
+      }, 50);
+    };
+    window.addEventListener('resize', onResize);
+
+    // Re-evaluate on window load (when all assets, stylesheets & scrollbars settle)
+    window.addEventListener('load', () => {
+      this.updateSlideWidths();
+      this.update();
     });
+
+    // Re-evaluate when web fonts finish loading
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => {
+        this.updateSlideWidths();
+        this.update();
+      });
+    }
+
+    // Use ResizeObserver for accurate sizing whenever container dimensions change
+    if (window.ResizeObserver) {
+      this.resizeObserver = new ResizeObserver(() => {
+        this.updateSlideWidths();
+        this.update();
+      });
+      this.resizeObserver.observe(this.container);
+    }
 
     // Touch & Mouse Drag Support
     let startX = 0;

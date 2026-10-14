@@ -48,7 +48,7 @@
                 <div class="testimonial-quote-wrap">
                   {% assign quote_text = block.settings.quote | default: "The capsules are easy to take and the packaging feels very trustworthy. I have been consistent for six weeks and feel noticeably lighter after meals." %}
                   <p class="testimonial-quote">"{{ quote_text }}"</p>
-                  {% if quote_text.size > 115 %}
+                  {% if quote_text.size > 70 %}
                     <button type="button" class="testimonial-read-more" aria-label="Read full review">Read more</button>
                   {% endif %}
                 </div>
@@ -134,24 +134,38 @@
 </section>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.testimonials-section').forEach(function(section) {
-      section.addEventListener('click', function(e) {
-        if (e.target && e.target.classList.contains('testimonial-read-more')) {
-          e.preventDefault();
-          var btn = e.target;
-          var wrap = btn.closest('.testimonial-quote-wrap');
-          if (wrap) {
-            var quote = wrap.querySelector('.testimonial-quote');
-            if (quote) {
-              quote.classList.toggle('is-expanded');
-              btn.textContent = quote.classList.contains('is-expanded') ? 'Read less' : 'Read more';
-            }
+  (function() {
+    if (window._testimonialToggleInit) return;
+    window._testimonialToggleInit = true;
+
+    document.addEventListener('click', function(e) {
+      var readMoreBtn = e.target.closest('.testimonial-read-more');
+      var quoteWrap = e.target.closest('.testimonial-quote-wrap');
+      
+      if (!readMoreBtn && !quoteWrap) return;
+      if (e._testimonialHandled) return;
+      e._testimonialHandled = true;
+
+      if (readMoreBtn) {
+        e.preventDefault();
+        var wrap = readMoreBtn.closest('.testimonial-quote-wrap');
+        if (wrap) {
+          var quote = wrap.querySelector('.testimonial-quote');
+          if (quote) {
+            quote.classList.toggle('is-expanded');
+            readMoreBtn.textContent = quote.classList.contains('is-expanded') ? 'Read less' : 'Read more';
           }
         }
-      });
+      } else if (quoteWrap) {
+        var quote = quoteWrap.querySelector('.testimonial-quote');
+        var btn = quoteWrap.querySelector('.testimonial-read-more');
+        if (quote && btn) {
+          quote.classList.toggle('is-expanded');
+          btn.textContent = quote.classList.contains('is-expanded') ? 'Read less' : 'Read more';
+        }
+      }
     });
-  });
+  })();
 </script>
 
 {% schema %}

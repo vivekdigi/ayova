@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ayova PDP Sticky Bar Desktop vs Mobile Test</title>
+  <link rel="stylesheet" href="assets/theme.css">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f8f9fa;
+      color: #173E34;
+    }
+    .pdp-container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 24px;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    }
+    .pdp-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+    @media (max-width: 768px) {
+      .pdp-grid {
+        grid-template-columns: 1fr;
+      }
+      .purchase-actions-row {
+        display: none !important;
+      }
+    }
+    .img-box {
+      background: #eef2ed;
+      border-radius: 12px;
+      height: 380px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: #5c746b;
+      font-weight: 600;
+    }
+    .purchase-actions-row {
+      display: flex;
+      gap: 12px;
+      margin: 20px 0;
+    }
+    .desktop-cart-btn {
+      flex: 1;
+      height: 48px;
+      background: #173E34;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .desktop-buy-btn {
+      flex: 1;
+      height: 48px;
+      background: #D96C3F;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .info-box {
+      background: #E8F5E9;
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 24px;
+      border-left: 4px solid #2E7D32;
+      font-size: 14px;
+    }
+
+    /* Mobile Sticky Action Bar styles matching main-product.liquid */
+    .mobile-sticky-action-bar {
+      display: block;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-top: 1px solid #E2E6DF;
+      padding: 8px 14px 10px;
+      padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+      z-index: 999;
+      box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08);
+    }
+    .mobile-sticky-inner {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      max-width: 500px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .btn-sticky-action {
+      flex: 1;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      border-radius: 22px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      box-sizing: border-box;
+      padding: 0 10px;
+      letter-spacing: 0.02em;
+    }
+    .btn-sticky-action.add-cart-sticky {
+      background-color: #173E34;
+      color: #ffffff;
+    }
+    .btn-sticky-action.buy-now-sticky {
+      background-color: #D96C3F;
+      color: #ffffff;
+    }
+    .mobile-sticky-marketplace {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 6px;
+    }
+
+    /* Floating Video Preview */
+    .floating-product-video {
+      position: fixed;
+      left: 20px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #173E34;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      z-index: 9999;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="pdp-container">
+    <div class="info-box">
+      <strong>Verification Test:</strong><br>
+      • <strong>On Desktop (>768px):</strong> Fixed sticky action bar is <code>display: none !important</code>. Only regular in-page purchase buttons appear.<br>
+      • <strong>On Mobile (≤768px):</strong> In-page purchase buttons are hidden, and sticky bar is docked at bottom with 'ADD TO CART', 'BUY NOW' & marketplace buttons.
+    </div>
+
+    <div class="pdp-grid">
+      <div class="img-box">Product Image / Gallery</div>
+      <div>
+        <h1 style="font-size: 26px; margin-top: 0;">Ayova Liver Care Syrup (200ml)</h1>
+        <div style="font-size: 22px; font-weight: 700; color: #D96C3F; margin-bottom: 16px;">₹389.00</div>
+        <p style="color: #4a5568; line-height: 1.6;">
+          Enriched with Milk Thistle, Bhumi Amla & Kalmegh to support healthy liver enzymes, natural detoxification, and digestive health.
+        </p>
+
+        <!-- Desktop In-Page Purchase Row -->
+        <div class="purchase-actions-row">
+          <button class="desktop-cart-btn">ADD TO CART</button>
+          <button class="desktop-buy-btn">BUY NOW</button>
+        </div>
+
+        <div style="height: 600px; background: #fafafa; border-radius: 8px; padding: 16px; margin-top: 24px; color: #718096;">
+          (Scrollable product details & reviews content)
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Video -->
+  <div class="floating-product-video">🎥</div>
+
+  <!-- Sticky Purchase Action Bar (Should be completely hidden on desktop!) -->
+  <div class="mobile-sticky-action-bar" id="mobileStickyActionBar">
+    <div class="mobile-sticky-inner">
+      <button type="button" class="btn-sticky-action add-cart-sticky">ADD TO CART</button>
+      <button type="button" class="btn-sticky-action buy-now-sticky">BUY NOW</button>
+    </div>
+    <div class="mobile-sticky-marketplace">
+      <div class="ayova-marketplace-bar ayova-marketplace-bar--sticky" style="display: flex; gap: 8px; justify-content: center; align-items: center;">
+        <span class="ayova-marketplace-label" style="font-size: 11px; color: #666; font-weight: 600;">Buy now:</span>
+        <a href="#" class="ayova-marketplace-btn ayova-mkt-amazon" style="border: 1px solid #FF9900; background: #FFFDF8; border-radius: 6px; padding: 2px 10px; display: inline-flex; align-items: center; height: 26px;">
+          <img src="assets/amazon.svg" alt="Amazon" style="height: 14px; width: auto;">
+        </a>
+        <a href="#" class="ayova-marketplace-btn ayova-mkt-flipkart" style="border: 1px solid #2874F0; background: #F8FBFF; border-radius: 6px; padding: 2px 10px; display: inline-flex; align-items: center; height: 26px;">
+          <img src="assets/flipkart.svg" alt="Flipkart" style="height: 14px; width: auto;">
+        </a>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -425,8 +425,42 @@
     });
   }
 
+  /* ── Testimonial Read More / Less Toggle ───────────────────────── */
+  function initTestimonialToggle() {
+    if (window._testimonialToggleInit) return;
+    window._testimonialToggleInit = true;
+
+    document.addEventListener('click', function(e) {
+      var readMoreBtn = e.target.closest('.testimonial-read-more');
+      var quoteWrap = e.target.closest('.testimonial-quote-wrap');
+
+      if (!readMoreBtn && !quoteWrap) return;
+      if (e._testimonialHandled) return;
+      e._testimonialHandled = true;
+
+      if (readMoreBtn) {
+        e.preventDefault();
+        var wrap = readMoreBtn.closest('.testimonial-quote-wrap');
+        if (wrap) {
+          var quote = wrap.querySelector('.testimonial-quote');
+          if (quote) {
+            quote.classList.toggle('is-expanded');
+            readMoreBtn.textContent = quote.classList.contains('is-expanded') ? 'Read less' : 'Read more';
+          }
+        }
+      } else if (quoteWrap) {
+        var quote = quoteWrap.querySelector('.testimonial-quote');
+        var btn = quoteWrap.querySelector('.testimonial-read-more');
+        if (quote && btn) {
+          quote.classList.toggle('is-expanded');
+          btn.textContent = quote.classList.contains('is-expanded') ? 'Read less' : 'Read more';
+        }
+      }
+    });
+  }
+
   /* ── Initialize All ───────────────────────────────────────────── */
-  document.addEventListener('DOMContentLoaded', function() {
+  function initAll() {
     initMobileMenu();
     initSearch();
     initCartAjax();
@@ -438,6 +472,13 @@
     initStickyHeader();
     initCartQuantity();
     initScrollAnimations();
-  });
+    initTestimonialToggle();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAll);
+  } else {
+    initAll();
+  }
 
 })();
