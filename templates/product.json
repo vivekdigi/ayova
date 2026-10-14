@@ -183,8 +183,8 @@
         "desktop_height": "adapt",
         "mobile_height": "adapt",
         "border_radius": 0,
-        "margin_top": 0,
-        "margin_bottom": 0
+        "margin_top": 28,
+        "margin_bottom": 28
       }
     }
   },

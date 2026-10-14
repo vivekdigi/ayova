@@ -470,10 +470,20 @@
 
 <style>
   #banner-{{ section.id }} {
-    padding-top: var(--p-top);
-    padding-bottom: var(--p-bottom);
-    margin-top: var(--m-top);
-    margin-bottom: var(--m-bottom);
+    padding-top: var(--p-top, 0px);
+    padding-bottom: var(--p-bottom, 0px);
+    margin-top: var(--m-top, 28px);
+    margin-bottom: var(--m-bottom, 28px);
+  }
+
+  @media (max-width: 768px) {
+    #banner-{{ section.id }} {
+      margin-top: max(var(--m-top, 28px), 24px) !important;
+      margin-bottom: max(var(--m-bottom, 28px), 24px) !important;
+    }
+    .ayova-banner-stack {
+      gap: max(var(--stack-gap, 16px), 20px) !important;
+    }
   }
 
   .ayova-banner-section--full {
@@ -1321,7 +1331,7 @@
       "step": 4,
       "unit": "px",
       "label": "Top Spacing (Margin)",
-      "default": 0
+      "default": 28
     },
     {
       "type": "range",
@@ -1331,7 +1341,7 @@
       "step": 4,
       "unit": "px",
       "label": "Bottom Spacing (Margin)",
-      "default": 0
+      "default": 28
     },
     {
       "type": "range",
