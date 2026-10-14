@@ -1,0 +1,909 @@
+{% comment %}
+  AYOVA RESPONSIVE BANNER SECTION (Desktop & Mobile)
+  - Separate desktop & mobile banners with full-width cover support
+  - Natural aspect ratio adaptation or fixed heights
+  - Optional dynamic text overlay, badges & buttons
+  - Usable anywhere: Default Product page (PDP), Homepage, Collections, etc.
+{% endcomment %}
+
+{% liquid
+  assign desktop_img = nil
+  assign mobile_img = nil
+  assign desktop_img_url = nil
+  assign mobile_img_url = nil
+  assign banner_link = section.settings.banner_link
+  assign found_product_banner = false
+  assign skip_section = false
+
+  comment
+    1. Check for specific product match in Theme Customizer blocks
+  endcomment
+  if product != blank and section.blocks.size > 0
+    for block in section.blocks
+      if block.type == 'product_banner' and block.settings.product != blank
+        if block.settings.product.handle == product.handle or block.settings.product.id == product.id
+          assign desktop_img = block.settings.desktop_image
+          assign mobile_img = block.settings.mobile_image | default: desktop_img
+          if block.settings.banner_link != blank
+            assign banner_link = block.settings.banner_link
+          endif
+          assign found_product_banner = true
+          break
+        endif
+      endif
+    endfor
+  endif
+
+  comment
+    2. Check for Product Metafields if no block matched (e.g. desktop_banner, mobile_banner)
+  endcomment
+  if found_product_banner == false and product != blank
+    assign meta_desk = product.metafields.custom.desktop_banner.value | default: product.metafields.custom.desktop_banner
+    if meta_desk == blank
+      assign meta_desk = product.metafields.custom.banner.value | default: product.metafields.custom.banner
+    endif
+    if meta_desk == blank
+      assign meta_desk = product.metafields.custom.banner_image.value | default: product.metafields.custom.banner_image
+    endif
+    if meta_desk == blank
+      assign meta_desk = product.metafields.custom.desktop_banner_image.value | default: product.metafields.custom.desktop_banner_image
+    endif
+
+    assign meta_mob = product.metafields.custom.mobile_banner.value | default: product.metafields.custom.mobile_banner
+    if meta_mob == blank
+      assign meta_mob = product.metafields.custom.mobile_banner_image.value | default: product.metafields.custom.mobile_banner_image
+    endif
+    if meta_mob == blank
+      assign meta_mob = product.metafields.custom.banner_mobile.value | default: product.metafields.custom.banner_mobile
+    endif
+
+    if meta_desk != blank or meta_mob != blank
+      if meta_desk != blank
+        assign desktop_img = meta_desk
+        assign mobile_img = meta_mob | default: meta_desk
+      else
+        assign desktop_img = meta_mob
+        assign mobile_img = meta_mob
+      endif
+      assign found_product_banner = true
+    endif
+  endif
+
+  comment
+    3. Fallback to Section Settings if no product-specific banner was found
+  endcomment
+  if found_product_banner == false
+    if template.name == 'product' and section.settings.hide_if_no_product_banner
+      assign skip_section = true
+    else
+      assign desktop_img = section.settings.desktop_image
+      assign mobile_img = section.settings.mobile_image | default: desktop_img
+      assign desktop_img_url = section.settings.desktop_image_url
+      assign mobile_img_url = section.settings.mobile_image_url | default: desktop_img_url
+    endif
+  endif
+
+  comment
+    4. Normalize Image Objects / Media / URLs
+  endcomment
+  if desktop_img.value != blank
+    assign desktop_img = desktop_img.value
+  endif
+  if desktop_img.preview_image != blank
+    assign desktop_img = desktop_img.preview_image
+  endif
+
+  if mobile_img.value != blank
+    assign mobile_img = mobile_img.value
+  endif
+  if mobile_img.preview_image != blank
+    assign mobile_img = mobile_img.preview_image
+  endif
+
+  assign desktop_src = ''
+  if desktop_img != blank
+    if desktop_img.width != blank
+      assign desktop_src = desktop_img | image_url: width: 1800
+    elsif desktop_img.url != blank
+      assign desktop_src = desktop_img.url
+    elsif desktop_img.src != blank
+      assign desktop_src = desktop_img.src
+    else
+      assign desktop_src = desktop_img | image_url: width: 1800
+      if desktop_src == blank
+        assign desktop_src = desktop_img
+      endif
+    endif
+  endif
+
+  assign mobile_src = ''
+  if mobile_img != blank
+    if mobile_img.width != blank
+      assign mobile_src = mobile_img | image_url: width: 750
+    elsif mobile_img.url != blank
+      assign mobile_src = mobile_img.url
+    elsif mobile_img.src != blank
+      assign mobile_src = mobile_img.src
+    else
+      assign mobile_src = mobile_img | image_url: width: 750
+      if mobile_src == blank
+        assign mobile_src = mobile_img
+      endif
+    endif
+  endif
+
+  assign has_heading = false
+  if section.settings.heading != blank or section.settings.badge_text != blank or section.settings.subheading != blank or section.settings.button_1_text != blank or section.settings.button_2_text != blank
+    assign has_heading = true
+  endif
+
+  assign is_link_whole_banner = false
+  if banner_link != blank and has_heading == false
+    assign is_link_whole_banner = true
+  endif
+%}
+
+{% unless skip_section %}
+
+<section id="banner-{{ section.id }}" class="ayova-banner-section {% if section.settings.full_width %}ayova-banner-section--full{% else %}container{% endif %}" style="--p-top: {{ section.settings.padding_top }}px; --p-bottom: {{ section.settings.padding_bottom }}px; --m-top: {{ section.settings.margin_top }}px; --m-bottom: {{ section.settings.margin_bottom }}px;">
+  <div class="ayova-banner-box {% if section.settings.border_radius > 0 %}ayova-banner-box--rounded{% endif %}" style="--border-rad: {{ section.settings.border_radius }}px;">
+
+    {% if is_link_whole_banner %}
+      <a href="{{ banner_link }}" class="ayova-banner-clickable-wrap" {% if section.settings.open_in_new_tab %}target="_blank" rel="noopener"{% endif %} aria-label="{{ section.settings.heading | default: 'Banner' }}">
+    {% endif %}
+
+      <div class="ayova-banner-media-container height-desk-{{ section.settings.desktop_height }} height-mob-{{ section.settings.mobile_height }}">
+        
+        <!-- Desktop & Mobile Picture Element -->
+        <picture class="ayova-banner-picture">
+          {% comment %} Mobile Source (max-width: 749px) {% endcomment %}
+          {% if mobile_img != blank %}
+            {% if mobile_img.width != blank %}
+              <source media="(max-width: 749px)" srcset="{{ mobile_img | image_url: width: 450 }} 450w, {{ mobile_img | image_url: width: 750 }} 750w, {{ mobile_img | image_url: width: 1100 }} 1100w" sizes="100vw">
+            {% elsif mobile_src != blank %}
+              <source media="(max-width: 749px)" srcset="{{ mobile_src }}">
+            {% endif %}
+          {% elsif mobile_img_url != blank %}
+            <source media="(max-width: 749px)" srcset="{{ mobile_img_url }}">
+          {% endif %}
+
+          {% comment %} Desktop Image {% endcomment %}
+          {% if desktop_img != blank %}
+            {% if desktop_img.width != blank %}
+              <img 
+                src="{{ desktop_img | image_url: width: 1800 }}"
+                srcset="{{ desktop_img | image_url: width: 1000 }} 1000w, {{ desktop_img | image_url: width: 1500 }} 1500w, {{ desktop_img | image_url: width: 2000 }} 2000w, {{ desktop_img | image_url: width: 2600 }} 2600w"
+                sizes="{% if section.settings.full_width %}100vw{% else %}(min-width: 1200px) 1200px, 100vw{% endif %}"
+                alt="{{ section.settings.heading | default: desktop_img.alt | default: 'Ayova Banner' | escape }}"
+                class="ayova-banner-img"
+                loading="lazy"
+                width="{{ desktop_img.width | default: 1920 }}"
+                height="{{ desktop_img.height | default: 600 }}"
+              >
+            {% elsif desktop_src != blank %}
+              <img 
+                src="{{ desktop_src }}"
+                alt="{{ section.settings.heading | default: 'Ayova Banner' | escape }}"
+                class="ayova-banner-img"
+                loading="lazy"
+                width="1920"
+                height="600"
+              >
+            {% endif %}
+          {% elsif desktop_img_url != blank %}
+            <img 
+              src="{{ desktop_img_url }}" 
+              alt="{{ section.settings.heading | default: 'Ayova Banner' | escape }}" 
+              class="ayova-banner-img" 
+              loading="lazy"
+            >
+          {% else %}
+            <!-- Fallback Placeholder if no image is uploaded -->
+            <div class="ayova-banner-placeholder">
+              <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+              </svg>
+              <span>Upload Desktop Banner in Theme Editor or Product Metafields</span>
+            </div>
+          {% endif %}
+        </picture>
+
+        <!-- Color Overlay / Tint -->
+        {% if section.settings.overlay_opacity > 0 %}
+          <div class="ayova-banner-overlay" style="background-color: {{ section.settings.overlay_color | default: '#000000' }}; opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};"></div>
+        {% endif %}
+
+        <!-- Optional Text Content Layer -->
+        {% if has_heading %}
+          <div class="ayova-banner-content-wrapper pos-{{ section.settings.content_position }} text-{{ section.settings.text_alignment }}">
+            <div class="ayova-banner-content-inner" style="color: {{ section.settings.text_color | default: '#FFFFFF' }};">
+              
+              {% if section.settings.badge_text != blank %}
+                <span class="ayova-banner-badge">{{ section.settings.badge_text }}</span>
+              {% endif %}
+
+              {% if section.settings.heading != blank %}
+                <h2 class="ayova-banner-heading size-{{ section.settings.heading_size | default: 'medium' }}" style="color: {{ section.settings.text_color | default: '#FFFFFF' }};">
+                  {{ section.settings.heading }}
+                </h2>
+              {% endif %}
+
+              {% if section.settings.subheading != blank %}
+                <p class="ayova-banner-subheading" style="color: {{ section.settings.text_color | default: '#FFFFFF' }};">
+                  {{ section.settings.subheading }}
+                </p>
+              {% endif %}
+
+              {% if section.settings.button_1_text != blank or section.settings.button_2_text != blank %}
+                <div class="ayova-banner-buttons">
+                  {% if section.settings.button_1_text != blank %}
+                    <a href="{{ section.settings.button_1_link | default: '#' }}" class="btn btn-banner btn-banner--{{ section.settings.button_1_style | default: 'primary' }}">
+                      {{ section.settings.button_1_text }}
+                    </a>
+                  {% endif %}
+
+                  {% if section.settings.button_2_text != blank %}
+                    <a href="{{ section.settings.button_2_link | default: '#' }}" class="btn btn-banner btn-banner--{{ section.settings.button_2_style | default: 'outline' }}">
+                      {{ section.settings.button_2_text }}
+                    </a>
+                  {% endif %}
+                </div>
+              {% endif %}
+
+            </div>
+          </div>
+        {% endif %}
+
+      </div>
+
+    {% if is_link_whole_banner %}
+      </a>
+    {% endif %}
+
+  </div>
+</section>
+{% endunless %}
+
+<style>
+  #banner-{{ section.id }} {
+    padding-top: var(--p-top);
+    padding-bottom: var(--p-bottom);
+    margin-top: var(--m-top);
+    margin-bottom: var(--m-bottom);
+  }
+
+  .ayova-banner-section--full {
+    width: 100%;
+    max-width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .ayova-banner-box {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .ayova-banner-box--rounded {
+    border-radius: var(--border-rad, 16px);
+  }
+
+  .ayova-banner-clickable-wrap {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .ayova-banner-media-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f4f6f4;
+  }
+
+  /* Desktop Heights */
+  .height-desk-adapt {
+    height: auto;
+  }
+  .height-desk-small {
+    height: 380px;
+  }
+  .height-desk-medium {
+    height: 520px;
+  }
+  .height-desk-large {
+    height: 680px;
+  }
+  .height-desk-full {
+    height: 100vh;
+    min-height: 500px;
+  }
+
+  /* Mobile Heights */
+  @media (max-width: 749px) {
+    .height-mob-adapt {
+      height: auto !important;
+    }
+    .height-mob-small {
+      height: 280px !important;
+    }
+    .height-mob-medium {
+      height: 400px !important;
+    }
+    .height-mob-large {
+      height: 520px !important;
+    }
+    .height-mob-square {
+      aspect-ratio: 1 / 1 !important;
+      height: auto !important;
+    }
+    .height-mob-portrait {
+      aspect-ratio: 4 / 5 !important;
+      height: auto !important;
+    }
+    .height-mob-full {
+      height: 100vh !important;
+      min-height: 400px !important;
+    }
+  }
+
+  .ayova-banner-picture {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .ayova-banner-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  /* When adapt height is active on desktop */
+  .height-desk-adapt .ayova-banner-img {
+    height: auto;
+    object-fit: contain;
+  }
+
+  /* When adapt height is active on mobile */
+  @media (max-width: 749px) {
+    .height-mob-adapt .ayova-banner-img {
+      height: auto !important;
+      object-fit: contain !important;
+    }
+  }
+
+  .ayova-banner-clickable-wrap:hover .ayova-banner-img {
+    transform: scale(1.02);
+  }
+
+  /* Placeholder */
+  .ayova-banner-placeholder {
+    width: 100%;
+    min-height: 350px;
+    background: #E8ECE9;
+    color: #4A6357;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 40px 20px;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  /* Overlay */
+  .ayova-banner-overlay {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* Content Overlay */
+  .ayova-banner-content-wrapper {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    display: flex;
+    padding: 48px;
+    pointer-events: none;
+    box-sizing: border-box;
+  }
+
+  @media (max-width: 749px) {
+    .ayova-banner-content-wrapper {
+      padding: 24px 20px;
+    }
+  }
+
+  .ayova-banner-content-inner {
+    max-width: 620px;
+    pointer-events: auto;
+  }
+
+  /* Positions */
+  .pos-top-left { align-items: flex-start; justify-content: flex-start; }
+  .pos-top-center { align-items: flex-start; justify-content: center; }
+  .pos-top-right { align-items: flex-start; justify-content: flex-end; }
+  .pos-middle-left { align-items: center; justify-content: flex-start; }
+  .pos-middle-center { align-items: center; justify-content: center; }
+  .pos-middle-right { align-items: center; justify-content: flex-end; }
+  .pos-bottom-left { align-items: flex-end; justify-content: flex-start; }
+  .pos-bottom-center { align-items: flex-end; justify-content: center; }
+  .pos-bottom-right { align-items: flex-end; justify-content: flex-end; }
+
+  /* Alignments */
+  .text-left { text-align: left; }
+  .text-center { text-align: center; }
+  .text-right { text-align: right; }
+
+  .ayova-banner-badge {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.22);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    color: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 50px;
+    margin-bottom: 16px;
+  }
+
+  .ayova-banner-heading {
+    font-family: var(--font-heading, 'Montserrat', sans-serif);
+    font-weight: 800;
+    line-height: 1.15;
+    margin: 0 0 16px 0;
+    letter-spacing: -0.02em;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  }
+
+  .ayova-banner-heading.size-small { font-size: clamp(24px, 3vw, 32px); }
+  .ayova-banner-heading.size-medium { font-size: clamp(28px, 4.2vw, 46px); }
+  .ayova-banner-heading.size-large { font-size: clamp(34px, 5.5vw, 60px); }
+  .ayova-banner-heading.size-xlarge { font-size: clamp(40px, 6.8vw, 76px); }
+
+  .ayova-banner-subheading {
+    font-size: clamp(14px, 1.4vw, 18px);
+    line-height: 1.55;
+    margin: 0 0 24px 0;
+    opacity: 0.95;
+    font-weight: 500;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.12);
+  }
+
+  .ayova-banner-buttons {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .text-center .ayova-banner-buttons {
+    justify-content: center;
+  }
+
+  .text-right .ayova-banner-buttons {
+    justify-content: flex-end;
+  }
+
+  .btn-banner {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 28px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    cursor: pointer;
+  }
+
+  .btn-banner--primary {
+    background: #D96C3F;
+    color: #FFFFFF;
+    border: 2px solid #D96C3F;
+  }
+  .btn-banner--primary:hover {
+    background: #c3592d;
+    border-color: #c3592d;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(217, 108, 63, 0.35);
+  }
+
+  .btn-banner--secondary {
+    background: #173E34;
+    color: #FFFFFF;
+    border: 2px solid #173E34;
+  }
+  .btn-banner--secondary:hover {
+    background: #102d26;
+    border-color: #102d26;
+    transform: translateY(-2px);
+  }
+
+  .btn-banner--white {
+    background: #FFFFFF;
+    color: #173E34;
+    border: 2px solid #FFFFFF;
+  }
+  .btn-banner--white:hover {
+    background: #F4F6F4;
+    border-color: #F4F6F4;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  }
+
+  .btn-banner--outline {
+    background: transparent;
+    color: inherit;
+    border: 2px solid currentColor;
+  }
+  .btn-banner--outline:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Responsive Banner",
+  "tag": "section",
+  "class": "section-responsive-banner",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Per-Product Banner Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_product_metafields",
+      "label": "Auto-detect Product Metafields",
+      "default": true,
+      "info": "Uses product.metafields.custom.desktop_banner & mobile_banner if present."
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_if_no_product_banner",
+      "label": "Hide if no product banner assigned",
+      "default": false,
+      "info": "On product pages, only show if this product has its own custom banner uploaded (via blocks or metafield). Prevents showing general/wrong banners on other products."
+    },
+    {
+      "type": "header",
+      "content": "Default Desktop & Mobile Images (Fallback)"
+    },
+    {
+      "type": "image_picker",
+      "id": "desktop_image",
+      "label": "Desktop Banner Image",
+      "info": "Recommended: 1920 x 650px or higher for crisp edge-to-edge cover."
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile Banner Image (Optional)",
+      "info": "Recommended: 750 x 850px or 1080 x 1080px. Automatically falls back to desktop image if left blank."
+    },
+    {
+      "type": "text",
+      "id": "desktop_image_url",
+      "label": "Desktop Image URL (Fallback)",
+      "info": "Optional direct image URL."
+    },
+    {
+      "type": "text",
+      "id": "mobile_image_url",
+      "label": "Mobile Image URL (Fallback)",
+      "info": "Optional direct mobile image URL."
+    },
+    {
+      "type": "header",
+      "content": "Dimensions & Height"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width (Edge-to-Edge)",
+      "default": true,
+      "info": "Covers all section width without margins."
+    },
+    {
+      "type": "select",
+      "id": "desktop_height",
+      "label": "Desktop Height",
+      "options": [
+        { "value": "adapt", "label": "Adapt to Image (Natural aspect ratio)" },
+        { "value": "small", "label": "Small (380px)" },
+        { "value": "medium", "label": "Medium (520px)" },
+        { "value": "large", "label": "Large (680px)" },
+        { "value": "full", "label": "Full Screen (100vh)" }
+      ],
+      "default": "adapt"
+    },
+    {
+      "type": "select",
+      "id": "mobile_height",
+      "label": "Mobile Height",
+      "options": [
+        { "value": "adapt", "label": "Adapt to Image (Natural aspect ratio)" },
+        { "value": "small", "label": "Small (280px)" },
+        { "value": "medium", "label": "Medium (400px)" },
+        { "value": "large", "label": "Large (520px)" },
+        { "value": "square", "label": "Square (1:1 Aspect Ratio)" },
+        { "value": "portrait", "label": "Portrait (4:5 Aspect Ratio)" },
+        { "value": "full", "label": "Full Screen (100vh)" }
+      ],
+      "default": "adapt"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Banner Border Radius",
+      "default": 0,
+      "info": "Keep 0 for full-bleed edge-to-edge banners."
+    },
+    {
+      "type": "header",
+      "content": "Entire Banner Link"
+    },
+    {
+      "type": "url",
+      "id": "banner_link",
+      "label": "Banner Link URL",
+      "info": "Makes the entire banner clickable (used when you upload a designed graphic banner without overlay text)."
+    },
+    {
+      "type": "checkbox",
+      "id": "open_in_new_tab",
+      "label": "Open link in new tab",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Optional Overlay Content"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge / Sub-tag"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading Text"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Heading Size",
+      "options": [
+        { "value": "small", "label": "Small" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "large", "label": "Large" },
+        { "value": "xlarge", "label": "Extra Large" }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading / Description"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "select",
+      "id": "content_position",
+      "label": "Content Position (Desktop)",
+      "options": [
+        { "value": "top-left", "label": "Top Left" },
+        { "value": "top-center", "label": "Top Center" },
+        { "value": "top-right", "label": "Top Right" },
+        { "value": "middle-left", "label": "Middle Left" },
+        { "value": "middle-center", "label": "Center" },
+        { "value": "middle-right", "label": "Middle Right" },
+        { "value": "bottom-left", "label": "Bottom Left" },
+        { "value": "bottom-center", "label": "Bottom Center" },
+        { "value": "bottom-right", "label": "Bottom Right" }
+      ],
+      "default": "middle-center"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Overlay Tint"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "label": "Overlay Dark Tint Opacity",
+      "default": 0,
+      "info": "Increase if text overlay needs more contrast against the image."
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay Color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Buttons"
+    },
+    {
+      "type": "text",
+      "id": "button_1_text",
+      "label": "Primary Button Text"
+    },
+    {
+      "type": "url",
+      "id": "button_1_link",
+      "label": "Primary Button Link"
+    },
+    {
+      "type": "select",
+      "id": "button_1_style",
+      "label": "Primary Button Style",
+      "options": [
+        { "value": "primary", "label": "Terracotta (Brand Accent)" },
+        { "value": "secondary", "label": "Forest Green (Dark)" },
+        { "value": "white", "label": "White Pill" },
+        { "value": "outline", "label": "Outline" }
+      ],
+      "default": "primary"
+    },
+    {
+      "type": "text",
+      "id": "button_2_text",
+      "label": "Secondary Button Text"
+    },
+    {
+      "type": "url",
+      "id": "button_2_link",
+      "label": "Secondary Button Link"
+    },
+    {
+      "type": "select",
+      "id": "button_2_style",
+      "label": "Secondary Button Style",
+      "options": [
+        { "value": "primary", "label": "Terracotta (Brand Accent)" },
+        { "value": "secondary", "label": "Forest Green (Dark)" },
+        { "value": "white", "label": "White Pill" },
+        { "value": "outline", "label": "Outline" }
+      ],
+      "default": "outline"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top Spacing (Margin)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom Spacing (Margin)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "label": "Internal Top Padding",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "label": "Internal Bottom Padding",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product_banner",
+      "name": "Product Banner",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Select Product",
+          "info": "This banner will show only on this product's page."
+        },
+        {
+          "type": "image_picker",
+          "id": "desktop_image",
+          "label": "Desktop Banner Image",
+          "info": "Recommended: 1920 x 600px or higher for crisp edge-to-edge cover."
+        },
+        {
+          "type": "image_picker",
+          "id": "mobile_image",
+          "label": "Mobile Banner Image (Optional)",
+          "info": "Recommended: 750 x 850px or square 1080 x 1080px. Automatically falls back to desktop image if left blank."
+        },
+        {
+          "type": "url",
+          "id": "banner_link",
+          "label": "Banner Link URL (Optional)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Responsive Banner",
+      "settings": {
+        "full_width": true,
+        "desktop_height": "adapt",
+        "mobile_height": "adapt"
+      }
+    }
+  ]
+}
+{% endschema %}
