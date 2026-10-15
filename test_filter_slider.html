@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ayova Shop Filter Sidebar & Price Slider Test</title>
+  <link rel="stylesheet" href="assets/theme.css">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      margin: 0;
+      padding: 40px 20px;
+      background: #F8FAF9;
+      color: #173E34;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .collection-layout {
+      display: grid;
+      grid-template-columns: 290px 1fr;
+      gap: 36px;
+      align-items: start;
+    }
+
+    @media (max-width: 900px) {
+      .collection-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Filter Sidebar */
+    .collection-filters {
+      background: #ffffff;
+      padding: 24px 20px;
+      border-radius: 16px;
+      border: 1.5px solid #D5DDD8;
+      height: fit-content;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .collection-filters:hover {
+      border-color: #B8C6BF;
+      box-shadow: 0 6px 24px rgba(23, 62, 52, 0.06);
+    }
+
+    .filter-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid #E8ECE9;
+    }
+
+    .filter-heading {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #173E34;
+      margin: 0;
+      letter-spacing: -0.01em;
+    }
+
+    .clear-filters-btn {
+      background: none;
+      border: none;
+      color: #D35F3C;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 0;
+      text-decoration: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .clear-filters-btn:hover {
+      opacity: 0.8;
+      text-decoration: underline;
+    }
+
+    .filter-group {
+      margin-bottom: 26px;
+    }
+
+    .filter-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+      color: #173E34;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    /* Price Slider Track & Handle */
+    .price-slider-container {
+      position: relative;
+      width: 100%;
+      height: 28px;
+      margin: 10px 0 18px;
+      display: flex;
+      align-items: center;
+    }
+
+    .price-slider-track {
+      position: absolute;
+      width: 100%;
+      height: 6px;
+      background-color: #E2E8E5;
+      border-radius: 999px;
+      pointer-events: none;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      overflow: hidden;
+    }
+
+    .price-slider-progress {
+      position: absolute;
+      height: 100%;
+      background: linear-gradient(90deg, #173E34 0%, #285044 100%);
+      border-radius: 999px;
+      left: 0;
+      right: 0;
+      transition: none;
+    }
+
+    .price-range-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      position: absolute;
+      pointer-events: none;
+      background: transparent;
+      top: 50%;
+      transform: translateY(-50%);
+      margin: 0;
+      height: 28px;
+      outline: none;
+    }
+
+    /* WebKit thumb */
+    .price-range-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      pointer-events: all;
+      width: 18px;
+      height: 18px;
+      background: #173E34;
+      border-radius: 50%;
+      cursor: grab;
+      border: 3px solid #ffffff;
+      box-shadow: 0 2px 6px rgba(23, 62, 52, 0.35), 0 0 0 1px rgba(0,0,0,0.06);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      position: relative;
+      z-index: 5;
+    }
+
+    .price-range-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.18);
+      box-shadow: 0 3px 10px rgba(23, 62, 52, 0.45);
+    }
+
+    .price-range-slider::-webkit-slider-thumb:active {
+      cursor: grabbing;
+      transform: scale(1.22);
+      background: #285044;
+    }
+
+    /* Firefox thumb */
+    .price-range-slider::-moz-range-thumb {
+      pointer-events: all;
+      width: 18px;
+      height: 18px;
+      background: #173E34;
+      border-radius: 50%;
+      cursor: grab;
+      border: 3px solid #ffffff;
+      box-shadow: 0 2px 6px rgba(23, 62, 52, 0.35), 0 0 0 1px rgba(0,0,0,0.06);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      position: relative;
+      z-index: 5;
+    }
+
+    .price-range-slider::-moz-range-thumb:hover {
+      transform: scale(1.18);
+    }
+
+    .price-range-slider::-moz-range-thumb:active {
+      cursor: grabbing;
+      transform: scale(1.22);
+    }
+
+    .price-range-slider::-webkit-slider-runnable-track {
+      background: transparent;
+      border: none;
+    }
+    .price-range-slider::-moz-range-track {
+      background: transparent;
+      border: none;
+    }
+
+    .price-range-slider.min-slider {
+      z-index: 3;
+    }
+    .price-range-slider.max-slider {
+      z-index: 2;
+    }
+    .price-range-slider:active {
+      z-index: 6 !important;
+    }
+
+    /* Option 1: Floating bubbles directly over both dots */
+    .price-slider-container.with-bubbles {
+      margin-top: 32px;
+      margin-bottom: 14px;
+    }
+
+    .slider-dot-bubble {
+      position: absolute;
+      top: -28px;
+      transform: translateX(-50%);
+      background: #173E34;
+      color: #FFFFFF;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      white-space: nowrap;
+      pointer-events: none;
+      box-shadow: 0 2px 6px rgba(23, 62, 52, 0.25);
+      z-index: 10;
+      transition: left 0.05s ease;
+    }
+
+    .slider-dot-bubble::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 4px solid transparent;
+      border-top-color: #173E34;
+    }
+
+    /* Option 2: Price at corners of both sides over slider */
+    .price-corners-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 6px 0 10px;
+    }
+
+    .price-corner-pill {
+      background: #173E34;
+      color: #FFFFFF;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 6px;
+      box-shadow: 0 2px 5px rgba(23, 62, 52, 0.2);
+    }
+
+    /* Categories / Tags */
+    .filter-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.88rem;
+      color: #4A5B53;
+      margin-bottom: 12px;
+      cursor: pointer;
+      user-select: none;
+      transition: color 0.15s ease;
+    }
+
+    .filter-label:hover {
+      color: #173E34;
+    }
+
+    .filter-input-chk {
+      accent-color: #285044;
+      width: 17px;
+      height: 17px;
+      cursor: pointer;
+    }
+
+    /* Product Grid Preview */
+    .products-column {
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+    }
+
+    .products-preview {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    /* Pagination Styles */
+    .pagination-wrapper {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .pagination {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #ffffff;
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 1px solid #D5DDD8;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    }
+
+    .page-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 38px;
+      height: 38px;
+      padding: 0 14px;
+      border-radius: 50%;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #173E34;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border: 1px solid #D5DDD8;
+      background: #ffffff;
+    }
+
+    .page-link.prev, .page-link.next {
+      border-radius: 8px;
+      border: 1px solid #D5DDD8;
+      padding: 0 16px;
+    }
+
+    .page-link:hover {
+      background: #EEF3EF;
+      color: #173E34;
+      border-color: #285044;
+    }
+
+    .page-link.active,
+    .page-link.active:hover,
+    .page-link.active:focus {
+      background: #173E34 !important;
+      color: #FFFFFF !important;
+      border-color: #173E34 !important;
+      box-shadow: 0 2px 8px rgba(23, 62, 52, 0.3);
+    }
+
+    .page-link.disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      border-color: #E2E8E4;
+      color: #8A9E96;
+      background: #FAFCFA;
+      pointer-events: none;
+    }
+    .mock-card {
+      background: #fff;
+      border: 1px solid #E2E8E4;
+      border-radius: 14px;
+      padding: 16px;
+      text-align: center;
+    }
+    .mock-img {
+      height: 180px;
+      background: #EEF3F0;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #7A8E85;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div style="margin-bottom: 24px;">
+    <h2 style="margin: 0 0 6px; color: #173E34;">Shop Ayurvedic Wellness Formulations</h2>
+    <span style="color: #6C7F76; font-size: 0.95rem;">Showing 18 Products</span>
+  </div>
+
+  <div class="collection-layout">
+    
+    <!-- Filter Sidebar with Added Border & Attractive Price Slider -->
+    <aside class="collection-filters">
+      <div class="filter-header">
+        <h3 class="filter-heading">Filters</h3>
+        <a href="#clear" class="clear-filters-btn">Clear All</a>
+      </div>
+
+      <!-- Option 1: Floating bubbles directly over both dots -->
+      <div class="filter-group" style="padding-bottom: 20px; border-bottom: 1px dashed #D5DDD8; margin-bottom: 18px;">
+        <h4 class="filter-title" style="margin-bottom: 4px;">PRICE (Option 1: Over Both Dots)</h4>
+        
+        <div class="price-slider-container with-bubbles">
+          <div class="price-slider-track">
+            <div class="price-slider-progress" id="priceSliderProgress1" style="left: 0%; right: 0%;"></div>
+          </div>
+          <div class="slider-dot-bubble" id="minBubble1" style="left: 9px;">Rs. 0</div>
+          <div class="slider-dot-bubble" id="maxBubble1" style="left: calc(100% - 9px);">Rs. 749</div>
+          <input type="range" class="price-range-slider min-slider" min="0" max="749" value="0" step="1" id="minRange1">
+          <input type="range" class="price-range-slider max-slider" min="0" max="749" value="749" step="1" id="maxRange1">
+        </div>
+      </div>
+
+      <!-- Option 2: Price at corners of both sides over slider -->
+      <div class="filter-group">
+        <h4 class="filter-title" style="margin-bottom: 4px;">PRICE (Option 2: Both Corners Over Slider)</h4>
+        <div class="price-corners-row">
+          <span class="price-corner-pill">Rs. <span id="minCornerText2">0</span></span>
+          <span class="price-corner-pill">Rs. <span id="maxCornerText2">749</span></span>
+        </div>
+        
+        <div class="price-slider-container">
+          <div class="price-slider-track">
+            <div class="price-slider-progress" id="priceSliderProgress2" style="left: 0%; right: 0%;"></div>
+          </div>
+          <input type="range" class="price-range-slider min-slider" min="0" max="749" value="0" step="1" id="minRange2">
+          <input type="range" class="price-range-slider max-slider" min="0" max="749" value="749" step="1" id="maxRange2">
+        </div>
+      </div>
+
+      <!-- Categories -->
+      <div class="filter-group">
+        <h4 class="filter-title">Categories</h4>
+        <label class="filter-label">
+          <input type="checkbox" class="filter-input-chk" checked>
+          Daily Essentials (8)
+        </label>
+        <label class="filter-label">
+          <input type="checkbox" class="filter-input-chk">
+          Immunity & Defense (5)
+        </label>
+        <label class="filter-label">
+          <input type="checkbox" class="filter-input-chk">
+          Digestive Wellness (3)
+        </label>
+        <label class="filter-label">
+          <input type="checkbox" class="filter-input-chk">
+          Deep Sleep & Mind (2)
+        </label>
+      </div>
+    </aside>
+
+    <!-- Product Grid Preview & Pagination -->
+    <div class="products-column">
+      <div class="products-preview">
+        <div class="mock-card">
+          <div class="mock-img">Ayova Daily Multi</div>
+          <div style="font-weight: 700; color: #173E34;">Men's Daily Essentials</div>
+          <div style="color: #285044; font-weight: 700; margin-top: 6px;">Rs. 499</div>
+        </div>
+        <div class="mock-card">
+          <div class="mock-img">Ayova Shilajit</div>
+          <div style="font-weight: 700; color: #173E34;">Pure Himalayan Shilajit</div>
+          <div style="color: #285044; font-weight: 700; margin-top: 6px;">Rs. 699</div>
+        </div>
+        <div class="mock-card">
+          <div class="mock-img">Ayova Magnesium</div>
+          <div style="font-weight: 700; color: #173E34;">Magnesium Glycinate</div>
+          <div style="color: #285044; font-weight: 700; margin-top: 6px;">Rs. 599</div>
+        </div>
+      </div>
+
+      <!-- Pagination Component with visible white active number -->
+      <div class="pagination-wrapper">
+        <nav class="pagination">
+          <span class="page-link prev disabled">← Prev</span>
+          <span class="page-link active">1</span>
+          <a href="#page2" class="page-link">2</a>
+          <a href="#next" class="page-link next">Next →</a>
+        </nav>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Option 1: Bubbles over dots
+    const minS1 = document.getElementById('minRange1');
+    const maxS1 = document.getElementById('maxRange1');
+    const minB1 = document.getElementById('minBubble1');
+    const maxB1 = document.getElementById('maxBubble1');
+    const prog1 = document.getElementById('priceSliderProgress1');
+
+    function update1() {
+      let minV = parseInt(minS1.value) || 0;
+      let maxV = parseInt(maxS1.value) || parseInt(maxS1.max);
+      const max = parseInt(minS1.max) || 749;
+
+      if (minV > maxV) {
+        minV = maxV;
+        minS1.value = minV;
+      }
+
+      const pMin = Math.min(100, Math.max(0, (minV / max) * 100));
+      const pMax = Math.min(100, Math.max(0, (maxV / max) * 100));
+
+      if (minB1) {
+        minB1.textContent = 'Rs. ' + minV;
+        minB1.style.left = `calc(9px + (100% - 18px) * ${pMin / 100})`;
+      }
+      if (maxB1) {
+        maxB1.textContent = 'Rs. ' + maxV;
+        maxB1.style.left = `calc(9px + (100% - 18px) * ${pMax / 100})`;
+      }
+
+      if (prog1) {
+        prog1.style.left = pMin + '%';
+        prog1.style.right = (100 - pMax) + '%';
+      }
+    }
+
+    minS1.addEventListener('input', update1);
+    maxS1.addEventListener('input', update1);
+    update1();
+
+    // Option 2: Both corners over slider
+    const minS2 = document.getElementById('minRange2');
+    const maxS2 = document.getElementById('maxRange2');
+    const minT2 = document.getElementById('minCornerText2');
+    const maxT2 = document.getElementById('maxCornerText2');
+    const prog2 = document.getElementById('priceSliderProgress2');
+
+    function update2() {
+      let minV = parseInt(minS2.value) || 0;
+      let maxV = parseInt(maxS2.value) || parseInt(maxS2.max);
+      const max = parseInt(minS2.max) || 749;
+
+      if (minV > maxV) {
+        minV = maxV;
+        minS2.value = minV;
+      }
+      if (minT2) minT2.textContent = minV;
+      if (maxT2) maxT2.textContent = maxV;
+
+      const pMin = Math.min(100, Math.max(0, (minV / max) * 100));
+      const pMax = Math.min(100, Math.max(0, (maxV / max) * 100));
+
+      if (prog2) {
+        prog2.style.left = pMin + '%';
+        prog2.style.right = (100 - pMax) + '%';
+      }
+    }
+
+    minS2.addEventListener('input', update2);
+    maxS2.addEventListener('input', update2);
+    update2();
+  });
+</script>
+
+</body>
+</html>

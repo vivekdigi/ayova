@@ -20,26 +20,8 @@
       <div class="product-gallery-wrapper">
         <div class="gallery-inner">
           
-          <!-- Vertical Thumbnails -->
-          <div class="gallery-vertical-thumbs">
-            <button class="thumb-nav-btn" aria-label="Previous image">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg>
-            </button>
-            
-            <div class="thumbs-list">
-              {% for image in product.images %}
-                <img src="{{ image | image_url: width: 200 }}" alt="{{ product.title | escape }}" class="thumb {% if forloop.first %}active{% endif %}" onclick="document.getElementById('mainProductImg').src=this.dataset.full; document.querySelectorAll('.thumbs-list .thumb').forEach(t=>t.classList.remove('active')); this.classList.add('active');" data-full="{{ image | image_url: width: 800 }}" data-id="{{ image.id }}">
-              {% endfor %}
-            </div>
-
-            <button class="thumb-nav-btn" aria-label="Next image">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-            </button>
-            <div class="thumb-count">1/{{ product.images.size }}</div>
-          </div>
-
           <!-- Main Image -->
-          <div class="main-image-box">
+          <div class="main-image-box" id="mainImageBox">
             <div class="main-image-top-badges">
               <span class="badge badge-bestseller">BESTSELLER</span>
               <button class="btn-wishlist" aria-label="Add to Wishlist">
@@ -52,13 +34,35 @@
             {% else %}
               {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
             {% endif %}
-            
-            <div class="main-image-text">
-              <h3>{{ product.metafields.custom.subtitle | default: 'PREMIUM AYURVEDIC FORMULATION' }}</h3>
-              <p class="hover-zoom-text">Hover to zoom • Swipe for more views</p>
-              <div class="secure-pack-text">Original Ayova product • Securely packed</div>
-            </div>
           </div>
+
+          <!-- Horizontal Thumbnails Carousel Below Main Image -->
+          {% if product.images.size > 1 %}
+          <div class="gallery-thumbs-carousel-wrapper" id="galleryThumbsWrapper">
+            <button type="button" class="thumb-nav-btn prev-thumb-btn disabled" aria-label="Previous image" id="prevThumbBtn" disabled>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 18l-6-6 6-6"/>
+              </svg>
+            </button>
+            
+            <div class="thumbs-carousel-container" id="thumbsCarouselContainer">
+              <div class="thumbs-list" id="thumbsList">
+                {% for image in product.images %}
+                  <div class="thumb {% if forloop.first %}active{% endif %}" data-index="{{ forloop.index0 }}" data-full="{{ image | image_url: width: 800 }}" data-id="{{ image.id }}" onclick="document.getElementById('mainProductImg').src=this.dataset.full; document.querySelectorAll('.thumbs-list .thumb').forEach(t=>t.classList.remove('active')); this.classList.add('active'); this.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});">
+                    <img src="{{ image | image_url: width: 200 }}" alt="{{ product.title | escape }}" class="thumb-img" loading="lazy">
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+
+            <button type="button" class="thumb-nav-btn next-thumb-btn" aria-label="Next image" id="nextThumbBtn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 18l6-6-6-6"/>
+              </svg>
+            </button>
+          </div>
+          {% endif %}
+
         </div>
 
         <!-- Image Navigation Pills -->
@@ -409,10 +413,12 @@
             {%- endif -%}
           {% endif %}
           
+          {% if section.settings.show_shipping_notice %}
           <div class="shipping-notice">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D35F3C" stroke-width="2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
             {{ section.settings.shipping_text | default: "Free shipping above ₹499 - COD available" }}
           </div>
+          {% endif %}
         </form>
 
       </div>
@@ -590,10 +596,107 @@
           if (thumbMatch) {
             thumbs.forEach(t => t.classList.remove('active'));
             thumb.classList.add('active');
+            thumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
           }
         });
       }
     });
+
+    // Gallery Carousel Below Main Image Logic
+    const galleryContainer = document.getElementById('thumbsCarouselContainer');
+    const prevThumbBtn = document.getElementById('prevThumbBtn');
+    const nextThumbBtn = document.getElementById('nextThumbBtn');
+    const allGalleryThumbs = document.querySelectorAll('.thumbs-list .thumb');
+
+    if (galleryContainer && allGalleryThumbs.length > 0) {
+      function updateGalleryArrows() {
+        const maxScroll = galleryContainer.scrollWidth - galleryContainer.clientWidth;
+        if (maxScroll <= 4) {
+          if (prevThumbBtn) prevThumbBtn.style.display = 'none';
+          if (nextThumbBtn) nextThumbBtn.style.display = 'none';
+          return;
+        } else {
+          if (prevThumbBtn) prevThumbBtn.style.display = 'flex';
+          if (nextThumbBtn) nextThumbBtn.style.display = 'flex';
+        }
+
+        if (galleryContainer.scrollLeft <= 5) {
+          if (prevThumbBtn) {
+            prevThumbBtn.disabled = true;
+            prevThumbBtn.classList.add('disabled');
+          }
+        } else {
+          if (prevThumbBtn) {
+            prevThumbBtn.disabled = false;
+            prevThumbBtn.classList.remove('disabled');
+          }
+        }
+
+        if (galleryContainer.scrollLeft >= maxScroll - 5) {
+          if (nextThumbBtn) {
+            nextThumbBtn.disabled = true;
+            nextThumbBtn.classList.add('disabled');
+          }
+        } else {
+          if (nextThumbBtn) {
+            nextThumbBtn.disabled = false;
+            nextThumbBtn.classList.remove('disabled');
+          }
+        }
+      }
+
+      function getThumbScrollStep() {
+        const first = allGalleryThumbs[0];
+        if (first && first.offsetWidth > 0) {
+          return first.offsetWidth + 12;
+        }
+        return galleryContainer.clientWidth / 4;
+      }
+
+      if (prevThumbBtn) {
+        prevThumbBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          galleryContainer.scrollBy({ left: -getThumbScrollStep(), behavior: 'smooth' });
+        });
+      }
+
+      if (nextThumbBtn) {
+        nextThumbBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          galleryContainer.scrollBy({ left: getThumbScrollStep(), behavior: 'smooth' });
+        });
+      }
+
+      galleryContainer.addEventListener('scroll', updateGalleryArrows);
+      window.addEventListener('resize', updateGalleryArrows);
+      setTimeout(updateGalleryArrows, 150);
+
+      // Touch swipe on main image
+      const mainBox = document.getElementById('mainImageBox');
+      if (mainBox) {
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        mainBox.addEventListener('touchstart', function(e) {
+          touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        mainBox.addEventListener('touchend', function(e) {
+          touchEndX = e.changedTouches[0].screenX;
+          const threshold = 40;
+          const currentActive = document.querySelector('.thumbs-list .thumb.active');
+          let currentIndex = currentActive ? parseInt(currentActive.dataset.index) : 0;
+
+          if (touchEndX < touchStartX - threshold) {
+            const nextIdx = (currentIndex + 1) % allGalleryThumbs.length;
+            allGalleryThumbs[nextIdx].click();
+          } else if (touchEndX > touchStartX + threshold) {
+            const prevIdx = (currentIndex - 1 + allGalleryThumbs.length) % allGalleryThumbs.length;
+            allGalleryThumbs[prevIdx].click();
+          }
+        }, { passive: true });
+      }
+    }
   });
 </script>
 
@@ -637,58 +740,115 @@
   }
 }
 
-/* Gallery Left */
+/* Gallery Inner & Horizontal Thumbnails Carousel */
 .gallery-inner {
   display: flex;
-  gap: 20px;
+  flex-direction: column;
+  gap: 16px;
   background: var(--color-sage-bg);
   padding: 24px;
   border-radius: 20px;
 }
 
-.gallery-vertical-thumbs {
+.gallery-thumbs-carousel-wrapper {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  width: 70px;
   gap: 12px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  position: relative;
+  box-sizing: border-box;
 }
 
 .thumb-nav-btn {
-  background: #fff;
-  border: 1px solid var(--color-sage-border);
-  width: 40px;
-  height: 40px;
+  background: #ffffff;
+  border: 1px solid #D5DBD8;
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: var(--color-forest-primary);
+  color: var(--color-forest-dark);
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  flex-shrink: 0;
+  padding: 0;
+  outline: none;
+}
+
+.thumb-nav-btn:hover:not(:disabled) {
+  background: var(--color-forest-dark);
+  color: #ffffff;
+  border-color: var(--color-forest-dark);
+}
+
+.thumb-nav-btn:disabled,
+.thumb-nav-btn.disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  border-color: #E2E6E4;
+  color: #A0ABA6;
+  box-shadow: none;
+}
+
+.thumbs-carousel-container {
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 4px 2px;
+}
+
+.thumbs-carousel-container::-webkit-scrollbar {
+  display: none;
 }
 
 .thumbs-list {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: calc((100% - 36px) / 4);
   gap: 12px;
+  margin: 0;
+  padding: 0;
 }
 
 .thumbs-list .thumb {
-  width: 60px;
-  height: 60px;
-  border-radius: 8px;
-  object-fit: cover;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 6px;
+  overflow: hidden;
   border: 2px solid transparent;
   cursor: pointer;
-  background: #fff;
-  padding: 4px;
+  background: #ffffff;
+  box-sizing: border-box;
+  padding: 0;
+  transition: border-color 0.2s ease, transform 0.15s ease, opacity 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
+.thumbs-list .thumb:hover {
+  opacity: 0.9;
+}
+
 .thumbs-list .thumb.active {
-  border-color: var(--color-terracotta);
+  border-color: #1A362D;
 }
-.thumb-count {
-  font-size: 0.8rem;
-  color: #7A857F;
+
+.thumbs-list .thumb .thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .main-image-box {
@@ -739,10 +899,12 @@
 
 .main-image-box img {
   width: 100%;
-  max-width: 320px;
+  max-width: 440px;
   height: auto;
+  max-height: 460px;
   object-fit: contain;
-  margin: 20px 0;
+  margin: 16px 0;
+  transition: opacity 0.2s ease;
 }
 
 .main-image-text {
@@ -971,8 +1133,8 @@
 
 .variant-pack-card.active {
   background: #F9FAFB;
-  border-color: #0F3B4C !important;
-  box-shadow: 0 0 0 1px #0F3B4C, 0 2px 8px rgba(15, 59, 76, 0.12);
+  border-color: #285044 !important;
+  box-shadow: 0 0 0 1px #285044, 0 2px 8px rgba(40, 80, 68, 0.12);
 }
 
 /* Card Header: Subhead / Badge + Radio */
@@ -996,7 +1158,7 @@
 }
 
 .pack-badge-bestseller {
-  background: #003B64;
+  background: #285044;
   color: #FFFFFF;
   font-size: 9.5px;
   font-weight: 800;
@@ -1022,7 +1184,7 @@
 }
 
 .variant-pack-card.active .pack-radio-circle {
-  border-color: #0F3B4C;
+  border-color: #285044;
   background: #FFFFFF;
 }
 
@@ -1035,7 +1197,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #0F3B4C;
+  background: #285044;
 }
 
 /* Divider Line */
@@ -1078,8 +1240,8 @@
 
 /* Savings Pill */
 .pack-savings-pill {
-  background: #EBF3FC;
-  color: #1D4ED8;
+  background: #EAF2EE;
+  color: #285044;
   font-size: 11px;
   font-weight: 600;
   padding: 3px 7px;
@@ -1103,46 +1265,56 @@
 /* Purchase Actions */
 .purchase-actions-row {
   display: flex;
-  gap: 16px;
-  margin-bottom: 16px;
+  gap: 10px;
+  margin-bottom: 14px;
+  align-items: center;
 }
 
 .quantity-selector-new {
   display: flex;
   align-items: center;
-  border: 1px solid var(--color-sage-border);
-  border-radius: 8px;
+  border: 1px solid var(--color-sage-border, #E5E7EB);
+  border-radius: 6px;
   background: #fff;
-  height: 52px;
+  height: 42px;
 }
 
 .qty-btn {
-  width: 40px;
+  width: 32px;
   height: 100%;
   border: none;
   background: none;
-  font-size: 1.2rem;
+  font-size: 1rem;
   cursor: pointer;
   color: var(--color-forest-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .quantity-selector-new input {
-  width: 40px;
+  width: 34px;
   text-align: center;
   border: none;
   font-weight: 600;
-  font-size: 1.1rem;
+  font-size: 0.95rem;
+  padding: 0;
 }
 
 .btn-add-cart-new, .btn-buy-now {
   flex-grow: 1;
-  height: 52px;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 600;
+  height: 42px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
   cursor: pointer;
   border: none;
   transition: opacity 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 14px;
 }
 
 .btn-add-cart-new {
@@ -1501,14 +1673,13 @@
 }
 
 .product-trust-block {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-  background: #f1f5f8;
-  padding: 16px;
-  border-radius: 4px;
-  margin: 24px 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px 16px;
+  background: #F4F7F5;
+  padding: 10px 14px;
+  border-radius: 6px;
+  margin: 14px 0;
 }
 .trust-feat {
   display: flex;
@@ -1516,18 +1687,22 @@
   gap: 8px;
 }
 .tf-icon {
-  width: 40px;
-  height: 40px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
 }
+.tf-icon svg {
+  width: 14px;
+  height: 14px;
+}
 .trust-feat span {
-  font-size: 0.8rem;
+  font-size: 0.74rem;
   font-weight: 600;
-  color: #000;
+  color: #1F2924;
   line-height: 1.2;
 }
 
@@ -1537,11 +1712,12 @@
     gap: 16px;
   }
   .product-trust-block {
-    flex-wrap: wrap;
-    gap: 16px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px 12px;
+    padding: 10px 12px;
   }
   .trust-feat {
-    width: calc(50% - 8px);
+    width: auto;
   }
 }
 
@@ -1612,27 +1788,22 @@
   .main-image-text {
     display: none;
   }
-  .gallery-vertical-thumbs {
-    flex-direction: row;
-    width: 100%;
-    overflow-x: auto;
-    align-items: center;
-    justify-content: center;
+  .gallery-thumbs-carousel-wrapper {
     gap: 8px;
+    margin-top: 4px;
   }
-  .gallery-vertical-thumbs .thumb-nav-btn,
-  .gallery-vertical-thumbs .thumb-count {
-    display: none;
+  .thumb-nav-btn {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
   }
   .thumbs-list {
-    flex-direction: row;
+    grid-auto-columns: calc((100% - 24px) / 4);
     gap: 8px;
   }
   .thumbs-list .thumb {
-    width: 44px;
-    height: 44px;
-    padding: 2px;
-    border-radius: 6px;
+    width: 100%;
+    border-radius: 5px;
   }
 
   .product-price-wrapper {
@@ -2129,6 +2300,12 @@
       "id": "promo_2_text",
       "label": "Promo Text 2",
       "default": "Get a FREE Ayova Herbal Tea (worth ₹499) on orders of ₹1495 or more!"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_shipping_notice",
+      "label": "Show Shipping Notice",
+      "default": false
     },
     {
       "type": "text",

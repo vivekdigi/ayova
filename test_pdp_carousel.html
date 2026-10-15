@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PDP Gallery Thumbnails Below Test</title>
+  <link rel="stylesheet" href="assets/theme.css">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      margin: 0;
+      padding: 30px;
+      background: #f8f9fa;
+      color: #173E34;
+    }
+
+    :root {
+      --color-forest-dark: #1A362D;
+      --color-forest-primary: #285044;
+      --color-sage-bg: #F4F6F5;
+      --color-sage-border: #E5EAE7;
+      --color-terracotta: #D35F3C;
+      --color-terracotta-light: #FDF3EF;
+    }
+
+    .test-wrapper {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    }
+
+    .product-main-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: 50px;
+      align-items: start;
+    }
+
+    @media (max-width: 900px) {
+      .product-main-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+    }
+
+    /* Gallery Container */
+    .product-gallery-wrapper {
+      width: 100%;
+    }
+
+    .gallery-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      background: var(--color-sage-bg);
+      padding: 24px;
+      border-radius: 20px;
+    }
+
+    .main-image-box {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      background: #fff;
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+      box-sizing: border-box;
+    }
+
+    .main-image-top-badges {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: absolute;
+      top: 16px;
+      left: 0;
+      padding: 0 16px;
+      box-sizing: border-box;
+    }
+
+    .badge-bestseller {
+      background: var(--color-forest-primary);
+      color: #fff;
+      font-size: 0.75rem;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-wishlist {
+      background: #fff;
+      border: 1px solid var(--color-sage-border);
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #7A857F;
+    }
+
+    .main-image-box img {
+      width: 100%;
+      max-width: 420px;
+      height: 360px;
+      object-fit: contain;
+      margin: 16px 0 10px;
+      transition: opacity 0.2s ease;
+    }
+
+    .main-image-text {
+      text-align: center;
+      width: 100%;
+    }
+
+    .main-image-text h3 {
+      font-size: 0.85rem;
+      color: var(--color-forest-dark);
+      margin-bottom: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    .hover-zoom-text {
+      font-size: 0.8rem;
+      color: #7A857F;
+      margin-bottom: 12px;
+    }
+
+    .secure-pack-text {
+      font-size: 0.82rem;
+      color: var(--color-forest-dark);
+      border-top: 1px solid var(--color-sage-border);
+      padding-top: 12px;
+      width: 100%;
+    }
+
+    /* Thumbnail Carousel Below Main Image */
+    .gallery-thumbs-carousel-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      position: relative;
+      box-sizing: border-box;
+    }
+
+    .thumb-nav-btn {
+      background: #ffffff;
+      border: 1px solid #D5DBD8;
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #1A362D;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      flex-shrink: 0;
+      padding: 0;
+      outline: none;
+    }
+
+    .thumb-nav-btn:hover:not(:disabled) {
+      background: #1A362D;
+      color: #ffffff;
+      border-color: #1A362D;
+      box-shadow: 0 4px 12px rgba(26,54,45,0.2);
+    }
+
+    .thumb-nav-btn:disabled,
+    .thumb-nav-btn.disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      border-color: #E2E6E4;
+      color: #A0ABA6;
+      box-shadow: none;
+    }
+
+    .thumbs-carousel-container {
+      flex: 1;
+      min-width: 0;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      padding: 4px 2px;
+    }
+
+    .thumbs-carousel-container::-webkit-scrollbar {
+      display: none;
+    }
+
+    .thumbs-list {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: calc((100% - 36px) / 4);
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+    }
+
+    .thumbs-list .thumb {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 2px solid transparent;
+      cursor: pointer;
+      background: #ffffff;
+      box-sizing: border-box;
+      padding: 0;
+      transition: border-color 0.2s ease, transform 0.15s ease, opacity 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .thumbs-list .thumb:hover {
+      opacity: 0.9;
+    }
+
+    .thumbs-list .thumb.active {
+      border-color: #1A362D;
+    }
+
+    .thumbs-list .thumb .thumb-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+      .test-wrapper {
+        padding: 12px;
+      }
+      .gallery-inner {
+        padding: 12px;
+        border-radius: 14px;
+        gap: 10px;
+      }
+      .main-image-box {
+        padding: 12px;
+        border-radius: 10px;
+      }
+      .main-image-box img {
+        height: 220px;
+        max-height: 220px;
+        margin: 8px 0;
+      }
+      .gallery-thumbs-carousel-wrapper {
+        gap: 8px;
+        margin-top: 4px;
+      }
+      .thumb-nav-btn {
+        width: 32px;
+        height: 32px;
+        min-width: 32px;
+      }
+      .thumbs-list {
+        grid-auto-columns: calc((100% - 24px) / 4);
+        gap: 8px;
+      }
+      .thumbs-list .thumb {
+        width: 100%;
+        border-radius: 5px;
+      }
+    }
+
+    /* Right column sample */
+    .product-details-sample h1 {
+      font-size: 26px;
+      margin: 0 0 12px;
+      color: #1A362D;
+    }
+    .price-sample {
+      font-size: 24px;
+      font-weight: 700;
+      color: #285044;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="test-wrapper">
+  <h2>Ayova Product Gallery: Thumbnails Below & 4 Images In Carousel</h2>
+  <div class="product-main-grid">
+    
+    <!-- Gallery Column -->
+    <div class="product-gallery-wrapper">
+      <div class="gallery-inner">
+        
+        <!-- Main Image -->
+        <div class="main-image-box" id="mainImageBox">
+          <div class="main-image-top-badges">
+            <span class="badge badge-bestseller">BESTSELLER</span>
+            <button class="btn-wishlist" aria-label="Add to Wishlist">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+            </button>
+          </div>
+          
+          <img src="https://picsum.photos/id/1060/800/800" alt="Ayova Men's Daily Essentials" id="mainProductImg">
+        </div>
+
+        <!-- Thumbnails Carousel Below Main Image -->
+        <div class="gallery-thumbs-carousel-wrapper" id="galleryThumbsWrapper">
+          <button type="button" class="thumb-nav-btn prev-thumb-btn disabled" aria-label="Previous image" id="prevThumbBtn" disabled>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 18l-6-6 6-6"/>
+            </svg>
+          </button>
+          
+          <div class="thumbs-carousel-container" id="thumbsCarouselContainer">
+            <div class="thumbs-list" id="thumbsList">
+              <div class="thumb active" data-index="0" data-full="https://picsum.photos/id/1060/800/800">
+                <img src="https://picsum.photos/id/1060/200/200" alt="Thumb 1" class="thumb-img">
+              </div>
+              <div class="thumb" data-index="1" data-full="https://picsum.photos/id/1062/800/800">
+                <img src="https://picsum.photos/id/1062/200/200" alt="Thumb 2" class="thumb-img">
+              </div>
+              <div class="thumb" data-index="2" data-full="https://picsum.photos/id/1069/800/800">
+                <img src="https://picsum.photos/id/1069/200/200" alt="Thumb 3" class="thumb-img">
+              </div>
+              <div class="thumb" data-index="3" data-full="https://picsum.photos/id/1074/800/800">
+                <img src="https://picsum.photos/id/1074/200/200" alt="Thumb 4" class="thumb-img">
+              </div>
+              <div class="thumb" data-index="4" data-full="https://picsum.photos/id/1080/800/800">
+                <img src="https://picsum.photos/id/1080/200/200" alt="Thumb 5" class="thumb-img">
+              </div>
+              <div class="thumb" data-index="5" data-full="https://picsum.photos/id/1084/800/800">
+                <img src="https://picsum.photos/id/1084/200/200" alt="Thumb 6" class="thumb-img">
+              </div>
+            </div>
+          </div>
+
+          <button type="button" class="thumb-nav-btn next-thumb-btn" aria-label="Next image" id="nextThumbBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 18l6-6-6-6"/>
+            </svg>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Product Details Column -->
+    <div class="product-details-sample">
+      <h1>Ayova Daily Essentials Multi-Nutrient Formula</h1>
+      <div class="price-sample">₹1,499 <span style="font-size: 16px; color: #888; text-decoration: line-through;">₹2,499</span> <span style="color: #D35F3C; font-size: 15px;">40% OFF</span></div>
+      <p style="line-height: 1.6; color: #555;">Pure natural ingredients for daily energy, bone strength, deep recovery, and immune defense. Standardized extracts clinically formulated for maximum bio-availability.</p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const mainImg = document.getElementById('mainProductImg');
+    const container = document.getElementById('thumbsCarouselContainer');
+    const thumbsList = document.getElementById('thumbsList');
+    const prevBtn = document.getElementById('prevThumbBtn');
+    const nextBtn = document.getElementById('nextThumbBtn');
+    const thumbs = document.querySelectorAll('.thumbs-list .thumb');
+
+    if (!container || !thumbsList || thumbs.length === 0) return;
+
+    // Update arrow enabled/disabled states based on scroll position
+    function updateArrows() {
+      const maxScroll = container.scrollWidth - container.clientWidth;
+      if (maxScroll <= 4) {
+        if (prevBtn) prevBtn.style.display = 'none';
+        if (nextBtn) nextBtn.style.display = 'none';
+        return;
+      } else {
+        if (prevBtn) prevBtn.style.display = 'flex';
+        if (nextBtn) nextBtn.style.display = 'flex';
+      }
+
+      if (container.scrollLeft <= 5) {
+        prevBtn.disabled = true;
+        prevBtn.classList.add('disabled');
+      } else {
+        prevBtn.disabled = false;
+        prevBtn.classList.remove('disabled');
+      }
+
+      if (container.scrollLeft >= maxScroll - 5) {
+        nextBtn.disabled = true;
+        nextBtn.classList.add('disabled');
+      } else {
+        nextBtn.disabled = false;
+        nextBtn.classList.remove('disabled');
+      }
+    }
+
+    // Scroll step = width of one thumbnail + gap (12px)
+    function getScrollStep() {
+      const firstThumb = thumbs[0];
+      if (firstThumb) {
+        return firstThumb.offsetWidth + 12;
+      }
+      return container.clientWidth / 4;
+    }
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', function() {
+        container.scrollBy({ left: -getScrollStep(), behavior: 'smooth' });
+      });
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', function() {
+        container.scrollBy({ left: getScrollStep(), behavior: 'smooth' });
+      });
+    }
+
+    container.addEventListener('scroll', updateArrows);
+    window.addEventListener('resize', updateArrows);
+
+    // Initial arrow state check
+    setTimeout(updateArrows, 100);
+
+    // Thumbnail click handler
+    thumbs.forEach(thumb => {
+      thumb.addEventListener('click', function() {
+        thumbs.forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+
+        if (mainImg && this.dataset.full) {
+          mainImg.style.opacity = '0.5';
+          mainImg.src = this.dataset.full;
+          mainImg.onload = function() {
+            mainImg.style.opacity = '1';
+          };
+        }
+
+        // Smoothly bring clicked thumbnail into view
+        this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      });
+    });
+
+    // Touch swipe support on main image
+    const mainBox = document.getElementById('mainImageBox');
+    if (mainBox) {
+      let touchStartX = 0;
+      let touchEndX = 0;
+
+      mainBox.addEventListener('touchstart', function(e) {
+        touchStartX = e.changedTouches[0].screenX;
+      }, { passive: true });
+
+      mainBox.addEventListener('touchend', function(e) {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+      }, { passive: true });
+
+      function handleSwipe() {
+        const threshold = 40;
+        const currentActive = document.querySelector('.thumbs-list .thumb.active');
+        let currentIndex = currentActive ? parseInt(currentActive.dataset.index) : 0;
+
+        if (touchEndX < touchStartX - threshold) {
+          // Swiped Left -> Next Image
+          const nextIndex = (currentIndex + 1) % thumbs.length;
+          thumbs[nextIndex].click();
+        } else if (touchEndX > touchStartX + threshold) {
+          // Swiped Right -> Previous Image
+          const prevIndex = (currentIndex - 1 + thumbs.length) % thumbs.length;
+          thumbs[prevIndex].click();
+        }
+      }
+    }
+  });
+</script>
+
+</body>
+</html>

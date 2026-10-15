@@ -5,7 +5,9 @@
 {% endcomment %}
 
 {% assign has_marketplace_buttons = false %}
-{% if section.settings.blinkit_url != blank or section.settings.amazon_url != blank or section.settings.flipkart_url != blank %}
+{% if section.settings.show_blinkit and section.settings.blinkit_url != blank %}
+  {% assign has_marketplace_buttons = true %}
+{% elsif section.settings.amazon_url != blank or section.settings.flipkart_url != blank %}
   {% assign has_marketplace_buttons = true %}
 {% endif %}
 
@@ -111,7 +113,7 @@
       <div class="header-utilities">
         <!-- Marketplace Buttons -->
         <div class="header-marketplace-buttons">
-          {% if section.settings.blinkit_url != blank %}
+          {% if section.settings.show_blinkit and section.settings.blinkit_url != blank %}
             <a href="{{ section.settings.blinkit_url }}" class="marketplace-btn btn-blinkit" target="_blank">
               {% if section.settings.blinkit_logo != blank %}
                 <img src="{{ section.settings.blinkit_logo | image_url: height: 32 }}" alt="Blinkit" style="height: 20px; width: auto;">
@@ -360,10 +362,15 @@
       "content": "Marketplace Buttons"
     },
     {
+      "type": "checkbox",
+      "id": "show_blinkit",
+      "label": "Show Blinkit",
+      "default": false
+    },
+    {
       "type": "url",
       "id": "blinkit_url",
-      "label": "Blinkit URL",
-      "default": "/"
+      "label": "Blinkit URL"
     },
     {
       "type": "image_picker",

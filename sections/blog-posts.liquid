@@ -48,10 +48,12 @@
                   {% endif %}
                   <div class="video-play-badge" aria-label="Play video">▶</div>
                 </div>
-              <div class="blog-content">
+                <div class="blog-content">
                   <h3 class="blog-title"><a href="{{ block.settings.url | default: '#' }}">{{ block.settings.title }}</a></h3>
                   <p class="story-author-tag">{{ block.settings.author | default: "Divya • Delhi" }}</p>
-                  <p class="story-product-tag">{{ block.settings.product | default: "Milk Thistle 800mg User" }}</p>
+                  {% unless template.name == 'product' or request.page_type == 'product' %}
+                    <p class="story-product-tag">{{ block.settings.product | default: "Milk Thistle 800mg User" }}</p>
+                  {% endunless %}
                 </div>
               </article>
             </div>
@@ -69,7 +71,9 @@
               <div class="blog-content">
                 <h3 class="blog-title"><a href="#">My 30-day liver wellness routine</a></h3>
                 <p class="story-author-tag">Divya • Delhi</p>
-                <p class="story-product-tag">Milk Thistle 800mg User</p>
+                {% unless template.name == 'product' or request.page_type == 'product' %}
+                  <p class="story-product-tag">Milk Thistle 800mg User</p>
+                {% endunless %}
               </div>
             </article>
           </div>
@@ -84,7 +88,9 @@
               <div class="blog-content">
                 <h3 class="blog-title"><a href="#">Why I added probiotics to every morning</a></h3>
                 <p class="story-author-tag">Mehar • Bengaluru</p>
-                <p class="story-product-tag">Probiotics 30B CFU User</p>
+                {% unless template.name == 'product' or request.page_type == 'product' %}
+                  <p class="story-product-tag">Probiotics 30B CFU User</p>
+                {% endunless %}
               </div>
             </article>
           </div>
@@ -99,7 +105,9 @@
               <div class="blog-content">
                 <h3 class="blog-title"><a href="#">A simpler way for 30-day gut cleanse</a></h3>
                 <p class="story-author-tag">Aniketh • Pune</p>
-                <p class="story-product-tag">Triphala Cleanse User</p>
+                {% unless template.name == 'product' or request.page_type == 'product' %}
+                  <p class="story-product-tag">Triphala Cleanse User</p>
+                {% endunless %}
               </div>
             </article>
           </div>
