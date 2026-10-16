@@ -4,7 +4,7 @@
 {% endcomment %}
 
 {% assign header_alignment = section.settings.header_alignment | default: 'center' %}
-{% assign items_desktop = section.settings.items_per_view | default: 6 %}
+{% assign items_desktop = section.settings.items_per_view | default: 4 %}
 {% assign layout_style = section.settings.card_style | default: 'figma' %}
 
 <section class="section-padding shop-wellness-section" id="shop-by-wellness">
@@ -33,7 +33,7 @@
     <div class="ayova-carousel-outer">
       <button type="button" class="ayova-overlay-btn ws-prev" data-carousel-prev aria-label="Previous">←</button>
 
-      <div class="ayova-carousel-wrapper" data-ayova-carousel data-items-per-view="{{ items_desktop }}" data-gap="18">
+      <div class="ayova-carousel-wrapper" data-ayova-carousel data-autoplay="true" data-autoplay-interval="3500" data-items-per-view="{{ items_desktop }}" data-gap="18">
         
         <div class="ayova-carousel-track" id="wellness-track-{{ section.id }}" style="scrollbar-width: none; -ms-overflow-style: none;">
 
@@ -344,7 +344,7 @@
       "max": 6,
       "step": 1,
       "label": "Items visible on Desktop",
-      "default": 6
+      "default": 4
     }
   ],
   "blocks": [

@@ -33,12 +33,35 @@
     </div>
   </div>
 
-  <div class="container text-center marquee-cta-wrapper" style="margin-top: 20px;">
+  <div class="container text-center marquee-cta-wrapper">
     <a href="{{ section.settings.btn_url | default: '#shop' }}" class="btn btn-primary btn-hero">
       {{ section.settings.btn_text | default: "Explore All Products →" }}
     </a>
   </div>
 </section>
+
+<style>
+  .ayova-marquee-section {
+    background: none;
+    color: var(--color-bg-white);
+    padding: 0 0 45px 0;
+    overflow: hidden;
+    position: relative;
+    white-space: nowrap;
+  }
+  .marquee-cta-wrapper {
+    margin-top: 10px;
+    margin-bottom: 0;
+  }
+  @media (max-width: 768px) {
+    .ayova-marquee-section {
+      padding: 0 0 32px 0;
+    }
+    .marquee-cta-wrapper {
+      margin-top: 8px;
+    }
+  }
+</style>
 
 {% schema %}
 {

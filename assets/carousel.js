@@ -7,6 +7,8 @@ class AyovaCarousel {
   constructor(element, options = {}) {
     this.container = typeof element === 'string' ? document.querySelector(element) : element;
     if (!this.container) return;
+    if (this.container._ayovaCarousel) return this.container._ayovaCarousel;
+    this.container._ayovaCarousel = this;
 
     this.section = this.container.closest('section') || this.container;
     this.track = this.container.querySelector('.ayova-carousel-track');
@@ -23,14 +25,19 @@ class AyovaCarousel {
     const outer = this.container.closest('.ayova-carousel-outer');
     this.prevBtn = this.container.querySelector('[data-carousel-prev]') || outer?.querySelector('[data-carousel-prev]') || this.section.querySelector('[data-carousel-prev]');
     this.nextBtn = this.container.querySelector('[data-carousel-next]') || outer?.querySelector('[data-carousel-next]') || this.section.querySelector('[data-carousel-next]');
-    this.dotsContainer = this.container.querySelector('[data-carousel-dots]') || this.section.querySelector('[data-carousel-dots]');
+    this.dotsContainer = this.container.querySelector('[data-carousel-dots]') || 
+                         this.container.parentElement?.querySelector('[data-carousel-dots]') || 
+                         this.section?.querySelector('[data-carousel-dots]') ||
+                         this.container.closest('section, .shopify-section, main')?.querySelector('[data-carousel-dots]');
 
     this.currentIndex = 0;
     this.customItems = this.container.getAttribute('data-items-per-view') || this.section.getAttribute('data-items-per-view');
     this.gap = parseInt(options.gap || this.container.getAttribute('data-gap') || 20);
     this.autoPlay = options.autoPlay || this.container.hasAttribute('data-autoplay');
-    this.autoPlayInterval = parseInt(options.autoPlayInterval || 4500);
+    this.autoPlayInterval = parseInt(this.container.getAttribute('data-autoplay-interval') || options.autoPlayInterval || 3500);
+    this.autoPlayDirection = 1;
     this.timer = null;
+    this.resumeTimer = null;
 
     this.init();
   }
@@ -75,14 +82,29 @@ class AyovaCarousel {
     // Ensure track gap matches this.gap
     this.track.style.gap = `${this.gap}px`;
 
-    // Calculate width taking gap into account
-    const totalGapsWidth = Math.max(0, (this.itemsPerView - 1) * this.gap);
-    // 6px safety buffer to ensure subpixel rounding, device pixel ratio scaling, and card borders never get clipped by overflow:hidden
-    const slideWidth = Math.max(120, Math.floor((availableWidth - totalGapsWidth - 6) / this.itemsPerView));
+    if (this.itemsPerView === 1) {
+      // Single slide view (hero banner): must cover exactly 100% full screen with zero buffer gap
+      const slideWidth = availableWidth;
+      this.slides.forEach(slide => {
+        slide.style.width = `${slideWidth}px`;
+        slide.style.minWidth = `${slideWidth}px`;
+        slide.style.maxWidth = `${slideWidth}px`;
+        slide.style.flex = `0 0 ${slideWidth}px`;
+        slide.style.boxSizing = 'border-box';
+      });
+    } else {
+      // Calculate width taking gap into account
+      const totalGapsWidth = Math.max(0, (this.itemsPerView - 1) * this.gap);
+      // 6px safety buffer to ensure subpixel rounding, device pixel ratio scaling, and card borders never get clipped by overflow:hidden
+      const slideWidth = Math.max(120, Math.floor((availableWidth - totalGapsWidth - 6) / this.itemsPerView));
 
-    this.slides.forEach(slide => {
-      slide.style.width = `${slideWidth}px`;
-    });
+      this.slides.forEach(slide => {
+        slide.style.width = `${slideWidth}px`;
+        slide.style.minWidth = '';
+        slide.style.maxWidth = '';
+        slide.style.flex = `0 0 ${slideWidth}px`;
+      });
+    }
 
     this.maxIndex = Math.max(0, this.slides.length - this.itemsPerView);
   }
@@ -107,8 +129,37 @@ class AyovaCarousel {
   }
 
   bindEvents() {
-    if (this.prevBtn) this.prevBtn.addEventListener('click', () => this.prev());
-    if (this.nextBtn) this.nextBtn.addEventListener('click', () => this.next());
+    if (this.prevBtn) {
+      this.prevBtn.addEventListener('click', () => {
+        this.prev();
+        this.autoPlayDirection = 1;
+        if (this.autoPlay) {
+          this.stopAutoPlay();
+          clearTimeout(this.resumeTimer);
+          this.resumeTimer = setTimeout(() => this.startAutoPlay(), 4000);
+        }
+      });
+    }
+
+    if (this.nextBtn) {
+      this.nextBtn.addEventListener('click', () => {
+        this.next();
+        if (this.currentIndex >= this.maxIndex) {
+          this.autoPlayDirection = -1;
+        }
+        if (this.autoPlay) {
+          this.stopAutoPlay();
+          clearTimeout(this.resumeTimer);
+          this.resumeTimer = setTimeout(() => this.startAutoPlay(), 4000);
+        }
+      });
+    }
+
+    // Pause on hover
+    this.container.addEventListener('mouseenter', () => this.stopAutoPlay());
+    this.container.addEventListener('mouseleave', () => {
+      if (this.autoPlay) this.startAutoPlay();
+    });
 
     let resizeTimeout;
     const onResize = () => {
@@ -163,7 +214,7 @@ class AyovaCarousel {
       if (!isDragging) return;
       const currentX = getPositionX(e);
       const diffX = currentX - startX;
-      const slideWidth = parseFloat(this.slides[0].style.width) || 300;
+      const slideWidth = this.itemsPerView === 1 ? this.container.clientWidth : (parseFloat(this.slides[0].style.width) || 300);
       const baseMove = -(slideWidth + this.gap) * this.currentIndex;
       currentTranslate = baseMove + diffX;
       this.track.style.transform = `translateX(${currentTranslate}px)`;
@@ -172,8 +223,8 @@ class AyovaCarousel {
     const touchEnd = () => {
       if (!isDragging) return;
       isDragging = false;
-      this.track.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-      const slideWidth = parseFloat(this.slides[0].style.width) || 300;
+      this.track.style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
+      const slideWidth = this.itemsPerView === 1 ? this.container.clientWidth : (parseFloat(this.slides[0].style.width) || 300);
       const baseMove = -(slideWidth + this.gap) * this.currentIndex;
       const movedBy = currentTranslate - baseMove;
 
@@ -183,6 +234,11 @@ class AyovaCarousel {
         this.prev();
       } else {
         this.update();
+      }
+
+      if (this.autoPlay) {
+        clearTimeout(this.resumeTimer);
+        this.resumeTimer = setTimeout(() => this.startAutoPlay(), 3500);
       }
     };
 
@@ -217,13 +273,13 @@ class AyovaCarousel {
 
   update() {
     if (!this.slides[0]) return;
-    const slideWidth = parseFloat(this.slides[0].style.width) || 300;
     
     // Clamp currentIndex safely
     this.currentIndex = Math.max(0, Math.min(this.currentIndex, this.maxIndex));
 
+    const slideWidth = this.itemsPerView === 1 ? this.container.clientWidth : (parseFloat(this.slides[0].style.width) || 300);
     const moveX = (slideWidth + this.gap) * this.currentIndex;
-    this.track.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+    this.track.style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
     this.track.style.transform = `translateX(-${moveX}px)`;
 
     // Update Buttons
@@ -252,11 +308,38 @@ class AyovaCarousel {
   }
 
   startAutoPlay() {
+    this.stopAutoPlay();
+    if (this.autoPlayDirection === undefined) {
+      this.autoPlayDirection = 1;
+    }
+
     this.timer = setInterval(() => {
-      if (this.currentIndex < this.maxIndex) {
-        this.next();
+      if (this.maxIndex <= 0) return;
+
+      if (this.itemsPerView === 1) {
+        // Single slide banners loop
+        if (this.currentIndex < this.maxIndex) {
+          this.next();
+        } else {
+          this.goTo(0);
+        }
       } else {
-        this.goTo(0);
+        // Multi-slide carousels: ping-pong left to right, then right to left
+        if (this.autoPlayDirection === 1) {
+          if (this.currentIndex < this.maxIndex) {
+            this.next();
+          } else {
+            this.autoPlayDirection = -1;
+            this.prev();
+          }
+        } else {
+          if (this.currentIndex > 0) {
+            this.prev();
+          } else {
+            this.autoPlayDirection = 1;
+            this.next();
+          }
+        }
       }
     }, this.autoPlayInterval);
   }
@@ -267,8 +350,18 @@ class AyovaCarousel {
 }
 
 // Auto Initialize all carousels with [data-ayova-carousel] attribute
-document.addEventListener('DOMContentLoaded', () => {
+function initAllAyovaCarousels() {
   document.querySelectorAll('[data-ayova-carousel]').forEach(el => {
-    new AyovaCarousel(el);
+    if (!el._ayovaCarousel) {
+      el._ayovaCarousel = new AyovaCarousel(el);
+    }
   });
-});
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initAllAyovaCarousels);
+} else {
+  initAllAyovaCarousels();
+}
+
+window.AyovaCarousel = AyovaCarousel;

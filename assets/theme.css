@@ -295,12 +295,12 @@ h6 {
 /* Add to Cart Button — Highlighted: full width, #173E34, border-radius 11px */
 .btn-add-cart {
   width: 100%;
-  height: 46px;
-  min-height: 46px;
-  padding: 0 16px;
+  height: 38px;
+  min-height: 38px;
+  padding: 0 14px;
   font-family: var(--font-accent);
   font-weight: 600;
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1;
   background-color: var(--color-forest-primary);
   color: var(--color-bg-white);
@@ -316,6 +316,16 @@ h6 {
   text-align: center;
   margin: 0 auto;
   box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .btn-add-cart {
+    height: 34px;
+    min-height: 34px;
+    padding: 0 10px;
+    font-size: 12px;
+    border-radius: 6px;
+  }
 }
 
 .btn-add-cart:hover {
@@ -402,17 +412,28 @@ h6 {
 /* Hero carousel: no gap, full width slides, no wrapper padding */
 .hero-carousel-container.ayova-carousel-wrapper,
 .hero-carousel-container .ayova-carousel-wrapper {
-  padding: 0;
-  margin: 0;
+  padding: 0 !important;
+  margin: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
 }
 
 .hero-carousel-container .ayova-carousel-track {
-  gap: 0;
+  gap: 0 !important;
+  display: flex !important;
 }
 
 .hero-carousel-container .hero-slide {
   flex: 0 0 100% !important;
   width: 100% !important;
+  min-width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  height: auto !important;
+  overflow: hidden;
 }
 
 .ayova-carousel-nav {
@@ -455,19 +476,24 @@ h6 {
 }
 
 .ayova-carousel-dot {
-  width: 8px;
-  height: 8px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
-  background: var(--color-border-muted);
+  background: #BCCEC4;
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all var(--transition-fast, 0.25s ease);
   border: none;
   padding: 0;
+  display: inline-block;
+}
+
+.ayova-carousel-dot:hover {
+  background: #8FA89C;
 }
 
 .ayova-carousel-dot.active {
-  background: var(--color-forest-mid);
-  width: 24px;
+  background: #173E34;
+  width: 26px;
   border-radius: 10px;
 }
 
@@ -824,17 +850,18 @@ h6 {
   display: block;
 }
 
-/* ── HERO SECTION (Figma: 600px height, #FFFCF9 bg) ──────────────────────── */
+/* ── HERO SECTION ──────────────────────────────────────────────────────────── */
 .ayova-hero-section {
   position: relative;
   overflow: hidden;
   background-color: var(--color-bg-cream);
-  height: 600px;
+  height: auto;
+  min-height: unset;
 }
 
 .hero-slide {
   width: 100% !important;
-  height: 600px;
+  height: auto;
 }
 
 .hero-slide-inner {
@@ -1809,10 +1836,25 @@ h6 {
   /* background: var(--color-terracotta); */
   background: none;
   color: var(--color-bg-white);
-  padding: 0px 0;
+  padding: 0 0 45px 0;
   overflow: hidden;
   position: relative;
   white-space: nowrap;
+}
+
+.marquee-cta-wrapper {
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .ayova-marquee-section {
+    padding: 0 0 32px 0;
+  }
+
+  .marquee-cta-wrapper {
+    margin-top: 8px;
+  }
 }
 
 .marquee-track {
@@ -1961,25 +2003,30 @@ h6 {
 .marketplace-logos {
   display: flex;
   justify-content: center;
-  gap: 26px;
+  align-items: center;
+  gap: 16px;
   margin-bottom: 26px;
 }
 
 .marketplace-logo {
-  width: 145px;
-  height: 47px;
-  border-radius: var(--radius-sm);
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 96px;
+  height: 36px;
+  padding: 0 10px;
+  border-radius: 6px;
+  box-sizing: border-box;
+  text-decoration: none;
+  transition: all 0.2s ease;
   overflow: hidden;
 }
 
 .marketplace-logo img {
   mix-blend-mode: multiply;
   object-fit: contain !important;
-  max-width: 80% !important;
-  max-height: 80% !important;
+  max-width: 76px !important;
+  max-height: 18px !important;
   width: auto !important;
   height: auto !important;
   margin: auto !important;
@@ -1999,7 +2046,7 @@ h6 {
 .marketplace-logo-blinkit span {
   font-family: var(--font-accent);
   font-weight: 700;
-  font-size: 22px;
+  font-size: 13px;
   color: #1E3B2E;
 }
 
@@ -2018,7 +2065,6 @@ h6 {
 }
 
 .marketplace-logo-flipkart {
-  width: 80px;
   background: #F8FBFF;
   border: 1px solid #2874F0;
   transition: all 0.2s ease;
@@ -3694,17 +3740,31 @@ body[class*="product"] .story-product-tag,
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 96px;
+  height: 36px;
+  padding: 0 10px;
+  box-sizing: border-box;
   font-weight: 700;
   font-size: 14px;
-  padding: 6px 16px;
   border-radius: 6px;
   text-decoration: none;
-  transition: opacity 0.2s, transform 0.2s;
+  transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
   white-space: nowrap;
+  overflow: hidden;
+}
+
+.marketplace-btn img {
+  max-height: 18px !important;
+  max-width: 76px !important;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain !important;
+  display: block;
+  margin: auto;
 }
 
 .marketplace-btn:hover {
-  opacity: 0.9;
+  opacity: 0.95;
   transform: translateY(-1px);
 }
 
@@ -4258,27 +4318,31 @@ body[class*="product"] .story-product-tag,
 
 @media (max-width: 768px) {
   .ayova-marketplace-bar--ws {
-    gap: 5px;
-    margin-top: 2px;
+    gap: 4px;
+    margin-top: 3px;
+    width: 100%;
   }
 
   .ayova-marketplace-bar--ws .ayova-marketplace-label {
-    font-size: 10.5px;
+    display: none;
   }
 
   .ayova-marketplace-bar--ws .ayova-marketplace-links {
-    gap: 5px;
+    display: flex;
+    gap: 4px;
+    width: 100%;
   }
 
   .ayova-marketplace-bar--ws .ayova-marketplace-btn {
-    height: 25px;
-    padding: 2px 7px;
-    border-radius: 6px;
+    flex: 1;
+    height: 22px;
+    padding: 2px 4px;
+    border-radius: 5px;
   }
 
   .ayova-marketplace-bar--ws .ayova-mkt-logo {
-    height: 12px;
-    max-width: 48px;
+    height: 11px;
+    max-width: 44px;
   }
 }
 

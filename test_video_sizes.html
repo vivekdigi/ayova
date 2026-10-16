@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Watch & Shop Mobile Video Size Options</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/theme.css">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      background: #eef2f0;
+      margin: 0;
+      padding: 20px 10px;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .wrapper {
+      max-width: 420px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+    .option-card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    }
+    .option-header {
+      font-size: 14px;
+      font-weight: 700;
+      color: #173E34;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #e2ebe6;
+      display: flex;
+      justify-content: space-between;
+    }
+    .badge {
+      background: #173E34;
+      color: #fff;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+    }
+
+    /* Common Styles */
+    .ws-grid {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding: 4px 0;
+    }
+    .ws-grid::-webkit-scrollbar { display: none; }
+    
+    .card-base {
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+    .video-box {
+      position: relative;
+      width: 100%;
+      background: #111;
+      overflow: hidden;
+    }
+    .video-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .sound-btn {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      padding: 0;
+    }
+    .sound-btn svg { width: 10px; height: 10px; }
+
+    .info-box {
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      background: #fff;
+    }
+    .info-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .thumb {
+      width: 28px;
+      height: 28px;
+      border-radius: 5px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .title-col {
+      flex: 1;
+      min-width: 0;
+    }
+    .prod-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: #202824;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin: 0;
+    }
+    .prod-price {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #173E34;
+      margin-top: 1px;
+    }
+    .buy-btn {
+      background: #173E34;
+      color: #fff;
+      text-align: center;
+      padding: 6px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      text-decoration: none;
+      display: block;
+    }
+    .mkt-row {
+      display: flex;
+      gap: 4px;
+      margin-top: 2px;
+    }
+    .mkt-btn {
+      flex: 1;
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      padding: 3px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 20px;
+    }
+    .mkt-btn img {
+      max-height: 11px;
+      max-width: 38px;
+      object-fit: contain;
+    }
+
+    /* Option 1: Card 145px, Video height 175px */
+    .opt-1 .card-base {
+      width: 145px;
+    }
+    .opt-1 .video-box {
+      height: 175px;
+    }
+
+    /* Option 2: Card 135px, Video height 160px (Super Compact) */
+    .opt-2 .card-base {
+      width: 135px;
+    }
+    .opt-2 .video-box {
+      height: 160px;
+    }
+
+    /* Option 3: Card 160px, Video height 195px (Medium Small) */
+    .opt-3 .card-base {
+      width: 160px;
+    }
+    .opt-3 .video-box {
+      height: 195px;
+    }
+
+    /* Current: 205px width, 250px height */
+    .opt-curr .card-base {
+      width: 205px;
+    }
+    .opt-curr .video-box {
+      height: 250px;
+    }
+    .opt-curr .thumb { width: 36px; height: 36px; }
+    .opt-curr .prod-title { font-size: 12.5px; }
+    .opt-curr .buy-btn { padding: 8px; font-size: 12px; }
+  </style>
+</head>
+<body>
+
+  <div class="wrapper">
+    <h2 style="font-size: 18px; color: #173E34; margin: 0; text-align: center;">Ayova Watch & Shop Mobile Sizing</h2>
+
+    <!-- Option 1 -->
+    <div class="option-card opt-1">
+      <div class="option-header">
+        <span>Option A: 145px Width &times; 175px Video Height</span>
+        <span class="badge">Recommended</span>
+      </div>
+      <p style="font-size: 11px; color: #666; margin: 0 0 10px;">Shows 2 full cards + 3rd card peek on standard mobile (390px).</p>
+      <div class="ws-grid">
+        <div class="card-base">
+          <div class="video-box">
+            <button class="sound-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
+            </button>
+            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400" alt="Video 1">
+          </div>
+          <div class="info-box">
+            <div class="info-header">
+              <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=80" class="thumb">
+              <div class="title-col">
+                <div class="prod-title">Glutathione Tablets</div>
+                <div class="prod-price">Rs. 349.00</div>
+              </div>
+            </div>
+            <a href="#" class="buy-btn">Buy Now</a>
+            <div class="mkt-row">
+              <div class="mkt-btn"><img src="assets/amazon.svg" alt="Amazon"></div>
+              <div class="mkt-btn"><img src="assets/flipkart_wvl.svg" alt="Flipkart"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-base">
+          <div class="video-box">
+            <button class="sound-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
+            </button>
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400" alt="Video 2">
+          </div>
+          <div class="info-box">
+            <div class="info-header">
+              <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=80" class="thumb">
+              <div class="title-col">
+                <div class="prod-title">Liver Care Herbal Syrup</div>
+                <div class="prod-price">Rs. 389.00</div>
+              </div>
+            </div>
+            <a href="#" class="buy-btn">Buy Now</a>
+            <div class="mkt-row">
+              <div class="mkt-btn"><img src="assets/amazon.svg" alt="Amazon"></div>
+              <div class="mkt-btn"><img src="assets/flipkart_wvl.svg" alt="Flipkart"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-base">
+          <div class="video-box">
+            <button class="sound-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
+            </button>
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400" alt="Video 3">
+          </div>
+          <div class="info-box">
+            <div class="info-header">
+              <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=80" class="thumb">
+              <div class="title-col">
+                <div class="prod-title">Pure Shilajit Tablets</div>
+                <div class="prod-price">Rs. 599.00</div>
+              </div>
+            </div>
+            <a href="#" class="buy-btn">Buy Now</a>
+            <div class="mkt-row">
+              <div class="mkt-btn"><img src="assets/amazon.svg" alt="Amazon"></div>
+              <div class="mkt-btn"><img src="assets/flipkart_wvl.svg" alt="Flipkart"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Option 2: Super Compact 135px x 160px -->
+    <div class="option-card opt-2">
+      <div class="option-header">
+        <span>Option B: 135px Width &times; 160px Video Height</span>
+        <span style="font-size: 11px; color: #666;">Ultra Compact</span>
+      </div>
+      <p style="font-size: 11px; color: #666; margin: 0 0 10px;">Shows 2.4 cards on screen, very lightweight footprint.</p>
+      <div class="ws-grid">
+        <div class="card-base">
+          <div class="video-box">
+            <button class="sound-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
+            </button>
+            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400" alt="Video 1">
+          </div>
+          <div class="info-box">
+            <div class="info-header">
+              <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=80" class="thumb">
+              <div class="title-col">
+                <div class="prod-title">Glutathione Tablets</div>
+                <div class="prod-price">Rs. 349.00</div>
+              </div>
+            </div>
+            <a href="#" class="buy-btn">Buy Now</a>
+            <div class="mkt-row">
+              <div class="mkt-btn"><img src="assets/amazon.svg" alt="Amazon"></div>
+              <div class="mkt-btn"><img src="assets/flipkart_wvl.svg" alt="Flipkart"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-base">
+          <div class="video-box">
+            <button class="sound-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
+            </button>
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400" alt="Video 2">
+          </div>
+          <div class="info-box">
+            <div class="info-header">
+              <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=80" class="thumb">
+              <div class="title-col">
+                <div class="prod-title">Liver Care Syrup</div>
+                <div class="prod-price">Rs. 389.00</div>
+              </div>
+            </div>
+            <a href="#" class="buy-btn">Buy Now</a>
+            <div class="mkt-row">
+              <div class="mkt-btn"><img src="assets/amazon.svg" alt="Amazon"></div>
+              <div class="mkt-btn"><img src="assets/flipkart_wvl.svg" alt="Flipkart"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-base">
+          <div class="video-box">
+            <button class="sound-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
+            </button>
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400" alt="Video 3">
+          </div>
+          <div class="info-box">
+            <div class="info-header">
+              <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=80" class="thumb">
+              <div class="title-col">
+                <div class="prod-title">Shilajit Tablets</div>
+                <div class="prod-price">Rs. 599.00</div>
+              </div>
+            </div>
+            <a href="#" class="buy-btn">Buy Now</a>
+            <div class="mkt-row">
+              <div class="mkt-btn"><img src="assets/amazon.svg" alt="Amazon"></div>
+              <div class="mkt-btn"><img src="assets/flipkart_wvl.svg" alt="Flipkart"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Current Original for comparison -->
+    <div class="option-card opt-curr">
+      <div class="option-header">
+        <span>Current Size (205px &times; 250px)</span>
+        <span style="font-size: 11px; color: #d9534f; font-weight: 700;">Too Large</span>
+      </div>
+      <p style="font-size: 11px; color: #666; margin: 0 0 10px;">Cards are bulky and cut off awkwardly.</p>
+      <div class="ws-grid">
+        <div class="card-base">
+          <div class="video-box">
+            <button class="sound-btn" style="width:26px; height:26px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
+            </button>
+            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400" alt="Video 1">
+          </div>
+          <div class="info-box">
+            <div class="info-header">
+              <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=80" class="thumb">
+              <div class="title-col">
+                <div class="prod-title">Glutathione Effervescent Tablets</div>
+                <div class="prod-price">Rs. 349.00</div>
+              </div>
+            </div>
+            <a href="#" class="buy-btn">Buy Now</a>
+          </div>
+        </div>
+
+        <div class="card-base">
+          <div class="video-box">
+            <button class="sound-btn" style="width:26px; height:26px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
+            </button>
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400" alt="Video 2">
+          </div>
+          <div class="info-box">
+            <div class="info-header">
+              <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=80" class="thumb">
+              <div class="title-col">
+                <div class="prod-title">Liver Care Herbal Syrup</div>
+                <div class="prod-price">Rs. 389.00</div>
+              </div>
+            </div>
+            <a href="#" class="buy-btn">Buy Now</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

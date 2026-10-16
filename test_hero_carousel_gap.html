@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ayova Hero Carousel Banner Full-Screen Test</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/theme.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #FFFFFF;
+      font-family: 'Montserrat', sans-serif;
+      overflow-x: hidden;
+    }
+    .test-header {
+      background: #FFFFFF;
+      padding: 15px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #ECEEEA;
+    }
+    .test-status {
+      padding: 12px 24px;
+      background: #E8F5E9;
+      color: #1B5E20;
+      font-weight: 600;
+      font-size: 14px;
+      text-align: center;
+    }
+    .hero-carousel-controls {
+      position: relative;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px 0 20px;
+      margin: 0 auto;
+      z-index: 10;
+    }
+    .hero-carousel-controls .ayova-carousel-dots {
+      margin-top: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+    }
+    .ayova-carousel-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #BCCEC4;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      border: none;
+      padding: 0;
+      display: inline-block;
+    }
+    .ayova-carousel-dot:hover {
+      background: #8FA89C;
+    }
+    .ayova-carousel-dot.active {
+      background: #173E34;
+      width: 26px;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Test Header -->
+  <header class="test-header">
+    <div style="font-weight: 700; font-size: 22px; color: #173E34;">AYOVA</div>
+    <div style="display: flex; gap: 20px; font-weight: 500; font-size: 14px; color: #2D3748;">
+      <span>Home</span>
+      <span>Shop</span>
+      <span>About Us</span>
+      <span>Contact Us</span>
+      <span>FAQ</span>
+    </div>
+  </header>
+
+  <div class="test-status" id="testStatus">
+    Slide: <span id="currentSlideDisplay">1 of 4</span> — Checking full width & zero gap
+  </div>
+
+  <!-- Hero Carousel Section -->
+  <section class="ayova-hero-section" style="background: #FAF8F2;">
+    <div class="ayova-carousel-wrapper hero-carousel-container" data-ayova-carousel data-items-per-view="1" data-gap="0">
+      <div class="ayova-carousel-track">
+
+        <!-- Slide 1: Full Bleed Banner -->
+        <div class="ayova-carousel-slide hero-slide">
+          <div class="hero-slide-grid hero-slide-grid--image-only">
+            <div class="hero-image-container">
+              <div class="hero-image-wrapper">
+                <div style="width: 100%; height: 380px; background: linear-gradient(135deg, #173E34 0%, #153D30 100%); display: flex; align-items: center; justify-content: center; color: #FFFFFF;">
+                  <h2 style="font-size: 36px; font-family: 'Cormorant Garamond', Georgia, serif;">Slide 1: Modern Wellness Ayurveda Banner</h2>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 2: Banner Slide -->
+        <div class="ayova-carousel-slide hero-slide">
+          <div class="hero-slide-grid hero-slide-grid--image-only">
+            <div class="hero-image-container">
+              <div class="hero-image-wrapper">
+                <div style="width: 100%; height: 380px; background: linear-gradient(135deg, #153D30 0%, #2A5A48 100%); display: flex; align-items: center; justify-content: center; color: #FFFFFF;">
+                  <h2 style="font-size: 36px; font-family: 'Cormorant Garamond', Georgia, serif;">Slide 2: Full Bleed Banner (Gradient Cover)</h2>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 3: The User's Banner (Image-Only Full Screen) -->
+        <div class="ayova-carousel-slide hero-slide">
+          <div class="hero-slide-grid hero-slide-grid--image-only">
+            <div class="hero-image-container">
+              <div class="hero-image-wrapper">
+                <div style="width: 100%; height: 380px; background: linear-gradient(90deg, #F3ECE1 0%, #E8DFD0 100%); display: flex; align-items: center; justify-content: space-between; padding: 0 60px; box-sizing: border-box;">
+                  <div>
+                    <h2 style="font-size: 38px; color: #173E34; margin: 0 0 10px; font-family: 'Cormorant Garamond', Georgia, serif;">Healthy Living,<br>Naturally Every Day<br>With Ayova.</h2>
+                    <span style="background: #153D30; color: #FFFFFF; padding: 8px 18px; border-radius: 20px; font-size: 13px; font-weight: 600;">Milk Thistle Extract</span>
+                  </div>
+                  <div style="width: 280px; height: 280px; background: #C8D8CE; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #153D30;">
+                    Banner Imagery
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 4: Full Bleed Banner -->
+        <div class="ayova-carousel-slide hero-slide">
+          <div class="hero-slide-grid hero-slide-grid--image-only">
+            <div class="hero-image-container">
+              <div class="hero-image-wrapper">
+                <div style="width: 100%; height: 380px; background: linear-gradient(135deg, #2E5C4E 0%, #173E34 100%); display: flex; align-items: center; justify-content: center; color: #FFFFFF;">
+                  <h2 style="font-size: 36px; font-family: 'Cormorant Garamond', Georgia, serif;">Slide 4: Another Full Screen Banner</h2>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+    </div>
+  </div>
+
+  <!-- Carousel Navigation Controls & Dots (OUTSIDE the slider) -->
+  <div class="hero-carousel-controls">
+    <div class="ayova-carousel-dots" data-carousel-dots></div>
+  </div>
+</section>
+
+  <!-- Nav Buttons for Quick Manual Testing -->
+  <div style="text-align: center; margin: 30px 0; display: flex; gap: 12px; justify-content: center;">
+    <button id="btnGo0" style="padding: 10px 20px; border-radius: 6px; border: 1px solid #153D30; background: #153D30; color: #FFF; font-weight: 600; cursor: pointer;">Go to Slide 1</button>
+    <button id="btnGo1" style="padding: 10px 20px; border-radius: 6px; border: 1px solid #153D30; background: #153D30; color: #FFF; font-weight: 600; cursor: pointer;">Go to Slide 2</button>
+    <button id="btnGo2" style="padding: 10px 20px; border-radius: 6px; border: 1px solid #153D30; background: #153D30; color: #FFF; font-weight: 600; cursor: pointer;">Go to Slide 3 (User Banner)</button>
+    <button id="btnGo3" style="padding: 10px 20px; border-radius: 6px; border: 1px solid #153D30; background: #153D30; color: #FFF; font-weight: 600; cursor: pointer;">Go to Slide 4</button>
+  </div>
+
+  <div id="measurements" style="max-width: 800px; margin: 0 auto 50px; background: #F8F9FA; padding: 20px; border-radius: 8px; font-family: monospace; font-size: 14px; line-height: 1.6; border: 1px solid #E2E8F0;">
+  </div>
+
+  <script src="assets/carousel.js"></script>
+  <script>
+    window.addEventListener('load', () => {
+      const carouselEl = document.querySelector('[data-ayova-carousel]');
+      const track = document.querySelector('.ayova-carousel-track');
+      const slides = document.querySelectorAll('.hero-slide');
+      const statusDisplay = document.getElementById('currentSlideDisplay');
+      const measurements = document.getElementById('measurements');
+
+      function updateMeasurements(slideIdx) {
+        const containerRect = carouselEl.getBoundingClientRect();
+        const trackRect = track.getBoundingClientRect();
+        const activeSlideRect = slides[slideIdx].getBoundingClientRect();
+        const computedTrackTransform = window.getComputedStyle(track).transform;
+
+        statusDisplay.textContent = `${slideIdx + 1} of ${slides.length}`;
+
+        const dotsEl = document.querySelector('.ayova-carousel-dots');
+        const dotsList = document.querySelectorAll('.ayova-carousel-dot');
+        measurements.innerHTML = `
+          <strong>Verification Data for Slide ${slideIdx + 1}:</strong><br>
+          Container width: <strong>${containerRect.width}px</strong><br>
+          Slide ${slideIdx + 1} width: <strong>${activeSlideRect.width}px</strong> (Diff: ${activeSlideRect.width - containerRect.width}px)<br>
+          Active Slide Left offset relative to container: <strong>${activeSlideRect.left - containerRect.left}px</strong><br>
+          Track transform: <strong>${computedTrackTransform}</strong><br>
+          Dots count: <strong>${dotsList.length}</strong> (display: ${dotsEl ? window.getComputedStyle(dotsEl).display : 'none'}, HTML: ${dotsEl ? dotsEl.innerHTML : ''})
+        `;
+      }
+
+      document.getElementById('btnGo0').addEventListener('click', () => {
+        const instance = AyovaCarousel ? carouselEl._ayovaCarousel || null : null;
+        // Trigger via click on dot
+        const dots = document.querySelectorAll('.ayova-carousel-dot');
+        if (dots[0]) dots[0].click();
+        setTimeout(() => updateMeasurements(0), 450);
+      });
+
+      document.getElementById('btnGo1').addEventListener('click', () => {
+        const dots = document.querySelectorAll('.ayova-carousel-dot');
+        if (dots[1]) dots[1].click();
+        setTimeout(() => updateMeasurements(1), 450);
+      });
+
+      document.getElementById('btnGo2').addEventListener('click', () => {
+        const dots = document.querySelectorAll('.ayova-carousel-dot');
+        if (dots[2]) dots[2].click();
+        setTimeout(() => updateMeasurements(2), 450);
+      });
+
+      document.getElementById('btnGo3').addEventListener('click', () => {
+        const dots = document.querySelectorAll('.ayova-carousel-dot');
+        if (dots[3]) dots[3].click();
+        setTimeout(() => updateMeasurements(3), 450);
+      });
+
+      setTimeout(() => updateMeasurements(0), 200);
+    });
+  </script>
+</body>
+</html>

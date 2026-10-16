@@ -188,40 +188,33 @@ document.addEventListener('DOMContentLoaded', function() {
   const prevBtns = sectionEl ? sectionEl.querySelectorAll('.ws-prev') : [];
   const nextBtns = sectionEl ? sectionEl.querySelectorAll('.ws-next') : [];
   const dotsContainer = document.getElementById('ws-dots-{{ section.id }}');
-  const cards = grid.querySelectorAll('.watch-shop-card');
+
+  const cards = Array.from(grid.querySelectorAll('.watch-shop-card'));
+  const totalCards = cards.length;
 
   function getStepSize() {
     const card = cards[0];
     if (card) {
       const style = window.getComputedStyle(grid);
-      const gap = parseFloat(style.gap) || (window.innerWidth <= 768 ? 12 : 16);
+      const gap = parseFloat(style.gap) || (window.innerWidth <= 768 ? 10 : 16);
       return card.offsetWidth + gap;
     }
-    return 260;
+    return 200;
   }
 
   function renderDots() {
-    if (!dotsContainer || !cards.length) return;
+    if (!dotsContainer || totalCards <= 1) return;
     dotsContainer.innerHTML = '';
-    const totalDots = cards.length;
-    const maxScroll = grid.scrollWidth - grid.clientWidth;
 
-    if (totalDots <= 1) {
-      dotsContainer.style.display = 'none';
-      return;
-    }
-    dotsContainer.style.display = 'flex';
-
-    for (let i = 0; i < totalDots; i++) {
+    for (let i = 0; i < totalCards; i++) {
       const dot = document.createElement('button');
       dot.type = 'button';
       dot.className = 'ayova-carousel-dot' + (i === 0 ? ' active' : '');
       dot.setAttribute('aria-label', `Video ${i + 1}`);
       dot.addEventListener('click', () => {
         const step = getStepSize();
-        const targetCard = cards[i];
-        const targetScroll = targetCard ? targetCard.offsetLeft - grid.offsetLeft : i * step;
-        grid.scrollTo({ left: Math.min(maxScroll, Math.max(0, targetScroll)), behavior: 'smooth' });
+        grid.scrollTo({ left: i * step, behavior: 'smooth' });
+        pauseAutoMove(4000);
       });
       dotsContainer.appendChild(dot);
     }
@@ -229,13 +222,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function updateActiveDot() {
     const dots = dotsContainer ? dotsContainer.querySelectorAll('.ayova-carousel-dot') : [];
-    if (!dots.length || !cards.length) return;
+    if (!dots.length) return;
+    const step = getStepSize();
     const scrollLeft = grid.scrollLeft;
     const maxScroll = grid.scrollWidth - grid.clientWidth;
-    const step = getStepSize();
 
     let activeIndex;
-    if (scrollLeft >= maxScroll - 15) {
+    if (scrollLeft >= maxScroll - 12) {
       activeIndex = dots.length - 1;
     } else {
       activeIndex = Math.min(dots.length - 1, Math.max(0, Math.round(scrollLeft / step)));
@@ -247,38 +240,116 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function updateArrows() {
-    const atStart = grid.scrollLeft <= 10;
-    const maxScroll = grid.scrollWidth - grid.clientWidth - 10;
-    const atEnd = grid.scrollLeft >= maxScroll;
+    const atStart = grid.scrollLeft <= 8;
+    const maxScroll = grid.scrollWidth - grid.clientWidth;
+    const atEnd = grid.scrollLeft >= maxScroll - 8;
+    const noScroll = maxScroll <= 5;
 
     prevBtns.forEach(btn => {
-      btn.style.opacity = atStart ? '0.35' : '1';
-      btn.style.pointerEvents = atStart ? 'none' : 'auto';
+      btn.disabled = atStart || noScroll;
+      btn.style.opacity = (atStart || noScroll) ? '0.35' : '1';
+      btn.style.pointerEvents = (atStart || noScroll) ? 'none' : 'auto';
     });
-
     nextBtns.forEach(btn => {
-      btn.style.opacity = atEnd ? '0.35' : '1';
-      btn.style.pointerEvents = atEnd ? 'none' : 'auto';
+      btn.disabled = atEnd || noScroll;
+      btn.style.opacity = (atEnd || noScroll) ? '0.35' : '1';
+      btn.style.pointerEvents = (atEnd || noScroll) ? 'none' : 'auto';
     });
   }
 
+  // Ping-pong auto-move: moves 1 video step at a time left to right, and after finish right to left
+  let direction = 1; // 1 = left to right, -1 = right to left
+  let isPaused = false;
+  let isInteracting = false;
+  let autoTimer = null;
+  let pauseTimer = null;
+  const moveInterval = 3200; // Time spent on each video before moving to the next
+
+  function moveOneVideo() {
+    if (isPaused || isInteracting || totalCards <= 1) return;
+    const maxScroll = grid.scrollWidth - grid.clientWidth;
+    if (maxScroll <= 5) return;
+
+    const step = getStepSize();
+    const currentScroll = grid.scrollLeft;
+
+    if (direction === 1) {
+      // Move left to right (next video)
+      if (currentScroll + step >= maxScroll - 10) {
+        grid.scrollTo({ left: maxScroll, behavior: 'smooth' });
+        direction = -1; // Reached right end, reverse to right-to-left
+      } else {
+        grid.scrollTo({ left: currentScroll + step, behavior: 'smooth' });
+      }
+    } else {
+      // Move right to left (prev video)
+      if (currentScroll - step <= 10) {
+        grid.scrollTo({ left: 0, behavior: 'smooth' });
+        direction = 1; // Reached left end, reverse to left-to-right
+      } else {
+        grid.scrollTo({ left: currentScroll - step, behavior: 'smooth' });
+      }
+    }
+  }
+
+  function startAutoMove() {
+    clearInterval(autoTimer);
+    autoTimer = setInterval(moveOneVideo, moveInterval);
+  }
+
+  function pauseAutoMove(duration = 4000) {
+    isInteracting = true;
+    clearInterval(autoTimer);
+    clearTimeout(pauseTimer);
+    pauseTimer = setTimeout(() => {
+      isInteracting = false;
+      startAutoMove();
+    }, duration);
+  }
+
+  startAutoMove();
+
+  // Pause on hover for desktop
+  grid.addEventListener('mouseenter', () => { isPaused = true; });
+  grid.addEventListener('mouseleave', () => { isPaused = false; });
+
+  // Pause on touch for mobile
+  grid.addEventListener('touchstart', () => {
+    isInteracting = true;
+    clearInterval(autoTimer);
+  }, { passive: true });
+
+  grid.addEventListener('touchend', () => {
+    pauseAutoMove(3000);
+  }, { passive: true });
+
+  // Arrow click handlers
   prevBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
       const step = getStepSize();
       grid.scrollBy({ left: -step, behavior: 'smooth' });
+      direction = 1;
+      pauseAutoMove(4000);
     });
   });
 
   nextBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
       const step = getStepSize();
       grid.scrollBy({ left: step, behavior: 'smooth' });
+      const maxScroll = grid.scrollWidth - grid.clientWidth;
+      if (grid.scrollLeft + step >= maxScroll - 12) {
+        direction = -1;
+      }
+      pauseAutoMove(4000);
     });
   });
 
   grid.addEventListener('scroll', () => {
-    updateArrows();
     updateActiveDot();
+    updateArrows();
   }, { passive: true });
 
   let resizeTimeout;
@@ -297,34 +368,30 @@ document.addEventListener('DOMContentLoaded', function() {
     updateActiveDot();
   }, 300);
 
-  // Sound toggle button logic
-  const soundToggles = grid.querySelectorAll('.ws-sound-toggle');
-  soundToggles.forEach(toggle => {
-    toggle.addEventListener('click', function(e) {
+  // Sound toggle button logic with event delegation
+  grid.addEventListener('click', function(e) {
+    const toggle = e.target.closest('.ws-sound-toggle');
+    if (toggle) {
       e.preventDefault();
       e.stopPropagation();
-      const container = this.closest('.ws-video-container');
+      const container = toggle.closest('.ws-video-container');
       const video = container ? container.querySelector('video') : null;
       if (video) {
         video.muted = !video.muted;
-        const muteIcon = this.querySelector('.ws-icon-mute');
-        const unmuteIcon = this.querySelector('.ws-icon-unmute');
+        const muteIcon = toggle.querySelector('.ws-icon-mute');
+        const unmuteIcon = toggle.querySelector('.ws-icon-unmute');
         if (muteIcon && unmuteIcon) {
           muteIcon.style.display = video.muted ? 'block' : 'none';
           unmuteIcon.style.display = video.muted ? 'none' : 'block';
         }
       }
-    });
-  });
+      return;
+    }
 
-  // Play / Pause on video container click
-  const videoContainers = grid.querySelectorAll('.ws-video-container');
-  videoContainers.forEach(container => {
-    const video = container.querySelector('video');
-    if (!video) return;
-
-    container.addEventListener('click', function(e) {
-      if (e.target.closest('.ws-custom-controls')) return;
+    const container = e.target.closest('.ws-video-container');
+    if (container && !e.target.closest('.ws-custom-controls')) {
+      const video = container.querySelector('video');
+      if (!video) return;
       if (video.paused) {
         video.play();
         container.classList.remove('is-paused');
@@ -332,13 +399,10 @@ document.addEventListener('DOMContentLoaded', function() {
         video.pause();
         container.classList.add('is-paused');
       }
-    });
-
-    video.addEventListener('play', () => container.classList.remove('is-paused'));
-    video.addEventListener('pause', () => container.classList.add('is-paused'));
+    }
   });
 
-  // Ensure videos play directly without blank thumbnail delay
+  // Ensure all videos play directly (originals and clones)
   const allVideos = grid.querySelectorAll('.ws-video-element');
   allVideos.forEach(v => {
     v.muted = true;
@@ -381,7 +445,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 .ayova-overlay-btn.ws-nav-btn {
   position: absolute;
-  top: 45%;
+  top: 138px;
   transform: translateY(-50%);
   width: 40px;
   height: 40px;
@@ -466,29 +530,29 @@ document.addEventListener('DOMContentLoaded', function() {
 @media (min-width: 992px) {
   .watch-shop-grid {
     justify-content: flex-start;
-    gap: 14px;
+    gap: 16px;
   }
   .watch-shop-card {
-    flex: 0 0 calc((100% - (4 * 14px)) / 5) !important;
-    width: calc((100% - (4 * 14px)) / 5) !important;
-    max-width: calc((100% - (4 * 14px)) / 5) !important;
-    min-width: calc((100% - (4 * 14px)) / 5) !important;
+    flex: 0 0 calc((100% - (4 * 16px)) / 5) !important;
+    width: calc((100% - (4 * 16px)) / 5) !important;
+    max-width: calc((100% - (4 * 16px)) / 5) !important;
+    min-width: calc((100% - (4 * 16px)) / 5) !important;
   }
   .ws-video-container {
-    max-height: 265px;
+    max-height: 275px;
   }
 }
 
 @media (min-width: 769px) and (max-width: 991px) {
   .watch-shop-grid {
     justify-content: flex-start;
-    gap: 12px;
+    gap: 14px;
   }
   .watch-shop-card {
-    flex: 0 0 calc((100% - (3 * 12px)) / 4) !important;
-    width: calc((100% - (3 * 12px)) / 4) !important;
-    max-width: calc((100% - (3 * 12px)) / 4) !important;
-    min-width: calc((100% - (3 * 12px)) / 4) !important;
+    flex: 0 0 calc((100% - (2 * 14px)) / 3) !important;
+    width: calc((100% - (2 * 14px)) / 3) !important;
+    max-width: calc((100% - (2 * 14px)) / 3) !important;
+    min-width: calc((100% - (2 * 14px)) / 3) !important;
   }
 }
 
@@ -792,8 +856,26 @@ document.addEventListener('DOMContentLoaded', function() {
     margin-bottom: 16px;
   }
 
-  /* Hide floating edge buttons on mobile */
+  /* Show floating edge buttons on mobile, just like desktop */
   .ws-slider-wrapper > .ws-nav-btn {
+    display: flex !important;
+    top: 88px !important;
+    transform: translateY(-50%) !important;
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+    z-index: 15;
+  }
+  .ws-slider-wrapper .ws-prev {
+    left: 4px;
+  }
+  .ws-slider-wrapper .ws-next {
+    right: 4px;
+  }
+
+  /* Hide duplicate inline buttons in dots pill on mobile */
+  .ws-carousel-controls .ws-nav-btn--inline {
     display: none !important;
   }
 
@@ -812,81 +894,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
   /* Compact mobile video card */
   .watch-shop-card {
-    flex: 0 0 205px;
-    width: 205px;
-    min-width: 195px;
-    max-width: 215px;
-    border-radius: 13px;
-    box-shadow: 0 3px 14px rgba(0, 0, 0, 0.07);
+    flex: 0 0 145px;
+    width: 145px;
+    min-width: 135px;
+    max-width: 155px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.07);
     scroll-snap-align: start;
     scroll-snap-stop: always;
   }
 
   .ws-video-container {
-    aspect-ratio: 9/13.5;
-    max-height: 250px;
+    aspect-ratio: 9/12.5;
+    max-height: 175px;
   }
 
-  .ws-product-info {
-    padding: 9px 10px 10px;
-    gap: 7px;
-  }
-
-  .ws-product-header {
-    gap: 8px;
-  }
-
-  .ws-product-thumb {
-    width: 36px;
-    height: 36px;
-    border-radius: 6px;
-  }
-
-  .ws-product-title {
-    font-size: 0.78rem;
-    line-height: 1.25;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .ws-product-price {
-    font-size: 0.82rem;
-    font-weight: 700;
-    margin-top: 2px;
-  }
-
-  .ws-buy-btn {
-    padding: 6px 10px;
-    font-size: 0.76rem;
-    border-radius: 6px;
-    min-height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-}
-
-@media (max-width: 360px) {
-  .watch-shop-card {
-    flex: 0 0 calc(100vw - 32px);
-    width: calc(100vw - 32px);
-    min-width: 190px;
-    max-width: 205px;
-  }
-
-  .ws-video-container {
-    max-height: 235px;
-  }
-
-  .watch-shop-grid {
-    padding: 0 14px;
-    margin: 0 -14px;
-    width: calc(100% + 28px);
-    scroll-padding-left: 14px;
-    gap: 10px;
+  .ws-custom-controls {
+    top: 6px;
+    right: 6px;
   }
 
   .ws-sound-toggle {
@@ -897,6 +922,126 @@ document.addEventListener('DOMContentLoaded', function() {
   .ws-sound-toggle svg {
     width: 11px;
     height: 11px;
+  }
+
+  .ws-play-indicator {
+    width: 32px;
+    height: 32px;
+  }
+
+  .ws-play-indicator svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .ws-product-info {
+    padding: 7px 8px 8px;
+    gap: 6px;
+  }
+
+  .ws-product-header {
+    gap: 6px;
+  }
+
+  .ws-product-thumb {
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+  }
+
+  .ws-product-title {
+    font-size: 0.72rem;
+    line-height: 1.2;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .ws-product-price {
+    font-size: 0.76rem;
+    font-weight: 700;
+    margin-top: 1px;
+  }
+
+  .ws-buy-btn {
+    padding: 5px 8px;
+    font-size: 0.72rem;
+    border-radius: 5px;
+    min-height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .watch-shop-grid {
+    gap: 10px;
+    padding: 0 16px;
+    margin: 0 -16px;
+    width: calc(100% + 32px);
+    scroll-padding-left: 16px;
+    box-sizing: border-box;
+  }
+
+  /* Compact marketplace buttons inside card */
+  .ayova-marketplace-bar--ws {
+    gap: 4px;
+    margin-top: 3px;
+    width: 100%;
+  }
+
+  .ayova-marketplace-bar--ws .ayova-marketplace-label {
+    display: none;
+  }
+
+  .ayova-marketplace-bar--ws .ayova-marketplace-links {
+    display: flex;
+    gap: 4px;
+    width: 100%;
+  }
+
+  .ayova-marketplace-bar--ws .ayova-marketplace-btn {
+    flex: 1;
+    height: 22px;
+    padding: 2px 4px;
+    border-radius: 5px;
+  }
+
+  .ayova-marketplace-bar--ws .ayova-mkt-logo {
+    height: 11px;
+    max-width: 44px;
+  }
+}
+
+@media (max-width: 360px) {
+  .watch-shop-card {
+    flex: 0 0 135px;
+    width: 135px;
+    min-width: 130px;
+    max-width: 140px;
+  }
+
+  .ws-video-container {
+    max-height: 160px;
+  }
+
+  .watch-shop-grid {
+    padding: 0 12px;
+    margin: 0 -12px;
+    width: calc(100% + 24px);
+    scroll-padding-left: 12px;
+    gap: 8px;
+  }
+
+  .ws-sound-toggle {
+    width: 22px;
+    height: 22px;
+  }
+
+  .ws-sound-toggle svg {
+    width: 10px;
+    height: 10px;
   }
 }
 </style>
@@ -961,6 +1106,7 @@ document.addEventListener('DOMContentLoaded', function() {
     {
       "name": "Watch & Shop",
       "blocks": [
+        { "type": "video" },
         { "type": "video" },
         { "type": "video" },
         { "type": "video" },

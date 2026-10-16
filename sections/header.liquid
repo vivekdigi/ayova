@@ -114,29 +114,29 @@
         <!-- Marketplace Buttons -->
         <div class="header-marketplace-buttons">
           {% if section.settings.show_blinkit and section.settings.blinkit_url != blank %}
-            <a href="{{ section.settings.blinkit_url }}" class="marketplace-btn btn-blinkit" target="_blank">
+            <a href="{{ section.settings.blinkit_url }}" class="marketplace-btn btn-blinkit" target="_blank" aria-label="Shop on Blinkit">
               {% if section.settings.blinkit_logo != blank %}
-                <img src="{{ section.settings.blinkit_logo | image_url: height: 32 }}" alt="Blinkit" style="height: 20px; width: auto;">
+                <img src="{{ section.settings.blinkit_logo | image_url: height: 36 }}" alt="Blinkit" style="width: auto; height: 18px; max-height: 18px; max-width: 76px; object-fit: contain;">
               {% else %}
                 blinkit
               {% endif %}
             </a>
           {% endif %}
           {% if section.settings.amazon_url != blank %}
-            <a href="{{ section.settings.amazon_url }}" class="marketplace-btn btn-amazon" target="_blank">
+            <a href="{{ section.settings.amazon_url }}" class="marketplace-btn btn-amazon" target="_blank" aria-label="Shop on Amazon">
               {% if section.settings.amazon_logo != blank %}
-                <img src="{{ section.settings.amazon_logo | image_url: height: 32 }}" alt="Amazon" style="height: 20px; width: auto;">
+                <img src="{{ section.settings.amazon_logo | image_url: height: 36 }}" alt="Amazon" style="width: auto; height: 18px; max-height: 18px; max-width: 76px; object-fit: contain;">
               {% else %}
-                amazon
+                <img src="{{ 'amazon.svg' | asset_url }}" alt="Amazon" style="width: auto; height: 18px; max-height: 18px; max-width: 76px; object-fit: contain;" width="60" height="18">
               {% endif %}
             </a>
           {% endif %}
           {% if section.settings.flipkart_url != blank %}
-            <a href="{{ section.settings.flipkart_url }}" class="marketplace-btn btn-flipkart" target="_blank">
+            <a href="{{ section.settings.flipkart_url }}" class="marketplace-btn btn-flipkart" target="_blank" aria-label="Shop on Flipkart">
               {% if section.settings.flipkart_logo != blank %}
-                <img src="{{ section.settings.flipkart_logo | image_url: height: 32 }}" alt="Flipkart" style="height: 20px; width: auto;">
+                <img src="{{ section.settings.flipkart_logo | image_url: height: 36 }}" alt="Flipkart" style="width: auto; height: 18px; max-height: 18px; max-width: 76px; object-fit: contain;">
               {% else %}
-                Flipkart
+                <img src="{{ 'flipkart_wvl.svg' | asset_url }}" alt="Flipkart" style="width: auto; height: 18px; max-height: 18px; max-width: 76px; object-fit: contain;" width="60" height="18">
               {% endif %}
             </a>
           {% endif %}

@@ -170,11 +170,11 @@
       {% endif %}
 
     </div>
+  </div>
 
-    <!-- Hero Carousel Controls & Navigation Dots -->
-    <div class="hero-carousel-controls container">
-      <div class="ayova-carousel-dots" data-carousel-dots></div>
-    </div>
+  <!-- Hero Carousel Controls & Navigation Dots (OUTSIDE the slider) -->
+  <div class="hero-carousel-controls">
+    <div class="ayova-carousel-dots" data-carousel-dots></div>
   </div>
 </section>
 
@@ -184,6 +184,8 @@
   padding: 0;
   overflow: hidden;
   background-color: #FAF8F2;
+  height: auto !important;
+  min-height: unset;
 }
 
 /* Decorative Leaf Overlays */
@@ -207,27 +209,43 @@
 
 .hero-carousel-container {
   width: 100%;
+  max-width: 100%;
   position: relative;
   z-index: 2;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
 }
 
 .hero-carousel-controls {
-  position: absolute;
-  bottom: 24px;
-  left: 0;
+  position: relative;
   width: 100%;
-  z-index: 10;
   display: flex;
   justify-content: center;
-  pointer-events: none; /* Let clicks pass through if dots aren't clicked */
+  align-items: center;
+  padding: 16px 0 20px;
+  margin: 0 auto;
+  z-index: 10;
 }
 
-.ayova-carousel-dots {
-  pointer-events: auto;
+.hero-carousel-controls .ayova-carousel-dots {
+  margin-top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
 }
 
 .hero-slide {
   width: 100% !important;
+  min-width: 100% !important;
+  max-width: 100% !important;
+  flex: 0 0 100% !important;
+  height: auto !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden;
 }
 
 .hero-slide-grid {
@@ -238,21 +256,39 @@
 }
 
 .hero-slide-grid--image-only {
+  display: block;
   grid-template-columns: 1fr;
   gap: 0;
   width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.hero-slide-grid--image-only .hero-image-container {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  display: block;
 }
 
 .hero-slide-grid--image-only .hero-image-wrapper {
+  width: 100%;
   max-width: 100%;
   border-radius: 0;
+  margin: 0;
+  padding: 0;
+  display: block;
 }
 
 .hero-slide-grid--image-only .hero-img {
   width: 100%;
+  height: auto;
   max-height: none;
   object-fit: cover;
   display: block;
+  filter: none;
 }
 
 .hero-content {
@@ -489,7 +525,8 @@
 
 @media (max-width: 768px) {
   .hero-carousel-controls {
-    display: none !important;
+    display: flex !important;
+    padding: 12px 0 16px;
   }
   .ayova-hero-section {
     padding: 0;
