@@ -326,48 +326,77 @@
                   {% endif %}
                 {% endfor %}
               {% else %}
-                <!-- Default Initial Offers -->
-                <div class="available-offer-card" data-coupon-code="NEW10" data-start-date="2024-01-01" data-end-date="2030-12-31">
-                  <div class="offer-card-top">
-                    <div class="offer-card-title">10% off</div>
-                    <div class="offer-card-desc">10% off entire order • Minimum purchase of ₹699.00</div>
-                  </div>
-                  <div class="offer-coupon-box">
-                    <div class="offer-coupon-meta">
-                      <span class="coupon-lbl">COUPON CODE</span>
-                      <span class="coupon-code-val">NEW10</span>
+                {% if section.settings.offer_1_code != blank %}
+                  <div class="available-offer-card" data-coupon-code="{{ section.settings.offer_1_code | escape }}" data-start-date="{{ section.settings.offer_1_start | default: '2024-01-01' | escape }}" data-end-date="{{ section.settings.offer_1_end | default: '2030-12-31' | escape }}">
+                    <div class="offer-card-top">
+                      <div class="offer-card-title">{{ section.settings.offer_1_title | default: "10% off" }}</div>
+                      {% if section.settings.offer_1_desc != blank %}
+                        <div class="offer-card-desc">{{ section.settings.offer_1_desc }}</div>
+                      {% endif %}
                     </div>
-                    <button type="button" class="btn-copy-coupon" onclick="copyOfferCoupon(this, 'NEW10')">COPY</button>
+                    <div class="offer-coupon-box">
+                      <div class="offer-coupon-meta">
+                        <span class="coupon-lbl">COUPON CODE</span>
+                        <span class="coupon-code-val">{{ section.settings.offer_1_code }}</span>
+                      </div>
+                      <button type="button" class="btn-copy-coupon" onclick="copyOfferCoupon(this, '{{ section.settings.offer_1_code | escape }}')">COPY</button>
+                    </div>
                   </div>
-                </div>
+                {% endif %}
 
-                <div class="available-offer-card" data-coupon-code="AYOVA5" data-start-date="2024-01-01" data-end-date="2030-12-31">
-                  <div class="offer-card-top">
-                    <div class="offer-card-title">5% OFF</div>
-                    <div class="offer-card-desc">5% off entire order • No minimum order</div>
-                  </div>
-                  <div class="offer-coupon-box">
-                    <div class="offer-coupon-meta">
-                      <span class="coupon-lbl">COUPON CODE</span>
-                      <span class="coupon-code-val">AYOVA5</span>
+                {% if section.settings.offer_2_code != blank %}
+                  <div class="available-offer-card" data-coupon-code="{{ section.settings.offer_2_code | escape }}" data-start-date="{{ section.settings.offer_2_start | default: '2024-01-01' | escape }}" data-end-date="{{ section.settings.offer_2_end | default: '2030-12-31' | escape }}">
+                    <div class="offer-card-top">
+                      <div class="offer-card-title">{{ section.settings.offer_2_title | default: "5% OFF" }}</div>
+                      {% if section.settings.offer_2_desc != blank %}
+                        <div class="offer-card-desc">{{ section.settings.offer_2_desc }}</div>
+                      {% endif %}
                     </div>
-                    <button type="button" class="btn-copy-coupon" onclick="copyOfferCoupon(this, 'AYOVA5')">COPY</button>
+                    <div class="offer-coupon-box">
+                      <div class="offer-coupon-meta">
+                        <span class="coupon-lbl">COUPON CODE</span>
+                        <span class="coupon-code-val">{{ section.settings.offer_2_code }}</span>
+                      </div>
+                      <button type="button" class="btn-copy-coupon" onclick="copyOfferCoupon(this, '{{ section.settings.offer_2_code | escape }}')">COPY</button>
+                    </div>
                   </div>
-                </div>
+                {% endif %}
 
-                <div class="available-offer-card" data-coupon-code="AYOVA150" data-start-date="2024-01-01" data-end-date="2030-12-31">
-                  <div class="offer-card-top">
-                    <div class="offer-card-title">FLAT ₹150 OFF</div>
-                    <div class="offer-card-desc">Flat ₹150 off on orders above ₹1299</div>
-                  </div>
-                  <div class="offer-coupon-box">
-                    <div class="offer-coupon-meta">
-                      <span class="coupon-lbl">COUPON CODE</span>
-                      <span class="coupon-code-val">AYOVA150</span>
+                {% if section.settings.offer_3_code != blank %}
+                  <div class="available-offer-card" data-coupon-code="{{ section.settings.offer_3_code | escape }}" data-start-date="{{ section.settings.offer_3_start | default: '2024-01-01' | escape }}" data-end-date="{{ section.settings.offer_3_end | default: '2030-12-31' | escape }}">
+                    <div class="offer-card-top">
+                      <div class="offer-card-title">{{ section.settings.offer_3_title | default: "FLAT ₹150 OFF" }}</div>
+                      {% if section.settings.offer_3_desc != blank %}
+                        <div class="offer-card-desc">{{ section.settings.offer_3_desc }}</div>
+                      {% endif %}
                     </div>
-                    <button type="button" class="btn-copy-coupon" onclick="copyOfferCoupon(this, 'AYOVA150')">COPY</button>
+                    <div class="offer-coupon-box">
+                      <div class="offer-coupon-meta">
+                        <span class="coupon-lbl">COUPON CODE</span>
+                        <span class="coupon-code-val">{{ section.settings.offer_3_code }}</span>
+                      </div>
+                      <button type="button" class="btn-copy-coupon" onclick="copyOfferCoupon(this, '{{ section.settings.offer_3_code | escape }}')">COPY</button>
+                    </div>
                   </div>
-                </div>
+                {% endif %}
+
+                {% if section.settings.offer_4_code != blank %}
+                  <div class="available-offer-card" data-coupon-code="{{ section.settings.offer_4_code | escape }}" data-start-date="{{ section.settings.offer_4_start | default: '2024-01-01' | escape }}" data-end-date="{{ section.settings.offer_4_end | default: '2030-12-31' | escape }}">
+                    <div class="offer-card-top">
+                      <div class="offer-card-title">{{ section.settings.offer_4_title | default: "Special Offer" }}</div>
+                      {% if section.settings.offer_4_desc != blank %}
+                        <div class="offer-card-desc">{{ section.settings.offer_4_desc }}</div>
+                      {% endif %}
+                    </div>
+                    <div class="offer-coupon-box">
+                      <div class="offer-coupon-meta">
+                        <span class="coupon-lbl">COUPON CODE</span>
+                        <span class="coupon-code-val">{{ section.settings.offer_4_code }}</span>
+                      </div>
+                      <button type="button" class="btn-copy-coupon" onclick="copyOfferCoupon(this, '{{ section.settings.offer_4_code | escape }}')">COPY</button>
+                    </div>
+                  </div>
+                {% endif %}
               {% endif %}
             </div>
 
@@ -3010,6 +3039,145 @@
       "id": "available_offers_title",
       "label": "Available Offers Title",
       "default": "Available Offers"
+    },
+    {
+      "type": "header",
+      "content": "Available Offers (Coupons Settings)"
+    },
+    {
+      "type": "paragraph",
+      "content": "Configure coupons here to display in the Available Offers carousel. Leave coupon code blank to hide an offer."
+    },
+    {
+      "type": "header",
+      "content": "Offer 1"
+    },
+    {
+      "type": "text",
+      "id": "offer_1_title",
+      "label": "Offer 1 Title",
+      "default": "10% off"
+    },
+    {
+      "type": "text",
+      "id": "offer_1_desc",
+      "label": "Offer 1 Description",
+      "default": "10% off entire order • Minimum purchase of ₹699.00"
+    },
+    {
+      "type": "text",
+      "id": "offer_1_code",
+      "label": "Offer 1 Coupon Code",
+      "default": "NEW10"
+    },
+    {
+      "type": "text",
+      "id": "offer_1_start",
+      "label": "Offer 1 Start Date (YYYY-MM-DD)",
+      "default": "2024-01-01"
+    },
+    {
+      "type": "text",
+      "id": "offer_1_end",
+      "label": "Offer 1 End Date (YYYY-MM-DD)",
+      "default": "2030-12-31"
+    },
+    {
+      "type": "header",
+      "content": "Offer 2"
+    },
+    {
+      "type": "text",
+      "id": "offer_2_title",
+      "label": "Offer 2 Title",
+      "default": "5% OFF"
+    },
+    {
+      "type": "text",
+      "id": "offer_2_desc",
+      "label": "Offer 2 Description",
+      "default": "5% off entire order • No minimum order"
+    },
+    {
+      "type": "text",
+      "id": "offer_2_code",
+      "label": "Offer 2 Coupon Code",
+      "default": "AYOVA5"
+    },
+    {
+      "type": "text",
+      "id": "offer_2_start",
+      "label": "Offer 2 Start Date (YYYY-MM-DD)",
+      "default": "2024-01-01"
+    },
+    {
+      "type": "text",
+      "id": "offer_2_end",
+      "label": "Offer 2 End Date (YYYY-MM-DD)",
+      "default": "2030-12-31"
+    },
+    {
+      "type": "header",
+      "content": "Offer 3"
+    },
+    {
+      "type": "text",
+      "id": "offer_3_title",
+      "label": "Offer 3 Title",
+      "default": "FLAT ₹150 OFF"
+    },
+    {
+      "type": "text",
+      "id": "offer_3_desc",
+      "label": "Offer 3 Description",
+      "default": "Flat ₹150 off on orders above ₹1299"
+    },
+    {
+      "type": "text",
+      "id": "offer_3_code",
+      "label": "Offer 3 Coupon Code",
+      "default": "AYOVA150"
+    },
+    {
+      "type": "text",
+      "id": "offer_3_start",
+      "label": "Offer 3 Start Date (YYYY-MM-DD)",
+      "default": "2024-01-01"
+    },
+    {
+      "type": "text",
+      "id": "offer_3_end",
+      "label": "Offer 3 End Date (YYYY-MM-DD)",
+      "default": "2030-12-31"
+    },
+    {
+      "type": "header",
+      "content": "Offer 4 (Optional)"
+    },
+    {
+      "type": "text",
+      "id": "offer_4_title",
+      "label": "Offer 4 Title"
+    },
+    {
+      "type": "text",
+      "id": "offer_4_desc",
+      "label": "Offer 4 Description"
+    },
+    {
+      "type": "text",
+      "id": "offer_4_code",
+      "label": "Offer 4 Coupon Code"
+    },
+    {
+      "type": "text",
+      "id": "offer_4_start",
+      "label": "Offer 4 Start Date (YYYY-MM-DD)"
+    },
+    {
+      "type": "text",
+      "id": "offer_4_end",
+      "label": "Offer 4 End Date (YYYY-MM-DD)"
     },
     {
       "type": "checkbox",
