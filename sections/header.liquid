@@ -14,7 +14,7 @@
 <header class="ayova-header-wrapper {% if section.settings.enable_sticky %}ayova-header-wrapper--sticky{% endif %} {% if has_marketplace_buttons %}has-marketplace-bar{% endif %}" data-header>
   <!-- Announcement Bar — Figma: 34px, #285044 -->
   {% if section.settings.show_announcement %}
-    <div class="announcement-bar" style="background-color: {{ section.settings.announcement_bg | default: '#285044' }}; color: {{ section.settings.announcement_text_color | default: '#FFFFFF' }};">
+    <div class="announcement-bar {% if section.settings.enable_color_alternate != false %}announcement-bar--alternate{% endif %}" style="--announcement-bg-1: {{ section.settings.announcement_color_1 | default: section.settings.announcement_bg | default: '#285044' }}; --announcement-bg-2: {{ section.settings.announcement_color_2 | default: '#8E4A1E' }}; --announcement-bg-3: {{ section.settings.announcement_color_3 | default: '#7A2035' }}; --announcement-bg-4: {{ section.settings.announcement_color_4 | default: '#184F45' }}; color: {{ section.settings.announcement_text_color | default: '#FFFFFF' }};">
       <div class="announcement-marquee">
         {% capture marquee_content %}
           {% for block in section.blocks %}
@@ -35,11 +35,33 @@
     </div>
     <style>
       .announcement-bar {
+        background-color: var(--announcement-bg-1, #285044);
         overflow: hidden;
         white-space: nowrap;
         display: flex;
         align-items: center;
         height: 34px;
+        transition: background-color 0.35s ease;
+      }
+      .announcement-bar--alternate {
+        animation: announcementColorCycle 4s ease-in-out infinite;
+      }
+      @keyframes announcementColorCycle {
+        0%, 18% {
+          background-color: var(--announcement-bg-1, #285044);
+        }
+        25%, 43% {
+          background-color: var(--announcement-bg-2, #8E4A1E);
+        }
+        50%, 68% {
+          background-color: var(--announcement-bg-3, #7A2035);
+        }
+        75%, 93% {
+          background-color: var(--announcement-bg-4, #184F45);
+        }
+        100% {
+          background-color: var(--announcement-bg-1, #285044);
+        }
       }
       .announcement-marquee {
         width: 100%;
@@ -48,6 +70,7 @@
       .marquee-track {
         display: inline-flex;
         align-items: center;
+        white-space: nowrap;
         animation: scroll-marquee 25s linear infinite;
       }
       .marquee-track:hover {
@@ -57,6 +80,8 @@
         font-size: 0.85rem;
         font-weight: 500;
         letter-spacing: 0.5px;
+        white-space: nowrap;
+        display: inline-block;
       }
       @keyframes scroll-marquee {
         0% { transform: translateX(0); }
@@ -330,6 +355,37 @@
       "id": "announcement_text_color",
       "label": "Announcement Text Color",
       "default": "#FFFFFF"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_color_alternate",
+      "label": "Enable 1-Second Alternating Colors",
+      "default": true,
+      "info": "Alternates smoothly between 3-4 related festive brand colors each second."
+    },
+    {
+      "type": "color",
+      "id": "announcement_color_1",
+      "label": "Alternate Color 1 (Brand Forest Green)",
+      "default": "#285044"
+    },
+    {
+      "type": "color",
+      "id": "announcement_color_2",
+      "label": "Alternate Color 2 (Festive Warm Amber)",
+      "default": "#8E4A1E"
+    },
+    {
+      "type": "color",
+      "id": "announcement_color_3",
+      "label": "Alternate Color 3 (Festive Burgundy Maroon)",
+      "default": "#7A2035"
+    },
+    {
+      "type": "color",
+      "id": "announcement_color_4",
+      "label": "Alternate Color 4 (Deep Ayurvedic Teal)",
+      "default": "#184F45"
     },
     {
       "type": "header",

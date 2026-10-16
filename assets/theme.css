@@ -528,7 +528,7 @@ h6 {
 
 /* Announcement Bar — Figma: 34px height, #285044 */
 .announcement-bar {
-  background-color: var(--color-forest-mid);
+  background-color: var(--announcement-bg-1, var(--color-forest-mid));
   color: var(--color-bg-white);
   font-family: var(--font-heading);
   font-weight: 500;
@@ -538,18 +538,59 @@ h6 {
   align-items: center;
   justify-content: center;
   letter-spacing: 0.03em;
+  transition: background-color 0.35s ease;
 }
 
-.announcement-content {
-  display: flex;
-  justify-content: center;
+.announcement-bar--alternate {
+  animation: announcementColorCycle 4s ease-in-out infinite;
+}
+
+@keyframes announcementColorCycle {
+  0%, 18% {
+    background-color: var(--announcement-bg-1, #285044);
+  }
+  25%, 43% {
+    background-color: var(--announcement-bg-2, #8E4A1E);
+  }
+  50%, 68% {
+    background-color: var(--announcement-bg-3, #7A2035);
+  }
+  75%, 93% {
+    background-color: var(--announcement-bg-4, #184F45);
+  }
+  100% {
+    background-color: var(--announcement-bg-1, #285044);
+  }
+}
+
+.announcement-marquee {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.marquee-track {
+  display: inline-flex;
   align-items: center;
-  gap: 18px;
-  flex-wrap: wrap;
+  white-space: nowrap;
+  animation: scroll-marquee 25s linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+.marquee-item {
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  display: inline-block;
 }
 
 .announcement-divider {
   opacity: 0.5;
+  white-space: nowrap;
 }
 
 /* Main Header — Figma: 80px height, padding-left 80px */
