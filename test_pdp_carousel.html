@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>PDP Gallery Thumbnails Below Test</title>
+  <title>Ayova Product Gallery Slider & Lightbox Test</title>
   <link rel="stylesheet" href="assets/theme.css">
   <style>
     body {
@@ -17,6 +17,7 @@
     :root {
       --color-forest-dark: #1A362D;
       --color-forest-primary: #285044;
+      --color-forest-btn: #173E34;
       --color-sage-bg: #F4F6F5;
       --color-sage-border: #E5EAE7;
       --color-terracotta: #D35F3C;
@@ -24,31 +25,34 @@
     }
 
     .test-wrapper {
-      max-width: 1100px;
+      max-width: 1240px;
       margin: 0 auto;
       background: #fff;
-      padding: 30px;
-      border-radius: 16px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      padding: 32px;
+      border-radius: 20px;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.06);
     }
 
     .product-main-grid {
       display: grid;
-      grid-template-columns: 1.15fr 1fr;
-      gap: 50px;
+      grid-template-columns: 1.25fr 1fr;
+      gap: 48px;
       align-items: start;
     }
 
     @media (max-width: 900px) {
       .product-main-grid {
         grid-template-columns: 1fr;
-        gap: 30px;
+        gap: 32px;
       }
     }
 
-    /* Gallery Container */
+    /* ===================================================
+       PRODUCT GALLERY WRAPPER & INNER
+       =================================================== */
     .product-gallery-wrapper {
       width: 100%;
+      min-width: 0;
     }
 
     .gallery-inner {
@@ -56,94 +60,126 @@
       flex-direction: column;
       gap: 16px;
       background: var(--color-sage-bg);
-      padding: 24px;
+      padding: 20px;
       border-radius: 20px;
+      box-sizing: border-box;
     }
 
+    /* ===================================================
+       BIG SIZE MAIN FEATURE IMAGE BOX
+       =================================================== */
     .main-image-box {
       width: 100%;
+      aspect-ratio: 1 / 1;
+      min-height: 480px;
+      max-height: 580px;
       display: flex;
-      flex-direction: column;
       align-items: center;
+      justify-content: center;
       position: relative;
-      background: #fff;
-      border-radius: 14px;
-      padding: 24px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+      background: #ffffff;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.04);
       box-sizing: border-box;
+      user-select: none;
     }
 
-    .main-image-top-badges {
+    /* Main image element */
+    .main-image-box img {
       width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      height: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      padding: 16px;
+      box-sizing: border-box;
+      transition: opacity 0.25s ease, transform 0.3s ease;
+      cursor: zoom-in;
+      display: block;
+    }
+
+    .main-image-box img:hover {
+      transform: scale(1.02);
+    }
+
+    /* Lightbox Zoom Icon Button on Main Image (Top-Left) */
+    .btn-lightbox-trigger {
       position: absolute;
       top: 16px;
-      left: 0;
-      padding: 0 16px;
-      box-sizing: border-box;
-    }
-
-    .badge-bestseller {
-      background: var(--color-forest-primary);
-      color: #fff;
-      font-size: 0.75rem;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-    }
-
-    .btn-wishlist {
-      background: #fff;
-      border: 1px solid var(--color-sage-border);
+      left: 16px;
+      width: 38px;
+      height: 38px;
       border-radius: 50%;
-      width: 36px;
-      height: 36px;
+      background: #ffffff;
+      border: 1px solid rgba(0,0,0,0.08);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.12);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      color: #7A857F;
-    }
-
-    .main-image-box img {
-      width: 100%;
-      max-width: 420px;
-      height: 360px;
-      object-fit: contain;
-      margin: 16px 0 10px;
-      transition: opacity 0.2s ease;
-    }
-
-    .main-image-text {
-      text-align: center;
-      width: 100%;
-    }
-
-    .main-image-text h3 {
-      font-size: 0.85rem;
       color: var(--color-forest-dark);
-      margin-bottom: 6px;
-      letter-spacing: 0.5px;
+      z-index: 12;
+      transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+      padding: 0;
+      outline: none;
     }
 
-    .hover-zoom-text {
-      font-size: 0.8rem;
-      color: #7A857F;
-      margin-bottom: 12px;
+    .btn-lightbox-trigger:hover {
+      transform: scale(1.1);
+      background: #f8faf9;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.18);
     }
 
-    .secure-pack-text {
-      font-size: 0.82rem;
-      color: var(--color-forest-dark);
-      border-top: 1px solid var(--color-sage-border);
-      padding-top: 12px;
-      width: 100%;
+    /* ===================================================
+       MAIN IMAGE CAROUSEL NAVIGATION ICONS (PREV / NEXT)
+       =================================================== */
+    .main-carousel-nav-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--color-forest-btn);
+      color: #ffffff;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.22);
+      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), background 0.2s ease, opacity 0.2s ease;
+      padding: 0;
+      outline: none;
     }
 
-    /* Thumbnail Carousel Below Main Image */
+    .main-carousel-nav-btn:hover {
+      background: var(--color-forest-primary);
+      transform: translateY(-50%) scale(1.1);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+    }
+
+    .main-carousel-nav-btn:active {
+      transform: translateY(-50%) scale(0.96);
+    }
+
+    .main-carousel-prev {
+      left: 16px;
+    }
+
+    .main-carousel-next {
+      right: 16px;
+    }
+
+    /* Carousel dots indicator hidden */
+    .main-carousel-dots {
+      display: none !important;
+    }
+
+    /* ===================================================
+       THUMBNAIL CAROUSEL BELOW MAIN IMAGE
+       =================================================== */
     .gallery-thumbs-carousel-wrapper {
       display: flex;
       align-items: center;
@@ -153,31 +189,32 @@
       min-width: 0;
       position: relative;
       box-sizing: border-box;
+      margin-top: 4px;
     }
 
     .thumb-nav-btn {
       background: #ffffff;
       border: 1px solid #D5DBD8;
-      width: 40px;
-      height: 40px;
-      min-width: 40px;
+      width: 38px;
+      height: 38px;
+      min-width: 38px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      color: #1A362D;
+      color: var(--color-forest-dark);
       transition: all 0.2s ease;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
       flex-shrink: 0;
       padding: 0;
       outline: none;
     }
 
     .thumb-nav-btn:hover:not(:disabled) {
-      background: #1A362D;
+      background: var(--color-forest-dark);
       color: #ffffff;
-      border-color: #1A362D;
+      border-color: var(--color-forest-dark);
       box-shadow: 0 4px 12px rgba(26,54,45,0.2);
     }
 
@@ -197,13 +234,17 @@
       overflow-y: hidden;
       scroll-behavior: smooth;
       -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
       padding: 4px 2px;
     }
 
     .thumbs-carousel-container::-webkit-scrollbar {
-      display: none;
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+      background: transparent !important;
+      -webkit-appearance: none !important;
     }
 
     .thumbs-list {
@@ -218,14 +259,14 @@
     .thumbs-list .thumb {
       width: 100%;
       aspect-ratio: 1 / 1;
-      border-radius: 6px;
+      border-radius: 8px;
       overflow: hidden;
       border: 2px solid transparent;
       cursor: pointer;
       background: #ffffff;
       box-sizing: border-box;
       padding: 0;
-      transition: border-color 0.2s ease, transform 0.15s ease, opacity 0.2s ease;
+      transition: border-color 0.2s ease, transform 0.15s ease, opacity 0.2s ease, box-shadow 0.2s ease;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -233,11 +274,13 @@
     }
 
     .thumbs-list .thumb:hover {
-      opacity: 0.9;
+      opacity: 0.92;
+      transform: translateY(-2px);
     }
 
     .thumbs-list .thumb.active {
-      border-color: #1A362D;
+      border-color: var(--color-forest-dark);
+      box-shadow: 0 3px 10px rgba(26, 54, 45, 0.18);
     }
 
     .thumbs-list .thumb .thumb-img {
@@ -247,85 +290,427 @@
       display: block;
     }
 
+    /* Video overlay badge on video thumbnails */
+    .thumb-video-badge {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(23, 62, 52, 0.85);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      pointer-events: none;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+
+    /* ===================================================
+       LIGHTBOX MODAL STYLES
+       =================================================== */
+    .product-lightbox-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 999999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .product-lightbox-modal.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .lightbox-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(14, 26, 22, 0.94);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .lightbox-dialog {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      z-index: 1;
+      padding: 20px;
+      box-sizing: border-box;
+      pointer-events: none;
+    }
+
+    .lightbox-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      pointer-events: auto;
+      padding: 4px 10px;
+      box-sizing: border-box;
+    }
+
+    .lightbox-counter {
+      color: #ffffff;
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      background: rgba(255, 255, 255, 0.12);
+      padding: 6px 14px;
+      border-radius: 20px;
+      backdrop-filter: blur(6px);
+    }
+
+    .lightbox-top-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .lightbox-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+      outline: none;
+      padding: 0;
+    }
+
+    .lightbox-btn:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: scale(1.08);
+    }
+
+    /* Main Viewport */
+    .lightbox-viewport {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      pointer-events: auto;
+      min-height: 0;
+    }
+
+    .lightbox-image-stage {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 10px;
+      box-sizing: border-box;
+      touch-action: pan-y;
+    }
+
+    .lightbox-image-stage img {
+      max-width: 90%;
+      max-height: 72vh;
+      object-fit: contain;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.25s ease;
+      user-select: none;
+    }
+
+    .lightbox-image-stage.zoomed img {
+      transform: scale(1.6);
+      cursor: zoom-out;
+    }
+
+    .lightbox-nav-btn {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.16);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+      flex-shrink: 0;
+      outline: none;
+      z-index: 5;
+    }
+
+    .lightbox-nav-btn:hover {
+      background: #ffffff;
+      color: var(--color-forest-dark);
+      transform: scale(1.1);
+    }
+
+    .lightbox-nav-btn:active {
+      transform: scale(0.95);
+    }
+
+    /* Lightbox Bottom Strip */
+    .lightbox-bottom-strip {
+      width: 100%;
+      max-width: 700px;
+      margin: 0 auto;
+      pointer-events: auto;
+      overflow-x: auto;
+      scrollbar-width: none;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      padding: 10px 4px;
+      box-sizing: border-box;
+    }
+
+    .lightbox-bottom-strip::-webkit-scrollbar {
+      display: none;
+    }
+
+    .lightbox-thumb {
+      width: 54px;
+      height: 54px;
+      min-width: 54px;
+      border-radius: 6px;
+      overflow: hidden;
+      cursor: pointer;
+      opacity: 0.5;
+      border: 2px solid transparent;
+      transition: opacity 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+      background: #fff;
+    }
+
+    .lightbox-thumb:hover {
+      opacity: 0.85;
+      transform: translateY(-2px);
+    }
+
+    .lightbox-thumb.active {
+      opacity: 1;
+      border-color: #ffffff;
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
+    }
+
+    .lightbox-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* ===================================================
+       MOBILE RESPONSIVENESS (<= 768px & <= 480px)
+       =================================================== */
     @media (max-width: 768px) {
       body {
-        padding: 10px;
+        padding: 12px;
+        overflow-x: hidden;
+        max-width: 100%;
+        box-sizing: border-box;
       }
       .test-wrapper {
-        padding: 12px;
+        padding: 14px;
+        border-radius: 16px;
+        max-width: 100%;
+        overflow-x: hidden;
+        box-sizing: border-box;
+      }
+      .product-main-grid {
+        max-width: 100%;
+        overflow-x: hidden;
+        box-sizing: border-box;
+      }
+      .product-gallery-wrapper {
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: hidden;
+        box-sizing: border-box;
       }
       .gallery-inner {
-        padding: 12px;
-        border-radius: 14px;
+        padding: 10px;
+        border-radius: 16px;
         gap: 10px;
+        max-width: 100%;
+        min-width: 0;
+        overflow: hidden;
+        box-sizing: border-box;
       }
+
+      /* Big size on mobile with fluid aspect-ratio, min-height: 0 to prevent forced overflow */
       .main-image-box {
-        padding: 12px;
-        border-radius: 10px;
+        width: 100%;
+        max-width: 100%;
+        aspect-ratio: 1 / 1;
+        min-height: 0;
+        height: auto;
+        border-radius: 12px;
+        padding: 6px;
+        overflow: hidden;
+        box-sizing: border-box;
       }
+
       .main-image-box img {
-        height: 220px;
-        max-height: 220px;
-        margin: 8px 0;
+        width: 100%;
+        height: 100%;
+        max-height: 100%;
+        padding: 4px;
+        object-fit: contain;
+        box-sizing: border-box;
       }
+
+      .main-carousel-nav-btn {
+        width: 38px;
+        height: 38px;
+      }
+      .main-carousel-prev {
+        left: 10px;
+      }
+      .main-carousel-next {
+        right: 10px;
+      }
+
+      .btn-lightbox-trigger {
+        top: 10px;
+        left: 10px;
+        width: 34px;
+        height: 34px;
+      }
+
       .gallery-thumbs-carousel-wrapper {
         gap: 8px;
         margin-top: 4px;
+        max-width: 100%;
+        min-width: 0;
+        overflow: hidden;
+        box-sizing: border-box;
       }
+
       .thumb-nav-btn {
-        width: 32px;
-        height: 32px;
-        min-width: 32px;
+        width: 34px;
+        height: 34px;
+        min-width: 34px;
       }
+
       .thumbs-list {
         grid-auto-columns: calc((100% - 24px) / 4);
         gap: 8px;
       }
-      .thumbs-list .thumb {
-        width: 100%;
-        border-radius: 5px;
+
+      .lightbox-nav-btn {
+        width: 42px;
+        height: 42px;
+      }
+      .lightbox-image-stage img {
+        max-width: 95%;
+        max-height: 65vh;
+      }
+      .lightbox-thumb {
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
       }
     }
 
-    /* Right column sample */
+    @media (max-width: 480px) {
+      .main-image-box {
+        min-height: 0;
+        height: auto;
+      }
+      .thumbs-list {
+        grid-auto-columns: calc((100% - 18px) / 3.5);
+      }
+    }
+
+    /* Product Details Sample */
     .product-details-sample h1 {
-      font-size: 26px;
+      font-size: 28px;
       margin: 0 0 12px;
       color: #1A362D;
+      line-height: 1.25;
     }
     .price-sample {
-      font-size: 24px;
+      font-size: 26px;
       font-weight: 700;
       color: #285044;
       margin-bottom: 20px;
+    }
+    .badge-sample {
+      display: inline-block;
+      background: var(--color-terracotta-light);
+      color: var(--color-terracotta);
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+      text-transform: uppercase;
     }
   </style>
 </head>
 <body>
 
 <div class="test-wrapper">
-  <h2>Ayova Product Gallery: Thumbnails Below & 4 Images In Carousel</h2>
   <div class="product-main-grid">
     
     <!-- Gallery Column -->
     <div class="product-gallery-wrapper">
       <div class="gallery-inner">
         
-        <!-- Main Image -->
+        <!-- Big Size Main Featured Image Box with Carousel Icons & Lightbox Trigger -->
         <div class="main-image-box" id="mainImageBox">
-          <div class="main-image-top-badges">
-            <span class="badge badge-bestseller">BESTSELLER</span>
-            <button class="btn-wishlist" aria-label="Add to Wishlist">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-            </button>
-          </div>
           
-          <img src="https://picsum.photos/id/1060/800/800" alt="Ayova Men's Daily Essentials" id="mainProductImg">
+          <!-- Top Badges & Controls -->
+          <!-- Lightbox Zoom Icon Button on Main Image -->
+          <button type="button" class="btn-lightbox-trigger" id="btnLightboxTrigger" aria-label="Open Lightbox Image Zoom" title="Click to zoom image">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="7"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              <line x1="11" y1="8" x2="11" y2="14"></line>
+              <line x1="8" y1="11" x2="14" y2="11"></line>
+            </svg>
+          </button>
+
+          <!-- Carousel Previous Button on Main Image -->
+          <button type="button" class="main-carousel-nav-btn main-carousel-prev" id="mainCarouselPrevBtn" aria-label="Previous Slide">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 18l-6-6 6-6"/>
+            </svg>
+          </button>
+
+          <!-- Main Product Image -->
+          <img src="https://picsum.photos/id/1060/1000/1000" alt="Ayova Men's Daily Essentials" id="mainProductImg" title="Click to open zoom lightbox">
+
+          <!-- Carousel Next Button on Main Image -->
+          <button type="button" class="main-carousel-nav-btn main-carousel-next" id="mainCarouselNextBtn" aria-label="Next Slide">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 18l6-6-6-6"/>
+            </svg>
+          </button>
         </div>
 
-        <!-- Thumbnails Carousel Below Main Image -->
+        <!-- Horizontal Thumbnails Carousel Below Main Image -->
         <div class="gallery-thumbs-carousel-wrapper" id="galleryThumbsWrapper">
-          <button type="button" class="thumb-nav-btn prev-thumb-btn disabled" aria-label="Previous image" id="prevThumbBtn" disabled>
+          <button type="button" class="thumb-nav-btn prev-thumb-btn disabled" aria-label="Previous thumbnail" id="prevThumbBtn" disabled>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M15 18l-6-6 6-6"/>
             </svg>
@@ -333,28 +718,31 @@
           
           <div class="thumbs-carousel-container" id="thumbsCarouselContainer">
             <div class="thumbs-list" id="thumbsList">
-              <div class="thumb active" data-index="0" data-full="https://picsum.photos/id/1060/800/800">
-                <img src="https://picsum.photos/id/1060/200/200" alt="Thumb 1" class="thumb-img">
+              <div class="thumb active" data-index="0" data-full="https://picsum.photos/id/1060/1000/1000">
+                <img src="https://picsum.photos/id/1060/240/240" alt="Thumb 1" class="thumb-img" loading="lazy">
               </div>
-              <div class="thumb" data-index="1" data-full="https://picsum.photos/id/1062/800/800">
-                <img src="https://picsum.photos/id/1062/200/200" alt="Thumb 2" class="thumb-img">
+              <div class="thumb" data-index="1" data-full="https://picsum.photos/id/1062/1000/1000" data-is-video="true">
+                <img src="https://picsum.photos/id/1062/240/240" alt="Thumb 2 (Video)" class="thumb-img" loading="lazy">
+                <div class="thumb-video-badge">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="#ffffff"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                </div>
               </div>
-              <div class="thumb" data-index="2" data-full="https://picsum.photos/id/1069/800/800">
-                <img src="https://picsum.photos/id/1069/200/200" alt="Thumb 3" class="thumb-img">
+              <div class="thumb" data-index="2" data-full="https://picsum.photos/id/1069/1000/1000">
+                <img src="https://picsum.photos/id/1069/240/240" alt="Thumb 3" class="thumb-img" loading="lazy">
               </div>
-              <div class="thumb" data-index="3" data-full="https://picsum.photos/id/1074/800/800">
-                <img src="https://picsum.photos/id/1074/200/200" alt="Thumb 4" class="thumb-img">
+              <div class="thumb" data-index="3" data-full="https://picsum.photos/id/1074/1000/1000">
+                <img src="https://picsum.photos/id/1074/240/240" alt="Thumb 4" class="thumb-img" loading="lazy">
               </div>
-              <div class="thumb" data-index="4" data-full="https://picsum.photos/id/1080/800/800">
-                <img src="https://picsum.photos/id/1080/200/200" alt="Thumb 5" class="thumb-img">
+              <div class="thumb" data-index="4" data-full="https://picsum.photos/id/1080/1000/1000">
+                <img src="https://picsum.photos/id/1080/240/240" alt="Thumb 5" class="thumb-img" loading="lazy">
               </div>
-              <div class="thumb" data-index="5" data-full="https://picsum.photos/id/1084/800/800">
-                <img src="https://picsum.photos/id/1084/200/200" alt="Thumb 6" class="thumb-img">
+              <div class="thumb" data-index="5" data-full="https://picsum.photos/id/1084/1000/1000">
+                <img src="https://picsum.photos/id/1084/240/240" alt="Thumb 6" class="thumb-img" loading="lazy">
               </div>
             </div>
           </div>
 
-          <button type="button" class="thumb-nav-btn next-thumb-btn" aria-label="Next image" id="nextThumbBtn">
+          <button type="button" class="thumb-nav-btn next-thumb-btn" aria-label="Next thumbnail" id="nextThumbBtn">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M9 18l6-6-6-6"/>
             </svg>
@@ -364,133 +752,434 @@
       </div>
     </div>
 
-    <!-- Product Details Column -->
+    <!-- Product Details Column Sample -->
     <div class="product-details-sample">
+      <div class="badge-sample">NUTRITION & VITALITY</div>
       <h1>Ayova Daily Essentials Multi-Nutrient Formula</h1>
-      <div class="price-sample">₹1,499 <span style="font-size: 16px; color: #888; text-decoration: line-through;">₹2,499</span> <span style="color: #D35F3C; font-size: 15px;">40% OFF</span></div>
-      <p style="line-height: 1.6; color: #555;">Pure natural ingredients for daily energy, bone strength, deep recovery, and immune defense. Standardized extracts clinically formulated for maximum bio-availability.</p>
+      <div class="price-sample">₹1,499 <span style="font-size: 18px; color: #888; text-decoration: line-through; margin-left: 6px;">₹2,499</span> <span style="color: #D35F3C; font-size: 16px; margin-left: 6px;">40% OFF</span></div>
+      <p style="line-height: 1.6; color: #555; font-size: 15px;">
+        Pure natural ingredients formulated for daily cellular recovery, sustained energy, bone density, and immune defense. Standardized extracts clinically formulated for maximum bio-availability.
+      </p>
+
+      <div style="background: #eef5f1; border-radius: 12px; padding: 18px; margin-top: 24px; border: 1px solid #dce8e2;">
+        <h4 style="margin: 0 0 10px; color: #173E34; font-size: 15px;">Key Features:</h4>
+        <ul style="margin: 0; padding-left: 20px; color: #285044; font-size: 14px; line-height: 1.6;">
+          <li>Big Size Gallery presentation with responsive ratio</li>
+          <li>Prev & Next carousel navigation icons overlaying main image</li>
+          <li>Lightbox zoom modal with keyboard, swipe, and thumbnail strip</li>
+          <li>Full mobile responsiveness with touch swipe integration</li>
+        </ul>
+      </div>
     </div>
 
   </div>
 </div>
 
+<!-- ===================================================
+     LIGHTBOX MODAL COMPONENT
+     =================================================== -->
+<div class="product-lightbox-modal" id="productLightboxModal" aria-hidden="true" role="dialog" aria-label="Product Gallery Lightbox">
+  <div class="lightbox-backdrop" id="lightboxBackdrop"></div>
+  
+  <div class="lightbox-dialog">
+    <!-- Top Bar -->
+    <div class="lightbox-topbar">
+      <div class="lightbox-counter" id="lightboxCounter">1 / 6</div>
+      <div class="lightbox-top-actions">
+        <button type="button" class="lightbox-btn" id="lightboxZoomToggle" aria-label="Toggle zoom" title="Toggle zoom">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="7"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            <line x1="11" y1="8" x2="11" y2="14"></line>
+            <line x1="8" y1="11" x2="14" y2="11"></line>
+          </svg>
+        </button>
+        <button type="button" class="lightbox-btn" id="lightboxCloseBtn" aria-label="Close lightbox" title="Close (Esc)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Viewport with Nav Arrows -->
+    <div class="lightbox-viewport">
+      <button type="button" class="lightbox-nav-btn lightbox-prev" id="lightboxPrevBtn" aria-label="Previous image">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 18l-6-6 6-6"/>
+        </svg>
+      </button>
+
+      <div class="lightbox-image-stage" id="lightboxImageStage">
+        <img src="" alt="Enlarged Product View" id="lightboxImg">
+      </div>
+
+      <button type="button" class="lightbox-nav-btn lightbox-next" id="lightboxNextBtn" aria-label="Next image">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 18l6-6-6-6"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Bottom Thumbnail Strip -->
+    <div class="lightbox-bottom-strip" id="lightboxBottomStrip"></div>
+  </div>
+</div>
+
+<!-- ===================================================
+     GALLERY & LIGHTBOX JAVASCRIPT
+     =================================================== -->
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const mainImg = document.getElementById('mainProductImg');
+    const mainBox = document.getElementById('mainImageBox');
+    const prevMainBtn = document.getElementById('mainCarouselPrevBtn');
+    const nextMainBtn = document.getElementById('mainCarouselNextBtn');
+    const dotsContainer = document.getElementById('mainCarouselDots');
+    const btnLightbox = document.getElementById('btnLightboxTrigger');
+
     const container = document.getElementById('thumbsCarouselContainer');
-    const thumbsList = document.getElementById('thumbsList');
-    const prevBtn = document.getElementById('prevThumbBtn');
-    const nextBtn = document.getElementById('nextThumbBtn');
-    const thumbs = document.querySelectorAll('.thumbs-list .thumb');
+    const prevThumbBtn = document.getElementById('prevThumbBtn');
+    const nextThumbBtn = document.getElementById('nextThumbBtn');
+    const thumbs = Array.from(document.querySelectorAll('.thumbs-list .thumb'));
 
-    if (!container || !thumbsList || thumbs.length === 0) return;
+    // Lightbox elements
+    const lightboxModal = document.getElementById('productLightboxModal');
+    const lightboxBackdrop = document.getElementById('lightboxBackdrop');
+    const lightboxCloseBtn = document.getElementById('lightboxCloseBtn');
+    const lightboxPrevBtn = document.getElementById('lightboxPrevBtn');
+    const lightboxNextBtn = document.getElementById('lightboxNextBtn');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxCounter = document.getElementById('lightboxCounter');
+    const lightboxZoomToggle = document.getElementById('lightboxZoomToggle');
+    const lightboxImageStage = document.getElementById('lightboxImageStage');
+    const lightboxBottomStrip = document.getElementById('lightboxBottomStrip');
 
-    // Update arrow enabled/disabled states based on scroll position
-    function updateArrows() {
-      const maxScroll = container.scrollWidth - container.clientWidth;
-      if (maxScroll <= 4) {
-        if (prevBtn) prevBtn.style.display = 'none';
-        if (nextBtn) nextBtn.style.display = 'none';
-        return;
-      } else {
-        if (prevBtn) prevBtn.style.display = 'flex';
-        if (nextBtn) nextBtn.style.display = 'flex';
-      }
+    let currentIndex = 0;
+    const totalSlides = thumbs.length;
 
-      if (container.scrollLeft <= 5) {
-        prevBtn.disabled = true;
-        prevBtn.classList.add('disabled');
-      } else {
-        prevBtn.disabled = false;
-        prevBtn.classList.remove('disabled');
-      }
+    if (totalSlides === 0) return;
 
-      if (container.scrollLeft >= maxScroll - 5) {
-        nextBtn.disabled = true;
-        nextBtn.classList.add('disabled');
-      } else {
-        nextBtn.disabled = false;
-        nextBtn.classList.remove('disabled');
+    // Build Dots on Main Carousel
+    if (dotsContainer) {
+      dotsContainer.innerHTML = '';
+      for (let i = 0; i < totalSlides; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'main-carousel-dot' + (i === 0 ? ' active' : '');
+        dotsContainer.appendChild(dot);
       }
     }
 
-    // Scroll step = width of one thumbnail + gap (12px)
-    function getScrollStep() {
-      const firstThumb = thumbs[0];
-      if (firstThumb) {
-        return firstThumb.offsetWidth + 12;
+    // Build Lightbox bottom thumbnails
+    if (lightboxBottomStrip) {
+      lightboxBottomStrip.innerHTML = '';
+      thumbs.forEach((t, i) => {
+        const fullSrc = t.dataset.full;
+        const thumbImg = t.querySelector('.thumb-img');
+        const thumbSrc = thumbImg ? thumbImg.src : fullSrc;
+        const stripItem = document.createElement('div');
+        stripItem.className = 'lightbox-thumb' + (i === 0 ? ' active' : '');
+        stripItem.innerHTML = `<img src="${thumbSrc}" alt="Slide ${i+1}">`;
+        stripItem.addEventListener('click', function(e) {
+          e.stopPropagation();
+          goToSlide(i);
+        });
+        lightboxBottomStrip.appendChild(stripItem);
+      });
+    }
+
+    // Switch slide function
+    function goToSlide(index, smoothScroll = true) {
+      if (index < 0) index = totalSlides - 1;
+      if (index >= totalSlides) index = 0;
+      currentIndex = index;
+
+      const activeThumb = thumbs[currentIndex];
+      if (!activeThumb) return;
+
+      const fullSrc = activeThumb.dataset.full;
+
+      // Update Main Image
+      if (mainImg && fullSrc) {
+        mainImg.style.opacity = '0.3';
+        mainImg.src = fullSrc;
+        mainImg.onload = function() {
+          mainImg.style.opacity = '1';
+        };
+      }
+
+      // Update Thumbs List
+      thumbs.forEach((t, i) => {
+        if (i === currentIndex) {
+          t.classList.add('active');
+          if (smoothScroll) {
+            t.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+          }
+        } else {
+          t.classList.remove('active');
+        }
+      });
+
+      // Update Main Dots
+      if (dotsContainer) {
+        const dots = dotsContainer.querySelectorAll('.main-carousel-dot');
+        dots.forEach((d, i) => d.classList.toggle('active', i === currentIndex));
+      }
+
+      // Update Lightbox if open
+      if (lightboxModal.classList.contains('active')) {
+        updateLightboxSlide();
+      }
+    }
+
+    // Arrow navigation on main image
+    if (prevMainBtn) {
+      prevMainBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        goToSlide(currentIndex - 1);
+      });
+    }
+
+    if (nextMainBtn) {
+      nextMainBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        goToSlide(currentIndex + 1);
+      });
+    }
+
+    // Thumbnail click handler
+    thumbs.forEach((thumb, i) => {
+      thumb.addEventListener('click', function() {
+        goToSlide(i);
+      });
+    });
+
+    // Thumbnail Carousel Scroll Controls (< > buttons below)
+    function updateThumbArrows() {
+      if (!container) return;
+      const maxScroll = container.scrollWidth - container.clientWidth;
+      if (maxScroll <= 4) {
+        if (prevThumbBtn) prevThumbBtn.style.display = 'none';
+        if (nextThumbBtn) nextThumbBtn.style.display = 'none';
+        return;
+      } else {
+        if (prevThumbBtn) prevThumbBtn.style.display = 'flex';
+        if (nextThumbBtn) nextThumbBtn.style.display = 'flex';
+      }
+
+      if (container.scrollLeft <= 5) {
+        if (prevThumbBtn) {
+          prevThumbBtn.disabled = true;
+          prevThumbBtn.classList.add('disabled');
+        }
+      } else {
+        if (prevThumbBtn) {
+          prevThumbBtn.disabled = false;
+          prevThumbBtn.classList.remove('disabled');
+        }
+      }
+
+      if (container.scrollLeft >= maxScroll - 5) {
+        if (nextThumbBtn) {
+          nextThumbBtn.disabled = true;
+          nextThumbBtn.classList.add('disabled');
+        }
+      } else {
+        if (nextThumbBtn) {
+          nextThumbBtn.disabled = false;
+          nextThumbBtn.classList.remove('disabled');
+        }
+      }
+    }
+
+    function getThumbScrollStep() {
+      const first = thumbs[0];
+      if (first && first.offsetWidth > 0) {
+        return first.offsetWidth + 12;
       }
       return container.clientWidth / 4;
     }
 
-    if (prevBtn) {
-      prevBtn.addEventListener('click', function() {
-        container.scrollBy({ left: -getScrollStep(), behavior: 'smooth' });
+    if (prevThumbBtn) {
+      prevThumbBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        container.scrollBy({ left: -getThumbScrollStep(), behavior: 'smooth' });
       });
     }
 
-    if (nextBtn) {
-      nextBtn.addEventListener('click', function() {
-        container.scrollBy({ left: getScrollStep(), behavior: 'smooth' });
+    if (nextThumbBtn) {
+      nextThumbBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        container.scrollBy({ left: getThumbScrollStep(), behavior: 'smooth' });
       });
     }
 
-    container.addEventListener('scroll', updateArrows);
-    window.addEventListener('resize', updateArrows);
+    if (container) {
+      container.addEventListener('scroll', updateThumbArrows);
+      window.addEventListener('resize', updateThumbArrows);
+      setTimeout(updateThumbArrows, 150);
+    }
 
-    // Initial arrow state check
-    setTimeout(updateArrows, 100);
-
-    // Thumbnail click handler
-    thumbs.forEach(thumb => {
-      thumb.addEventListener('click', function() {
-        thumbs.forEach(t => t.classList.remove('active'));
-        this.classList.add('active');
-
-        if (mainImg && this.dataset.full) {
-          mainImg.style.opacity = '0.5';
-          mainImg.src = this.dataset.full;
-          mainImg.onload = function() {
-            mainImg.style.opacity = '1';
-          };
-        }
-
-        // Smoothly bring clicked thumbnail into view
-        this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-      });
-    });
-
-    // Touch swipe support on main image
-    const mainBox = document.getElementById('mainImageBox');
+    // Touch swipe support on main image box
     if (mainBox) {
       let touchStartX = 0;
+      let touchStartY = 0;
       let touchEndX = 0;
+      let touchEndY = 0;
 
       mainBox.addEventListener('touchstart', function(e) {
         touchStartX = e.changedTouches[0].screenX;
+        touchStartY = e.changedTouches[0].screenY;
       }, { passive: true });
 
       mainBox.addEventListener('touchend', function(e) {
         touchEndX = e.changedTouches[0].screenX;
-        handleSwipe();
-      }, { passive: true });
+        touchEndY = e.changedTouches[0].screenY;
+        const diffX = touchEndX - touchStartX;
+        const diffY = touchEndY - touchStartY;
 
-      function handleSwipe() {
-        const threshold = 40;
-        const currentActive = document.querySelector('.thumbs-list .thumb.active');
-        let currentIndex = currentActive ? parseInt(currentActive.dataset.index) : 0;
-
-        if (touchEndX < touchStartX - threshold) {
-          // Swiped Left -> Next Image
-          const nextIndex = (currentIndex + 1) % thumbs.length;
-          thumbs[nextIndex].click();
-        } else if (touchEndX > touchStartX + threshold) {
-          // Swiped Right -> Previous Image
-          const prevIndex = (currentIndex - 1 + thumbs.length) % thumbs.length;
-          thumbs[prevIndex].click();
+        // Ensure horizontal swipe is dominant
+        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 40) {
+          if (diffX < 0) {
+            // Swiped Left -> Next
+            goToSlide(currentIndex + 1);
+          } else {
+            // Swiped Right -> Prev
+            goToSlide(currentIndex - 1);
+          }
         }
+      }, { passive: true });
+    }
+
+    // ===================================================
+    // LIGHTBOX CONTROLLER
+    // ===================================================
+    function openLightbox() {
+      if (!lightboxModal) return;
+      lightboxModal.classList.add('active');
+      lightboxModal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      updateLightboxSlide();
+    }
+
+    function closeLightbox() {
+      if (!lightboxModal) return;
+      lightboxModal.classList.remove('active');
+      lightboxModal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      if (lightboxImageStage) lightboxImageStage.classList.remove('zoomed');
+    }
+
+    function updateLightboxSlide() {
+      const activeThumb = thumbs[currentIndex];
+      if (!activeThumb) return;
+
+      const fullSrc = activeThumb.dataset.full;
+      if (lightboxImg && fullSrc) {
+        lightboxImg.style.opacity = '0.3';
+        lightboxImg.src = fullSrc;
+        lightboxImg.onload = function() {
+          lightboxImg.style.opacity = '1';
+        };
+      }
+
+      if (lightboxCounter) {
+        lightboxCounter.textContent = `${currentIndex + 1} / ${totalSlides}`;
+      }
+
+      if (lightboxBottomStrip) {
+        const stripThumbs = lightboxBottomStrip.querySelectorAll('.lightbox-thumb');
+        stripThumbs.forEach((st, i) => {
+          st.classList.toggle('active', i === currentIndex);
+          if (i === currentIndex) {
+            st.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+          }
+        });
+      }
+
+      if (lightboxImageStage) {
+        lightboxImageStage.classList.remove('zoomed');
       }
     }
+
+    // Trigger open lightbox
+    if (btnLightbox) {
+      btnLightbox.addEventListener('click', function(e) {
+        e.stopPropagation();
+        openLightbox();
+      });
+    }
+
+    if (mainImg) {
+      mainImg.addEventListener('click', function(e) {
+        openLightbox();
+      });
+    }
+
+    // Lightbox Close Events
+    if (lightboxCloseBtn) lightboxCloseBtn.addEventListener('click', closeLightbox);
+    if (lightboxBackdrop) lightboxBackdrop.addEventListener('click', closeLightbox);
+
+    // Lightbox Nav
+    if (lightboxPrevBtn) {
+      lightboxPrevBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        goToSlide(currentIndex - 1);
+      });
+    }
+
+    if (lightboxNextBtn) {
+      lightboxNextBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        goToSlide(currentIndex + 1);
+      });
+    }
+
+    // Lightbox Zoom Toggle
+    if (lightboxZoomToggle && lightboxImageStage) {
+      lightboxZoomToggle.addEventListener('click', function(e) {
+        e.stopPropagation();
+        lightboxImageStage.classList.toggle('zoomed');
+      });
+
+      lightboxImageStage.addEventListener('click', function(e) {
+        if (e.target === lightboxImg) {
+          lightboxImageStage.classList.toggle('zoomed');
+        }
+      });
+    }
+
+    // Keyboard support (Escape to close, Left/Right arrows to navigate)
+    document.addEventListener('keydown', function(e) {
+      if (!lightboxModal.classList.contains('active')) return;
+      if (e.key === 'Escape') {
+        closeLightbox();
+      } else if (e.key === 'ArrowLeft') {
+        goToSlide(currentIndex - 1);
+      } else if (e.key === 'ArrowRight') {
+        goToSlide(currentIndex + 1);
+      }
+    });
+
+    // Touch Swipe in Lightbox
+    if (lightboxImageStage) {
+      let lbStartX = 0;
+      let lbEndX = 0;
+      lightboxImageStage.addEventListener('touchstart', function(e) {
+        lbStartX = e.changedTouches[0].screenX;
+      }, { passive: true });
+
+      lightboxImageStage.addEventListener('touchend', function(e) {
+        lbEndX = e.changedTouches[0].screenX;
+        const diffX = lbEndX - lbStartX;
+        if (Math.abs(diffX) > 40) {
+          if (diffX < 0) goToSlide(currentIndex + 1);
+          else goToSlide(currentIndex - 1);
+        }
+      }, { passive: true });
+    }
+
   });
 </script>
 

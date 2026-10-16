@@ -62,6 +62,8 @@
       bottom: 0;
       left: 0;
       width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
       background: rgba(255, 255, 255, 0.98);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
@@ -70,6 +72,7 @@
       padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
       z-index: 999;
       box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08);
+      overflow-x: hidden;
     }
     .mobile-sticky-inner {
       display: flex;

@@ -116,6 +116,8 @@ html {
   font-size: 16px;
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 body {
@@ -125,6 +127,9 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  max-width: 100%;
+  overflow-x: hidden;
+  position: relative;
 }
 
 a {
@@ -4456,6 +4461,23 @@ body[class*="product"] .story-product-tag,
   .mobile-sticky-action-bar {
     display: none !important;
   }
+}
+
+/* Ensure mobile sticky bar and carousel sections never cause horizontal overflow */
+.mobile-sticky-action-bar {
+  box-sizing: border-box !important;
+  max-width: 100% !important;
+}
+
+.mobile-sticky-action-bar * {
+  box-sizing: border-box;
+}
+
+.watch-and-shop-section,
+.testimonials-section,
+.bestsellers-section {
+  max-width: 100%;
+  overflow-x: clip;
 }
 
 /* ── PDP VARIANT PACK CARDS (Design Type 1) ─────────────────────────────────── */
