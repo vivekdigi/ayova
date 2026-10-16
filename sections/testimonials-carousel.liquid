@@ -48,7 +48,13 @@
                   </span>
                   <span>VERIFIED</span>
                 </div>
-                <div class="testimonial-rating" style="color: #FFC107;">★★★★★</div>
+                <div class="testimonial-rating-row">
+                  <div class="testimonial-rating" style="color: #FFC107;">★★★★★</div>
+                  {% assign card_score = block.settings.rating | default: "5.0" %}
+                  {% if section.settings.show_card_rating != false and card_score != blank %}
+                    <span class="testimonial-card-rating-num">{{ card_score }}</span>
+                  {% endif %}
+                </div>
                 <h3 class="testimonial-title">{{ block.settings.review_title | default: "Liver wellness that fits my routine" }}</h3>
                 <div class="testimonial-quote-wrap">
                   {% assign quote_text = block.settings.quote | default: "The capsules are easy to take and the packaging feels very trustworthy. I have been consistent for six weeks and feel noticeably lighter after meals." %}
@@ -83,7 +89,12 @@
                 </span>
                 <span>VERIFIED</span>
               </div>
-              <div class="testimonial-rating" style="color: #FFC107;">★★★★★</div>
+              <div class="testimonial-rating-row">
+                <div class="testimonial-rating" style="color: #FFC107;">★★★★★</div>
+                {% if section.settings.show_card_rating != false %}
+                  <span class="testimonial-card-rating-num">5.0</span>
+                {% endif %}
+              </div>
               <h3 class="testimonial-title">Liver wellness that fits my routine</h3>
               <div class="testimonial-quote-wrap">
                 <p class="testimonial-quote">"The capsules are easy to take and the packaging feels very trustworthy. I have been consistent for six weeks and feel noticeably lighter after meals."</p>
@@ -107,7 +118,12 @@
                 </span>
                 <span>VERIFIED</span>
               </div>
-              <div class="testimonial-rating" style="color: #FFC107;">★★★★★</div>
+              <div class="testimonial-rating-row">
+                <div class="testimonial-rating" style="color: #FFC107;">★★★★★</div>
+                {% if section.settings.show_card_rating != false %}
+                  <span class="testimonial-card-rating-num">4.8</span>
+                {% endif %}
+              </div>
               <h3 class="testimonial-title">A simple daily wellness upgrade</h3>
               <div class="testimonial-quote-wrap">
                 <p class="testimonial-quote">"I wanted something uncomplicated. The clear dosage guidance, clean ingredients, and quick delivery made Ayova an easy repeat purchase."</p>
@@ -131,7 +147,12 @@
                 </span>
                 <span>VERIFIED</span>
               </div>
-              <div class="testimonial-rating" style="color: #FFC107;">★★★★★</div>
+              <div class="testimonial-rating-row">
+                <div class="testimonial-rating" style="color: #FFC107;">★★★★★</div>
+                {% if section.settings.show_card_rating != false %}
+                  <span class="testimonial-card-rating-num">4.6</span>
+                {% endif %}
+              </div>
               <h3 class="testimonial-title">The support team was genuinely helpful</h3>
               <div class="testimonial-quote-wrap">
                 <p class="testimonial-quote">"I had questions before ordering and received a thoughtful response. The probiotics has now become part of my morning routine."</p>
@@ -211,6 +232,12 @@
       "default": "Thousands of verified buyers trust Ayova for their daily health transformation"
     },
     {
+      "type": "checkbox",
+      "id": "show_card_rating",
+      "label": "Show Rating Score on Cards",
+      "default": true
+    },
+    {
       "type": "select",
       "id": "header_alignment",
       "label": "Header Alignment",
@@ -241,6 +268,12 @@
       "type": "testimonial",
       "name": "Testimonial",
       "settings": [
+        {
+          "type": "text",
+          "id": "rating",
+          "label": "Rating Score (e.g. 5.0 or 4.6)",
+          "default": "5.0"
+        },
         {
           "type": "text",
           "id": "review_title",

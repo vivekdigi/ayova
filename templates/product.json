@@ -58,6 +58,36 @@
             "title": "FAQ",
             "content": "<p>FAQ content goes here...</p>"
           }
+        },
+        "coupon_1": {
+          "type": "coupon_offer",
+          "settings": {
+            "title": "10% off",
+            "description": "10% off entire order • Minimum purchase of ₹699.00",
+            "coupon_code": "NEW10",
+            "start_date": "2024-01-01",
+            "end_date": "2030-12-31"
+          }
+        },
+        "coupon_2": {
+          "type": "coupon_offer",
+          "settings": {
+            "title": "5% OFF",
+            "description": "5% off entire order • No minimum order",
+            "coupon_code": "AYOVA5",
+            "start_date": "2024-01-01",
+            "end_date": "2030-12-31"
+          }
+        },
+        "coupon_3": {
+          "type": "coupon_offer",
+          "settings": {
+            "title": "FLAT ₹150 OFF",
+            "description": "Flat ₹150 off on orders above ₹1299",
+            "coupon_code": "AYOVA150",
+            "start_date": "2024-01-01",
+            "end_date": "2030-12-31"
+          }
         }
       },
       "block_order": [
@@ -68,9 +98,14 @@
         "tab_1",
         "tab_2",
         "tab_3",
-        "tab_4"
+        "tab_4",
+        "coupon_1",
+        "coupon_2",
+        "coupon_3"
       ],
       "settings": {
+        "show_available_offers": true,
+        "available_offers_title": "Available Offers",
         "show_description": false,
         "show_why_love_it": false,
         "show_gallery_pills": false,

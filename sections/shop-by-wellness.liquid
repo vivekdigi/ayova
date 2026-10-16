@@ -86,7 +86,9 @@
                   </div>
                   <div class="card-figma-bottom">
                     <h3 class="card-figma-title">{{ goal_title | default: "Wellness Goal" }}</h3>
-                    <span class="card-figma-cta">→</span>
+                    {% if section.settings.show_card_arrow %}
+                      <span class="card-figma-cta">→</span>
+                    {% endif %}
                   </div>
                 </a>
               {% elsif layout_style == 'pill' %}
@@ -99,7 +101,9 @@
                     <h3 class="pill-card-title">{{ goal_title | default: "Wellness Goal" }}</h3>
                     <span class="pill-card-meta">{{ goal_count | default: 'Explore' }}</span>
                   </div>
-                  <span class="pill-card-arrow">→</span>
+                  {% if section.settings.show_card_arrow %}
+                    <span class="pill-card-arrow">→</span>
+                  {% endif %}
                 </a>
               {% else %}
                 <a href="{{ goal_link | default: '#' }}" class="wellness-card" {{ block.shopify_attributes }}>
@@ -124,7 +128,9 @@
               </div>
               <div class="card-figma-bottom">
                 <h3 class="card-figma-title">Liver Wellness</h3>
-                <span class="card-figma-cta">→</span>
+                {% if section.settings.show_card_arrow %}
+                  <span class="card-figma-cta">→</span>
+                {% endif %}
               </div>
             </a>
           </div>
@@ -137,7 +143,9 @@
               </div>
               <div class="card-figma-bottom">
                 <h3 class="card-figma-title">Metabolic Balance</h3>
-                <span class="card-figma-cta">→</span>
+                {% if section.settings.show_card_arrow %}
+                  <span class="card-figma-cta">→</span>
+                {% endif %}
               </div>
             </a>
           </div>
@@ -150,7 +158,9 @@
               </div>
               <div class="card-figma-bottom">
                 <h3 class="card-figma-title">Digestion</h3>
-                <span class="card-figma-cta">→</span>
+                {% if section.settings.show_card_arrow %}
+                  <span class="card-figma-cta">→</span>
+                {% endif %}
               </div>
             </a>
           </div>
@@ -163,7 +173,9 @@
               </div>
               <div class="card-figma-bottom">
                 <h3 class="card-figma-title">Immunity</h3>
-                <span class="card-figma-cta">→</span>
+                {% if section.settings.show_card_arrow %}
+                  <span class="card-figma-cta">→</span>
+                {% endif %}
               </div>
             </a>
           </div>
@@ -176,7 +188,9 @@
               </div>
               <div class="card-figma-bottom">
                 <h3 class="card-figma-title">Energy &amp; Vitality</h3>
-                <span class="card-figma-cta">→</span>
+                {% if section.settings.show_card_arrow %}
+                  <span class="card-figma-cta">→</span>
+                {% endif %}
               </div>
             </a>
           </div>
@@ -189,7 +203,9 @@
               </div>
               <div class="card-figma-bottom">
                 <h3 class="card-figma-title">Wellness Kits</h3>
-                <span class="card-figma-cta">→</span>
+                {% if section.settings.show_card_arrow %}
+                  <span class="card-figma-cta">→</span>
+                {% endif %}
               </div>
             </a>
           </div>
@@ -202,7 +218,9 @@
               </div>
               <div class="card-figma-bottom">
                 <h3 class="card-figma-title">Stress &amp; Sleep</h3>
-                <span class="card-figma-cta">→</span>
+                {% if section.settings.show_card_arrow %}
+                  <span class="card-figma-cta">→</span>
+                {% endif %}
               </div>
             </a>
           </div>
@@ -261,6 +279,10 @@
 
 .ayova-overlay-btn.ws-next {
   right: -20px;
+}
+
+.card-figma-cta {
+  display: none !important;
 }
 
 @media (min-width: 1200px) {
@@ -345,6 +367,12 @@
       "step": 1,
       "label": "Items visible on Desktop",
       "default": 4
+    },
+    {
+      "type": "checkbox",
+      "id": "show_card_arrow",
+      "label": "Show Arrow Under Card Title",
+      "default": false
     }
   ],
   "blocks": [

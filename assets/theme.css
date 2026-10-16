@@ -1197,12 +1197,9 @@ h6 {
   line-height: 1.25;
 }
 
-.card-goal-cta {
-  font-family: var(--font-heading);
-  font-weight: 500;
-  font-size: 11px;
-  color: var(--color-terracotta);
-  white-space: nowrap;
+.card-goal-cta,
+.card-figma-cta {
+  display: none !important;
 }
 
 /* 🛒 PRODUCT CARD (Figma: 310x690px) */
@@ -1461,6 +1458,136 @@ h6 {
   padding: 20px 0 40px;
 }
 
+/* ── TESTIMONIALS RATING SUMMARY ─────────────────────────────────────────── */
+.testimonials-rating-summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 12px 0 16px;
+}
+
+.wellness-header-row .testimonials-rating-summary {
+  justify-content: flex-start;
+  margin: 10px 0 14px;
+}
+
+.rating-summary-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #FAF8F5;
+  border: 1px solid #EAE3D5;
+  padding: 6px 16px;
+  border-radius: var(--radius-pill, 9999px);
+  box-shadow: 0 1px 3px rgba(23, 62, 52, 0.04);
+  transition: all var(--transition-fast, 0.2s ease);
+}
+
+.rating-summary-pill:hover {
+  background: #F5EFE4;
+  border-color: #D8CEBC;
+  box-shadow: 0 2px 6px rgba(23, 62, 52, 0.08);
+}
+
+.rating-score-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--color-forest-primary, #173E34);
+  color: #FFFFFF;
+  padding: 3px 8px;
+  border-radius: var(--radius-pill, 9999px);
+  font-family: var(--font-accent, 'Plus Jakarta Sans', sans-serif);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+}
+
+.rating-score-badge .rating-star-icon {
+  width: 12px;
+  height: 12px;
+  fill: #FFC107;
+  stroke: #FFC107;
+  display: inline-block;
+}
+
+.dynamic-star-rating {
+  position: relative;
+  display: inline-flex;
+  line-height: 1;
+  font-size: 15px;
+  letter-spacing: 2px;
+  user-select: none;
+}
+
+.dynamic-star-rating .star-rating-base {
+  color: #DDD6C9;
+  display: flex;
+}
+
+.dynamic-star-rating .star-rating-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: #FFC107;
+  overflow: hidden;
+  white-space: nowrap;
+  display: flex;
+}
+
+.rating-divider-dot {
+  color: #B5AD9F;
+  font-size: 13px;
+  line-height: 1;
+}
+
+.rating-reviews-count {
+  font-family: var(--font-accent, 'Plus Jakarta Sans', sans-serif);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--color-text-heading, #173E34);
+  letter-spacing: -0.01em;
+}
+
+.testimonial-rating-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.testimonial-card-rating-num {
+  font-family: var(--font-accent, 'Plus Jakarta Sans', sans-serif);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--color-forest-primary, #173E34);
+  background: #F0F7ED;
+  padding: 2px 6px;
+  border-radius: 4px;
+  line-height: 1.2;
+}
+
+@media (max-width: 640px) {
+  .testimonials-rating-summary {
+    margin: 10px 0 14px;
+  }
+  .rating-summary-pill {
+    padding: 5px 12px;
+    gap: 7px;
+  }
+  .rating-score-badge {
+    font-size: 12px;
+    padding: 2px 6px;
+  }
+  .dynamic-star-rating {
+    font-size: 14px;
+    letter-spacing: 1px;
+  }
+  .rating-reviews-count {
+    font-size: 12px;
+  }
+}
+
 /* Review card — Figma: 413x400px, border-radius 22px, border #E8DECC */
 .testimonial-card {
   background: var(--color-bg-white);
@@ -1489,16 +1616,26 @@ h6 {
 }
 
 .verified-pill {
-  background: #F0F7ED;
-  border-radius: var(--radius-pill);
-  padding: 6px 12px;
-  font-family: var(--font-accent);
-  font-weight: 600;
+  background: #E4F2E2;
+  border: 1px solid #C5E3C2;
+  border-radius: var(--radius-pill, 9999px);
+  padding: 5px 12px;
+  font-family: var(--font-accent, sans-serif);
+  font-weight: 700;
   font-size: 11px;
-  color: var(--color-forest-primary);
+  letter-spacing: 0.04em;
+  color: var(--color-forest-primary, #173E34);
   display: inline-flex;
   align-items: center;
+  gap: 5px;
   align-self: flex-start;
+  box-shadow: 0 1px 2px rgba(23, 62, 52, 0.04);
+}
+
+.verified-pill .verified-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .testimonial-title {
@@ -4763,4 +4900,259 @@ body[class*="product"] .story-product-tag,
 
 .btn-add-cart-new:hover, .btn-buy-now:hover {
   opacity: 0.9;
+}
+
+/* ── PDP AVAILABLE OFFERS (DISCOUNT COUPON CAROUSEL) ─────────────────────── */
+.product-available-offers-section {
+  margin-top: 18px;
+  margin-bottom: 22px;
+  width: 100%;
+  clear: both;
+}
+
+.available-offers-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.available-offers-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.offer-tag-icon {
+  width: 20px;
+  height: 20px;
+  color: var(--color-forest-primary, #173E34);
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+.available-offers-title {
+  font-family: var(--font-heading, 'Montserrat', sans-serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-forest-dark, #173E34);
+  margin: 0;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.offers-count-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #173E34;
+  background: #E2EEE6;
+  padding: 3px 9px;
+  border-radius: 12px;
+  letter-spacing: 0.03em;
+  display: inline-block;
+}
+
+.offers-nav-arrows {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.offer-nav-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid #CBD5E1;
+  background: #FFFFFF;
+  color: #173E34;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.2s ease;
+  outline: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.offer-nav-btn:hover {
+  border-color: #173E34;
+  background: #F0F7F3;
+  color: #173E34;
+  transform: scale(1.05);
+}
+
+.offer-nav-btn:active {
+  transform: scale(0.96);
+}
+
+.available-offers-track {
+  display: flex;
+  width: 100%;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+  gap: 0;
+  padding: 2px 0 4px;
+}
+
+.available-offers-track::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+/* Exactly ONE card visible at a time */
+.available-offer-card {
+  flex: 0 0 100%;
+  width: 100%;
+  min-width: 100%;
+  max-width: 100%;
+  background: #F4F8F5; /* Soft herbal green tint */
+  border: 1.5px dashed #A3CBB6; /* Light dashed herbal border */
+  border-radius: 14px;
+  padding: 16px 18px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.available-offer-card:hover {
+  box-shadow: 0 4px 14px rgba(23, 62, 52, 0.08);
+}
+
+.offer-card-top {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 14px;
+}
+
+.offer-card-title {
+  font-family: var(--font-heading, 'Montserrat', sans-serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-forest-primary, #173E34);
+  margin: 0;
+  line-height: 1.25;
+}
+
+.offer-card-desc {
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: #4A5E54;
+  margin: 0;
+}
+
+.offer-coupon-box {
+  background: #FFFFFF;
+  border: 1px solid #D5E7DD;
+  border-radius: 10px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+}
+
+.offer-coupon-meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.coupon-lbl {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #7A8E85;
+  text-transform: uppercase;
+  line-height: 1;
+  margin-bottom: 3px;
+}
+
+.coupon-code-val {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #173E34;
+  line-height: 1.1;
+  background: #EAF4EE;
+  padding: 3px 8px;
+  border-radius: 6px;
+  display: inline-block;
+  white-space: nowrap;
+  width: fit-content;
+}
+
+.btn-copy-coupon {
+  background: #173E34;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 20px;
+  padding: 7px 18px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  outline: none;
+  box-shadow: 0 2px 6px rgba(23, 62, 52, 0.15);
+}
+
+.btn-copy-coupon:hover {
+  background: #235649;
+  transform: translateY(-1px);
+}
+
+.btn-copy-coupon.copied {
+  background: #1E7E4B !important;
+  color: #FFFFFF !important;
+}
+
+.offers-dots-indicator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.offer-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #CBDDD3;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: inline-block;
+}
+
+.offer-dot.active {
+  width: 22px;
+  border-radius: 10px;
+  background: #173E34;
+}
+
+@media (max-width: 600px) {
+  .available-offer-card {
+    padding: 14px;
+  }
+  .offer-card-title {
+    font-size: 0.98rem;
+  }
+  .offer-card-desc {
+    font-size: 0.76rem;
+  }
+  .btn-copy-coupon {
+    padding: 6px 14px;
+    font-size: 0.72rem;
+  }
 }

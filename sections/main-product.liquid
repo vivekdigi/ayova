@@ -281,6 +281,101 @@
             </div>
           </div>
 
+          <!-- Available Offers (Discount Coupons Carousel) -->
+          {% if section.settings.show_available_offers != false %}
+          {% assign coupon_blocks = section.blocks | where: "type", "coupon_offer" %}
+          <div class="product-available-offers-section" id="productAvailableOffersSection" data-has-offers="true">
+            <div class="available-offers-header">
+              <div class="available-offers-title-wrap">
+                <svg class="offer-tag-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                  <circle cx="7" cy="7" r="1.5" fill="currentColor"></circle>
+                </svg>
+                <h4 class="available-offers-title">{{ section.settings.available_offers_title | default: "Available Offers" }}</h4>
+                <span class="offers-count-badge" id="offersCountBadge">1 of 3</span>
+              </div>
+              <div class="offers-nav-arrows" id="offersNavArrows">
+                <button type="button" class="offer-nav-btn offer-nav-prev" onclick="scrollOffersCarousel(this, -1)" aria-label="Previous Offer">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                </button>
+                <button type="button" class="offer-nav-btn offer-nav-next" onclick="scrollOffersCarousel(this, 1)" aria-label="Next Offer">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="available-offers-track" id="availableOffersTrack">
+              {% if coupon_blocks.size > 0 %}
+                {% for block in coupon_blocks %}
+                  {% if block.settings.coupon_code != blank %}
+                    <div class="available-offer-card" {{ block.shopify_attributes }} data-coupon-code="{{ block.settings.coupon_code | escape }}" data-start-date="{{ block.settings.start_date | escape }}" data-end-date="{{ block.settings.end_date | escape }}">
+                      <div class="offer-card-top">
+                        <div class="offer-card-title">{{ block.settings.title | default: "Special Discount" }}</div>
+                        {% if block.settings.description != blank %}
+                          <div class="offer-card-desc">{{ block.settings.description }}</div>
+                        {% endif %}
+                      </div>
+                      <div class="offer-coupon-box">
+                        <div class="offer-coupon-meta">
+                          <span class="coupon-lbl">COUPON CODE</span>
+                          <span class="coupon-code-val">{{ block.settings.coupon_code }}</span>
+                        </div>
+                        <button type="button" class="btn-copy-coupon" onclick="copyOfferCoupon(this, '{{ block.settings.coupon_code | escape }}')">COPY</button>
+                      </div>
+                    </div>
+                  {% endif %}
+                {% endfor %}
+              {% else %}
+                <!-- Default Initial Offers -->
+                <div class="available-offer-card" data-coupon-code="NEW10" data-start-date="2024-01-01" data-end-date="2030-12-31">
+                  <div class="offer-card-top">
+                    <div class="offer-card-title">10% off</div>
+                    <div class="offer-card-desc">10% off entire order • Minimum purchase of ₹699.00</div>
+                  </div>
+                  <div class="offer-coupon-box">
+                    <div class="offer-coupon-meta">
+                      <span class="coupon-lbl">COUPON CODE</span>
+                      <span class="coupon-code-val">NEW10</span>
+                    </div>
+                    <button type="button" class="btn-copy-coupon" onclick="copyOfferCoupon(this, 'NEW10')">COPY</button>
+                  </div>
+                </div>
+
+                <div class="available-offer-card" data-coupon-code="AYOVA5" data-start-date="2024-01-01" data-end-date="2030-12-31">
+                  <div class="offer-card-top">
+                    <div class="offer-card-title">5% OFF</div>
+                    <div class="offer-card-desc">5% off entire order • No minimum order</div>
+                  </div>
+                  <div class="offer-coupon-box">
+                    <div class="offer-coupon-meta">
+                      <span class="coupon-lbl">COUPON CODE</span>
+                      <span class="coupon-code-val">AYOVA5</span>
+                    </div>
+                    <button type="button" class="btn-copy-coupon" onclick="copyOfferCoupon(this, 'AYOVA5')">COPY</button>
+                  </div>
+                </div>
+
+                <div class="available-offer-card" data-coupon-code="AYOVA150" data-start-date="2024-01-01" data-end-date="2030-12-31">
+                  <div class="offer-card-top">
+                    <div class="offer-card-title">FLAT ₹150 OFF</div>
+                    <div class="offer-card-desc">Flat ₹150 off on orders above ₹1299</div>
+                  </div>
+                  <div class="offer-coupon-box">
+                    <div class="offer-coupon-meta">
+                      <span class="coupon-lbl">COUPON CODE</span>
+                      <span class="coupon-code-val">AYOVA150</span>
+                    </div>
+                    <button type="button" class="btn-copy-coupon" onclick="copyOfferCoupon(this, 'AYOVA150')">COPY</button>
+                  </div>
+                </div>
+              {% endif %}
+            </div>
+
+            <!-- Dots Indicator for Multi-Offer Carousel -->
+            <div class="offers-dots-indicator" id="offersDotsIndicator"></div>
+          </div>
+          {% endif %}
+
           <!-- Promo Banners -->
           {% if section.settings.show_promos %}
           <div class="product-promos">
@@ -2905,6 +3000,19 @@
     },
     {
       "type": "checkbox",
+      "id": "show_available_offers",
+      "label": "Show Available Offers Section",
+      "default": true,
+      "info": "Toggle visibility (visible/invisible) for Available Offers discount coupon carousel after variant selection."
+    },
+    {
+      "type": "text",
+      "id": "available_offers_title",
+      "label": "Available Offers Title",
+      "default": "Available Offers"
+    },
+    {
+      "type": "checkbox",
       "id": "show_description",
       "label": "Show Product Description",
       "default": false,
@@ -3062,6 +3170,44 @@
           "label": "Tab Content"
         }
       ]
+    },
+    {
+      "type": "coupon_offer",
+      "name": "Discount Coupon Offer",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Offer Title / Discount",
+          "default": "10% off"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Offer Description",
+          "default": "10% off entire order • Minimum purchase of ₹699.00"
+        },
+        {
+          "type": "text",
+          "id": "coupon_code",
+          "label": "Coupon Code",
+          "default": "NEW10"
+        },
+        {
+          "type": "text",
+          "id": "start_date",
+          "label": "Start Date (YYYY-MM-DD)",
+          "default": "2024-01-01",
+          "info": "Offer will only be visible on or after this date. Leave blank for no start limit."
+        },
+        {
+          "type": "text",
+          "id": "end_date",
+          "label": "End Date (YYYY-MM-DD)",
+          "default": "2030-12-31",
+          "info": "Offer will only be visible on or before this date. Leave blank for no expiry."
+        }
+      ]
     }
   ],
   "presets": [
@@ -3188,5 +3334,216 @@
         }, 5000); // Hide after 5 seconds
       }, 60000); // Show every 1 minute
     }
+
+    // Available Offers Dynamic Date & Coupon Validation
+    if (typeof window.filterActiveCouponOffers === 'function') {
+      window.filterActiveCouponOffers();
+    }
   });
+
+  // Available Offers Single-Card Carousel Scrolling
+  window.scrollOffersCarousel = function(btn, direction) {
+    var section = btn.closest('.product-available-offers-section');
+    var track = section ? section.querySelector('.available-offers-track') : document.getElementById('availableOffersTrack');
+    if (!track) return;
+
+    var cards = track.querySelectorAll('.available-offer-card:not([style*="display: none"])');
+    if (cards.length <= 1) return;
+
+    var cardWidth = track.clientWidth || 1;
+    var currentScroll = track.scrollLeft;
+    var currentIndex = Math.round(currentScroll / cardWidth);
+    var nextIndex = currentIndex + direction;
+
+    // Loop carousel around seamlessly
+    if (nextIndex >= cards.length) {
+      nextIndex = 0;
+    } else if (nextIndex < 0) {
+      nextIndex = cards.length - 1;
+    }
+
+    track.scrollTo({
+      left: nextIndex * cardWidth,
+      behavior: 'smooth'
+    });
+
+    setTimeout(function() {
+      updateOffersCarouselState(nextIndex, cards.length);
+    }, 150);
+  };
+
+  // Direct dot navigation
+  window.goToOfferSlide = function(index) {
+    var track = document.getElementById('availableOffersTrack');
+    if (!track) return;
+    var cardWidth = track.clientWidth || 1;
+    track.scrollTo({
+      left: index * cardWidth,
+      behavior: 'smooth'
+    });
+    var cards = track.querySelectorAll('.available-offer-card:not([style*="display: none"])');
+    updateOffersCarouselState(index, cards.length);
+  };
+
+  // Update badge and dots state
+  function updateOffersCarouselState(activeIdx, total) {
+    var badge = document.getElementById('offersCountBadge');
+    if (badge && total > 1) {
+      badge.innerText = (activeIdx + 1) + ' of ' + total;
+      badge.style.display = 'inline-block';
+    } else if (badge) {
+      badge.style.display = 'none';
+    }
+
+    var dots = document.querySelectorAll('#offersDotsIndicator .offer-dot');
+    dots.forEach(function(dot, idx) {
+      if (idx === activeIdx) {
+        dot.classList.add('active');
+      } else {
+        dot.classList.remove('active');
+      }
+    });
+  }
+
+  // Copy Coupon Code to Clipboard with User Feedback
+  window.copyOfferCoupon = function(btn, code) {
+    if (!code) return;
+    var originalText = btn.innerText;
+
+    function markCopied() {
+      btn.innerText = 'COPIED! ✓';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.innerText = originalText;
+        btn.classList.remove('copied');
+      }, 2500);
+    }
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(code).then(markCopied).catch(function() {
+        fallbackCopy(code);
+        markCopied();
+      });
+    } else {
+      fallbackCopy(code);
+      markCopied();
+    }
+  };
+
+  function fallbackCopy(text) {
+    var el = document.createElement('textarea');
+    el.value = text;
+    el.setAttribute('readonly', '');
+    el.style.position = 'absolute';
+    el.style.left = '-9999px';
+    document.body.appendChild(el);
+    el.select();
+    try {
+      document.execCommand('copy');
+    } catch (e) {}
+    document.body.removeChild(el);
+  }
+
+  // Dynamic Date and Coupon Presence Filtering
+  window.filterActiveCouponOffers = function() {
+    var now = new Date();
+    var currentTimestamp = now.getTime();
+    var visibleOffers = 0;
+
+    var cards = document.querySelectorAll('.available-offer-card');
+    cards.forEach(function(card) {
+      var code = (card.getAttribute('data-coupon-code') || '').trim();
+      var startDateStr = (card.getAttribute('data-start-date') || '').trim();
+      var endDateStr = (card.getAttribute('data-end-date') || '').trim();
+
+      // If coupon code is missing, do not show offer
+      if (!code) {
+        card.style.display = 'none';
+        return;
+      }
+
+      var isValidDate = true;
+
+      // Check start date (YYYY-MM-DD)
+      if (startDateStr) {
+        var start = new Date(startDateStr.indexOf('T') > -1 ? startDateStr : startDateStr + 'T00:00:00');
+        if (!isNaN(start.getTime()) && currentTimestamp < start.getTime()) {
+          isValidDate = false;
+        }
+      }
+
+      // Check end date (YYYY-MM-DD)
+      if (endDateStr) {
+        var end = new Date(endDateStr.indexOf('T') > -1 ? endDateStr : endDateStr + 'T23:59:59');
+        if (!isNaN(end.getTime()) && currentTimestamp > end.getTime()) {
+          isValidDate = false;
+        }
+      }
+
+      if (isValidDate) {
+        card.style.display = 'flex';
+        visibleOffers++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    // Handle section visibility
+    var sections = document.querySelectorAll('.product-available-offers-section');
+    sections.forEach(function(sec) {
+      if (visibleOffers === 0) {
+        sec.style.display = 'none';
+      } else {
+        sec.style.display = 'block';
+      }
+    });
+
+    // Controls visibility and dynamic dots generation
+    var navArrows = document.getElementById('offersNavArrows');
+    var countBadge = document.getElementById('offersCountBadge');
+    var dotsContainer = document.getElementById('offersDotsIndicator');
+
+    if (visibleOffers > 1) {
+      if (navArrows) navArrows.style.display = 'flex';
+      if (countBadge) {
+        countBadge.innerText = '1 of ' + visibleOffers;
+        countBadge.style.display = 'inline-block';
+      }
+      if (dotsContainer) {
+        dotsContainer.innerHTML = '';
+        for (var i = 0; i < visibleOffers; i++) {
+          var dot = document.createElement('span');
+          dot.className = 'offer-dot' + (i === 0 ? ' active' : '');
+          dot.setAttribute('onclick', 'goToOfferSlide(' + i + ')');
+          dot.setAttribute('aria-label', 'Go to offer ' + (i + 1));
+          dotsContainer.appendChild(dot);
+        }
+        dotsContainer.style.display = 'flex';
+      }
+    } else {
+      if (navArrows) navArrows.style.display = 'none';
+      if (countBadge) countBadge.style.display = 'none';
+      if (dotsContainer) dotsContainer.style.display = 'none';
+    }
+
+    // Attach scroll listener to update dots on touch swipe
+    var track = document.getElementById('availableOffersTrack');
+    if (track && !track._hasScrollListener) {
+      track._hasScrollListener = true;
+      var scrollTimer = null;
+      track.addEventListener('scroll', function() {
+        clearTimeout(scrollTimer);
+        scrollTimer = setTimeout(function() {
+          var w = track.clientWidth || 1;
+          var activeIdx = Math.round(track.scrollLeft / w);
+          updateOffersCarouselState(activeIdx, visibleOffers);
+        }, 80);
+      });
+    }
+  };
+
+  // Immediate execution for fast rendering
+  if (document.readyState === 'interactive' || document.readyState === 'complete') {
+    window.filterActiveCouponOffers();
+  }
 </script>
