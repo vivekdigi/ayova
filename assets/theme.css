@@ -5197,3 +5197,49 @@ body[class*="product"] .story-product-tag,
     font-size: 0.72rem;
   }
 }
+
+/* Gallery Bottom Features (Product Info Grid & Trust Badges below Gallery) */
+.gallery-features-wrapper {
+  margin-top: 24px;
+  width: 100%;
+}
+.gallery-features-wrapper .product-info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 16px 0;
+  padding: 16px 18px;
+  background: #FAFCFB;
+  border: 1px solid #EBF1EE;
+  border-radius: 12px;
+}
+.gallery-features-wrapper .product-trust-block {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  background: #F4F7F5;
+  padding: 12px 14px;
+  border-radius: 10px;
+  margin: 14px 0 0 0;
+}
+
+@media (max-width: 768px) {
+  .gallery-features-wrapper {
+    order: 2;
+    margin-top: 14px;
+    margin-bottom: 12px;
+    width: 100%;
+  }
+  .gallery-features-wrapper .product-info-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 12px 14px;
+    margin: 10px 0;
+  }
+  .gallery-features-wrapper .product-trust-block {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px 10px;
+    padding: 10px 12px;
+    margin: 10px 0 0 0;
+  }
+}
