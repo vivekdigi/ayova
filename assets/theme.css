@@ -4675,13 +4675,13 @@ body[class*="product"] .story-product-tag,
 
 .variant-cards-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
 }
 
 @media (max-width: 600px) {
   .variant-cards-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 8px;
   }
 }
@@ -4948,6 +4948,10 @@ body[class*="product"] .story-product-tag,
   margin-top: 18px;
   margin-bottom: 22px;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: hidden;
   clear: both;
 }
 
@@ -4955,13 +4959,20 @@ body[class*="product"] .story-product-tag,
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   margin-bottom: 12px;
+  gap: 10px;
 }
 
 .available-offers-title-wrap {
   display: flex;
   align-items: center;
   gap: 8px;
+  min-width: 0;
+  flex: 1 1 auto;
 }
 
 .offer-tag-icon {
@@ -4980,6 +4991,7 @@ body[class*="product"] .story-product-tag,
   margin: 0;
   line-height: 1.2;
   letter-spacing: -0.01em;
+  white-space: nowrap;
 }
 
 .offers-count-badge {
@@ -4991,12 +5003,15 @@ body[class*="product"] .story-product-tag,
   border-radius: 12px;
   letter-spacing: 0.03em;
   display: inline-block;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .offers-nav-arrows {
   display: flex;
   align-items: center;
   gap: 6px;
+  flex-shrink: 0;
 }
 
 .offer-nav-btn {
@@ -5030,6 +5045,9 @@ body[class*="product"] .story-product-tag,
 .available-offers-track {
   display: flex;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   overflow-x: auto;
   scroll-behavior: smooth;
   scroll-snap-type: x mandatory;
@@ -5047,7 +5065,7 @@ body[class*="product"] .story-product-tag,
 .available-offer-card {
   flex: 0 0 100%;
   width: 100%;
-  min-width: 100%;
+  min-width: 0;
   max-width: 100%;
   background: #F4F8F5; /* Soft herbal green tint */
   border: 1.5px dashed #A3CBB6; /* Light dashed herbal border */
@@ -5099,12 +5117,17 @@ body[class*="product"] .story-product-tag,
   justify-content: space-between;
   gap: 12px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .offer-coupon-meta {
   display: flex;
   flex-direction: column;
   min-width: 0;
+  flex: 1 1 auto;
 }
 
 .coupon-lbl {
@@ -5143,6 +5166,7 @@ body[class*="product"] .story-product-tag,
   letter-spacing: 0.05em;
   cursor: pointer;
   white-space: nowrap;
+  flex-shrink: 0;
   transition: all 0.2s ease;
   outline: none;
   box-shadow: 0 2px 6px rgba(23, 62, 52, 0.15);
@@ -5182,19 +5206,99 @@ body[class*="product"] .story-product-tag,
   background: #173E34;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
+  .product-available-offers-section {
+    margin-top: 14px;
+    margin-bottom: 16px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+  .available-offers-header {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    gap: 8px;
+  }
+  .available-offers-title {
+    font-size: 0.95rem;
+  }
+  .offers-count-badge {
+    font-size: 0.68rem;
+    padding: 2px 7px;
+    flex-shrink: 0;
+  }
+  .offers-nav-arrows {
+    flex-shrink: 0;
+    gap: 5px;
+  }
+  .offer-nav-btn {
+    width: 28px;
+    height: 28px;
+  }
+  .available-offers-track {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    padding: 2px 0 4px;
+  }
   .available-offer-card {
-    padding: 14px;
+    flex: 0 0 100%;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 13px 14px;
   }
   .offer-card-title {
-    font-size: 0.98rem;
+    font-size: 0.95rem;
   }
   .offer-card-desc {
     font-size: 0.76rem;
+    line-height: 1.4;
+  }
+  .offer-coupon-box {
+    padding: 7px 10px;
+    gap: 8px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  .coupon-lbl {
+    font-size: 0.6rem;
+  }
+  .coupon-code-val {
+    font-size: 0.88rem;
+    padding: 2px 6px;
   }
   .btn-copy-coupon {
     padding: 6px 14px;
     font-size: 0.72rem;
+    flex-shrink: 0;
+  }
+}
+
+@media (max-width: 380px) {
+  .available-offers-title {
+    font-size: 0.86rem;
+  }
+  .offers-count-badge {
+    font-size: 0.62rem;
+    padding: 2px 5px;
+  }
+  .offer-nav-btn {
+    width: 26px;
+    height: 26px;
+  }
+  .available-offer-card {
+    padding: 11px 11px;
+  }
+  .btn-copy-coupon {
+    padding: 5px 10px;
+    font-size: 0.68rem;
   }
 }
 

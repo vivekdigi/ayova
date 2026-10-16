@@ -27,8 +27,28 @@
       gap: 40px;
     }
     @media (max-width: 768px) {
+      .pdp-container {
+        margin: 0 auto;
+        padding: 16px 14px;
+        border-radius: 0;
+        box-shadow: none;
+        max-width: 100%;
+        box-sizing: border-box;
+      }
       .pdp-grid {
-        grid-template-columns: 1fr;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+      }
+      .pdp-grid > div {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
       }
       .purchase-actions-row {
         display: none !important;
@@ -410,8 +430,9 @@
         nextIndex = cards.length - 1;
       }
 
+      var targetLeft = cards[nextIndex] ? cards[nextIndex].offsetLeft : (nextIndex * cardWidth);
       track.scrollTo({
-        left: nextIndex * cardWidth,
+        left: targetLeft,
         behavior: 'smooth'
       });
 
@@ -424,12 +445,12 @@
     window.goToOfferSlide = function(index) {
       var track = document.getElementById('availableOffersTrack');
       if (!track) return;
-      var cardWidth = track.clientWidth || 1;
+      var cards = track.querySelectorAll('.available-offer-card:not([style*="display: none"])');
+      if (!cards || !cards[index]) return;
       track.scrollTo({
-        left: index * cardWidth,
+        left: cards[index].offsetLeft,
         behavior: 'smooth'
       });
-      var cards = track.querySelectorAll('.available-offer-card:not([style*="display: none"])');
       updateOffersCarouselState(index, cards.length);
     };
 

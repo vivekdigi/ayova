@@ -1810,13 +1810,13 @@
 
 .variant-cards-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
 }
 
 @media (max-width: 600px) {
   .variant-cards-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 8px;
   }
 }
@@ -2706,6 +2706,20 @@
     order: 5;
     display: flex;
     flex-direction: column;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+  .product-available-offers-section {
+    order: 0;
+    margin-top: 10px;
+    margin-bottom: 14px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    overflow: hidden;
   }
   .variant-picker-new {
     order: 1;
@@ -3577,8 +3591,9 @@
       nextIndex = cards.length - 1;
     }
 
+    var targetLeft = cards[nextIndex] ? cards[nextIndex].offsetLeft : (nextIndex * cardWidth);
     track.scrollTo({
-      left: nextIndex * cardWidth,
+      left: targetLeft,
       behavior: 'smooth'
     });
 
@@ -3591,12 +3606,12 @@
   window.goToOfferSlide = function(index) {
     var track = document.getElementById('availableOffersTrack');
     if (!track) return;
-    var cardWidth = track.clientWidth || 1;
+    var cards = track.querySelectorAll('.available-offer-card:not([style*="display: none"])');
+    if (!cards || !cards[index]) return;
     track.scrollTo({
-      left: index * cardWidth,
+      left: cards[index].offsetLeft,
       behavior: 'smooth'
     });
-    var cards = track.querySelectorAll('.available-offer-card:not([style*="display: none"])');
     updateOffersCarouselState(index, cards.length);
   };
 
