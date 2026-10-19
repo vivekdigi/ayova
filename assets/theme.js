@@ -300,21 +300,31 @@
     });
   }
 
-  /* ── Sticky Header Shadow ─────────────────────────────────────── */
+  /* ── Sticky Header Shadow & Scrolled State ────────────────────── */
   function initStickyHeader() {
     var header = document.querySelector('[data-header]');
     if (!header) return;
 
-    var lastScroll = 0;
-    window.addEventListener('scroll', function() {
-      var scrollY = window.scrollY;
+    var sectionWrapper = header.closest('#shopify-section-header') || header.closest('.shopify-section');
+
+    function onScroll() {
+      var scrollY = window.pageYOffset || document.documentElement.scrollTop || window.scrollY || 0;
       if (scrollY > 10) {
-        header.style.boxShadow = '0 2px 12px rgba(20,36,28,0.08)';
+        header.classList.add('is-scrolled');
+        if (sectionWrapper) {
+          sectionWrapper.classList.add('is-scrolled');
+        }
       } else {
-        header.style.boxShadow = 'none';
+        header.classList.remove('is-scrolled');
+        if (sectionWrapper) {
+          sectionWrapper.classList.remove('is-scrolled');
+        }
       }
-      lastScroll = scrollY;
-    }, { passive: true });
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    // Run once on load in case page is refreshed while scrolled
+    onScroll();
   }
 
   /* ── Cart Page Quantity Updates ────────────────────────────────── */

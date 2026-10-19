@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sticky Header Test</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@400;500;600;700&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Manrope:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/theme.css">
+  <style>
+    :root {
+      --color-forest-primary: #173E34;
+      --color-forest-mid: #285044;
+      --color-forest-accent: #2F5D50;
+      --color-terracotta: #D96C3F;
+      --color-bg-white: #FFFFFF;
+      --color-bg-cream: #FFFCF9;
+      --color-text-heading: #1F2924;
+      --color-text-body: #606B65;
+      --color-border-default: #E2E6DF;
+      --font-heading: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-body: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-accent: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+  </style>
+</head>
+<body class="template-index">
+
+  <!-- Header Section as rendered by Shopify -->
+  <div id="shopify-section-header" class="shopify-section shopify-section-header">
+    <header class="ayova-header-wrapper ayova-header-wrapper--sticky has-marketplace-bar" data-header>
+      <!-- Announcement Bar -->
+      <div class="announcement-bar announcement-bar--alternate" style="--announcement-bg-1: #285044; --announcement-bg-2: #8E4A1E; --announcement-bg-3: #7A2035; --announcement-bg-4: #184F45; color: #FFFFFF;">
+        <div class="announcement-marquee">
+          <div class="marquee-track">
+            <span class="marquee-item">🌿 Free Shipping on orders above Rs. 499</span>
+            <span class="announcement-divider" style="margin: 0 15px;">•</span>
+            <span class="marquee-item">100% Ayurvedic & Lab Tested</span>
+            <span class="announcement-divider" style="margin: 0 15px;">•</span>
+            <span class="marquee-item">AYUSH & ISO Certified Quality</span>
+            <span class="announcement-divider" style="margin: 0 15px;">•</span>
+            <span class="marquee-item">⭐ 10,000+ Happy Customers</span>
+            <span class="announcement-divider" style="margin: 0 15px;">•</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Header -->
+      <div class="main-header">
+        <div class="header-inner">
+          <a href="/" class="header-logo" aria-label="Ayova">
+            <span class="logo-title">AYOVA</span>
+          </a>
+
+          <nav class="header-nav" role="navigation">
+            <div class="nav-item"><a href="#" class="nav-link">Shop</a></div>
+            <div class="nav-item"><a href="#" class="nav-link">Wellness Goals</a></div>
+            <div class="nav-item"><a href="#" class="nav-link">About Us</a></div>
+            <div class="nav-item"><a href="#" class="nav-link">Doctor Consultation</a></div>
+          </nav>
+
+          <div class="header-utilities">
+            <div class="header-marketplace-buttons">
+              <a href="#" class="marketplace-btn btn-amazon" style="display:inline-flex;align-items:center;justify-content:center;padding:4px 12px;background:#F6EBE5;border-radius:6px;font-weight:700;font-size:13px;color:#173E34;">Amazon</a>
+              <a href="#" class="marketplace-btn btn-flipkart" style="display:inline-flex;align-items:center;justify-content:center;padding:4px 12px;background:#EAF0EA;border-radius:6px;font-weight:700;font-size:13px;color:#173E34;">Flipkart</a>
+            </div>
+            <button type="button" class="utility-icon-btn" aria-label="Search">🔍</button>
+            <button type="button" class="utility-icon-btn" aria-label="Account">👤</button>
+            <a href="#" class="cart-btn" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:#173E34;color:#fff;border-radius:20px;font-size:13px;font-weight:600;">
+              🛒 <span class="cart-count-badge">0</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+  </div>
+
+  <main id="MainContent" style="padding: 40px; background: #fafafa;">
+    <h1>Testing Sticky Header on Scroll</h1>
+    <p>Scroll down this page to see if the header sticks to the top.</p>
+    <div style="height: 400px; margin: 20px 0; background: #e0f2fe; border-radius: 12px; padding: 20px;">
+      <h2>Section 1</h2>
+      <p>Scroll position indicator...</p>
+    </div>
+    <div style="height: 400px; margin: 20px 0; background: #fef3c7; border-radius: 12px; padding: 20px;">
+      <h2>Section 2</h2>
+      <p>Header should be visible right above this section!</p>
+    </div>
+    <div style="height: 400px; margin: 20px 0; background: #dcfce7; border-radius: 12px; padding: 20px;">
+      <h2>Section 3</h2>
+      <p>Header should remain sticky at top: 0 with a nice drop shadow.</p>
+    </div>
+    <div style="height: 600px; margin: 20px 0; background: #f3e8ff; border-radius: 12px; padding: 20px;">
+      <h2>Section 4</h2>
+      <p>End of test page.</p>
+    </div>
+  </main>
+
+  <script src="assets/theme.js"></script>
+</body>
+</html>
