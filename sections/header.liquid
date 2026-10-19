@@ -11,6 +11,28 @@
   {% assign has_marketplace_buttons = true %}
 {% endif %}
 
+{% if section.settings.enable_sticky %}
+  <style>
+    #shopify-section-{{ section.id }},
+    .shopify-section-header,
+    .shopify-section-group-header-group {
+      position: -webkit-sticky !important;
+      position: sticky !important;
+      top: 0 !important;
+      z-index: 1000 !important;
+      width: 100% !important;
+      background-color: var(--color-bg-white, #ffffff);
+    }
+    .ayova-header-wrapper {
+      position: -webkit-sticky !important;
+      position: sticky !important;
+      top: 0 !important;
+      z-index: 1000 !important;
+      width: 100% !important;
+    }
+  </style>
+{% endif %}
+
 <header class="ayova-header-wrapper {% if section.settings.enable_sticky %}ayova-header-wrapper--sticky{% endif %} {% if has_marketplace_buttons %}has-marketplace-bar{% endif %}" data-header>
   <!-- Announcement Bar — Figma: 34px, #285044 -->
   {% if section.settings.show_announcement %}

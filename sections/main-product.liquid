@@ -736,7 +736,7 @@
     <div class="lightbox-bottom-strip" id="lightboxBottomStrip">
       {% for item in media_items %}
         {% assign item_image = item.preview_image | default: item %}
-        <div class="lightbox-thumb {% if forloop.first %}active{% endif %}" data-index="{{ forloop.index0 }}">
+        <div class="lightbox-thumb {% if forloop.first %}active{% endif %}" data-index="{{ forloop.index0 }}" data-full="{{ item_image | image_url: width: 1400 }}">
           <img src="{{ item_image | image_url: width: 140 }}" alt="Slide {{ forloop.index }}">
         </div>
       {% endfor %}
@@ -963,12 +963,13 @@
     const mainBox = document.getElementById('mainImageBox');
     const prevMainBtn = document.getElementById('mainCarouselPrevBtn');
     const nextMainBtn = document.getElementById('mainCarouselNextBtn');
+    const dotsContainer = document.getElementById('mainCarouselDots');
     const btnLightbox = document.getElementById('btnLightboxTrigger');
 
     const galleryContainer = document.getElementById('thumbsCarouselContainer');
     const prevThumbBtn = document.getElementById('prevThumbBtn');
     const nextThumbBtn = document.getElementById('nextThumbBtn');
-    const allGalleryThumbs = Array.from(document.querySelectorAll('.thumbs-list .thumb'));
+    let allGalleryThumbs = Array.from(document.querySelectorAll('.thumbs-list .thumb'));
 
     // Lightbox elements
     const lightboxModal = document.getElementById('productLightboxModal');
@@ -983,7 +984,11 @@
     const lightboxBottomStrip = document.getElementById('lightboxBottomStrip');
 
     let currentIndex = 0;
-    const totalSlides = allGalleryThumbs.length;
+    // Fallback if thumbs-list is empty but lightbox strip exists
+    if (allGalleryThumbs.length === 0 && lightboxBottomStrip) {
+      allGalleryThumbs = Array.from(lightboxBottomStrip.querySelectorAll('.lightbox-thumb'));
+    }
+    const totalSlides = allGalleryThumbs.length > 0 ? allGalleryThumbs.length : (mainImg ? 1 : 0);
 
     // Go to slide function
     window.goToSlide = function(index, smoothScroll = true) {
@@ -993,22 +998,36 @@
       currentIndex = index;
 
       const activeThumb = allGalleryThumbs[currentIndex];
-      if (!activeThumb) return;
-
-      const fullSrc = activeThumb.dataset.full;
+      let fullSrc = activeThumb ? activeThumb.dataset.full : '';
+      if (!fullSrc && activeThumb) {
+        const thumbImg = activeThumb.querySelector('img');
+        if (thumbImg) fullSrc = thumbImg.src;
+      }
+      if (!fullSrc && lightboxBottomStrip) {
+        const stripThumbs = lightboxBottomStrip.querySelectorAll('.lightbox-thumb');
+        if (stripThumbs[currentIndex]) {
+          fullSrc = stripThumbs[currentIndex].dataset.full || (stripThumbs[currentIndex].querySelector('img') ? stripThumbs[currentIndex].querySelector('img').src : '');
+        }
+      }
 
       if (mainImg && fullSrc) {
         mainImg.style.opacity = '0.3';
-        mainImg.src = fullSrc;
         mainImg.onload = function() {
           mainImg.style.opacity = '1';
         };
+        mainImg.onerror = function() {
+          mainImg.style.opacity = '1';
+        };
+        mainImg.src = fullSrc;
+        if (mainImg.complete) {
+          mainImg.style.opacity = '1';
+        }
       }
 
       allGalleryThumbs.forEach((t, i) => {
         if (i === currentIndex) {
           t.classList.add('active');
-          if (smoothScroll) {
+          if (smoothScroll && typeof t.scrollIntoView === 'function') {
             t.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
           }
         } else {
@@ -1156,16 +1175,36 @@
     }
 
     function updateLightboxSlide() {
-      const activeThumb = allGalleryThumbs[currentIndex];
-      if (!activeThumb) return;
+      let fullSrc = '';
+      if (allGalleryThumbs && allGalleryThumbs[currentIndex]) {
+        fullSrc = allGalleryThumbs[currentIndex].dataset.full;
+        if (!fullSrc) {
+          const tImg = allGalleryThumbs[currentIndex].querySelector('img');
+          if (tImg) fullSrc = tImg.src;
+        }
+      }
+      if (!fullSrc && lightboxBottomStrip) {
+        const stripThumbs = lightboxBottomStrip.querySelectorAll('.lightbox-thumb');
+        if (stripThumbs[currentIndex]) {
+          fullSrc = stripThumbs[currentIndex].dataset.full || (stripThumbs[currentIndex].querySelector('img') ? stripThumbs[currentIndex].querySelector('img').src : '');
+        }
+      }
+      if (!fullSrc && mainImg) {
+        fullSrc = mainImg.src;
+      }
 
-      const fullSrc = activeThumb.dataset.full;
       if (lightboxImg && fullSrc) {
         lightboxImg.style.opacity = '0.3';
-        lightboxImg.src = fullSrc;
         lightboxImg.onload = function() {
           lightboxImg.style.opacity = '1';
         };
+        lightboxImg.onerror = function() {
+          lightboxImg.style.opacity = '1';
+        };
+        lightboxImg.src = fullSrc;
+        if (lightboxImg.complete) {
+          lightboxImg.style.opacity = '1';
+        }
       }
 
       if (lightboxCounter) {
@@ -1175,8 +1214,9 @@
       if (lightboxBottomStrip) {
         const stripThumbs = lightboxBottomStrip.querySelectorAll('.lightbox-thumb');
         stripThumbs.forEach((st, i) => {
-          st.classList.toggle('active', i === currentIndex);
-          if (i === currentIndex) {
+          const isActive = (i === currentIndex);
+          st.classList.toggle('active', isActive);
+          if (isActive && typeof st.scrollIntoView === 'function') {
             st.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
           }
         });
@@ -1253,15 +1293,21 @@
 
     if (lightboxImageStage) {
       let lbStartX = 0;
+      let lbStartY = 0;
       let lbEndX = 0;
+      let lbEndY = 0;
       lightboxImageStage.addEventListener('touchstart', function(e) {
         lbStartX = e.changedTouches[0].screenX;
+        lbStartY = e.changedTouches[0].screenY;
       }, { passive: true });
 
       lightboxImageStage.addEventListener('touchend', function(e) {
+        if (lightboxImageStage.classList.contains('zoomed')) return;
         lbEndX = e.changedTouches[0].screenX;
+        lbEndY = e.changedTouches[0].screenY;
         const diffX = lbEndX - lbStartX;
-        if (Math.abs(diffX) > 40) {
+        const diffY = lbEndY - lbStartY;
+        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 40) {
           if (diffX < 0) window.goToSlide(currentIndex + 1);
           else window.goToSlide(currentIndex - 1);
         }
@@ -1949,56 +1995,42 @@
 
 .variant-cards-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+  gap: 10px;
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
 }
 
-/* Dynamic columns based on variant count */
-.variant-cards-grid:has(> .variant-pack-card:only-child),
+/* Explicit class-based columns for variant counts */
 .variant-cards-grid.variant-count-1 {
   grid-template-columns: minmax(0, 320px);
 }
 
-.variant-cards-grid:has(> .variant-pack-card:first-child:nth-last-child(2)),
 .variant-cards-grid.variant-count-2 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.variant-cards-grid:has(> .variant-pack-card:first-child:nth-last-child(3)),
 .variant-cards-grid.variant-count-3 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
-.variant-cards-grid:has(> .variant-pack-card:first-child:nth-last-child(4)),
 .variant-cards-grid.variant-count-4 {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
-@media (max-width: 600px) {
-  .variant-cards-grid {
-    gap: 8px;
-  }
-  .variant-cards-grid:has(> .variant-pack-card:first-child:nth-last-child(2)),
-  .variant-cards-grid.variant-count-2 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .variant-cards-grid:has(> .variant-pack-card:first-child:nth-last-child(3)),
-  .variant-cards-grid.variant-count-3 {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-  .variant-cards-grid:has(> .variant-pack-card:first-child:nth-last-child(4)),
-  .variant-cards-grid.variant-count-4 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+/* Fallback with :has() */
+.variant-cards-grid:has(> .variant-pack-card:only-child) {
+  grid-template-columns: minmax(0, 320px);
 }
-
-@media (max-width: 380px) {
-  .variant-cards-grid {
-    gap: 6px;
-  }
+.variant-cards-grid:has(> .variant-pack-card:first-child:nth-last-child(2)) {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.variant-cards-grid:has(> .variant-pack-card:first-child:nth-last-child(3)) {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.variant-cards-grid:has(> .variant-pack-card:first-child:nth-last-child(4)) {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .variant-pack-card {
@@ -2006,7 +2038,7 @@
   background: #FFFFFF;
   border: 1.5px solid #E5E7EB;
   border-radius: 12px;
-  padding: 12px 10px 14px;
+  padding: 10px 10px 12px;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
@@ -2014,7 +2046,9 @@
   text-align: left;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   box-sizing: border-box;
+  width: 100%;
   min-width: 0;
+  max-width: 100%;
   overflow: hidden;
 }
 
@@ -2034,17 +2068,18 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 22px;
-  gap: 4px;
+  min-height: 20px;
+  gap: 6px;
   min-width: 0;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .pack-subhead {
   font-size: 10.5px;
   font-weight: 700;
   color: #4B5563;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
   text-transform: uppercase;
   white-space: nowrap;
   overflow: hidden;
@@ -2056,22 +2091,25 @@
 .pack-badge-bestseller {
   background: #285044;
   color: #FFFFFF;
-  font-size: 9.5px;
+  font-size: 8.5px;
   font-weight: 800;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
   padding: 2px 5px;
   border-radius: 4px;
   text-transform: uppercase;
   line-height: 1.2;
   white-space: nowrap;
-  flex-shrink: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 22px);
+  flex: 0 1 auto;
 }
 
 /* Radio Circle */
 .pack-radio-circle {
-  width: 17px;
-  height: 17px;
-  min-width: 17px;
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
   border: 1.5px solid #9CA3AF;
   border-radius: 50%;
   position: relative;
@@ -2079,6 +2117,7 @@
   background: #FFFFFF;
   box-sizing: border-box;
   flex-shrink: 0;
+  margin-left: auto;
 }
 
 .variant-pack-card.active .pack-radio-circle {
@@ -2092,8 +2131,8 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background: #285044;
 }
@@ -2102,21 +2141,22 @@
 .pack-card-divider {
   height: 1px;
   background: #E5E7EB;
-  margin: 8px 0 10px;
+  margin: 6px 0 8px;
   width: 100%;
 }
 
 /* Card Title */
 .pack-card-title {
-  font-size: 14.5px;
+  font-size: 14px;
   font-weight: 700;
   color: #1F2937;
   line-height: 1.25;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   min-width: 0;
+  width: 100%;
 }
 
 /* Prices */
@@ -2124,110 +2164,152 @@
   display: flex;
   align-items: baseline;
   flex-wrap: wrap;
-  gap: 4px;
+  gap: 3px 6px;
   margin-bottom: 8px;
   min-width: 0;
-  max-width: 100%;
+  width: 100%;
 }
 
 .pack-price {
-  font-size: 14.5px;
-  font-weight: 700;
+  font-size: 14px;
+  font-weight: 800;
   color: #111827;
   line-height: 1.2;
   white-space: nowrap;
 }
 
 .pack-compare-price {
-  font-size: 12px;
+  font-size: 11.5px;
   color: #9CA3AF;
   text-decoration: line-through;
   line-height: 1.2;
   white-space: nowrap;
 }
 
-/* Savings Pill */
+/* Savings Pill - Full-width clean ribbon that never overflows */
 .pack-savings-pill {
   background: #EAF2EE;
-  color: #285044;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 3px 7px;
+  color: #1E634A;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 3px 6px;
   border-radius: 4px;
-  display: inline-block;
-  align-self: flex-start;
-  margin-top: auto;
-  white-space: nowrap;
+  display: block;
+  width: 100%;
   max-width: 100%;
   box-sizing: border-box;
+  margin-top: auto;
+  text-align: center;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  line-height: 1.25;
+  line-height: 1.3;
 }
 
+/* Mobile & Tablet Refinements */
 @media (max-width: 600px) {
+  .variant-cards-grid {
+    gap: 8px;
+  }
+  .variant-cards-grid.variant-count-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .variant-cards-grid:has(> .variant-pack-card:first-child:nth-last-child(4)) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
   .variant-pack-card {
-    padding: 10px 8px 12px;
+    padding: 8px 7px 10px;
+    border-radius: 10px;
   }
   .pack-card-title {
-    font-size: 13.5px;
-    margin-bottom: 4px;
-  }
-  .pack-card-prices {
-    gap: 3px;
-    margin-bottom: 6px;
+    font-size: 13px;
+    margin-bottom: 3px;
   }
   .pack-price {
-    font-size: 13.5px;
-  }
-  .pack-compare-price {
-    font-size: 11px;
-  }
-  .pack-savings-pill {
-    font-size: 10px;
-    padding: 2.5px 6px;
-  }
-  .pack-subhead {
-    font-size: 9.5px;
-  }
-  .pack-badge-bestseller {
-    font-size: 8.5px;
-    padding: 2px 4px;
-  }
-  .pack-radio-circle {
-    width: 15px;
-    height: 15px;
-    min-width: 15px;
-  }
-  .variant-pack-card.active .pack-radio-circle::after {
-    width: 7px;
-    height: 7px;
-  }
-}
-
-@media (max-width: 380px) {
-  .variant-pack-card {
-    padding: 8px 6px 10px;
-  }
-  .pack-card-title {
-    font-size: 12.5px;
-  }
-  .pack-price {
-    font-size: 12.5px;
+    font-size: 13px;
   }
   .pack-compare-price {
     font-size: 10.5px;
   }
   .pack-savings-pill {
+    font-size: 9.5px;
+    padding: 2.5px 4px;
+  }
+  .pack-subhead {
     font-size: 9px;
-    padding: 2px 4.5px;
+  }
+  .pack-badge-bestseller {
+    font-size: 8px;
+    padding: 1.5px 4px;
+  }
+  .pack-radio-circle {
+    width: 14px;
+    height: 14px;
+    min-width: 14px;
+  }
+  .variant-pack-card.active .pack-radio-circle::after {
+    width: 6px;
+    height: 6px;
+  }
+}
+
+@media (max-width: 420px) {
+  .variant-cards-grid {
+    gap: 6px;
+  }
+  .variant-cards-grid.variant-count-3,
+  .variant-cards-grid:has(> .variant-pack-card:first-child:nth-last-child(3)) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .variant-pack-card {
+    padding: 7px 5px 9px;
+  }
+  .pack-card-title {
+    font-size: 12px;
+  }
+  .pack-price {
+    font-size: 12px;
+  }
+  .pack-compare-price {
+    font-size: 10px;
+  }
+  .pack-savings-pill {
+    font-size: 9px;
+    padding: 2px 3px;
+    letter-spacing: -0.01em;
   }
   .pack-subhead {
     font-size: 8.5px;
   }
   .pack-badge-bestseller {
-    font-size: 8px;
-    padding: 1.5px 3.5px;
+    font-size: 7.5px;
+    padding: 1px 3px;
+  }
+  .pack-radio-circle {
+    width: 13px;
+    height: 13px;
+    min-width: 13px;
+  }
+  .variant-pack-card.active .pack-radio-circle::after {
+    width: 5px;
+    height: 5px;
+  }
+}
+
+@media (max-width: 350px) {
+  .variant-cards-grid.variant-count-3,
+  .variant-cards-grid:has(> .variant-pack-card:first-child:nth-last-child(3)) {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 4px;
+    gap: 6px;
+  }
+  .variant-cards-grid.variant-count-3 .variant-pack-card,
+  .variant-cards-grid:has(> .variant-pack-card:first-child:nth-last-child(3)) .variant-pack-card {
+    flex: 0 0 115px;
+    min-width: 115px;
+    scroll-snap-align: start;
   }
 }
 

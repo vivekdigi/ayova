@@ -305,7 +305,14 @@
     var header = document.querySelector('[data-header]');
     if (!header) return;
 
-    var sectionWrapper = header.closest('#shopify-section-header') || header.closest('.shopify-section');
+    var sectionWrapper = header.closest('#shopify-section-header') || header.closest('.shopify-section') || header.parentElement;
+    if (sectionWrapper && sectionWrapper !== document.body && (header.classList.contains('ayova-header-wrapper--sticky') || window.getComputedStyle(header).position === 'sticky')) {
+      sectionWrapper.style.position = '-webkit-sticky';
+      sectionWrapper.style.position = 'sticky';
+      sectionWrapper.style.top = '0';
+      sectionWrapper.style.zIndex = '1000';
+      sectionWrapper.style.width = '100%';
+    }
 
     function onScroll() {
       var scrollY = window.pageYOffset || document.documentElement.scrollTop || window.scrollY || 0;

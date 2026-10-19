@@ -903,10 +903,16 @@
       // Update Main Image
       if (mainImg && fullSrc) {
         mainImg.style.opacity = '0.3';
-        mainImg.src = fullSrc;
         mainImg.onload = function() {
           mainImg.style.opacity = '1';
         };
+        mainImg.onerror = function() {
+          mainImg.style.opacity = '1';
+        };
+        mainImg.src = fullSrc;
+        if (mainImg.complete) {
+          mainImg.style.opacity = '1';
+        }
       }
 
       // Update Thumbs List
@@ -1078,10 +1084,16 @@
       const fullSrc = activeThumb.dataset.full;
       if (lightboxImg && fullSrc) {
         lightboxImg.style.opacity = '0.3';
-        lightboxImg.src = fullSrc;
         lightboxImg.onload = function() {
           lightboxImg.style.opacity = '1';
         };
+        lightboxImg.onerror = function() {
+          lightboxImg.style.opacity = '1';
+        };
+        lightboxImg.src = fullSrc;
+        if (lightboxImg.complete) {
+          lightboxImg.style.opacity = '1';
+        }
       }
 
       if (lightboxCounter) {
