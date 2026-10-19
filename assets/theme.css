@@ -4677,12 +4677,53 @@ body[class*="product"] .story-product-tag,
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Dynamic columns based on variant count */
+.variant-cards-grid:has(> .variant-pack-card:only-child),
+.variant-cards-grid.variant-count-1 {
+  grid-template-columns: minmax(0, 320px);
+}
+
+.variant-cards-grid:has(> .variant-pack-card:first-child:nth-last-child(2)),
+.variant-cards-grid.variant-count-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.variant-cards-grid:has(> .variant-pack-card:first-child:nth-last-child(3)),
+.variant-cards-grid.variant-count-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.variant-cards-grid:has(> .variant-pack-card:first-child:nth-last-child(4)),
+.variant-cards-grid.variant-count-4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 @media (max-width: 600px) {
   .variant-cards-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 8px;
+  }
+  .variant-cards-grid:has(> .variant-pack-card:first-child:nth-last-child(2)),
+  .variant-cards-grid.variant-count-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .variant-cards-grid:has(> .variant-pack-card:first-child:nth-last-child(3)),
+  .variant-cards-grid.variant-count-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .variant-cards-grid:has(> .variant-pack-card:first-child:nth-last-child(4)),
+  .variant-cards-grid.variant-count-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 380px) {
+  .variant-cards-grid {
+    gap: 6px;
   }
 }
 
@@ -4699,6 +4740,8 @@ body[class*="product"] .story-product-tag,
   text-align: left;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   box-sizing: border-box;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .variant-pack-card:hover {
@@ -4718,7 +4761,9 @@ body[class*="product"] .story-product-tag,
   align-items: center;
   justify-content: space-between;
   min-height: 22px;
-  gap: 6px;
+  gap: 4px;
+  min-width: 0;
+  width: 100%;
 }
 
 .pack-subhead {
@@ -4730,6 +4775,8 @@ body[class*="product"] .story-product-tag,
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  min-width: 0;
+  flex: 1 1 auto;
 }
 
 .pack-badge-bestseller {
@@ -4737,12 +4784,13 @@ body[class*="product"] .story-product-tag,
   color: #FFFFFF;
   font-size: 9.5px;
   font-weight: 800;
-  letter-spacing: 0.05em;
-  padding: 2px 6px;
+  letter-spacing: 0.04em;
+  padding: 2px 5px;
   border-radius: 4px;
   text-transform: uppercase;
   line-height: 1.2;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 /* Radio Circle */
@@ -4756,6 +4804,7 @@ body[class*="product"] .story-product-tag,
   transition: all 0.2s ease;
   background: #FFFFFF;
   box-sizing: border-box;
+  flex-shrink: 0;
 }
 
 .variant-pack-card.active .pack-radio-circle {
@@ -4790,6 +4839,10 @@ body[class*="product"] .story-product-tag,
   color: #1F2937;
   line-height: 1.25;
   margin-bottom: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
 }
 
 /* Prices */
@@ -4797,20 +4850,26 @@ body[class*="product"] .story-product-tag,
   display: flex;
   align-items: baseline;
   flex-wrap: wrap;
-  gap: 5px;
+  gap: 4px;
   margin-bottom: 8px;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .pack-price {
   font-size: 14.5px;
   font-weight: 700;
   color: #111827;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
 .pack-compare-price {
   font-size: 12px;
   color: #9CA3AF;
   text-decoration: line-through;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
 /* Savings Pill */
@@ -4825,6 +4884,77 @@ body[class*="product"] .story-product-tag,
   align-self: flex-start;
   margin-top: auto;
   white-space: nowrap;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.25;
+}
+
+@media (max-width: 600px) {
+  .variant-pack-card {
+    padding: 10px 8px 12px;
+  }
+  .pack-card-title {
+    font-size: 13.5px;
+    margin-bottom: 4px;
+  }
+  .pack-card-prices {
+    gap: 3px;
+    margin-bottom: 6px;
+  }
+  .pack-price {
+    font-size: 13.5px;
+  }
+  .pack-compare-price {
+    font-size: 11px;
+  }
+  .pack-savings-pill {
+    font-size: 10px;
+    padding: 2.5px 6px;
+  }
+  .pack-subhead {
+    font-size: 9.5px;
+  }
+  .pack-badge-bestseller {
+    font-size: 8.5px;
+    padding: 2px 4px;
+  }
+  .pack-radio-circle {
+    width: 15px;
+    height: 15px;
+    min-width: 15px;
+  }
+  .variant-pack-card.active .pack-radio-circle::after {
+    width: 7px;
+    height: 7px;
+  }
+}
+
+@media (max-width: 380px) {
+  .variant-pack-card {
+    padding: 8px 6px 10px;
+  }
+  .pack-card-title {
+    font-size: 12.5px;
+  }
+  .pack-price {
+    font-size: 12.5px;
+  }
+  .pack-compare-price {
+    font-size: 10.5px;
+  }
+  .pack-savings-pill {
+    font-size: 9px;
+    padding: 2px 4.5px;
+  }
+  .pack-subhead {
+    font-size: 8.5px;
+  }
+  .pack-badge-bestseller {
+    font-size: 8px;
+    padding: 1.5px 3.5px;
+  }
 }
 
 .hidden-radio {
@@ -5010,15 +5140,16 @@ body[class*="product"] .story-product-tag,
 .offers-nav-arrows {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   flex-shrink: 0;
+  margin-left: auto;
 }
 
 .offer-nav-btn {
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  border: 1px solid #CBD5E1;
+  border: 1.5px solid #CBD5E1;
   background: #FFFFFF;
   color: #173E34;
   display: inline-flex;
@@ -5028,7 +5159,7 @@ body[class*="product"] .story-product-tag,
   padding: 0;
   transition: all 0.2s ease;
   outline: none;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .offer-nav-btn:hover {
@@ -5220,23 +5351,36 @@ body[class*="product"] .story-product-tag,
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
-    gap: 8px;
+    gap: 10px;
+    padding: 0 2px;
+  }
+  .available-offers-title-wrap {
+    gap: 6px;
+    min-width: 0;
+    flex: 1 1 auto;
   }
   .available-offers-title {
     font-size: 0.95rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .offers-count-badge {
     font-size: 0.68rem;
     padding: 2px 7px;
     flex-shrink: 0;
+    margin-right: 2px;
   }
   .offers-nav-arrows {
     flex-shrink: 0;
-    gap: 5px;
+    gap: 8px;
+    margin-left: auto;
   }
   .offer-nav-btn {
     width: 28px;
     height: 28px;
+    border: 1.5px solid #CBD5E1;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
   }
   .available-offers-track {
     width: 100%;
@@ -5288,6 +5432,9 @@ body[class*="product"] .story-product-tag,
   .offers-count-badge {
     font-size: 0.62rem;
     padding: 2px 5px;
+  }
+  .offers-nav-arrows {
+    gap: 7px;
   }
   .offer-nav-btn {
     width: 26px;

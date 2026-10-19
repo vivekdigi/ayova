@@ -259,12 +259,12 @@
         {% endif %}
 
         <!-- Add to Cart Form -->
-        <form action="/cart/add" method="post" enctype="multipart/form-data" class="product-form" data-product-form onsubmit="event.preventDefault(); var btn = event.submitter || this.querySelector('button[type=submit]'); if(btn.dataset.added === 'true') { window.location.href='/cart'; return; } btn.innerHTML = 'Adding...'; btn.disabled = true; fetch('/cart/add.js', { method: 'POST', body: new FormData(this) }).then(res=>res.json()).then(data=>{ btn.innerHTML = 'View Cart'; btn.disabled = false; btn.dataset.added = 'true'; }).catch(err => { btn.innerHTML = 'Error'; btn.disabled = false; });">
+        <form action="/cart/add" method="post" enctype="multipart/form-data" class="product-form" data-product-form onsubmit="return window.handleProductFormSubmit(event);">
           <!-- Choose Pack / Variants -->
           <div class="variant-picker-new">
             <h4 class="variant-label-new">Select a Pack</h4>
             
-            <div class="variant-options-grid variant-cards-grid">
+            <div class="variant-options-grid variant-cards-grid variant-count-{{ product.variants.size }}">
               {% if product.has_only_default_variant %}
                 <input type="hidden" name="id" value="{{ product.variants.first.id }}">
               {% else %}
@@ -548,16 +548,16 @@
           {% else %}
             <div class="purchase-actions-row">
               <div class="quantity-selector-new">
-                <button type="button" class="qty-btn" onclick="let q=document.getElementById('pQty'); if(q.value>1)q.value--;">-</button>
+                <button type="button" class="qty-btn" onclick="var q=document.getElementById('pQty'); if(q && parseInt(q.value,10)>1){ q.value = parseInt(q.value,10)-1; q.dispatchEvent(new Event('change', {bubbles:true})); }">-</button>
                 <input type="number" name="quantity" id="pQty" value="1" min="1" readonly>
-                <button type="button" class="qty-btn" onclick="let q=document.getElementById('pQty'); q.value++;">+</button>
+                <button type="button" class="qty-btn" onclick="var q=document.getElementById('pQty'); if(q){ q.value = parseInt(q.value,10)+1; q.dispatchEvent(new Event('change', {bubbles:true})); }">+</button>
               </div>
 
-              <button type="submit" name="add" class="btn-add-cart-new" data-add-to-cart>
+              <button type="submit" name="add" class="btn-add-cart-new" data-add-to-cart onclick="var f=this.closest('form'); if(f) f.dataset.intent='add-to-cart';">
                 ADD TO CART
               </button>
               
-              <button type="submit" class="btn-buy-now">
+              <button type="submit" class="btn-buy-now" onclick="var f=this.closest('form'); if(f) f.dataset.intent='buy-now';">
                 BUY NOW
               </button>
             </div>
@@ -745,12 +745,151 @@
 </div>
 
 <script>
+  // PDP Add-to-Cart and Buy-Now handler with double-submit prevention
+  window.handleProductFormSubmit = function(e) {
+    if (e) {
+      if (e.preventDefault) e.preventDefault();
+      if (e.stopPropagation) e.stopPropagation();
+      if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+    }
+    var form = e ? (e.target || e.currentTarget) : document.querySelector('.product-form');
+    if (!form) return false;
+
+    var submitter = e ? e.submitter : null;
+    var isBuyNow = false;
+    if (form.dataset.intent === 'buy-now') {
+      isBuyNow = true;
+    } else if (submitter && (submitter.classList.contains('btn-buy-now') || submitter.classList.contains('buy-now-sticky'))) {
+      isBuyNow = true;
+    }
+    form.dataset.intent = '';
+
+    var addBtn = form.querySelector('button[name="add"]') || form.querySelector('.btn-add-cart-new');
+    var buyBtn = form.querySelector('.btn-buy-now');
+    var stickyAddBtn = document.querySelector('.btn-sticky-action.add-cart-sticky');
+    var stickyBuyBtn = document.querySelector('.btn-sticky-action.buy-now-sticky');
+
+    // If item already added and user clicks "View Cart"
+    if (!isBuyNow && ((addBtn && addBtn.dataset.added === 'true') || (stickyAddBtn && stickyAddBtn.dataset.added === 'true') || (submitter && submitter.dataset.added === 'true'))) {
+      window.location.href = '/cart';
+      return false;
+    }
+
+    if (form._submitting) return false;
+    form._submitting = true;
+
+    if (isBuyNow) {
+      if (buyBtn) { buyBtn.disabled = true; buyBtn.innerText = 'Redirecting...'; }
+      if (stickyBuyBtn) { stickyBuyBtn.disabled = true; stickyBuyBtn.innerText = 'Redirecting...'; }
+    } else {
+      if (addBtn) { addBtn.disabled = true; addBtn.innerText = 'Adding...'; }
+      if (stickyAddBtn) { stickyAddBtn.disabled = true; stickyAddBtn.innerText = 'Adding...'; }
+    }
+
+    var formData = new FormData(form);
+
+    fetch('/cart/add.js', {
+      method: 'POST',
+      body: formData
+    })
+    .then(function(res) {
+      if (!res.ok) {
+        return res.json().then(function(errJson) { throw errJson; });
+      }
+      return res.json();
+    })
+    .then(function(data) {
+      form._submitting = false;
+
+      if (typeof window.updateCartCount === 'function') {
+        window.updateCartCount();
+      } else {
+        fetch('/cart.js')
+          .then(function(r) { return r.json(); })
+          .then(function(cart) {
+            var badges = document.querySelectorAll('[data-cart-count]');
+            badges.forEach(function(b) { b.textContent = cart.item_count; });
+          })
+          .catch(function() {});
+      }
+
+      if (isBuyNow) {
+        window.location.href = '/checkout';
+      } else {
+        if (addBtn) {
+          addBtn.disabled = false;
+          addBtn.innerText = 'View Cart';
+          addBtn.dataset.added = 'true';
+        }
+        if (stickyAddBtn) {
+          stickyAddBtn.disabled = false;
+          stickyAddBtn.innerText = 'View Cart';
+          stickyAddBtn.dataset.added = 'true';
+        }
+      }
+    })
+    .catch(function(err) {
+      console.error('Cart add error:', err);
+      form._submitting = false;
+      var errMsg = (err && (err.description || err.message)) ? (err.description || err.message) : 'Could not add to cart. Please try again.';
+      alert(errMsg);
+      if (addBtn) {
+        addBtn.disabled = false;
+        addBtn.innerText = 'ADD TO CART';
+        addBtn.dataset.added = 'false';
+      }
+      if (stickyAddBtn) {
+        stickyAddBtn.disabled = false;
+        stickyAddBtn.innerText = 'ADD TO CART';
+        stickyAddBtn.dataset.added = 'false';
+      }
+      if (buyBtn) {
+        buyBtn.disabled = false;
+        buyBtn.innerText = 'BUY NOW';
+      }
+      if (stickyBuyBtn) {
+        stickyBuyBtn.disabled = false;
+        stickyBuyBtn.innerText = 'BUY NOW';
+      }
+    });
+
+    return false;
+  };
+
   document.addEventListener('DOMContentLoaded', function() {
+    // Reset added state on quantity changes
+    var qtyInput = document.getElementById('pQty');
+    if (qtyInput) {
+      qtyInput.addEventListener('change', function() {
+        var addBtn = document.querySelector('.btn-add-cart-new');
+        var stickyAddBtn = document.querySelector('.btn-sticky-action.add-cart-sticky');
+        if (addBtn && addBtn.dataset.added === 'true') {
+          addBtn.dataset.added = 'false';
+          addBtn.innerText = 'ADD TO CART';
+        }
+        if (stickyAddBtn && stickyAddBtn.dataset.added === 'true') {
+          stickyAddBtn.dataset.added = 'false';
+          stickyAddBtn.innerText = 'ADD TO CART';
+        }
+      });
+    }
+
     // Variant pack card selector and image switcher
     document.querySelectorAll('.variant-box').forEach(box => {
       box.addEventListener('click', function(e) {
         document.querySelectorAll('.variant-box').forEach(b => b.classList.remove('active'));
         this.classList.add('active');
+
+        var addBtn = document.querySelector('.btn-add-cart-new');
+        var stickyAddBtn = document.querySelector('.btn-sticky-action.add-cart-sticky');
+        if (addBtn && addBtn.dataset.added === 'true') {
+          addBtn.dataset.added = 'false';
+          addBtn.innerText = 'ADD TO CART';
+        }
+        if (stickyAddBtn && stickyAddBtn.dataset.added === 'true') {
+          stickyAddBtn.dataset.added = 'false';
+          stickyAddBtn.innerText = 'ADD TO CART';
+        }
         
         const input = this.querySelector('input[type="radio"]');
         if (input) {
@@ -1812,12 +1951,53 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Dynamic columns based on variant count */
+.variant-cards-grid:has(> .variant-pack-card:only-child),
+.variant-cards-grid.variant-count-1 {
+  grid-template-columns: minmax(0, 320px);
+}
+
+.variant-cards-grid:has(> .variant-pack-card:first-child:nth-last-child(2)),
+.variant-cards-grid.variant-count-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.variant-cards-grid:has(> .variant-pack-card:first-child:nth-last-child(3)),
+.variant-cards-grid.variant-count-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.variant-cards-grid:has(> .variant-pack-card:first-child:nth-last-child(4)),
+.variant-cards-grid.variant-count-4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 @media (max-width: 600px) {
   .variant-cards-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 8px;
+  }
+  .variant-cards-grid:has(> .variant-pack-card:first-child:nth-last-child(2)),
+  .variant-cards-grid.variant-count-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .variant-cards-grid:has(> .variant-pack-card:first-child:nth-last-child(3)),
+  .variant-cards-grid.variant-count-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .variant-cards-grid:has(> .variant-pack-card:first-child:nth-last-child(4)),
+  .variant-cards-grid.variant-count-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 380px) {
+  .variant-cards-grid {
+    gap: 6px;
   }
 }
 
@@ -1834,6 +2014,8 @@
   text-align: left;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   box-sizing: border-box;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .variant-pack-card:hover {
@@ -1853,7 +2035,9 @@
   align-items: center;
   justify-content: space-between;
   min-height: 22px;
-  gap: 6px;
+  gap: 4px;
+  min-width: 0;
+  width: 100%;
 }
 
 .pack-subhead {
@@ -1865,6 +2049,8 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  min-width: 0;
+  flex: 1 1 auto;
 }
 
 .pack-badge-bestseller {
@@ -1872,12 +2058,13 @@
   color: #FFFFFF;
   font-size: 9.5px;
   font-weight: 800;
-  letter-spacing: 0.05em;
-  padding: 2px 6px;
+  letter-spacing: 0.04em;
+  padding: 2px 5px;
   border-radius: 4px;
   text-transform: uppercase;
   line-height: 1.2;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 /* Radio Circle */
@@ -1891,6 +2078,7 @@
   transition: all 0.2s ease;
   background: #FFFFFF;
   box-sizing: border-box;
+  flex-shrink: 0;
 }
 
 .variant-pack-card.active .pack-radio-circle {
@@ -1925,6 +2113,10 @@
   color: #1F2937;
   line-height: 1.25;
   margin-bottom: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
 }
 
 /* Prices */
@@ -1932,20 +2124,26 @@
   display: flex;
   align-items: baseline;
   flex-wrap: wrap;
-  gap: 5px;
+  gap: 4px;
   margin-bottom: 8px;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .pack-price {
   font-size: 14.5px;
   font-weight: 700;
   color: #111827;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
 .pack-compare-price {
   font-size: 12px;
   color: #9CA3AF;
   text-decoration: line-through;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
 /* Savings Pill */
@@ -1960,6 +2158,77 @@
   align-self: flex-start;
   margin-top: auto;
   white-space: nowrap;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.25;
+}
+
+@media (max-width: 600px) {
+  .variant-pack-card {
+    padding: 10px 8px 12px;
+  }
+  .pack-card-title {
+    font-size: 13.5px;
+    margin-bottom: 4px;
+  }
+  .pack-card-prices {
+    gap: 3px;
+    margin-bottom: 6px;
+  }
+  .pack-price {
+    font-size: 13.5px;
+  }
+  .pack-compare-price {
+    font-size: 11px;
+  }
+  .pack-savings-pill {
+    font-size: 10px;
+    padding: 2.5px 6px;
+  }
+  .pack-subhead {
+    font-size: 9.5px;
+  }
+  .pack-badge-bestseller {
+    font-size: 8.5px;
+    padding: 2px 4px;
+  }
+  .pack-radio-circle {
+    width: 15px;
+    height: 15px;
+    min-width: 15px;
+  }
+  .variant-pack-card.active .pack-radio-circle::after {
+    width: 7px;
+    height: 7px;
+  }
+}
+
+@media (max-width: 380px) {
+  .variant-pack-card {
+    padding: 8px 6px 10px;
+  }
+  .pack-card-title {
+    font-size: 12.5px;
+  }
+  .pack-price {
+    font-size: 12.5px;
+  }
+  .pack-compare-price {
+    font-size: 10.5px;
+  }
+  .pack-savings-pill {
+    font-size: 9px;
+    padding: 2px 4.5px;
+  }
+  .pack-subhead {
+    font-size: 8.5px;
+  }
+  .pack-badge-bestseller {
+    font-size: 8px;
+    padding: 1.5px 3.5px;
+  }
 }
 
 .hidden-radio {
@@ -3061,10 +3330,10 @@
         </a>
       {% endif %}
     {% else %}
-      <button type="button" class="btn-sticky-action add-cart-sticky" onclick="var f=document.querySelector('.product-form'); if(f){ var b=f.querySelector('button[name=add]'); if(b) b.click(); else f.querySelector('button[type=submit]').click(); }">
+      <button type="button" class="btn-sticky-action add-cart-sticky" onclick="if(this.dataset.added === 'true'){ window.location.href='/cart'; return; } var f=document.querySelector('.product-form'); if(f){ f.dataset.intent='add-to-cart'; var b=f.querySelector('button[name=add]'); if(b) b.click(); else (f.requestSubmit ? f.requestSubmit() : f.submit()); }">
         ADD TO CART
       </button>
-      <button type="button" class="btn-sticky-action buy-now-sticky" onclick="var f=document.querySelector('.product-form'); if(f){ var buyBtn=f.querySelector('.btn-buy-now') || f.querySelector('.btn-buy-now-new'); if(buyBtn) buyBtn.click(); else { var b=f.querySelector('button[name=add]'); if(b) b.click(); else f.submit(); } }">
+      <button type="button" class="btn-sticky-action buy-now-sticky" onclick="var f=document.querySelector('.product-form'); if(f){ f.dataset.intent='buy-now'; var buyBtn=f.querySelector('.btn-buy-now') || f.querySelector('.btn-buy-now-new'); if(buyBtn) buyBtn.click(); else (f.requestSubmit ? f.requestSubmit() : f.submit()); }">
         BUY NOW
       </button>
     {% endif %}

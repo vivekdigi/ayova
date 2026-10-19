@@ -150,9 +150,12 @@
   /* ── Cart AJAX ────────────────────────────────────────────────── */
   function initCartAjax() {
     document.addEventListener('submit', function(e) {
+      if (e.defaultPrevented) return;
       var form = e.target;
       if (form.action && form.action.includes('/cart/add')) {
+        if (form._submitting || form.dataset.productForm !== undefined) return;
         e.preventDefault();
+        form._submitting = true;
         var formData = new FormData(form);
         
         fetch('/cart/add.js', {
@@ -161,6 +164,7 @@
         })
         .then(function(res) { return res.json(); })
         .then(function(data) {
+          form._submitting = false;
           updateCartCount();
           var btn = form.querySelector('button[type="submit"]');
           if (btn) {
@@ -174,6 +178,7 @@
           }
         })
         .catch(function(err) {
+          form._submitting = false;
           console.error('Cart error:', err);
         });
       }
@@ -188,8 +193,10 @@
         badges.forEach(function(badge) {
           badge.textContent = cart.item_count;
         });
-      });
+      })
+      .catch(function() {});
   }
+  window.updateCartCount = updateCartCount;
 
   /* ── Product Gallery ──────────────────────────────────────────── */
   function initProductGallery() {
