@@ -168,14 +168,20 @@
 
     @media (max-width: 768px) {
       .floating-widgets {
-        bottom: auto;
-        top: 50%;
-        transform: translateY(-50%);
-        right: 10px;
+        bottom: 20px;
+        bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+        top: auto;
+        transform: none;
+        right: 12px;
         gap: 8px;
         z-index: 990;
         max-width: calc(100vw - 20px);
         box-sizing: border-box;
+      }
+      .template-product .floating-widgets,
+      body:has(.mobile-sticky-action-bar) .floating-widgets {
+        bottom: 85px;
+        bottom: calc(85px + env(safe-area-inset-bottom, 0px));
       }
       .floating-widgets a {
         width: 44px;

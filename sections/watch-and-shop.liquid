@@ -445,38 +445,13 @@ document.addEventListener('DOMContentLoaded', function() {
   max-width: 100%;
 }
 
-.ayova-overlay-btn.ws-nav-btn {
-  position: absolute;
-  top: 138px;
-  transform: translateY(-50%);
-  width: 40px;
-  height: 40px;
-  background: #ffffff;
-  border: 1px solid #eaeaea;
-  border-radius: 50%;
-  font-size: 1.2rem;
-  line-height: 1;
-  color: #333333;
-  cursor: pointer;
-  z-index: 15;
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  transition: background 0.2s, color 0.2s, transform 0.15s, opacity 0.2s;
-  padding: 0;
-}
-
-.ayova-overlay-btn.ws-nav-btn:hover {
-  background: var(--color-forest-dark, #1a3c34);
-  color: #ffffff;
-  transform: translateY(-50%) scale(1.06);
-}
-
-.ayova-overlay-btn.ws-nav-btn:disabled {
-  opacity: 0.35;
-  cursor: not-allowed;
-  pointer-events: none;
+.watch-and-shop-section .ws-nav-btn,
+.watch-and-shop-section .ayova-overlay-btn.ws-nav-btn,
+.ws-slider-wrapper > .ws-nav-btn,
+.ws-slider-wrapper .ws-prev,
+.ws-slider-wrapper .ws-next,
+.ws-carousel-controls .ws-nav-btn--inline {
+  display: none !important;
 }
 
 .ws-slider-wrapper .ws-prev {
@@ -776,32 +751,7 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 .ws-nav-btn--inline {
-  position: static !important;
-  transform: none !important;
-  width: 26px !important;
-  height: 26px !important;
-  min-width: 26px;
-  border-radius: 50% !important;
-  background: linear-gradient(145deg, #ffffff 0%, #f0f3ef 100%) !important;
-  border: 1px solid rgba(23, 62, 52, 0.12) !important;
-  color: var(--color-forest-primary, #173E34) !important;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08), inset 0 1px 1px rgba(255, 255, 255, 1) !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  cursor: pointer;
-  padding: 0 !important;
-  transition: all 0.2s cubic-bezier(0.2, 0, 0, 1) !important;
-}
-
-.ws-nav-btn--inline:hover {
-  background: var(--color-forest-primary, #173E34) !important;
-  color: #ffffff !important;
-  transform: scale(1.08) !important;
-}
-
-.ws-nav-btn--inline:active {
-  transform: scale(0.92) !important;
+  display: none !important;
 }
 
 .ws-carousel-dots {
@@ -858,22 +808,9 @@ document.addEventListener('DOMContentLoaded', function() {
     margin-bottom: 16px;
   }
 
-  /* Show floating edge buttons on mobile, just like desktop */
+  /* Hide floating edge buttons on mobile */
   .ws-slider-wrapper > .ws-nav-btn {
-    display: flex !important;
-    top: 88px !important;
-    transform: translateY(-50%) !important;
-    width: 32px;
-    height: 32px;
-    font-size: 1rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
-    z-index: 15;
-  }
-  .ws-slider-wrapper .ws-prev {
-    left: 4px;
-  }
-  .ws-slider-wrapper .ws-next {
-    right: 4px;
+    display: none !important;
   }
 
   /* Hide duplicate inline buttons in dots pill on mobile */
@@ -1056,6 +993,7 @@ document.addEventListener('DOMContentLoaded', function() {
 {% schema %}
 {
   "name": "Watch & Shop",
+  "max_blocks": 16,
   "settings": [
     {
       "type": "text",
@@ -1068,7 +1006,7 @@ document.addEventListener('DOMContentLoaded', function() {
     {
       "type": "video",
       "name": "Video Card",
-      "limit": 8,
+      "limit": 16,
       "settings": [
         {
           "type": "image_picker",

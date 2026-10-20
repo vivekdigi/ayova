@@ -23,8 +23,21 @@
     }
     .pdp-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
       gap: 40px;
+      align-items: start;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+    }
+    @media (min-width: 769px) {
+      .img-box-wrapper {
+        position: -webkit-sticky;
+        position: sticky;
+        top: 24px;
+        align-self: start;
+      }
     }
     @media (max-width: 768px) {
       .pdp-container {
@@ -51,7 +64,122 @@
         box-sizing: border-box;
       }
       .purchase-actions-row {
-        display: none !important;
+        display: flex !important;
+        gap: 8px;
+        margin-top: 6px;
+        margin-bottom: 14px;
+        align-items: center;
+        width: 100%;
+        box-sizing: border-box;
+      }
+      .quantity-selector-new {
+        display: flex !important;
+        align-items: center;
+        border: 1.5px solid #d1d5db;
+        border-radius: 8px;
+        height: 42px;
+        background: #ffffff;
+        flex-shrink: 0;
+        box-sizing: border-box;
+      }
+      .quantity-selector-new .qty-btn {
+        width: 30px;
+        height: 100%;
+        border: none;
+        background: none;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        color: #173E34;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+      }
+      .quantity-selector-new input {
+        width: 28px;
+        height: 100%;
+        text-align: center;
+        border: none;
+        font-weight: 700;
+        font-size: 14px;
+        color: #111827;
+        padding: 0;
+        margin: 0;
+        background: transparent;
+        outline: none;
+      }
+      .btn-add-cart-new,
+      .btn-buy-now {
+        flex: 1 1 0;
+        min-width: 0;
+        height: 42px;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        letter-spacing: 0.02em;
+        cursor: pointer;
+        border: none;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-transform: uppercase;
+        white-space: nowrap;
+        padding: 0 6px;
+        box-sizing: border-box;
+      }
+      .btn-add-cart-new {
+        background: #285044;
+        color: #ffffff;
+      }
+      .btn-buy-now {
+        background: #D35F3C;
+        color: #ffffff;
+      }
+    }
+    @media (max-width: 420px) {
+      .purchase-actions-row {
+        gap: 6px;
+      }
+      .quantity-selector-new {
+        height: 40px;
+      }
+      .quantity-selector-new .qty-btn {
+        width: 27px;
+        font-size: 15px;
+      }
+      .quantity-selector-new input {
+        width: 26px;
+        font-size: 13px;
+      }
+      .btn-add-cart-new,
+      .btn-buy-now {
+        height: 40px;
+        font-size: 0.8rem;
+        padding: 0 4px;
+      }
+    }
+    @media (max-width: 350px) {
+      .purchase-actions-row {
+        gap: 4px;
+      }
+      .quantity-selector-new {
+        height: 38px;
+      }
+      .quantity-selector-new .qty-btn {
+        width: 23px;
+        font-size: 14px;
+      }
+      .quantity-selector-new input {
+        width: 22px;
+        font-size: 12px;
+      }
+      .btn-add-cart-new,
+      .btn-buy-now {
+        height: 38px;
+        font-size: 0.72rem;
+        padding: 0 2px;
       }
     }
     .img-box {
@@ -197,10 +325,6 @@
             <div class="trust-feat">
               <div class="tf-icon" style="background-color: #22a855;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div>
               <span>48 Hrs Shipment</span>
-            </div>
-            <div class="trust-feat">
-              <div class="tf-icon" style="background-color: #1994d1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg></div>
-              <span>Non Returnable</span>
             </div>
           </div>
         </div>
@@ -406,6 +530,19 @@
           </div>
           <button class="btn-add-cart-new">ADD TO CART</button>
           <button class="btn-buy-now">BUY NOW</button>
+        </div>
+
+        <!-- In-Page Marketplace Buttons (Amazon & Flipkart) -->
+        <div class="ayova-marketplace-bar ayova-marketplace-bar--pdp">
+          <span class="ayova-marketplace-label">Buy now:</span>
+          <div class="ayova-marketplace-links">
+            <a href="#" class="ayova-marketplace-btn ayova-mkt-amazon" title="Buy on Amazon" aria-label="Buy on Amazon">
+              <img src="assets/amazon.svg" alt="Amazon" class="ayova-mkt-logo" width="75" height="18">
+            </a>
+            <a href="#" class="ayova-marketplace-btn ayova-mkt-flipkart" title="Buy on Flipkart" aria-label="Buy on Flipkart">
+              <img src="assets/flipkart.svg" alt="Flipkart" class="ayova-mkt-logo" width="75" height="18">
+            </a>
+          </div>
         </div>
 
         <div style="height: 600px; background: #fafafa; border-radius: 8px; padding: 16px; margin-top: 24px; color: #718096;">
