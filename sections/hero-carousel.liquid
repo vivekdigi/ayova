@@ -81,7 +81,7 @@
                   {% if block.settings.floating_badge != blank %}
                     <div class="hero-floating-badge">
                       <span class="badge-icon">+</span>
-                      <span class="badge-text">{{ block.settings.floating_badge }}</span>
+                      <span class="badge-text">{{ block.settings.floating_badge | remove_first: '+' | strip }}</span>
                     </div>
                   {% endif %}
                 </div>
@@ -131,10 +131,7 @@
                 <div class="hero-ground-shadow"></div>
               </div>
 
-              <div class="hero-floating-badge">
-                <span class="badge-icon">+</span>
-                <span class="badge-text">Digestive Support</span>
-              </div>
+
             </div>
           </div>
         </div>
@@ -647,7 +644,7 @@
           "type": "text",
           "id": "floating_badge",
           "label": "Floating Pill Badge Text",
-          "default": "+ Digestive Support"
+          "default": ""
         }
       ]
     }
