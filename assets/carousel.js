@@ -25,10 +25,10 @@ class AyovaCarousel {
     const outer = this.container.closest('.ayova-carousel-outer');
     this.prevBtn = this.container.querySelector('[data-carousel-prev]') || outer?.querySelector('[data-carousel-prev]') || this.section.querySelector('[data-carousel-prev]');
     this.nextBtn = this.container.querySelector('[data-carousel-next]') || outer?.querySelector('[data-carousel-next]') || this.section.querySelector('[data-carousel-next]');
-    this.dotsContainer = this.container.querySelector('[data-carousel-dots]') || 
-                         this.container.parentElement?.querySelector('[data-carousel-dots]') || 
-                         this.section?.querySelector('[data-carousel-dots]') ||
-                         this.container.closest('section, .shopify-section, main')?.querySelector('[data-carousel-dots]');
+    this.dotsContainer = this.container.querySelector('[data-carousel-dots]') ||
+      this.container.parentElement?.querySelector('[data-carousel-dots]') ||
+      this.section?.querySelector('[data-carousel-dots]') ||
+      this.container.closest('section, .shopify-section, main')?.querySelector('[data-carousel-dots]');
 
     this.currentIndex = 0;
     this.customItems = this.container.getAttribute('data-items-per-view') || this.section.getAttribute('data-items-per-view');
@@ -45,9 +45,9 @@ class AyovaCarousel {
   calculateItemsPerView() {
     const width = window.innerWidth;
     const target = this.customItems ? parseInt(this.customItems) : 4;
-    
+
     if (target === 1) return 1;
-    
+
     if (width < 640) {
       return 1;
     } else if (width < 900) {
@@ -78,7 +78,7 @@ class AyovaCarousel {
     const paddingRight = parseFloat(computedStyle.paddingRight) || 0;
     const availableWidth = this.container.clientWidth - paddingLeft - paddingRight;
     this.itemsPerView = this.calculateItemsPerView();
-    
+
     // Ensure track gap matches this.gap
     this.track.style.gap = `${this.gap}px`;
 
@@ -273,7 +273,7 @@ class AyovaCarousel {
 
   update() {
     if (!this.slides[0]) return;
-    
+
     // Clamp currentIndex safely
     this.currentIndex = Math.max(0, Math.min(this.currentIndex, this.maxIndex));
 
