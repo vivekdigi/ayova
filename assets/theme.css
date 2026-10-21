@@ -3967,14 +3967,7 @@ body[class*="product"] .story-product-tag,
 
   .ayova-product-card .ayova-marketplace-label,
   .ayova-marketplace-bar--card .ayova-marketplace-label {
-    display: block !important;
-    font-size: 10.5px !important;
-    font-weight: 600 !important;
-    color: #496357 !important;
-    text-align: center !important;
-    margin: 0 !important;
-    line-height: 1.2 !important;
-    white-space: nowrap !important;
+    display: none !important;
   }
 
   .ayova-product-card .ayova-marketplace-links,
@@ -4763,6 +4756,13 @@ body[class*="product"] .story-product-tag,
   margin: 0 0 2px 0 !important;
   line-height: 1.2 !important;
   white-space: nowrap !important;
+}
+
+/* Hide "Buy now" label on product cards for mobile (collection page) */
+@media screen and (max-width: 749px) {
+  .ayova-marketplace-bar--card .ayova-marketplace-label {
+    display: none !important;
+  }
 }
 
 .ayova-marketplace-bar--card .ayova-marketplace-links {

@@ -712,14 +712,7 @@
 
   .ayova-product-card .ayova-marketplace-label,
   .ayova-marketplace-bar--card .ayova-marketplace-label {
-    display: block !important;
-    font-size: 10.5px !important;
-    font-weight: 600 !important;
-    color: #496357 !important;
-    text-align: center !important;
-    margin: 0 !important;
-    line-height: 1.2 !important;
-    white-space: nowrap !important;
+    display: none !important;
   }
 
   .ayova-product-card .ayova-marketplace-links,
@@ -794,15 +787,19 @@
     display: none !important;
   }
 
-  /* Top Drag Handle */
+  /* Top / Side Drag Indicator */
   .mobile-filter-drag-handle {
     display: block !important;
-    width: 38px;
-    height: 4px;
-    background: #DCE4DD;
+    width: 4px;
+    height: 48px;
+    background: #CBD5E1;
     border-radius: 999px;
-    margin: 10px auto 4px auto;
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
     flex-shrink: 0;
+    cursor: grab;
   }
 
   /* Mobile Popup Header */
@@ -810,7 +807,7 @@
     display: flex !important;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 20px 14px 20px;
+    padding: 16px 18px 14px 22px;
     border-bottom: 1px solid #E8ECE9;
     background: #FFFFFF;
     flex-shrink: 0;
@@ -860,7 +857,7 @@
     flex: 1;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    padding: 18px 20px 14px 20px;
+    padding: 18px 18px 14px 22px;
     box-sizing: border-box;
     width: 100%;
   }
@@ -873,9 +870,9 @@
   /* Sticky Footer on Mobile */
   .mobile-filter-modal-footer {
     display: flex !important;
-    gap: 12px;
+    gap: 10px;
     align-items: center;
-    padding: 14px 20px;
+    padding: 14px 18px;
     border-top: 1px solid #E8ECE9;
     background: #FFFFFF;
     box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.05);
@@ -884,13 +881,13 @@
 
   .mobile-filter-clear-all {
     flex: 1;
-    padding: 13px 16px;
+    padding: 12px 14px;
     border: 1.5px solid #D5DDD8;
     border-radius: 10px;
     background: #FFFFFF;
     color: #173E34;
     font-weight: 600;
-    font-size: 0.88rem;
+    font-size: 0.85rem;
     cursor: pointer;
     text-align: center;
     text-decoration: none;
@@ -901,14 +898,14 @@
   }
 
   .mobile-filter-apply-btn {
-    flex: 1.6;
-    padding: 13px 18px;
+    flex: 1.5;
+    padding: 12px 16px;
     border: none;
     border-radius: 10px;
     background: #173E34;
     color: #FFFFFF;
     font-weight: 700;
-    font-size: 0.92rem;
+    font-size: 0.88rem;
     cursor: pointer;
     text-align: center;
     box-shadow: 0 4px 12px rgba(23, 62, 52, 0.25);
@@ -919,37 +916,41 @@
     transform: translateY(-1px);
   }
 
-  /* Mobile Drawer Container */
+  /* Mobile Drawer Container — Side Drawer from Right with behind screen visible */
   .collection-filters {
     position: fixed !important;
+    top: 0 !important;
     bottom: 0 !important;
-    left: 0 !important;
     right: 0 !important;
-    width: 100% !important;
-    max-width: 100vw !important;
-    height: 85vh !important;
-    max-height: 85vh !important;
+    left: auto !important;
+    width: 82% !important;
+    max-width: 360px !important;
+    min-width: 280px !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    max-height: 100vh !important;
     background: #FFFFFF !important;
-    border-radius: 22px 22px 0 0 !important;
+    border-radius: 20px 0 0 20px !important;
     border: none !important;
-    border-top: 1px solid #D5DDD8 !important;
-    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.25) !important;
+    border-left: 1px solid #D5DDD8 !important;
+    box-shadow: -10px 0 35px rgba(0, 0, 0, 0.22) !important;
     z-index: 99999 !important;
     display: flex !important;
     flex-direction: column !important;
     padding: 0 !important;
     margin: 0 !important;
-    transform: translateY(105%) !important;
-    transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.32s !important;
+    transform: translateX(105%) !important;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s !important;
     visibility: hidden !important;
     pointer-events: none !important;
     overflow: hidden !important;
     box-sizing: border-box !important;
+    touch-action: pan-y;
   }
 
   .collection-filters.mobile-open,
   .collection-filters.is-open {
-    transform: translateY(0) !important;
+    transform: translateX(0) !important;
     visibility: visible !important;
     pointer-events: auto !important;
   }
@@ -993,6 +994,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const sidebar = getFilterSidebar();
     const overlay = getFilterOverlay();
     if (!sidebar) return;
+    sidebar.style.transform = ''; // Clear inline drag transforms
     sidebar.classList.add('mobile-open', 'is-open');
     if (overlay) overlay.classList.add('active');
     document.body.classList.add('filter-modal-open');
@@ -1002,6 +1004,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const sidebar = getFilterSidebar();
     const overlay = getFilterOverlay();
     if (!sidebar) return;
+    sidebar.style.transform = ''; // Clear inline drag transforms
     sidebar.classList.remove('mobile-open', 'is-open');
     if (overlay) overlay.classList.remove('active');
     document.body.classList.remove('filter-modal-open');
@@ -1023,14 +1026,14 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
 
-    // Overlay Backdrop
+    // Overlay Backdrop Click
     if (e.target && e.target.id === 'MobileFilterOverlay') {
       e.preventDefault();
       closeFilterDrawer();
       return;
     }
 
-    // Apply Button
+    // Apply Button Click — hide after filter apply
     if (e.target.closest('#MobileFilterApplyBtn')) {
       e.preventDefault();
       const form = document.getElementById('CollectionFiltersForm');
@@ -1040,7 +1043,61 @@ document.addEventListener('DOMContentLoaded', function() {
       closeFilterDrawer();
       return;
     }
+
+    // Clear All Click in mobile footer — also auto close
+    if (e.target.closest('#MobileFilterClearBtn')) {
+      closeFilterDrawer();
+    }
   });
+
+  // Drag / Swipe to Close Logic (Swiping right closes the right-side drawer)
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let currentTranslateX = 0;
+  let isDragging = false;
+
+  document.addEventListener('touchstart', function(e) {
+    const sidebar = getFilterSidebar();
+    if (!sidebar || !sidebar.classList.contains('mobile-open')) return;
+    if (!sidebar.contains(e.target)) return;
+
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    currentTranslateX = 0;
+    isDragging = true;
+  }, { passive: true });
+
+  document.addEventListener('touchmove', function(e) {
+    if (!isDragging) return;
+    const sidebar = getFilterSidebar();
+    if (!sidebar || !sidebar.classList.contains('mobile-open')) return;
+
+    const diffX = e.touches[0].clientX - touchStartX;
+    const diffY = e.touches[0].clientY - touchStartY;
+
+    // Only drag if horizontal swipe is dominant and moving to the right
+    if (diffX > 0 && Math.abs(diffX) > Math.abs(diffY)) {
+      currentTranslateX = diffX;
+      sidebar.style.transition = 'none';
+      sidebar.style.transform = `translateX(${diffX}px)`;
+    }
+  }, { passive: true });
+
+  document.addEventListener('touchend', function(e) {
+    if (!isDragging) return;
+    isDragging = false;
+    const sidebar = getFilterSidebar();
+    if (!sidebar || !sidebar.classList.contains('mobile-open')) return;
+
+    sidebar.style.transition = '';
+    // If dragged right more than 80px, close the drawer; otherwise snap back
+    if (currentTranslateX > 80) {
+      closeFilterDrawer();
+    } else {
+      sidebar.style.transform = '';
+    }
+    currentTranslateX = 0;
+  }, { passive: true });
 
   // Escape key closes modal
   document.addEventListener('keydown', function(e) {
@@ -1285,6 +1342,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const searchParams = new URLSearchParams(formData);
         
         renderPage(searchParams, pathname);
+        closeFilterDrawer(); // Automatically hide mobile drawer when filter category is clicked
       });
     });
   }
