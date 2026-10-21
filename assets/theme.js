@@ -7,19 +7,64 @@
   'use strict';
 
   /* ── Mobile Menu ──────────────────────────────────────────────── */
+  /* ── Mobile Menu ──────────────────────────────────────────────── */
   function initMobileMenu() {
     const toggle = document.querySelector('[data-mobile-menu-toggle]');
     const drawer = document.querySelector('[data-mobile-menu]');
     const overlay = document.querySelector('[data-mobile-overlay]');
     const close = document.querySelector('[data-mobile-menu-close]');
+    const drawerTrack = document.getElementById('mobileDrawerTrack');
+    let drawerAutoscrollTimer = null;
+    let isDrawerInteracting = false;
 
     if (!toggle || !drawer) return;
+
+    function startDrawerAutoscroll() {
+      stopDrawerAutoscroll();
+      if (!drawerTrack) return;
+
+      drawerAutoscrollTimer = setInterval(function () {
+        if (isDrawerInteracting || !drawer.classList.contains('active')) return;
+        var firstCard = drawerTrack.querySelector('.mobile-drawer-card-item');
+        if (!firstCard) return;
+
+        // Scroll 2 items forward (width of 2 cards + 2 gaps)
+        var scrollStep = (firstCard.offsetWidth + 12) * 2;
+        var maxScroll = drawerTrack.scrollWidth - drawerTrack.clientWidth;
+
+        if (drawerTrack.scrollLeft >= maxScroll - 10) {
+          drawerTrack.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          drawerTrack.scrollBy({ left: scrollStep, behavior: 'smooth' });
+        }
+      }, 3000);
+    }
+
+    function stopDrawerAutoscroll() {
+      if (drawerAutoscrollTimer) {
+        clearInterval(drawerAutoscrollTimer);
+        drawerAutoscrollTimer = null;
+      }
+    }
+
+    if (drawerTrack) {
+      drawerTrack.addEventListener('touchstart', function () {
+        isDrawerInteracting = true;
+      }, { passive: true });
+
+      drawerTrack.addEventListener('touchend', function () {
+        setTimeout(function () {
+          isDrawerInteracting = false;
+        }, 1500);
+      }, { passive: true });
+    }
 
     function openMenu() {
       drawer.classList.add('active');
       if (overlay) overlay.classList.add('active');
       toggle.setAttribute('aria-expanded', 'true');
       document.body.style.overflow = 'hidden';
+      startDrawerAutoscroll();
     }
 
     function closeMenu() {
@@ -27,6 +72,7 @@
       if (overlay) overlay.classList.remove('active');
       toggle.setAttribute('aria-expanded', 'false');
       document.body.style.overflow = '';
+      stopDrawerAutoscroll();
     }
 
     toggle.addEventListener('click', openMenu);
@@ -50,13 +96,82 @@
     var liveResults = document.getElementById('searchLiveResults');
     var resultsGrid = document.getElementById('searchResultsGrid');
     var popularSection = document.getElementById('searchPopular');
+    var rotator = document.getElementById('searchPlaceholderRotator');
+    var inputWrap = document.querySelector('.search-panel-input-wrap');
     var searchDebounce;
+
+    // Animated Rotating Search Placeholder (Transition effect)
+    var placeholderPhrases = [
+      'Search Milk Thistle, Curcumin, Liver Care...',
+      'Search Glutathione, Vitamin C Tablets...',
+      'Search Shilajit, Ashwagandha, Vitality...',
+      'Search Vitamin D3 + K2, Bone Health...',
+      'Search Berberine, Blood Sugar Control...',
+      'Search Herbal Supplements, Daily Wellness...'
+    ];
+    var currentPhraseIndex = 0;
+    var rotatorInterval = null;
+
+    function updateRotatorVisibility() {
+      if (!rotator || !searchInput) return;
+      var hasText = searchInput.value.length > 0;
+      rotator.style.opacity = hasText ? '0' : '1';
+      rotator.style.visibility = hasText ? 'hidden' : 'visible';
+    }
+
+    function rotatePlaceholder() {
+      if (!rotator || !searchInput || searchInput.value.length > 0) return;
+      var currentEl = rotator.querySelector('.search-rotator-text.active');
+      currentPhraseIndex = (currentPhraseIndex + 1) % placeholderPhrases.length;
+
+      var nextEl = document.createElement('span');
+      nextEl.className = 'search-rotator-text';
+      nextEl.textContent = placeholderPhrases[currentPhraseIndex];
+      rotator.appendChild(nextEl);
+
+      // Force reflow
+      nextEl.offsetHeight;
+
+      if (currentEl) {
+        currentEl.classList.remove('active');
+        currentEl.classList.add('exit');
+        setTimeout(function () {
+          if (currentEl.parentNode) currentEl.parentNode.removeChild(currentEl);
+        }, 500);
+      }
+      nextEl.classList.add('active');
+    }
+
+    function startRotator() {
+      if (rotatorInterval) clearInterval(rotatorInterval);
+      rotatorInterval = setInterval(rotatePlaceholder, 2600);
+    }
+
+    function stopRotator() {
+      if (rotatorInterval) {
+        clearInterval(rotatorInterval);
+        rotatorInterval = null;
+      }
+    }
+
+    // Start rotator initially
+    startRotator();
+
+    if (inputWrap && searchInput) {
+      inputWrap.addEventListener('click', function(e) {
+        if (e.target !== clearBtn) {
+          searchInput.focus();
+        }
+      });
+    }
 
     if (!toggleBtn || !overlay) return;
 
     function openSearch() {
       overlay.classList.add('active');
       document.body.style.overflow = 'hidden';
+      startRotator();
+      updateRotatorVisibility();
       if (searchInput) setTimeout(function () { searchInput.focus(); }, 120);
     }
 
@@ -67,6 +182,8 @@
       if (clearBtn) clearBtn.classList.remove('visible');
       if (liveResults) liveResults.style.display = 'none';
       if (popularSection) popularSection.style.display = 'block';
+      updateRotatorVisibility();
+      stopRotator();
     }
 
     toggleBtn.addEventListener('click', openSearch);
@@ -93,6 +210,7 @@
         clearBtn.classList.remove('visible');
         if (liveResults) liveResults.style.display = 'none';
         if (popularSection) popularSection.style.display = 'block';
+        updateRotatorVisibility();
         searchInput.focus();
       });
     }
@@ -101,6 +219,7 @@
     if (searchInput) {
       searchInput.addEventListener('input', function () {
         var q = this.value.trim();
+        updateRotatorVisibility();
         if (clearBtn) clearBtn.classList.toggle('visible', q.length > 0);
 
         clearTimeout(searchDebounce);

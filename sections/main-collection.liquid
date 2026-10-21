@@ -6,8 +6,8 @@
 <div class="section-padding collection-page">
   <div class="container">
     
-    <!-- Collection Banner Header -->
-    <div class="collection-banner">
+    <!-- Collection Banner Header (Hidden as requested) -->
+    <div class="collection-banner" style="display: none !important;">
       <div class="banner-content">
         <span class="badge badge-category">AYUSH & ISO CERTIFIED FORMULATIONS</span>
         <h1 class="collection-title">{{ collection.title | default: "All Ayurvedic Products" }}</h1>
@@ -233,12 +233,13 @@
 </div>
 
 <style>
+.section-padding.collection-page,
+.collection-page {
+  padding-top: 8px !important;
+}
+
 .collection-banner {
-  background: linear-gradient(135deg, var(--color-sage-light) 0%, var(--color-cream-bg) 100%);
-  padding: 44px;
-  border-radius: var(--radius-lg);
-  margin-bottom: 36px;
-  border: 1px solid var(--color-sage-border);
+  display: none !important;
 }
 
 .collection-title {
@@ -302,13 +303,21 @@
 }
 
 .filter-group {
-  margin-bottom: 24px;
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #E8ECE9;
+}
+
+.filter-group:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
 }
 
 .filter-title {
-  font-size: 0.9rem;
+  font-size: 0.82rem;
   font-weight: 700;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   color: var(--color-text-dark);
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -317,17 +326,17 @@
 .filter-label {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 0.85rem;
+  gap: 8px;
+  font-size: 0.80rem;
   color: var(--color-text-muted);
-  margin-bottom: 10px;
+  margin-bottom: 7px;
   cursor: pointer;
 }
 
 .filter-input-chk {
   accent-color: var(--color-forest-mid);
-  width: 16px;
-  height: 16px;
+  width: 15px;
+  height: 15px;
 }
 
 
@@ -336,9 +345,10 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  margin-top: 0 !important;
+  margin-bottom: 18px;
   background: var(--color-white);
-  padding: 14px 20px;
+  padding: 10px 18px;
   border-radius: var(--radius-md);
   border: 1px solid var(--color-sage-border);
 }
@@ -349,11 +359,7 @@
 }
 
 .sort-box {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 0.85rem;
-  color: var(--color-text-muted);
+  display: none !important;
 }
 
 .sort-select {
@@ -406,10 +412,12 @@
   padding: 0 16px;
 }
 
-.page-link:hover {
-  background: #EEF3EF;
-  color: #173E34;
-  border-color: #285044;
+.page-link:hover,
+.page-link:focus {
+  background: #173E34 !important;
+  color: #FFFFFF !important;
+  border-color: #173E34 !important;
+  box-shadow: 0 2px 8px rgba(23, 62, 52, 0.25);
 }
 
 .page-link.active,
@@ -439,8 +447,8 @@
 .price-slider-container {
   position: relative;
   width: 100%;
-  height: 28px;
-  margin: 10px 0 18px;
+  height: 24px;
+  margin: 4px 0 8px;
   display: flex;
   align-items: center;
 }
@@ -557,7 +565,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 6px 0 10px;
+  margin: 4px 0 6px;
   width: 100%;
   box-sizing: border-box;
 }
@@ -565,9 +573,9 @@
 .price-corner-pill {
   background: #173E34;
   color: #FFFFFF;
-  font-size: 0.8rem;
+  font-size: 0.74rem;
   font-weight: 700;
-  padding: 4px 11px;
+  padding: 3px 9px;
   border-radius: 6px;
   box-shadow: 0 2px 5px rgba(23, 62, 52, 0.2);
   letter-spacing: 0.02em;
@@ -762,8 +770,14 @@
 
   .card-pack-pill,
   .card-per-count {
-    font-size: 9.5px !important;
+    font-size: 8px !important;
+    line-height: 1.2 !important;
+    padding: 2px 7px !important;
+    border-radius: 999px !important;
     margin-bottom: 2px !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    text-align: center !important;
   }
 
   .btn-add-cart {
@@ -833,9 +847,19 @@
     display: none !important;
   }
 
+  .section-padding.collection-page,
+  .collection-page {
+    padding-top: 4px !important;
+  }
+
+  .collection-layout {
+    margin-top: 0 !important;
+  }
+
   .collection-toolbar {
-    padding: 12px 16px;
-    margin-bottom: 18px;
+    padding: 8px 12px !important;
+    margin-top: 0 !important;
+    margin-bottom: 12px !important;
   }
 
   /* Show mobile filter button in toolbar */
@@ -935,7 +959,7 @@
     flex: 1;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    padding: 18px 18px 14px 22px;
+    padding: 14px 16px 12px 18px;
     box-sizing: border-box;
     width: 100%;
   }
@@ -943,6 +967,54 @@
   .collection-filters-scroll-body .filter-form {
     width: 100%;
     box-sizing: border-box;
+  }
+
+  /* Compact spacing & reduced text size for mobile filter popup */
+  .collection-filters .filter-group {
+    margin-bottom: 12px !important;
+    padding-bottom: 12px !important;
+    border-bottom: 1px solid #E8ECE9 !important;
+  }
+
+  .collection-filters .filter-group:last-child {
+    border-bottom: none !important;
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  .collection-filters .filter-title {
+    font-size: 0.76rem !important;
+    font-weight: 700 !important;
+    margin-bottom: 6px !important;
+    letter-spacing: 0.05em !important;
+    color: #173E34 !important;
+  }
+
+  .collection-filters .filter-label {
+    font-size: 0.78rem !important;
+    color: #4B5563 !important;
+    margin-bottom: 6px !important;
+    gap: 8px !important;
+    line-height: 1.35 !important;
+  }
+
+  .collection-filters .filter-input-chk {
+    width: 15px !important;
+    height: 15px !important;
+  }
+
+  .collection-filters .price-corners-row {
+    margin: 4px 0 6px !important;
+  }
+
+  .collection-filters .price-corner-pill {
+    font-size: 0.72rem !important;
+    padding: 3px 8px !important;
+  }
+
+  .collection-filters .price-slider-container {
+    height: 22px !important;
+    margin: 4px 0 6px !important;
   }
 
   /* Sticky Footer on Mobile */

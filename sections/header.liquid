@@ -263,6 +263,37 @@
         {% endif %}
       {% endfor %}
     </nav>
+
+    <!-- Best Seller Section in Mobile Menu Drawer (Auto-scrolling 2-items) -->
+    <div class="mobile-menu-bestsellers">
+      <div class="mobile-menu-bestsellers-header">
+        <h4 class="mobile-menu-bestsellers-title">Best Sellers</h4>
+        <a href="/collections/all" class="mobile-menu-bestsellers-view-all">View All →</a>
+      </div>
+      
+      <div class="mobile-drawer-carousel-wrap">
+        <div class="mobile-drawer-carousel-track" id="mobileDrawerTrack">
+          {% assign best_seller_collection = collections['best-seller'] | default: collections['bestsellers'] | default: collections['all'] %}
+          {% for product in best_seller_collection.products limit: 8 %}
+            <div class="mobile-drawer-card-item">
+              <a href="{{ product.url }}" class="mobile-drawer-card-inner">
+                <div class="mobile-drawer-card-img">
+                  {% if product.featured_image %}
+                    <img src="{{ product.featured_image | image_url: width: 300 }}" alt="{{ product.title | escape }}" loading="lazy" width="140" height="140">
+                  {% endif %}
+                </div>
+                <div class="mobile-drawer-card-info">
+                  <span class="mobile-drawer-card-name">{{ product.title }}</span>
+                  <span class="mobile-drawer-card-price">{{ product.price | money }}</span>
+                  <div class="mobile-drawer-card-stars">★★★★★</div>
+                </div>
+                <span class="mobile-drawer-card-btn">VIEW PRODUCT →</span>
+              </a>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Search Overlay (Rich Design) -->
@@ -279,11 +310,16 @@
 
       <form action="{{ routes.search_url }}" method="get" role="search" class="search-panel-form" onsubmit="this.q.value = this.q.value.trim().split(/\s+/).join(' AND ');">
         <div class="search-panel-input-wrap">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7A857F" stroke-width="2">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7A857F" stroke-width="2" class="search-panel-icon">
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
-          <input type="search" name="q" id="searchPanelInput" class="search-panel-input" placeholder="Search Milk Thistle, Curcumin, Liver Care..." autocomplete="off" aria-label="Search" spellcheck="false">
+          <div class="search-input-field-container">
+            <input type="search" name="q" id="searchPanelInput" class="search-panel-input" placeholder="" autocomplete="off" aria-label="Search" spellcheck="false">
+            <div class="search-placeholder-rotator" id="searchPlaceholderRotator" aria-hidden="true">
+              <span class="search-rotator-text active">Search Milk Thistle, Curcumin, Liver Care...</span>
+            </div>
+          </div>
           <button type="button" class="search-clear-btn" id="searchClearBtn" aria-label="Clear">✕</button>
         </div>
         <input type="hidden" name="type" value="product">
