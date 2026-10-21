@@ -110,10 +110,21 @@
   <!-- Image Area — Figma: 278x360px, bg #EEF3EF, border-radius 22px -->
   <div class="card-image-wrapper">
     {% if badge != blank %}
-      <span class="card-badge">{{ badge }}</span>
+      {%- if badge contains 'SAVE ' or badge contains 'Save ' or badge contains 'save ' -%}
+        {%- assign clean_pct = badge | remove: 'SAVE ' | remove: 'Save ' | remove: 'save ' | remove: 'OFF' | remove: 'off' | strip -%}
+        <div class="card-badge card-badge--ribbon">
+          <span class="card-badge-num">{{ clean_pct }}</span>
+          <span class="card-badge-lbl">OFF</span>
+        </div>
+      {%- else -%}
+        <div class="card-badge card-badge--pill">{{ badge }}</div>
+      {%- endif -%}
     {% elsif product != blank and product.compare_at_price > product.price %}
       {%- assign save_pct = product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price | round -%}
-      <span class="card-badge">SAVE {{ save_pct }}%</span>
+      <div class="card-badge card-badge--ribbon">
+        <span class="card-badge-num">{{ save_pct }}%</span>
+        <span class="card-badge-lbl">OFF</span>
+      </div>
     {% endif %}
 
     <a href="{{ card_url }}" aria-label="View {{ card_title | escape }}">

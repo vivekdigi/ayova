@@ -1459,7 +1459,7 @@ h6 {
   transform: scale(1.05);
 }
 
-/* Card badge */
+/* Card badge (Default pill) */
 .card-badge {
   position: absolute;
   top: 10px;
@@ -1474,6 +1474,43 @@ h6 {
   z-index: 2;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+/* Card badge — Top-Right Ribbon style (primary theme color) */
+.card-badge--ribbon {
+  top: 0 !important;
+  right: 0 !important;
+  left: auto !important;
+  background: var(--color-forest-primary, #173E34) !important;
+  color: #FFFFFF !important;
+  border-radius: 0 12px 0 14px !important;
+  padding: 6px 10px 7px 10px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+  text-align: center !important;
+  box-shadow: 0 2px 8px rgba(23, 62, 52, 0.25) !important;
+  z-index: 3 !important;
+}
+
+.card-badge--ribbon .card-badge-num {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 12px;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+
+.card-badge--ribbon .card-badge-lbl {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 9px;
+  line-height: 1;
+  letter-spacing: 0.05em;
+  margin-top: 1px;
 }
 
 /* Quick view badge on hover */
@@ -3871,46 +3908,134 @@ body[class*="product"] .story-product-tag,
   .ayova-product-card {
     max-width: 100%;
     border-radius: 14px;
+    overflow: hidden;
   }
 
   .card-image-wrapper {
-    border-radius: 12px;
+    height: 195px !important;
+    margin: 0 !important;
+    border-radius: 14px 14px 0 0 !important;
+    padding: 2px 2px 0 2px !important;
+    background: #EBF1EC !important;
+    position: relative !important;
+    overflow: hidden !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .card-image-wrapper a {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .card-img {
+    max-height: 100% !important;
+    height: 100% !important;
+    width: 100% !important;
+    object-fit: contain !important;
+    padding: 0 !important;
+    margin: 0 auto !important;
+    transform: scale(1.04) !important;
+  }
+
+  /* Default pill badge */
+  .card-badge:not(.card-badge--ribbon) {
+    top: 6px !important;
+    left: 6px !important;
+    font-size: 8.5px !important;
+    padding: 2.5px 7px !important;
+    border-radius: 6px !important;
+  }
+
+  /* Ribbon badge on mobile top-right (primary theme color) */
+  .card-badge--ribbon {
+    top: 0 !important;
+    right: 0 !important;
+    left: auto !important;
+    background: var(--color-forest-primary, #173E34) !important;
+    color: #FFFFFF !important;
+    border-radius: 0 14px 0 14px !important;
+    padding: 6px 9px 7px 9px !important;
+    min-width: 44px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    line-height: 1 !important;
+    text-align: center !important;
+    z-index: 3 !important;
+    box-shadow: 0 2px 6px rgba(23, 62, 52, 0.3) !important;
+  }
+
+  .card-badge--ribbon .card-badge-num {
+    font-family: var(--font-heading), sans-serif !important;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    line-height: 1.05 !important;
+    letter-spacing: -0.02em !important;
+    color: #FFFFFF !important;
+  }
+
+  .card-badge--ribbon .card-badge-lbl {
+    font-family: var(--font-heading), sans-serif !important;
+    font-size: 8.5px !important;
+    font-weight: 700 !important;
+    line-height: 1 !important;
+    letter-spacing: 0.06em !important;
+    color: #FFFFFF !important;
+    margin-top: 1px !important;
+    text-transform: uppercase !important;
   }
 
   .card-info {
-    padding: 8px 8px 10px;
+    padding: 6px 8px 10px !important;
+    gap: 2px !important;
   }
 
   .card-category-tag {
-    font-size: 9px;
-    margin-bottom: 2px;
+    font-size: 8.5px !important;
+    margin-bottom: 1px !important;
+    display: none !important;
   }
 
   .card-rating {
-    margin-bottom: 2px;
-    gap: 3px;
+    margin-bottom: 2px !important;
+    gap: 3px !important;
   }
 
   .card-rating .rating-stars svg {
-    width: 11px;
-    height: 11px;
+    width: 11px !important;
+    height: 11px !important;
   }
 
   .card-rating .rating-count {
-    font-size: 11px;
+    font-size: 11px !important;
   }
 
+  /* Single 1-line title on mobile */
   .card-title {
     font-size: 13px !important;
-    line-height: 1.3 !important;
-    min-height: 2.6em !important;
-    max-height: 2.6em !important;
-    margin-bottom: 3px !important;
+    line-height: 1.25 !important;
+    min-height: auto !important;
+    max-height: none !important;
+    margin-bottom: 2px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    display: block !important;
   }
 
   .card-title a {
     font-size: 13px !important;
-    line-height: 1.3 !important;
+    line-height: 1.25 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    display: block !important;
   }
 
   .card-short-desc {
@@ -3918,29 +4043,30 @@ body[class*="product"] .story-product-tag,
   }
 
   .card-price-row {
-    flex-wrap: wrap;
-    gap: 2px 6px;
-    margin-bottom: 6px;
-    align-items: baseline;
+    flex-wrap: nowrap !important;
+    gap: 4px 6px !important;
+    margin-bottom: 4px !important;
+    align-items: baseline !important;
   }
 
   .price-amount {
-    font-size: 13.5px;
+    font-size: 12px !important;
+    font-weight: 700 !important;
   }
 
   .price-compare {
-    font-size: 11px;
+    font-size: 10px !important;
   }
 
+  /* Hide bottom save badge on mobile — save is already shown on top of image badge */
   .price-save-badge {
-    font-size: 9px;
-    padding: 2px 5px;
-    border-radius: 4px;
+    display: none !important;
   }
 
   .card-pack-pill,
   .card-per-count {
-    font-size: 10px;
+    font-size: 9.5px !important;
+    margin-bottom: 2px !important;
   }
 
   .btn-add-cart {
@@ -4104,6 +4230,178 @@ body[class*="product"] .story-product-tag,
     max-width: calc(100% - 40px);
     padding: 24px 20px;
   }
+
+  /* Testimonial & Review Cards — Compact Small with Equal Min-Height on Mobile */
+  .testimonials-section .ayova-carousel-track,
+  .blog-section .ayova-carousel-track {
+    align-items: stretch !important;
+  }
+
+  .testimonials-section .ayova-carousel-slide,
+  .blog-section .ayova-carousel-slide {
+    display: flex !important;
+    height: auto !important;
+  }
+
+  .testimonial-card {
+    padding: 14px 12px 14px 12px !important;
+    gap: 8px !important;
+    border-radius: 14px !important;
+    height: 100% !important;
+    min-height: 250px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+  }
+
+  .testimonial-card .verified-pill {
+    padding: 3px 8px !important;
+    font-size: 8.5px !important;
+    gap: 3px !important;
+    margin-bottom: 2px !important;
+  }
+
+  .testimonial-card .testimonial-rating-row {
+    gap: 4px !important;
+    margin-bottom: 2px !important;
+  }
+
+  .testimonial-card .testimonial-rating {
+    font-size: 11px !important;
+    letter-spacing: 0.5px !important;
+  }
+
+  .testimonial-card .testimonial-card-rating-num {
+    font-size: 10.5px !important;
+    padding: 1px 5px !important;
+    border-radius: 4px !important;
+  }
+
+  .testimonial-card .testimonial-title {
+    font-size: 12.5px !important;
+    line-height: 1.25 !important;
+    min-height: 2.5em !important;
+    max-height: 2.5em !important;
+    margin: 0 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .testimonial-card .testimonial-quote-wrap {
+    flex: 1 !important;
+    margin-bottom: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+  }
+
+  .testimonial-card .testimonial-quote {
+    font-size: 10.5px !important;
+    line-height: 1.35 !important;
+    margin: 0 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    max-height: calc(1.35em * 2) !important;
+  }
+
+  .testimonial-card .testimonial-read-more {
+    font-size: 10px !important;
+    margin-top: 3px !important;
+    text-decoration: underline !important;
+  }
+
+  .testimonial-card .testimonial-divider {
+    margin: 6px 0 !important;
+  }
+
+  .testimonial-card .testimonial-author {
+    gap: 8px !important;
+    margin-top: auto !important;
+  }
+
+  .testimonial-card .testimonial-avatar,
+  .testimonial-card .author-avatar {
+    width: 28px !important;
+    height: 28px !important;
+    min-width: 28px !important;
+    margin-right: 0 !important;
+  }
+
+  .testimonial-card .author-name {
+    font-size: 10.5px !important;
+    margin: 0 !important;
+    line-height: 1.2 !important;
+  }
+
+  .testimonial-card .author-product {
+    font-size: 9px !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    display: block !important;
+    max-width: 105px !important;
+  }
+
+  /* User Stories / Choosing Ayova Blog Cards — Compact with Equal Min-Height */
+  .story-video-card,
+  .blog-card {
+    height: 100% !important;
+    min-height: 220px !important;
+    border-radius: 14px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+  }
+
+  .story-video-card .blog-content,
+  .blog-card .blog-content {
+    padding: 10px 10px 12px !important;
+    gap: 3px !important;
+    flex: 1 !important;
+  }
+
+  .story-video-card .blog-title,
+  .blog-card .blog-title {
+    font-size: 12px !important;
+    line-height: 1.25 !important;
+    min-height: 2.5em !important;
+    max-height: 2.5em !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+  }
+
+  .story-video-card .story-author-tag,
+  .story-video-card .story-product-tag {
+    font-size: 9.5px !important;
+    margin: 0 !important;
+  }
+}
+
+/* Ensure preloader is completely removed */
+#site-preloader,
+.site-preloader {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+html.preloader-active,
+body.preloader-active {
+  overflow: visible !important;
 }
 
 @media (max-width: 640px) {
@@ -4357,33 +4655,12 @@ body[class*="product"] .story-product-tag,
     position: relative;
     height: auto !important;
     min-height: 70px;
-    padding-bottom: 48px !important;
+    padding-bottom: 0 !important;
   }
 
+  /* Hide header marketplace buttons (Amazon & Flipkart) on mobile responsive */
   .header-marketplace-buttons {
-    position: absolute;
-    bottom: 0;
-    top: auto;
-    left: 0;
-    width: 100%;
-    height: 48px;
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--color-bg-white, #fff);
-    padding: 8px 10px;
-    border-bottom: 1px solid var(--color-border-default, #eee);
-    gap: 8px;
-    margin-right: 0;
-    z-index: 99;
-  }
-
-  .marketplace-btn {
-    font-size: 12px;
-    padding: 4px 10px;
-    flex: 1;
-    max-width: 100px;
+    display: none !important;
   }
 }
 
@@ -6156,27 +6433,29 @@ body[class*="product"] .story-product-tag,
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
-    justify-content: space-between !important;
+    justify-content: center !important;
     text-align: center !important;
     width: 100% !important;
-    max-width: 290px !important;
-    min-height: 330px !important;
+    max-width: 260px !important;
+    min-height: auto !important;
+    height: auto !important;
     box-sizing: border-box !important;
-    border-radius: 18px !important;
-    padding: 22px 18px 20px !important;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06) !important;
+    border-radius: 16px !important;
+    padding: 14px 12px 14px !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05) !important;
     border: 1px solid rgba(23, 62, 52, 0.08) !important;
     background-color: #ffffff;
+    gap: 8px !important;
   }
 
   .shop-wellness-section .card-figma-img-box {
     width: 100% !important;
-    max-width: 190px !important;
-    height: 190px !important;
+    max-width: 150px !important;
+    height: 140px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    margin: 0 auto 12px !important;
+    margin: 0 auto 4px !important;
   }
 
   .shop-wellness-section .card-figma-img {
@@ -6195,17 +6474,17 @@ body[class*="product"] .story-product-tag,
     text-align: center !important;
     width: 100% !important;
     margin: 0 auto !important;
-    gap: 4px !important;
+    gap: 0 !important;
   }
 
   .shop-wellness-section .card-figma-title {
     font-family: var(--font-heading) !important;
-    font-size: 17px !important;
+    font-size: 15px !important;
     font-weight: 700 !important;
     color: var(--color-forest-primary, #173E34) !important;
     margin: 0 !important;
     text-align: center !important;
-    line-height: 1.3 !important;
+    line-height: 1.25 !important;
   }
 
   /* Hide overlay navigation arrows on mobile */
@@ -6237,19 +6516,21 @@ body[class*="product"] .story-product-tag,
   .shop-wellness-section .wellness-goal-card,
   .shop-wellness-section .wellness-pill-card,
   .shop-wellness-section .wellness-card {
-    max-width: 270px !important;
-    min-height: 310px !important;
-    padding: 20px 16px !important;
+    max-width: 220px !important;
+    min-height: auto !important;
+    height: auto !important;
+    padding: 12px 10px !important;
+    gap: 6px !important;
   }
 
   .shop-wellness-section .card-figma-img-box {
-    max-width: 170px !important;
-    height: 170px !important;
-    margin-bottom: 10px !important;
+    max-width: 130px !important;
+    height: 125px !important;
+    margin-bottom: 2px !important;
   }
 
   .shop-wellness-section .card-figma-title {
-    font-size: 16px !important;
+    font-size: 14px !important;
   }
 }
 

@@ -49,7 +49,8 @@ class AyovaCarousel {
     if (target === 1) return 1;
 
     if (width < 640) {
-      return 1;
+      // 2 items per view on mobile screens for product/combo carousels
+      return Math.min(2, target);
     } else if (width < 900) {
       return Math.min(2, target);
     } else if (width < 1200) {
@@ -83,8 +84,10 @@ class AyovaCarousel {
     const availableWidth = this.container.clientWidth - paddingLeft - paddingRight;
     this.itemsPerView = this.calculateItemsPerView();
 
-    // Ensure track gap matches this.gap
-    this.track.style.gap = `${this.gap}px`;
+    // Use a tighter gap on small screens for multi-item (2-per-view) layouts
+    const effectiveGap = (window.innerWidth < 768 && this.itemsPerView > 1) ? Math.min(10, this.gap) : this.gap;
+    this.effectiveGap = effectiveGap;
+    this.track.style.gap = `${effectiveGap}px`;
 
     if (this.itemsPerView === 1) {
       // Single slide view (hero banner): must cover exactly 100% full screen with zero buffer gap
@@ -98,9 +101,9 @@ class AyovaCarousel {
       });
     } else {
       // Calculate width taking gap into account
-      const totalGapsWidth = Math.max(0, (this.itemsPerView - 1) * this.gap);
-      // 6px safety buffer to ensure subpixel rounding, device pixel ratio scaling, and card borders never get clipped by overflow:hidden
-      const slideWidth = Math.max(120, Math.floor((availableWidth - totalGapsWidth - 6) / this.itemsPerView));
+      const totalGapsWidth = Math.max(0, (this.itemsPerView - 1) * effectiveGap);
+      // 4px safety buffer to ensure subpixel rounding and card borders never get clipped by overflow:hidden
+      const slideWidth = Math.max(120, Math.floor((availableWidth - totalGapsWidth - 4) / this.itemsPerView));
 
       this.slides.forEach(slide => {
         slide.style.width = `${slideWidth}px`;
@@ -218,8 +221,9 @@ class AyovaCarousel {
       if (!isDragging) return;
       const currentX = getPositionX(e);
       const diffX = currentX - startX;
+      const gap = this.effectiveGap !== undefined ? this.effectiveGap : this.gap;
       const slideWidth = this.itemsPerView === 1 ? this.container.clientWidth : (parseFloat(this.slides[0].style.width) || 300);
-      const baseMove = -(slideWidth + this.gap) * this.currentIndex;
+      const baseMove = -(slideWidth + gap) * this.currentIndex;
 
       // Rubber-band at edges: 25% resistance when dragging past first/last
       const atStart = this.currentIndex <= 0 && diffX > 0;
@@ -236,8 +240,9 @@ class AyovaCarousel {
       if (!isDragging) return;
       isDragging = false;
       this.track.style.transition = 'transform 0.45s cubic-bezier(0.16, 1, 0.3, 1)';
+      const gap = this.effectiveGap !== undefined ? this.effectiveGap : this.gap;
       const slideWidth = this.itemsPerView === 1 ? this.container.clientWidth : (parseFloat(this.slides[0].style.width) || 300);
-      const baseMove = -(slideWidth + this.gap) * this.currentIndex;
+      const baseMove = -(slideWidth + gap) * this.currentIndex;
       const movedBy = currentTranslate - baseMove;
 
       // Lower threshold (40px) for snappier swipe response on mobile
@@ -296,8 +301,9 @@ class AyovaCarousel {
     // Clamp currentIndex safely
     this.currentIndex = Math.max(0, Math.min(this.currentIndex, this.maxIndex));
 
+    const gap = this.effectiveGap !== undefined ? this.effectiveGap : this.gap;
     const slideWidth = this.itemsPerView === 1 ? this.container.clientWidth : (parseFloat(this.slides[0].style.width) || 300);
-    const moveX = (slideWidth + this.gap) * this.currentIndex;
+    const moveX = (slideWidth + gap) * this.currentIndex;
     // Smooth spring easing — feels native on mobile
     this.track.style.transition = 'transform 0.45s cubic-bezier(0.16, 1, 0.3, 1)';
     this.track.style.transform = `translateX(-${moveX}px)`;
