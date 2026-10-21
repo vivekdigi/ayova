@@ -900,15 +900,22 @@ h6 {
 .mobile-nav {
   display: flex;
   flex-direction: column;
-  padding: 24px var(--container-padding);
+  padding: 10px var(--container-padding);
+}
+
+.mobile-nav ul,
+.mobile-nav li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .mobile-nav-link {
   display: block;
-  padding: 14px 0;
+  padding: 8px 0;
   font-family: var(--font-heading);
   font-weight: 600;
-  font-size: 18px;
+  font-size: 17px;
   color: var(--color-forest-primary);
   border-bottom: 1px solid var(--color-border-default);
   text-decoration: none;
@@ -924,13 +931,14 @@ h6 {
 
 .mobile-nav-child .mobile-nav-link {
   font-weight: 500;
-  font-size: 15px;
+  font-size: 14px;
+  padding: 6px 0;
   color: var(--color-text-body);
 }
 
 /* ── Mobile Menu Best Sellers Carousel ────────────────────────────────────── */
 .mobile-menu-bestsellers {
-  padding: 20px 20px 36px;
+  padding: 14px 20px 28px;
   border-top: 1px solid var(--color-border-default, #E8ECE9);
   background: #FFFFFF;
 }
@@ -4926,15 +4934,14 @@ body[class*="product"] .story-product-tag,
     max-width: fit-content !important;
   }
 
-  /* Dots indicator spacing for all product and wellness carousels on mobile */
+  /* Dots indicator spacing for all product carousels on mobile */
   .bestsellers-section .ayova-carousel-dots,
   .formulations-section .ayova-carousel-dots,
-  .combo-kits-section .ayova-carousel-dots,
-  .shop-wellness-section .ayova-carousel-dots {
+  .combo-kits-section .ayova-carousel-dots {
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
-    margin: 12px auto 0 !important;
+    margin: 14px auto 0 !important;
     gap: 8px !important;
     width: 100% !important;
   }
@@ -7059,12 +7066,12 @@ body.preloader-active {
     display: none !important;
   }
 
-  /* Centered dots */
+  /* Centered dots with generous spacing top and below */
   .shop-wellness-section .ayova-carousel-dots {
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
-    margin: 6px auto 0 !important;
+    margin: 22px auto 24px !important;
     gap: 8px !important;
     width: 100% !important;
   }

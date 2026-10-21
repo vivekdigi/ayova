@@ -139,7 +139,6 @@ class AyovaCarousel {
     if (this.prevBtn) {
       this.prevBtn.addEventListener('click', () => {
         this.prev();
-        this.autoPlayDirection = 1;
         if (this.autoPlay) {
           this.stopAutoPlay();
           clearTimeout(this.resumeTimer);
@@ -151,9 +150,6 @@ class AyovaCarousel {
     if (this.nextBtn) {
       this.nextBtn.addEventListener('click', () => {
         this.next();
-        if (this.currentIndex >= this.maxIndex) {
-          this.autoPlayDirection = -1;
-        }
         if (this.autoPlay) {
           this.stopAutoPlay();
           clearTimeout(this.resumeTimer);
@@ -247,9 +243,9 @@ class AyovaCarousel {
 
       // Lower threshold (40px) for snappier swipe response on mobile
       if (movedBy < -40) {
-        this.next(); // next() is now infinite — wraps to first after last
+        this.next(); // wraps to first after last
       } else if (movedBy > 40) {
-        this.prev(); // prev() is now infinite — wraps to last before first
+        this.prev(); // wraps to last before first
       } else {
         this.update();
       }
@@ -276,21 +272,23 @@ class AyovaCarousel {
   }
 
   prev() {
+    const step = (window.innerWidth < 768 && this.itemsPerView === 2) ? 2 : 1;
     if (this.currentIndex <= 0) {
       // First slide → wrap to last (infinite loop)
       this.currentIndex = this.maxIndex;
     } else {
-      this.currentIndex--;
+      this.currentIndex = Math.max(0, this.currentIndex - step);
     }
     this.update();
   }
 
   next() {
+    const step = (window.innerWidth < 768 && this.itemsPerView === 2) ? 2 : 1;
     if (this.currentIndex >= this.maxIndex) {
       // Last slide → wrap to first (infinite loop)
       this.currentIndex = 0;
     } else {
-      this.currentIndex++;
+      this.currentIndex = Math.min(this.currentIndex + step, this.maxIndex);
     }
     this.update();
   }
@@ -333,37 +331,18 @@ class AyovaCarousel {
 
   startAutoPlay() {
     this.stopAutoPlay();
-    if (this.autoPlayDirection === undefined) {
-      this.autoPlayDirection = 1;
-    }
 
     this.timer = setInterval(() => {
       if (this.maxIndex <= 0) return;
 
-      if (this.itemsPerView === 1) {
-        // Single slide banners loop
-        if (this.currentIndex < this.maxIndex) {
-          this.next();
-        } else {
-          this.goTo(0);
-        }
+      const step = (window.innerWidth < 768 && this.itemsPerView === 2) ? 2 : 1;
+
+      if (this.currentIndex < this.maxIndex) {
+        const nextIndex = Math.min(this.currentIndex + step, this.maxIndex);
+        this.goTo(nextIndex);
       } else {
-        // Multi-slide carousels: ping-pong left to right, then right to left
-        if (this.autoPlayDirection === 1) {
-          if (this.currentIndex < this.maxIndex) {
-            this.next();
-          } else {
-            this.autoPlayDirection = -1;
-            this.prev();
-          }
-        } else {
-          if (this.currentIndex > 0) {
-            this.prev();
-          } else {
-            this.autoPlayDirection = 1;
-            this.next();
-          }
-        }
+        // After last moved/finished, slider restarts back from start (index 0)
+        this.goTo(0);
       }
     }, this.autoPlayInterval);
   }

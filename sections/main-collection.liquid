@@ -109,7 +109,8 @@
             {% endfor %}
           </div>
 
-          <!-- Tags Filter (Custom Form Implementation) -->
+          {% comment %}
+          Tags and In-stock (Availability) filters hidden as requested — only Price Range and Categories will show.
           {% if collection.all_tags.size > 0 %}
             <div class="filter-group">
               <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -146,6 +147,7 @@
               </div>
             {% endif %}
           {% endfor %}
+          {% endcomment %}
           </form>
         </div>
 
