@@ -1020,30 +1020,37 @@ h6 {
   align-items: center;
 }
 
-/* Hero CTA — Figma: 148x48px, #285044, Inter SemiBold 16px, border-radius 11px */
-.btn-hero {
+/* Hero CTA & Explore All Products Button — Compact sleek pill size */
+.btn-hero,
+.marquee-cta-wrapper .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 9px;
-  width: 200px;
-  height: 48px;
-  background-color: var(--color-forest-mid);
-  color: var(--color-bg-white);
-  font-family: var(--font-accent);
+  gap: 7px;
+  width: auto;
+  max-width: fit-content;
+  height: auto;
+  min-height: 38px;
+  padding: 8px 22px;
+  background-color: var(--color-forest-primary, #173E34);
+  color: var(--color-bg-white, #FFFFFF);
+  font-family: var(--font-accent, sans-serif);
   font-weight: 600;
-  font-size: 16px;
-  border-radius: var(--radius-btn);
+  font-size: 13.5px;
+  border-radius: var(--radius-pill, 999px);
   border: none;
   cursor: pointer;
-  box-shadow: var(--shadow-cta);
-  transition: all var(--transition-fast);
+  box-shadow: 0 3px 10px rgba(23, 62, 52, 0.2);
+  transition: all var(--transition-fast, 0.2s ease);
   text-decoration: none;
+  line-height: 1.2;
 }
 
-.btn-hero:hover {
-  background-color: var(--color-forest-primary);
+.btn-hero:hover,
+.marquee-cta-wrapper .btn:hover {
+  background-color: var(--color-forest-dark, #0E2920);
   transform: translateY(-1px);
+  box-shadow: 0 5px 14px rgba(23, 62, 52, 0.28);
 }
 
 /* Hero Product Stage — Figma: right side 741x594px */
@@ -2219,6 +2226,39 @@ h6 {
   display: flex;
   gap: 16px;
   flex-wrap: wrap;
+}
+
+/* Doctor Consultation CTA — Compact sleek pill size */
+.btn-doctor,
+.doctor-actions .btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 7px !important;
+  width: auto !important;
+  max-width: fit-content !important;
+  height: auto !important;
+  min-height: 38px !important;
+  padding: 8px 22px !important;
+  background-color: var(--color-forest-primary, #173E34) !important;
+  color: var(--color-bg-white, #FFFFFF) !important;
+  font-family: var(--font-accent, sans-serif) !important;
+  font-weight: 600 !important;
+  font-size: 13.5px !important;
+  border-radius: var(--radius-pill, 999px) !important;
+  border: none !important;
+  cursor: pointer !important;
+  box-shadow: 0 3px 10px rgba(23, 62, 52, 0.2) !important;
+  transition: all var(--transition-fast, 0.2s ease) !important;
+  text-decoration: none !important;
+  line-height: 1.2 !important;
+}
+
+.btn-doctor:hover,
+.doctor-actions .btn:hover {
+  background-color: var(--color-forest-dark, #0E2920) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 5px 14px rgba(23, 62, 52, 0.28) !important;
 }
 
 /* ── MARQUEE STRIP ────────────────────────────────────────────────────────── */
@@ -4342,52 +4382,131 @@ body[class*="product"] .story-product-tag,
   }
 
   .testimonial-card .author-product {
-    font-size: 9px !important;
+    font-size: 8.5px !important;
     line-height: 1.2 !important;
+    color: #6B7280 !important;
     white-space: nowrap !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
     display: block !important;
-    max-width: 105px !important;
+    max-width: 100% !important;
+    width: 100% !important;
   }
 
-  /* User Stories / Choosing Ayova Blog Cards — Compact with Equal Min-Height */
+  /* User Stories / Choosing Ayova Blog Cards — Compact, Zero Bottom Dead Space */
+  .blog-section {
+    padding-top: 16px !important;
+    padding-bottom: 16px !important;
+  }
+
+  .blog-section .wellness-header-centered {
+    margin-bottom: 12px !important;
+  }
+
+  .blog-section .wellness-header-centered .section-title {
+    margin-bottom: 4px !important;
+  }
+
+  .blog-section .wellness-header-centered .section-subtitle {
+    margin-bottom: 0 !important;
+  }
+
+  .blog-section .ayova-carousel-wrapper {
+    padding: 4px 0 8px !important;
+    margin-bottom: 0 !important;
+  }
+
+  .blog-section .ayova-carousel-track {
+    align-items: flex-start !important;
+  }
+
+  .blog-section .ayova-carousel-slide {
+    display: block !important;
+    height: auto !important;
+  }
+
   .story-video-card,
   .blog-card {
-    height: 100% !important;
-    min-height: 220px !important;
+    height: auto !important;
+    min-height: auto !important;
     border-radius: 14px !important;
     display: flex !important;
     flex-direction: column !important;
-    justify-content: space-between !important;
+    justify-content: flex-start !important;
     box-sizing: border-box !important;
     width: 100% !important;
+    overflow: hidden !important;
+    padding-bottom: 0 !important;
+  }
+
+  .blog-section .blog-image-wrapper {
+    width: 100% !important;
+    aspect-ratio: 16 / 10 !important;
+    height: auto !important;
+    max-height: 110px !important;
   }
 
   .story-video-card .blog-content,
   .blog-card .blog-content {
-    padding: 10px 10px 12px !important;
-    gap: 3px !important;
-    flex: 1 !important;
+    padding: 8px 10px 10px !important;
+    gap: 2px !important;
+    flex: 0 0 auto !important;
+    box-sizing: border-box !important;
   }
 
   .story-video-card .blog-title,
   .blog-card .blog-title {
     font-size: 12px !important;
     line-height: 1.25 !important;
-    min-height: 2.5em !important;
-    max-height: 2.5em !important;
-    margin: 0 !important;
+    min-height: auto !important;
+    max-height: none !important;
+    margin: 0 0 2px !important;
     overflow: hidden !important;
     display: -webkit-box !important;
     -webkit-line-clamp: 2 !important;
     -webkit-box-orient: vertical !important;
   }
 
-  .story-video-card .story-author-tag,
-  .story-video-card .story-product-tag {
+  .story-video-card .story-author-tag {
     font-size: 9.5px !important;
+    margin: 0 0 2px !important;
+    line-height: 1.2 !important;
+  }
+
+  .story-video-card .story-product-tag {
+    font-size: 9px !important;
     margin: 0 !important;
+    line-height: 1.2 !important;
+  }
+
+  .blog-section .ayova-carousel-dots {
+    margin-top: 8px !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* Compact button sizes on mobile */
+  .btn-hero,
+  .marquee-cta-wrapper .btn,
+  .btn-doctor,
+  .doctor-actions .btn {
+    padding: 7px 18px !important;
+    font-size: 12.5px !important;
+    min-height: 35px !important;
+    width: auto !important;
+    max-width: fit-content !important;
+  }
+
+  /* Dots indicator spacing for all product and wellness carousels on mobile */
+  .bestsellers-section .ayova-carousel-dots,
+  .formulations-section .ayova-carousel-dots,
+  .combo-kits-section .ayova-carousel-dots,
+  .shop-wellness-section .ayova-carousel-dots {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    margin: 12px auto 0 !important;
+    gap: 8px !important;
+    width: 100% !important;
   }
 }
 
@@ -6344,9 +6463,9 @@ body.preloader-active {
 /* ── SHOP BY WELLNESS — MOBILE RESPONSIVE CENTERING (With & Without Auto Scroll) ── */
 @media (max-width: 768px) {
 
-  /* Section & Container centering */
+  /* Section & Container centering — Zero excess padding */
   .shop-wellness-section {
-    padding: 24px 0 !important;
+    padding: 14px 0 0 0 !important;
   }
 
   .shop-wellness-section>.container,
@@ -6365,7 +6484,7 @@ body.preloader-active {
   .shop-wellness-section .wellness-header-row {
     text-align: center !important;
     width: 100% !important;
-    margin: 0 auto 20px !important;
+    margin: 0 auto 10px !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
@@ -6373,12 +6492,16 @@ body.preloader-active {
   }
 
   .shop-wellness-section .wellness-header-centered .section-title,
-  .shop-wellness-section .wellness-header-row .section-title,
+  .shop-wellness-section .wellness-header-row .section-title {
+    margin-bottom: 4px !important;
+  }
+
   .shop-wellness-section .wellness-header-centered .section-subtitle,
   .shop-wellness-section .wellness-header-row .section-subtitle {
     text-align: center !important;
     margin-left: auto !important;
     margin-right: auto !important;
+    margin-bottom: 0 !important;
   }
 
   /* Carousel Outer & Wrapper */
@@ -6397,9 +6520,23 @@ body.preloader-active {
     width: 100% !important;
     max-width: 100% !important;
     margin: 0 auto !important;
-    padding: 10px 0 16px !important;
+    padding: 4px 0 6px !important;
     overflow: hidden !important;
     box-sizing: border-box !important;
+  }
+
+  /* Marquee CTA right below Shop by Wellness Goal */
+  .ayova-marquee-section {
+    padding: 0 0 18px 0 !important;
+  }
+
+  .ayova-marquee-section .marquee-wrapper {
+    display: none !important;
+  }
+
+  .ayova-marquee-section .marquee-cta-wrapper {
+    margin-top: 6px !important;
+    margin-bottom: 0 !important;
   }
 
   /* Carousel Track: perfectly aligned and centered */
@@ -6497,7 +6634,7 @@ body.preloader-active {
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
-    margin: 14px auto 0 !important;
+    margin: 6px auto 0 !important;
     gap: 8px !important;
     width: 100% !important;
   }
