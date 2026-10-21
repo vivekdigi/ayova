@@ -66,11 +66,18 @@
                 <div class="testimonial-divider"></div>
                 <div class="testimonial-author">
                   {% if block.settings.image != blank %}
-                    <img src="{{ block.settings.image | image_url: width: 80 }}" class="testimonial-avatar" alt="{{ block.settings.name | escape }}" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; margin-right: 12px; margin-bottom: 0;">
+                    <img src="{{ block.settings.image | image_url: width: 80 }}" class="testimonial-avatar" alt="{{ block.settings.name | escape }}" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; margin-right: 10px; margin-bottom: 0; flex-shrink: 0;">
                   {% endif %}
-                  <div>
+                  <div style="min-width: 0; flex: 1; overflow: hidden;">
                     <h4 class="author-name">{{ block.settings.name | default: "PRIYA" | upcase }}</h4>
-                    <span class="author-product">Verified Buyer - {{ block.settings.product | default: "Milk Thistle" }}</span>
+                    {% assign prod_str = block.settings.product | default: "Verified Buyer" | strip %}
+                    {% if prod_str == "Verified Buyer" or prod_str == blank %}
+                      <span class="author-product">Verified Buyer</span>
+                    {% elsif prod_str contains "Verified Buyer" %}
+                      <span class="author-product">{{ prod_str }}</span>
+                    {% else %}
+                      <span class="author-product">Verified Buyer - {{ prod_str }}</span>
+                    {% endif %}
                   </div>
                 </div>
               </div>
