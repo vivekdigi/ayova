@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ayova Collection Mobile Filter & Popup Test</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/theme.css">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: #F8FAF9;
+      font-family: 'Montserrat', sans-serif;
+      color: #173E34;
+    }
+
+    .container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Device Preview Switcher at top for testing */
+    .test-controls-bar {
+      background: #173E34;
+      color: #fff;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      position: sticky;
+      top: 0;
+      z-index: 999999;
+    }
+
+    .test-btn {
+      background: #285044;
+      color: #fff;
+      border: 1px solid #437163;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-family: inherit;
+    }
+
+    .test-btn.active {
+      background: #D96C3F;
+      border-color: #D96C3F;
+    }
+
+    /* Outer Wrapper for testing mobile frame vs desktop */
+    #viewport-container {
+      transition: width 0.3s ease;
+      margin: 0 auto;
+    }
+
+    #viewport-container.mobile-mode {
+      max-width: 390px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+      background: #ffffff;
+      min-height: 100vh;
+      border-left: 1px solid #DCE4DD;
+      border-right: 1px solid #DCE4DD;
+    }
+
+    /* Collection Page CSS */
+    .section-padding.collection-page {
+      padding: 30px 0 60px;
+    }
+
+    .collection-banner {
+      background: linear-gradient(135deg, #EDF2E3 0%, #FFFCF9 100%);
+      padding: 36px 32px;
+      border-radius: 16px;
+      margin-bottom: 28px;
+      border: 1px solid #DCE4DD;
+    }
+
+    .badge-category {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: #285044;
+      background: #EAF1EC;
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+    }
+
+    .collection-title {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 2.1rem;
+      color: #173E34;
+      margin: 4px 0 10px;
+      letter-spacing: -0.02em;
+    }
+
+    .collection-desc {
+      color: #606B65;
+      max-width: 700px;
+      font-size: 0.98rem;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .collection-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 36px;
+      align-items: start;
+    }
+
+    /* Desktop Sidebar Filters */
+    .collection-filters {
+      background: #FFFFFF;
+      padding: 24px 20px;
+      border-radius: 16px;
+      border: 1.5px solid #D5DDD8;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    }
+
+    .filter-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid #E8ECE9;
+    }
+
+    .filter-heading {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #173E34;
+      margin: 0;
+    }
+
+    .clear-filters-btn {
+      background: none;
+      border: none;
+      color: #D96C3F;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .clear-filters-btn:hover {
+      text-decoration: underline;
+    }
+
+    .filter-group {
+      margin-bottom: 24px;
+    }
+
+    .filter-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin: 0 0 12px 0;
+      color: #1F2924;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .filter-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.88rem;
+      color: #4A5B53;
+      margin-bottom: 10px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .filter-label:hover {
+      color: #173E34;
+    }
+
+    .filter-input-chk {
+      accent-color: #285044;
+      width: 17px;
+      height: 17px;
+      cursor: pointer;
+    }
+
+    /* Price Slider Track & Handle */
+    .price-slider-container {
+      position: relative;
+      width: 100%;
+      height: 28px;
+      margin: 10px 0 18px;
+      display: flex;
+      align-items: center;
+    }
+
+    .price-slider-track {
+      position: absolute;
+      width: 100%;
+      height: 6px;
+      background-color: #E2E8E5;
+      border-radius: 999px;
+      pointer-events: none;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      overflow: hidden;
+    }
+
+    .price-slider-progress {
+      position: absolute;
+      height: 100%;
+      background: linear-gradient(90deg, #173E34 0%, #285044 100%);
+      border-radius: 999px;
+      left: 0;
+      right: 0;
+    }
+
+    .price-range-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      position: absolute;
+      pointer-events: none;
+      background: transparent;
+      top: 50%;
+      transform: translateY(-50%);
+      margin: 0;
+      height: 28px;
+      outline: none;
+    }
+
+    .price-range-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      pointer-events: all;
+      width: 18px;
+      height: 18px;
+      background: #173E34;
+      border-radius: 50%;
+      cursor: grab;
+      border: 3px solid #ffffff;
+      box-shadow: 0 2px 6px rgba(23, 62, 52, 0.35);
+      position: relative;
+      z-index: 5;
+    }
+
+    .price-range-slider::-moz-range-thumb {
+      pointer-events: all;
+      width: 18px;
+      height: 18px;
+      background: #173E34;
+      border-radius: 50%;
+      cursor: grab;
+      border: 3px solid #ffffff;
+      box-shadow: 0 2px 6px rgba(23, 62, 52, 0.35);
+      position: relative;
+      z-index: 5;
+    }
+
+    .price-range-slider.min-slider { z-index: 3; }
+    .price-range-slider.max-slider { z-index: 2; }
+    .price-range-slider:active { z-index: 6 !important; }
+
+    .price-corners-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 6px 0 10px;
+    }
+
+    .price-corner-pill {
+      background: #173E34;
+      color: #FFFFFF;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 6px;
+      box-shadow: 0 2px 5px rgba(23, 62, 52, 0.2);
+    }
+
+    /* Desktop Toolbar */
+    .collection-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      background: #FFFFFF;
+      padding: 14px 20px;
+      border-radius: 12px;
+      border: 1px solid #DCE4DD;
+    }
+
+    .product-count {
+      font-size: 0.9rem;
+      color: #606B65;
+    }
+
+    .sort-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.85rem;
+      color: #606B65;
+    }
+
+    .sort-select {
+      padding: 8px 14px;
+      border: 1px solid #DCE4DD;
+      border-radius: 8px;
+      background: #FFFFFF;
+      color: #173E34;
+      font-weight: 600;
+      font-family: inherit;
+    }
+
+    /* Products Grid */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .test-product-card {
+      background: #FFFFFF;
+      border: 1px solid #DCE4DD;
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .test-product-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(20, 36, 28, 0.08);
+    }
+
+    .test-product-img {
+      height: 180px;
+      background: #EEF3EF;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #59665E;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .test-product-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #1F2924;
+      margin: 0 0 6px;
+    }
+
+    .test-product-price {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #173E34;
+      margin-bottom: 12px;
+    }
+
+    .test-add-btn {
+      margin-top: auto;
+      background: #173E34;
+      color: #fff;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    /* ==========================================================================
+       MOBILE RESPONSIVE FILTER & POPUP MODAL STYLES (MATCHING USER IMAGE)
+       ========================================================================== */
+
+    /* Mobile Toolbar (Hidden on Desktop by default) */
+    .mobile-filter-toolbar {
+      display: none;
+    }
+
+    /* Mobile Popup Specific Elements (Hidden on Desktop) */
+    .mobile-filter-backdrop,
+    .mobile-filter-modal-header,
+    .mobile-filter-modal-footer,
+    .mobile-sort-filter-group {
+      display: none;
+    }
+
+    /* Responsive Mode: When viewport <= 900px OR when parent has .mobile-mode */
+    @media (max-width: 900px) {
+      .collection-layout {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+
+      .collection-banner {
+        padding: 22px 18px;
+        margin-bottom: 18px;
+      }
+
+      .collection-title {
+        font-size: 1.55rem;
+      }
+
+      .collection-desc {
+        font-size: 0.88rem;
+      }
+
+      .collection-toolbar {
+        display: none !important;
+      }
+
+      .desktop-filter-header {
+        display: none !important;
+      }
+
+      /* Mobile Filter & Sort Toolbar — Exactly matching the user's image */
+      .mobile-filter-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 4px 14px;
+        margin-bottom: 18px;
+        border-bottom: 1px solid #E8ECE9;
+        background: transparent;
+      }
+
+      .mobile-filter-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        background: transparent;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        outline: none;
+        color: #173E34;
+        font-family: inherit;
+        text-align: left;
+        user-select: none;
+      }
+
+      .mobile-filter-icon {
+        width: 20px;
+        height: 20px;
+        display: block;
+        flex-shrink: 0;
+        color: #173E34;
+      }
+
+      .mobile-filter-text {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #173E34;
+        letter-spacing: -0.01em;
+      }
+
+      .mobile-filter-count-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 19px;
+        height: 19px;
+        padding: 0 5px;
+        border-radius: 999px;
+        background: #D96C3F;
+        color: #FFFFFF;
+        font-size: 0.72rem;
+        font-weight: 700;
+        line-height: 1;
+        margin-left: 3px;
+      }
+
+      .mobile-product-count {
+        font-size: 0.88rem;
+        color: #7A857F;
+        font-weight: 500;
+      }
+
+      /* Mobile Products Grid (2 columns on mobile) */
+      .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+
+      .test-product-card {
+        padding: 12px;
+        border-radius: 12px;
+      }
+
+      .test-product-img {
+        height: 130px;
+        margin-bottom: 8px;
+        font-size: 0.78rem;
+      }
+
+      .test-product-title {
+        font-size: 0.85rem;
+        line-height: 1.3;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        min-height: 2.6em;
+        max-height: 2.6em;
+      }
+
+      .test-product-price {
+        font-size: 0.92rem;
+        margin-bottom: 8px;
+      }
+
+      .test-add-btn {
+        padding: 8px;
+        font-size: 0.78rem;
+      }
+
+      /* ======================================================================
+         POPUP MODAL / DRAWER FOR FILTERS ON MOBILE
+         ====================================================================== */
+      
+      .mobile-filter-backdrop {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(18, 37, 30, 0.48);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        z-index: 99998;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+      }
+
+      .mobile-filter-backdrop.is-open {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+      }
+
+      .collection-filters {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        max-width: 100vw;
+        height: 88vh;
+        max-height: 88vh;
+        background: #FFFFFF;
+        border-radius: 22px 22px 0 0;
+        border: none;
+        box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.22);
+        z-index: 99999;
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        transform: translateY(105%);
+        transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.32s;
+        visibility: hidden;
+        pointer-events: none;
+        overflow: hidden;
+      }
+
+      .collection-filters.is-open {
+        transform: translateY(0);
+        visibility: visible;
+        pointer-events: auto;
+      }
+
+      /* Top drag pill handle */
+      .mobile-filter-drag-handle {
+        width: 38px;
+        height: 4px;
+        background: #DCE4DD;
+        border-radius: 999px;
+        margin: 10px auto 4px auto;
+        flex-shrink: 0;
+      }
+
+      /* Modal Header */
+      .mobile-filter-modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 20px 14px 20px;
+        border-bottom: 1px solid #E8ECE9;
+        flex-shrink: 0;
+      }
+
+      .mobile-filter-modal-title-wrap {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+      }
+
+      .mobile-filter-modal-title {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: #173E34;
+        margin: 0;
+      }
+
+      .mobile-filter-modal-count {
+        font-size: 0.82rem;
+        color: #7A857F;
+        font-weight: 500;
+      }
+
+      .mobile-filter-close-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #F4F6F4;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #173E34;
+        cursor: pointer;
+        padding: 0;
+        transition: background 0.2s ease, transform 0.15s ease;
+      }
+
+      .mobile-filter-close-btn:hover,
+      .mobile-filter-close-btn:active {
+        background: #E5ECE7;
+        transform: scale(0.95);
+      }
+
+      /* Scrollable Body */
+      .collection-filters-scroll-body {
+        flex: 1;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 20px 20px 14px 20px;
+      }
+
+      /* Mobile Sort By dropdown hidden on mobile */
+      .mobile-sort-filter-group {
+        display: none !important;
+      }
+
+      .mobile-sort-select-wrapper {
+        position: relative;
+        width: 100%;
+        margin-top: 8px;
+      }
+
+      .mobile-sort-select {
+        width: 100%;
+        appearance: none;
+        -webkit-appearance: none;
+        padding: 12px 38px 12px 14px;
+        border: 1.5px solid #D5DDD8;
+        border-radius: 10px;
+        background: #FAFCFA;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #173E34;
+        outline: none;
+        cursor: pointer;
+      }
+
+      .mobile-sort-select:focus {
+        border-color: #285044;
+      }
+
+      .mobile-sort-select-wrapper .select-chevron {
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        color: #285044;
+      }
+
+      /* Modal Sticky Footer */
+      .mobile-filter-modal-footer {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        padding: 14px 20px;
+        border-top: 1px solid #E8ECE9;
+        background: #FFFFFF;
+        box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.05);
+        flex-shrink: 0;
+      }
+
+      .mobile-filter-clear-all {
+        flex: 1;
+        padding: 13px 16px;
+        border: 1.5px solid #D5DDD8;
+        border-radius: 10px;
+        background: #FFFFFF;
+        color: #173E34;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;
+        font-size: 0.88rem;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        transition: all 0.2s ease;
+      }
+
+      .mobile-filter-clear-all:active {
+        background: #F4F6F4;
+      }
+
+      .mobile-filter-apply-btn {
+        flex: 1.6;
+        padding: 13px 18px;
+        border: none;
+        border-radius: 10px;
+        background: #173E34;
+        color: #FFFFFF;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 0.92rem;
+        cursor: pointer;
+        text-align: center;
+        box-shadow: 0 4px 12px rgba(23, 62, 52, 0.25);
+        transition: all 0.2s ease;
+      }
+
+      .mobile-filter-apply-btn:active {
+        background: #285044;
+      }
+    }
+
+    /* Also apply when #viewport-container has .mobile-mode in test harness */
+    #viewport-container.mobile-mode .collection-layout { grid-template-columns: 1fr; gap: 0; }
+    #viewport-container.mobile-mode .collection-banner { padding: 22px 18px; margin-bottom: 18px; }
+    #viewport-container.mobile-mode .collection-title { font-size: 1.55rem; }
+    #viewport-container.mobile-mode .collection-desc { font-size: 0.88rem; }
+    #viewport-container.mobile-mode .collection-toolbar { display: none !important; }
+    #viewport-container.mobile-mode .desktop-filter-header { display: none !important; }
+    #viewport-container.mobile-mode .mobile-filter-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 4px 14px;
+      margin-bottom: 18px;
+      border-bottom: 1px solid #E8ECE9;
+      background: transparent;
+    }
+    #viewport-container.mobile-mode .mobile-filter-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      background: transparent;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      outline: none;
+      color: #173E34;
+      font-family: inherit;
+      text-align: left;
+    }
+    #viewport-container.mobile-mode .mobile-filter-icon { width: 20px; height: 20px; display: block; flex-shrink: 0; color: #173E34; }
+    #viewport-container.mobile-mode .mobile-filter-text {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #173E34;
+      letter-spacing: -0.01em;
+    }
+    #viewport-container.mobile-mode .mobile-filter-count-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 19px;
+      height: 19px;
+      padding: 0 5px;
+      border-radius: 999px;
+      background: #D96C3F;
+      color: #FFFFFF;
+      font-size: 0.72rem;
+      font-weight: 700;
+      line-height: 1;
+      margin-left: 3px;
+    }
+    #viewport-container.mobile-mode .mobile-product-count { font-size: 0.88rem; color: #7A857F; font-weight: 500; }
+    #viewport-container.mobile-mode .products-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    #viewport-container.mobile-mode .test-product-card { padding: 12px; border-radius: 12px; }
+    #viewport-container.mobile-mode .test-product-img { height: 130px; margin-bottom: 8px; font-size: 0.78rem; }
+    #viewport-container.mobile-mode .test-product-title { font-size: 0.85rem; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; min-height: 2.6em; max-height: 2.6em; }
+    #viewport-container.mobile-mode .test-product-price { font-size: 0.92rem; margin-bottom: 8px; }
+    #viewport-container.mobile-mode .test-add-btn { padding: 8px; font-size: 0.78rem; }
+    
+    #viewport-container.mobile-mode .mobile-filter-backdrop {
+      display: block;
+      position: fixed;
+      inset: 0;
+      background: rgba(18, 37, 30, 0.48);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 99998;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    #viewport-container.mobile-mode .mobile-filter-backdrop.is-open { opacity: 1; visibility: visible; pointer-events: auto; }
+    #viewport-container.mobile-mode .collection-filters {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      max-width: 100vw;
+      height: 88vh;
+      max-height: 88vh;
+      background: #FFFFFF;
+      border-radius: 22px 22px 0 0;
+      border: none;
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.22);
+      z-index: 99999;
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      transform: translateY(105%);
+      transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.32s;
+      visibility: hidden;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    #viewport-container.mobile-mode .collection-filters.is-open { transform: translateY(0); visibility: visible; pointer-events: auto; }
+    #viewport-container.mobile-mode .mobile-filter-drag-handle { width: 38px; height: 4px; background: #DCE4DD; border-radius: 999px; margin: 10px auto 4px auto; flex-shrink: 0; }
+    #viewport-container.mobile-mode .mobile-filter-modal-header { display: flex; justify-content: space-between; align-items: center; padding: 8px 20px 14px 20px; border-bottom: 1px solid #E8ECE9; flex-shrink: 0; }
+    #viewport-container.mobile-mode .mobile-filter-modal-title-wrap { display: flex; align-items: baseline; gap: 8px; }
+    #viewport-container.mobile-mode .mobile-filter-modal-title { font-family: 'Montserrat', sans-serif; font-size: 1.15rem; font-weight: 700; color: #173E34; margin: 0; }
+    #viewport-container.mobile-mode .mobile-filter-modal-count { font-size: 0.82rem; color: #7A857F; font-weight: 500; }
+    #viewport-container.mobile-mode .mobile-filter-close-btn { width: 36px; height: 36px; border-radius: 50%; background: #F4F6F4; border: none; display: inline-flex; align-items: center; justify-content: center; color: #173E34; cursor: pointer; padding: 0; }
+    #viewport-container.mobile-mode .collection-filters-scroll-body { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 20px 20px 14px 20px; }
+    #viewport-container.mobile-mode .mobile-sort-filter-group { display: none !important; }
+    #viewport-container.mobile-mode .mobile-sort-select-wrapper { position: relative; width: 100%; margin-top: 8px; }
+    #viewport-container.mobile-mode .mobile-sort-select { width: 100%; appearance: none; -webkit-appearance: none; padding: 12px 38px 12px 14px; border: 1.5px solid #D5DDD8; border-radius: 10px; background: #FAFCFA; font-family: 'Montserrat', sans-serif; font-size: 0.9rem; font-weight: 600; color: #173E34; outline: none; cursor: pointer; }
+    #viewport-container.mobile-mode .mobile-sort-select-wrapper .select-chevron { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); pointer-events: none; color: #285044; }
+    #viewport-container.mobile-mode .mobile-filter-modal-footer { display: flex; gap: 12px; align-items: center; padding: 14px 20px; border-top: 1px solid #E8ECE9; background: #FFFFFF; box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.05); flex-shrink: 0; }
+    #viewport-container.mobile-mode .mobile-filter-clear-all { flex: 1; padding: 13px 16px; border: 1.5px solid #D5DDD8; border-radius: 10px; background: #FFFFFF; color: #173E34; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 0.88rem; cursor: pointer; text-align: center; text-decoration: none; }
+    #viewport-container.mobile-mode .mobile-filter-apply-btn { flex: 1.6; padding: 13px 18px; border: none; border-radius: 10px; background: #173E34; color: #FFFFFF; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.92rem; cursor: pointer; text-align: center; box-shadow: 0 4px 12px rgba(23, 62, 52, 0.25); }
+
+    /* Lock body scroll when modal is open */
+    body.filter-modal-open {
+      overflow: hidden !important;
+      touch-action: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Test Bar for Dev Inspection -->
+  <div class="test-controls-bar">
+    <span>Ayova Collection Filter Test</span>
+    <div style="display: flex; gap: 8px;">
+      <button class="test-btn" id="btnDesktop" onclick="setMode('desktop')">Desktop View</button>
+      <button class="test-btn active" id="btnMobile" onclick="setMode('mobile')">Mobile Frame (390px)</button>
+    </div>
+  </div>
+
+  <div id="viewport-container" class="mobile-mode">
+    <div class="section-padding collection-page">
+      <div class="container">
+        
+        <!-- Collection Banner Header -->
+        <div class="collection-banner">
+          <span class="badge-category">AYUSH & ISO CERTIFIED FORMULATIONS</span>
+          <h1 class="collection-title">All Ayurvedic Products</h1>
+          <p class="collection-desc">Explore doctor-backed Ayurvedic supplements formulated for daily wellness, liver care, PCOS management, and immunity.</p>
+        </div>
+
+        <!-- Collection Layout: Filter Sidebar + Product Grid -->
+        <div class="collection-layout">
+          
+          <!-- Mobile Backdrop Overlay -->
+          <div class="mobile-filter-backdrop" id="MobileFilterBackdrop"></div>
+
+          <!-- Filters (Sidebar on Desktop, Popup Drawer/Modal on Mobile) -->
+          <aside class="collection-filters" id="CollectionFiltersAside">
+            <!-- Top Drag Handle (Mobile only) -->
+            <div class="mobile-filter-drag-handle"></div>
+
+            <!-- Mobile Popup Header -->
+            <div class="mobile-filter-modal-header">
+              <div class="mobile-filter-modal-title-wrap">
+                <h3 class="mobile-filter-modal-title">Filter and sort</h3>
+                <span class="mobile-filter-modal-count" id="ModalHeaderCount">12 products</span>
+              </div>
+              <button type="button" class="mobile-filter-close-btn" id="MobileFilterCloseBtn" aria-label="Close filters">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+
+            <div class="collection-filters-scroll-body">
+              <form class="filter-form" id="CollectionFiltersForm">
+                <!-- Desktop Header -->
+                <div class="filter-header desktop-filter-header">
+                  <h3 class="filter-heading">Filters</h3>
+                  <a href="#clear" class="clear-filters-btn" id="DesktopClearBtn">Clear All</a>
+                </div>
+
+                <!-- Mobile Sort By Dropdown (Inside popup on mobile) -->
+                <div class="filter-group mobile-sort-filter-group">
+                  <h4 class="filter-title">Sort by</h4>
+                  <div class="mobile-sort-select-wrapper">
+                    <select class="mobile-sort-select" id="mobile-sort-select" name="sort_by">
+                      <option value="manual">Featured</option>
+                      <option value="best-selling" selected>Best selling</option>
+                      <option value="title-ascending">Alphabetically, A-Z</option>
+                      <option value="title-descending">Alphabetically, Z-A</option>
+                      <option value="price-ascending">Price, low to high</option>
+                      <option value="price-descending">Price, high to low</option>
+                      <option value="created-descending">Date, new to old</option>
+                    </select>
+                    <svg class="select-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </div>
+                </div>
+
+                <!-- Price Filter (Dual Slider) -->
+                <div class="filter-group">
+                  <h4 class="filter-title" style="margin-bottom: 6px;">Price</h4>
+                  <div class="price-corners-row">
+                    <span class="price-corner-pill">Rs. <span id="priceMinDisplay">0</span></span>
+                    <span class="price-corner-pill">Rs. <span id="priceMaxDisplay">1200</span></span>
+                  </div>
+
+                  <div class="price-slider-container">
+                    <div class="price-slider-track">
+                      <div class="price-slider-progress" id="priceSliderProgress" style="left: 0%; right: 0%;"></div>
+                    </div>
+                    <input type="range" class="price-range-slider min-slider" min="0" max="1200" value="0" step="1" aria-label="Minimum price">
+                    <input type="range" class="price-range-slider max-slider" min="0" max="1200" value="1200" step="1" aria-label="Maximum price">
+                  </div>
+                </div>
+
+                <!-- Categories -->
+                <div class="filter-group">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px;">
+                    <h4 class="filter-title" style="margin-bottom: 0;">Categories</h4>
+                  </div>
+                  <label class="filter-label">
+                    <input type="checkbox" class="filter-input-chk custom-cat-link" value="daily-wellness">
+                    Daily Wellness (6)
+                  </label>
+                  <label class="filter-label">
+                    <input type="checkbox" class="filter-input-chk custom-cat-link" value="liver-care">
+                    Liver Care & Detox (3)
+                  </label>
+                  <label class="filter-label">
+                    <input type="checkbox" class="filter-input-chk custom-cat-link" value="pcos-care">
+                    PCOS & Hormonal Care (2)
+                  </label>
+                  <label class="filter-label">
+                    <input type="checkbox" class="filter-input-chk custom-cat-link" value="sleep-stress">
+                    Sleep & Stress Relief (4)
+                  </label>
+                  <label class="filter-label">
+                    <input type="checkbox" class="filter-input-chk custom-cat-link" value="hair-skin">
+                    Skin & Hair Nourishment (3)
+                  </label>
+                </div>
+
+                <!-- Wellness Goals Tags -->
+                <div class="filter-group">
+                  <h4 class="filter-title">Wellness Goals</h4>
+                  <label class="filter-label">
+                    <input type="checkbox" class="filter-input-chk custom-tag-checkbox" value="gut-health">
+                    Gut Health & Digestion (5)
+                  </label>
+                  <label class="filter-label">
+                    <input type="checkbox" class="filter-input-chk custom-tag-checkbox" value="energy-boost">
+                    Energy & Stamina (4)
+                  </label>
+                  <label class="filter-label">
+                    <input type="checkbox" class="filter-input-chk custom-tag-checkbox" value="immunity">
+                    Immunity Shield (6)
+                  </label>
+                </div>
+
+              </form>
+            </div>
+
+            <!-- Mobile Popup Sticky Footer -->
+            <div class="mobile-filter-modal-footer">
+              <button type="button" class="mobile-filter-clear-all" id="MobileFilterClearBtn">Clear all</button>
+              <button type="button" class="mobile-filter-apply-btn" id="MobileFilterApplyBtn">
+                Apply (12)
+              </button>
+            </div>
+          </aside>
+
+          <!-- Main Product Grid & Controls -->
+          <main class="collection-products" id="ProductGridContainer">
+            
+            <!-- Mobile Filter & Sort Toolbar (Matches user reference image) -->
+            <div class="mobile-filter-toolbar">
+              <button type="button" class="mobile-filter-btn" id="MobileFilterOpenBtn" aria-label="Open filter and sort popup">
+                <!-- Two sliders icon matching reference image -->
+                <svg class="mobile-filter-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M2.5 6.5H17.5" stroke="#173E34" stroke-width="1.6" stroke-linecap="round"/>
+                  <circle cx="6.5" cy="6.5" r="2.5" fill="#FFFFFF" stroke="#173E34" stroke-width="1.6"/>
+                  <path d="M2.5 13.5H17.5" stroke="#173E34" stroke-width="1.6" stroke-linecap="round"/>
+                  <circle cx="13.5" cy="13.5" r="2.5" fill="#FFFFFF" stroke="#173E34" stroke-width="1.6"/>
+                </svg>
+                <span class="mobile-filter-text">Filter and sort</span>
+                <span class="mobile-filter-count-badge" id="FilterCountBadge" style="display:none;">0</span>
+              </button>
+              <span class="mobile-product-count" id="MobileProductCount">12 products</span>
+            </div>
+
+            <!-- Desktop Toolbar -->
+            <div class="collection-toolbar">
+              <span class="product-count">Showing <strong>12</strong> Products</span>
+              <div class="sort-box">
+                <label for="sort-select">Sort by:</label>
+                <select id="sort-select" class="sort-select" name="sort_by">
+                  <option value="manual">Featured</option>
+                  <option value="best-selling" selected>Best selling</option>
+                  <option value="title-ascending">Alphabetically, A-Z</option>
+                  <option value="title-descending">Alphabetically, Z-A</option>
+                  <option value="price-ascending">Price, low to high</option>
+                  <option value="price-descending">Price, high to low</option>
+                  <option value="created-descending">Date, new to old</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Product Grid -->
+            <div class="products-grid" id="ProductsGrid">
+              <div class="test-product-card">
+                <div class="test-product-img">Daily Multivitamin</div>
+                <h3 class="test-product-title">Ayova Multi-Herb Men</h3>
+                <div class="test-product-price">Rs. 499</div>
+                <button class="test-add-btn">Add to Cart</button>
+              </div>
+              <div class="test-product-card">
+                <div class="test-product-img">Liver Detox Capsule</div>
+                <h3 class="test-product-title">Yakrit Care Formula</h3>
+                <div class="test-product-price">Rs. 699</div>
+                <button class="test-add-btn">Add to Cart</button>
+              </div>
+              <div class="test-product-card">
+                <div class="test-product-img">Himalayan Shilajit</div>
+                <h3 class="test-product-title">Pure Himalayan Resin</h3>
+                <div class="test-product-price">Rs. 899</div>
+                <button class="test-add-btn">Add to Cart</button>
+              </div>
+              <div class="test-product-card">
+                <div class="test-product-img">PCOS Balance Tea</div>
+                <h3 class="test-product-title">OvaPure Hormonal Care</h3>
+                <div class="test-product-price">Rs. 549</div>
+                <button class="test-add-btn">Add to Cart</button>
+              </div>
+              <div class="test-product-card">
+                <div class="test-product-img">Ashwagandha Gold</div>
+                <h3 class="test-product-title">KSM-66 Stress & Sleep</h3>
+                <div class="test-product-price">Rs. 599</div>
+                <button class="test-add-btn">Add to Cart</button>
+              </div>
+              <div class="test-product-card">
+                <div class="test-product-img">Triphala Pure Extract</div>
+                <h3 class="test-product-title">Gut Cleanse & Digestion</h3>
+                <div class="test-product-price">Rs. 399</div>
+                <button class="test-add-btn">Add to Cart</button>
+              </div>
+            </div>
+
+          </main>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Testing mode switcher
+    function setMode(mode) {
+      const container = document.getElementById('viewport-container');
+      const btnD = document.getElementById('btnDesktop');
+      const btnM = document.getElementById('btnMobile');
+      if (mode === 'mobile') {
+        container.classList.add('mobile-mode');
+        btnM.classList.add('active');
+        btnD.classList.remove('active');
+      } else {
+        container.classList.remove('mobile-mode');
+        btnD.classList.add('active');
+        btnM.classList.remove('active');
+        closeFilterModal();
+      }
+    }
+
+    // Modal open / close handlers
+    const aside = document.getElementById('CollectionFiltersAside');
+    const backdrop = document.getElementById('MobileFilterBackdrop');
+    const openBtn = document.getElementById('MobileFilterOpenBtn');
+    const closeBtn = document.getElementById('MobileFilterCloseBtn');
+    const applyBtn = document.getElementById('MobileFilterApplyBtn');
+    const clearBtn = document.getElementById('MobileFilterClearBtn');
+    const filterForm = document.getElementById('CollectionFiltersForm');
+    const badge = document.getElementById('FilterCountBadge');
+
+    function openFilterModal() {
+      if (aside) aside.classList.add('is-open');
+      if (backdrop) backdrop.classList.add('is-open');
+      document.body.classList.add('filter-modal-open');
+    }
+
+    function closeFilterModal() {
+      if (aside) aside.classList.remove('is-open');
+      if (backdrop) backdrop.classList.remove('is-open');
+      document.body.classList.remove('filter-modal-open');
+    }
+
+    if (openBtn) openBtn.addEventListener('click', openFilterModal);
+    if (closeBtn) closeBtn.addEventListener('click', closeFilterModal);
+    if (backdrop) backdrop.addEventListener('click', closeFilterModal);
+    if (applyBtn) applyBtn.addEventListener('click', closeFilterModal);
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeFilterModal();
+    });
+
+    // Update active filter badge & count
+    function updateActiveFilterBadge() {
+      let activeCount = 0;
+      const checkedBoxes = filterForm.querySelectorAll('input[type="checkbox"]:checked');
+      activeCount += checkedBoxes.length;
+
+      const minS = document.querySelector('.min-slider');
+      const maxS = document.querySelector('.max-slider');
+      if (minS && maxS) {
+        if (parseInt(minS.value) > 0 || parseInt(maxS.value) < parseInt(maxS.max)) {
+          activeCount += 1;
+        }
+      }
+
+      if (badge) {
+        if (activeCount > 0) {
+          badge.textContent = activeCount;
+          badge.style.display = 'inline-flex';
+        } else {
+          badge.style.display = 'none';
+        }
+      }
+
+      // Simulated count calculation for testing
+      const totalCount = Math.max(2, 12 - (activeCount * 2));
+      const countStr = totalCount + ' products';
+      document.getElementById('MobileProductCount').textContent = countStr;
+      document.getElementById('ModalHeaderCount').textContent = countStr;
+      document.getElementById('MobileFilterApplyBtn').textContent = 'Apply (' + totalCount + ')';
+    }
+
+    filterForm.addEventListener('change', updateActiveFilterBadge);
+
+    // Clear filters
+    if (clearBtn) {
+      clearBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        filterForm.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+        const minS = document.querySelector('.min-slider');
+        const maxS = document.querySelector('.max-slider');
+        if (minS && maxS) {
+          minS.value = 0;
+          maxS.value = maxS.max;
+          updateSliderTrack();
+        }
+        updateActiveFilterBadge();
+      });
+    }
+
+    // Sync Desktop & Mobile Sort selects
+    const desktopSort = document.getElementById('sort-select');
+    const mobileSort = document.getElementById('mobile-sort-select');
+    if (desktopSort && mobileSort) {
+      desktopSort.addEventListener('change', function() {
+        mobileSort.value = this.value;
+      });
+      mobileSort.addEventListener('change', function() {
+        desktopSort.value = this.value;
+      });
+    }
+
+    // Slider logic
+    function updateSliderTrack() {
+      const minSlider = document.querySelector('.min-slider');
+      const maxSlider = document.querySelector('.max-slider');
+      const progress = document.getElementById('priceSliderProgress');
+      const minDisplay = document.getElementById('priceMinDisplay');
+      const maxDisplay = document.getElementById('priceMaxDisplay');
+
+      if (!minSlider || !maxSlider) return;
+
+      let minVal = parseInt(minSlider.value) || 0;
+      let maxVal = parseInt(maxSlider.value) || parseInt(maxSlider.max);
+      const max = parseInt(minSlider.max) || 1200;
+
+      if (minVal > maxVal) {
+        minVal = maxVal;
+        minSlider.value = minVal;
+      }
+
+      if (minDisplay) minDisplay.textContent = minVal;
+      if (maxDisplay) maxDisplay.textContent = maxVal;
+
+      const percentMin = Math.min(100, Math.max(0, (minVal / max) * 100));
+      const percentMax = Math.min(100, Math.max(0, (maxVal / max) * 100));
+
+      if (progress) {
+        progress.style.left = percentMin + '%';
+        progress.style.right = (100 - percentMax) + '%';
+      }
+    }
+
+    filterForm.addEventListener('input', function(e) {
+      if (e.target.classList.contains('price-range-slider')) {
+        updateSliderTrack();
+        updateActiveFilterBadge();
+      }
+    });
+
+    updateSliderTrack();
+  </script>
+</body>
+</html>

@@ -541,13 +541,17 @@
     position: relative;
     width: 100%;
     overflow: hidden;
+    /* Allow vertical page scroll while swiping horizontally */
+    touch-action: pan-y;
   }
 
   .ayova-banner-track {
     display: flex;
     width: 100%;
-    transition: transform 0.55s cubic-bezier(0.25, 1, 0.5, 1);
+    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
     will-change: transform;
+    /* Smooth momentum on iOS */
+    -webkit-overflow-scrolling: touch;
   }
 
   .ayova-banner-slider-container .ayova-banner-slide {
@@ -957,25 +961,57 @@
       // Touch / Swipe Gesture Support
       let touchStartX = 0;
       let touchEndX = 0;
+      let touchStartTime = 0;
 
       container.addEventListener('touchstart', function(e) {
-        touchStartX = e.changedTouches[0].screenX;
+        touchStartX = e.changedTouches[0].clientX;
+        touchStartTime = Date.now();
+        // Disable transition for live drag feedback
+        if (track) track.style.transition = 'none';
+      }, { passive: true });
+
+      container.addEventListener('touchmove', function(e) {
+        if (!track) return;
+        const diffX = e.changedTouches[0].clientX - touchStartX;
+        const baseTranslate = -(currentIndex * 100);
+        const dragPercent = (diffX / container.offsetWidth) * 100;
+        let newPos = baseTranslate + dragPercent;
+
+        // At edges: allow rubber-band overscroll (1/4 resistance) so user
+        // feels the loop is about to happen — no hard wall
+        const atStart = currentIndex === 0 && diffX > 0;
+        const atEnd   = currentIndex === total - 1 && diffX < 0;
+        if (atStart || atEnd) {
+          // Rubber-band: only move 25% of actual finger distance
+          newPos = baseTranslate + (dragPercent * 0.25);
+        }
+
+        track.style.transform = 'translateX(' + newPos + '%)';
       }, { passive: true });
 
       container.addEventListener('touchend', function(e) {
-        touchEndX = e.changedTouches[0].screenX;
+        touchEndX = e.changedTouches[0].clientX;
+        // Restore smooth transition
+        if (track) track.style.transition = 'transform 0.45s cubic-bezier(0.16, 1, 0.3, 1)';
         handleSwipe();
       }, { passive: true });
 
       function handleSwipe() {
         const diff = touchEndX - touchStartX;
-        if (Math.abs(diff) > 40) {
+        const elapsed = Date.now() - touchStartTime;
+        // Trigger on 40px drag OR fast flick (< 250ms)
+        if (Math.abs(diff) > 40 || (Math.abs(diff) > 15 && elapsed < 250)) {
           if (diff < 0) {
+            // Swiped left → next (wraps last → first)
             nextSlide();
           } else {
+            // Swiped right → prev (wraps first → last)
             prevSlide();
           }
           resetAutoplay();
+        } else {
+          // Snap back to current slide if threshold not met
+          updateSlide(currentIndex);
         }
       }
 

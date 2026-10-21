@@ -50,36 +50,45 @@
     }
     .ayova-marketplace-bar {
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 8px;
       width: 100%;
+      gap: 3px;
       margin-top: 6px;
-      padding: 2px 0;
+      padding: 0;
       box-sizing: border-box;
     }
     .ayova-marketplace-label {
       font-family: 'Inter', sans-serif;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
-      color: #55625B;
+      color: #496357;
+      text-align: center;
+      margin: 0 0 2px 0;
+      line-height: 1.2;
       white-space: nowrap;
-      letter-spacing: 0.01em;
     }
     .ayova-marketplace-links {
-      display: inline-flex;
+      display: flex;
       align-items: center;
-      gap: 8px;
+      justify-content: center;
+      width: 100%;
+      gap: 5px;
+      box-sizing: border-box;
     }
     .ayova-marketplace-btn {
+      flex: 1 1 0;
+      min-width: 0;
+      width: 100%;
+      height: 28px;
+      padding: 2px 4px;
+      border-radius: 6px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      height: 32px;
-      padding: 4px 10px;
       background: #FFFFFF;
       border: 1px solid #D6DED9;
-      border-radius: 8px;
       text-decoration: none;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
       transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
@@ -108,9 +117,10 @@
       box-shadow: 0 3px 8px rgba(40, 116, 240, 0.18);
     }
     .ayova-mkt-logo {
-      height: 16px;
+      height: 13px;
       width: auto;
-      max-width: 72px;
+      max-width: 82%;
+      max-height: 13px;
       object-fit: contain;
       display: block;
     }

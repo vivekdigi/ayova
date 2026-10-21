@@ -62,6 +62,10 @@ class AyovaCarousel {
 
   init() {
     this.track.style.gap = `${this.gap}px`;
+    // GPU acceleration & mobile scroll hints
+    this.track.style.willChange = 'transform';
+    this.track.style.webkitOverflowScrolling = 'touch';
+    this.container.style.touchAction = 'pan-y';
     this.updateSlideWidths();
     this.createDots();
     this.bindEvents();
@@ -216,22 +220,31 @@ class AyovaCarousel {
       const diffX = currentX - startX;
       const slideWidth = this.itemsPerView === 1 ? this.container.clientWidth : (parseFloat(this.slides[0].style.width) || 300);
       const baseMove = -(slideWidth + this.gap) * this.currentIndex;
-      currentTranslate = baseMove + diffX;
+
+      // Rubber-band at edges: 25% resistance when dragging past first/last
+      const atStart = this.currentIndex <= 0 && diffX > 0;
+      const atEnd   = this.currentIndex >= this.maxIndex && diffX < 0;
+      if (atStart || atEnd) {
+        currentTranslate = baseMove + (diffX * 0.25);
+      } else {
+        currentTranslate = baseMove + diffX;
+      }
       this.track.style.transform = `translateX(${currentTranslate}px)`;
     };
 
     const touchEnd = () => {
       if (!isDragging) return;
       isDragging = false;
-      this.track.style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
+      this.track.style.transition = 'transform 0.45s cubic-bezier(0.16, 1, 0.3, 1)';
       const slideWidth = this.itemsPerView === 1 ? this.container.clientWidth : (parseFloat(this.slides[0].style.width) || 300);
       const baseMove = -(slideWidth + this.gap) * this.currentIndex;
       const movedBy = currentTranslate - baseMove;
 
-      if (movedBy < -50) {
-        this.next();
-      } else if (movedBy > 50) {
-        this.prev();
+      // Lower threshold (40px) for snappier swipe response on mobile
+      if (movedBy < -40) {
+        this.next(); // next() is now infinite — wraps to first after last
+      } else if (movedBy > 40) {
+        this.prev(); // prev() is now infinite — wraps to last before first
       } else {
         this.update();
       }
@@ -258,17 +271,23 @@ class AyovaCarousel {
   }
 
   prev() {
-    if (this.currentIndex > 0) {
+    if (this.currentIndex <= 0) {
+      // First slide → wrap to last (infinite loop)
+      this.currentIndex = this.maxIndex;
+    } else {
       this.currentIndex--;
-      this.update();
     }
+    this.update();
   }
 
   next() {
-    if (this.currentIndex < this.maxIndex) {
+    if (this.currentIndex >= this.maxIndex) {
+      // Last slide → wrap to first (infinite loop)
+      this.currentIndex = 0;
+    } else {
       this.currentIndex++;
-      this.update();
     }
+    this.update();
   }
 
   update() {
@@ -279,23 +298,22 @@ class AyovaCarousel {
 
     const slideWidth = this.itemsPerView === 1 ? this.container.clientWidth : (parseFloat(this.slides[0].style.width) || 300);
     const moveX = (slideWidth + this.gap) * this.currentIndex;
-    this.track.style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
+    // Smooth spring easing — feels native on mobile
+    this.track.style.transition = 'transform 0.45s cubic-bezier(0.16, 1, 0.3, 1)';
     this.track.style.transform = `translateX(-${moveX}px)`;
 
-    // Update Buttons
-    const atStart = this.currentIndex <= 0;
-    const atEnd = this.currentIndex >= this.maxIndex;
+    // Update Buttons — infinite loop: buttons always active (never disabled)
     const noScroll = this.maxIndex <= 0;
 
     if (this.prevBtn) {
-      this.prevBtn.disabled = atStart || noScroll;
-      this.prevBtn.style.opacity = (atStart || noScroll) ? '0.35' : '1';
-      this.prevBtn.style.pointerEvents = (atStart || noScroll) ? 'none' : 'auto';
+      this.prevBtn.disabled = noScroll;
+      this.prevBtn.style.opacity = noScroll ? '0.35' : '1';
+      this.prevBtn.style.pointerEvents = noScroll ? 'none' : 'auto';
     }
     if (this.nextBtn) {
-      this.nextBtn.disabled = atEnd || noScroll;
-      this.nextBtn.style.opacity = (atEnd || noScroll) ? '0.35' : '1';
-      this.nextBtn.style.pointerEvents = (atEnd || noScroll) ? 'none' : 'auto';
+      this.nextBtn.disabled = noScroll;
+      this.nextBtn.style.opacity = noScroll ? '0.35' : '1';
+      this.nextBtn.style.pointerEvents = noScroll ? 'none' : 'auto';
     }
 
     // Update Dots

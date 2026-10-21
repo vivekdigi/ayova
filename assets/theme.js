@@ -3,7 +3,7 @@
  * Mobile menu, search overlay, cart AJAX, FAQ accordion, sticky header, product gallery
  */
 
-(function() {
+(function () {
   'use strict';
 
   /* ── Mobile Menu ──────────────────────────────────────────────── */
@@ -33,7 +33,7 @@
     if (close) close.addEventListener('click', closeMenu);
     if (overlay) overlay.addEventListener('click', closeMenu);
 
-    document.addEventListener('keydown', function(e) {
+    document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && drawer.classList.contains('active')) {
         closeMenu();
       }
@@ -57,7 +57,7 @@
     function openSearch() {
       overlay.classList.add('active');
       document.body.style.overflow = 'hidden';
-      if (searchInput) setTimeout(function() { searchInput.focus(); }, 120);
+      if (searchInput) setTimeout(function () { searchInput.focus(); }, 120);
     }
 
     function closeSearch() {
@@ -71,16 +71,16 @@
 
     toggleBtn.addEventListener('click', openSearch);
 
-    closeBtns.forEach(function(btn) {
+    closeBtns.forEach(function (btn) {
       btn.addEventListener('click', closeSearch);
     });
 
     // Close on backdrop click (clicking the dark overlay itself, not the panel)
-    overlay.addEventListener('click', function(e) {
+    overlay.addEventListener('click', function (e) {
       if (e.target === overlay) closeSearch();
     });
 
-    document.addEventListener('keydown', function(e) {
+    document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && overlay.classList.contains('active')) {
         closeSearch();
       }
@@ -88,7 +88,7 @@
 
     // Clear button
     if (clearBtn && searchInput) {
-      clearBtn.addEventListener('click', function() {
+      clearBtn.addEventListener('click', function () {
         searchInput.value = '';
         clearBtn.classList.remove('visible');
         if (liveResults) liveResults.style.display = 'none';
@@ -99,7 +99,7 @@
 
     // Live search
     if (searchInput) {
-      searchInput.addEventListener('input', function() {
+      searchInput.addEventListener('input', function () {
         var q = this.value.trim();
         if (clearBtn) clearBtn.classList.toggle('visible', q.length > 0);
 
@@ -113,24 +113,24 @@
 
         var apiQuery = q.split(/\s+/).join(' AND ');
 
-        searchDebounce = setTimeout(function() {
+        searchDebounce = setTimeout(function () {
           fetch('/search/suggest.json?q=' + encodeURIComponent(apiQuery) + '&resources[type]=product&resources[limit]=8&resources[options][fields]=title,variants.title')
-            .then(function(res) { return res.json(); })
-            .then(function(data) {
+            .then(function (res) { return res.json(); })
+            .then(function (data) {
               var products = data.resources && data.resources.results && data.resources.results.products || [];
               if (products.length > 0) {
-                var html = products.map(function(p) {
+                var html = products.map(function (p) {
                   var img = p.featured_image && p.featured_image.url ? '<img src="' + p.featured_image.url + '" alt="' + (p.title || '') + '" loading="lazy">' : '';
                   return '<a href="' + p.url + '" class="search-pop-card">' +
                     '<div class="search-pop-img">' + img + '</div>' +
                     '<div class="search-pop-info">' +
-                      '<span class="search-pop-cat">' + (p.product_type || 'PRODUCT') + '</span>' +
-                      '<span class="search-pop-name">' + p.title + '</span>' +
-                      '<span class="search-pop-price">' + (p.price ? Number(p.price).toLocaleString('en-IN', {style:'currency', currency:'INR', maximumFractionDigits:0}) : '') + '</span>' +
-                      '<div class="search-pop-stars">★★★★★</div>' +
+                    '<span class="search-pop-cat">' + (p.product_type || 'PRODUCT') + '</span>' +
+                    '<span class="search-pop-name">' + p.title + '</span>' +
+                    '<span class="search-pop-price">' + (p.price ? Number(p.price).toLocaleString('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }) : '') + '</span>' +
+                    '<div class="search-pop-stars">★★★★★</div>' +
                     '</div>' +
                     '<span class="search-pop-btn">VIEW PRODUCT →</span>' +
-                  '</a>';
+                    '</a>';
                 }).join('');
                 if (resultsGrid) resultsGrid.innerHTML = html;
                 if (liveResults) liveResults.style.display = 'block';
@@ -141,7 +141,7 @@
                 if (popularSection) popularSection.style.display = 'none';
               }
             })
-            .catch(function() {});
+            .catch(function () { });
         }, 300);
       });
     }
@@ -149,7 +149,7 @@
 
   /* ── Cart AJAX ────────────────────────────────────────────────── */
   function initCartAjax() {
-    document.addEventListener('submit', function(e) {
+    document.addEventListener('submit', function (e) {
       if (e.defaultPrevented) return;
       var form = e.target;
       if (form.action && form.action.includes('/cart/add')) {
@@ -157,44 +157,44 @@
         e.preventDefault();
         form._submitting = true;
         var formData = new FormData(form);
-        
+
         fetch('/cart/add.js', {
           method: 'POST',
           body: formData
         })
-        .then(function(res) { return res.json(); })
-        .then(function(data) {
-          form._submitting = false;
-          updateCartCount();
-          var btn = form.querySelector('button[type="submit"]');
-          if (btn) {
-            var original = btn.textContent;
-            btn.textContent = '✓ Added!';
-            btn.style.backgroundColor = '#2F5D50';
-            setTimeout(function() {
-              btn.textContent = original;
-              btn.style.backgroundColor = '';
-            }, 1500);
-          }
-        })
-        .catch(function(err) {
-          form._submitting = false;
-          console.error('Cart error:', err);
-        });
+          .then(function (res) { return res.json(); })
+          .then(function (data) {
+            form._submitting = false;
+            updateCartCount();
+            var btn = form.querySelector('button[type="submit"]');
+            if (btn) {
+              var original = btn.textContent;
+              btn.textContent = '✓ Added!';
+              btn.style.backgroundColor = '#2F5D50';
+              setTimeout(function () {
+                btn.textContent = original;
+                btn.style.backgroundColor = '';
+              }, 1500);
+            }
+          })
+          .catch(function (err) {
+            form._submitting = false;
+            console.error('Cart error:', err);
+          });
       }
     });
   }
 
   function updateCartCount() {
     fetch('/cart.js')
-      .then(function(res) { return res.json(); })
-      .then(function(cart) {
+      .then(function (res) { return res.json(); })
+      .then(function (cart) {
         var badges = document.querySelectorAll('[data-cart-count]');
-        badges.forEach(function(badge) {
+        badges.forEach(function (badge) {
           badge.textContent = cart.item_count;
         });
       })
-      .catch(function() {});
+      .catch(function () { });
   }
   window.updateCartCount = updateCartCount;
 
@@ -204,13 +204,13 @@
     var mainImg = document.getElementById('mainProductImg');
     if (!mainImg || thumbs.length === 0) return;
 
-    thumbs.forEach(function(thumb) {
-      thumb.addEventListener('click', function() {
+    thumbs.forEach(function (thumb) {
+      thumb.addEventListener('click', function () {
         // Get full-size URL from data attribute or src
         var fullSrc = this.dataset.full || this.src;
         mainImg.src = fullSrc;
         // Update active state
-        thumbs.forEach(function(t) { t.classList.remove('active'); });
+        thumbs.forEach(function (t) { t.classList.remove('active'); });
         this.classList.add('active');
       });
     });
@@ -218,10 +218,10 @@
 
   /* ── Product Variant Selector ─────────────────────────────────── */
   function initVariantSelector() {
-    document.querySelectorAll('.variant-btn').forEach(function(btn) {
-      btn.addEventListener('click', function() {
+    document.querySelectorAll('.variant-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
         var siblings = this.parentElement.querySelectorAll('.variant-btn');
-        siblings.forEach(function(s) { s.classList.remove('active'); });
+        siblings.forEach(function (s) { s.classList.remove('active'); });
         this.classList.add('active');
 
         // Update hidden variant ID if data-variant-id is present
@@ -239,20 +239,20 @@
 
   /* ── Quantity Selector ────────────────────────────────────────── */
   function initQuantitySelector() {
-    document.querySelectorAll('.quantity-selector').forEach(function(selector) {
+    document.querySelectorAll('.quantity-selector').forEach(function (selector) {
       var minus = selector.querySelector('[data-qty-minus]');
       var plus = selector.querySelector('[data-qty-plus]');
       var input = selector.querySelector('input');
 
       if (!minus || !plus || !input) return;
 
-      minus.addEventListener('click', function() {
+      minus.addEventListener('click', function () {
         var val = parseInt(input.value) || 1;
         if (val > 1) input.value = val - 1;
         input.dispatchEvent(new Event('change'));
       });
 
-      plus.addEventListener('click', function() {
+      plus.addEventListener('click', function () {
         var val = parseInt(input.value) || 1;
         input.value = val + 1;
         input.dispatchEvent(new Event('change'));
@@ -262,16 +262,16 @@
 
   /* ── FAQ Accordion ────────────────────────────────────────────── */
   function initFaqAccordion() {
-    document.querySelectorAll('.faq-question').forEach(function(btn) {
-      btn.addEventListener('click', function() {
+    document.querySelectorAll('.faq-question').forEach(function (btn) {
+      btn.addEventListener('click', function () {
         var item = this.closest('.faq-item');
         var isOpen = item.classList.contains('active');
-        
+
         // Close all
-        document.querySelectorAll('.faq-item').forEach(function(i) {
+        document.querySelectorAll('.faq-item').forEach(function (i) {
           i.classList.remove('active');
         });
-        
+
         // Toggle current
         if (!isOpen) {
           item.classList.add('active');
@@ -282,15 +282,15 @@
 
   /* ── Product Tabs ─────────────────────────────────────────────── */
   function initProductTabs() {
-    document.querySelectorAll('.tab-btn').forEach(function(btn) {
-      btn.addEventListener('click', function() {
+    document.querySelectorAll('.tab-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
         var tabId = this.dataset.tab;
         var container = this.closest('.product-tabs');
         if (!container) return;
 
         // Deactivate all
-        container.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
-        container.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
+        container.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.remove('active'); });
+        container.querySelectorAll('.tab-content').forEach(function (c) { c.classList.remove('active'); });
 
         // Activate selected
         this.classList.add('active');
@@ -336,19 +336,19 @@
 
   /* ── Cart Page Quantity Updates ────────────────────────────────── */
   function initCartQuantity() {
-    document.querySelectorAll('[data-cart-qty-change]').forEach(function(btn) {
-      btn.addEventListener('click', function() {
+    document.querySelectorAll('[data-cart-qty-change]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
         var line = this.dataset.line;
         var qty = parseInt(this.dataset.qty) || 0;
-        
+
         fetch('/cart/change.js', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ line: parseInt(line), quantity: qty })
         })
-        .then(function(res) { return res.json(); })
-        .then(function() { location.reload(); })
-        .catch(function(err) { console.error(err); });
+          .then(function (res) { return res.json(); })
+          .then(function () { location.reload(); })
+          .catch(function (err) { console.error(err); });
       });
     });
   }
@@ -378,7 +378,7 @@
     var elements = document.querySelectorAll(revealSelectors.join(', '));
     if (!elements.length) return;
 
-    elements.forEach(function(el) {
+    elements.forEach(function (el) {
       if (!el.classList.contains('ayova-reveal')) {
         el.classList.add('ayova-reveal');
 
@@ -391,7 +391,7 @@
         // Stagger within parent track / row
         var parent = el.parentElement;
         if (parent) {
-          var siblings = Array.prototype.filter.call(parent.children, function(child) {
+          var siblings = Array.prototype.filter.call(parent.children, function (child) {
             return child.matches && child.matches(revealSelectors.join(', '));
           });
           if (siblings.length > 1) {
@@ -404,8 +404,8 @@
       }
     });
 
-    var observer = new IntersectionObserver(function(entries, obs) {
-      entries.forEach(function(entry) {
+    var observer = new IntersectionObserver(function (entries, obs) {
+      entries.forEach(function (entry) {
         if (entry.isIntersecting) {
           entry.target.classList.add('is-revealed');
           obs.unobserve(entry.target);
@@ -417,10 +417,10 @@
       threshold: 0.08
     });
 
-    elements.forEach(function(el) {
+    elements.forEach(function (el) {
       var rect = el.getBoundingClientRect();
       if (rect.top < window.innerHeight && rect.bottom > 0) {
-        setTimeout(function() {
+        setTimeout(function () {
           el.classList.add('is-revealed');
         }, 50);
       } else {
@@ -429,10 +429,10 @@
     });
 
     // When carousel enters viewport, ensure all child slides ripple in
-    var carouselObserver = new IntersectionObserver(function(entries, obs) {
-      entries.forEach(function(entry) {
+    var carouselObserver = new IntersectionObserver(function (entries, obs) {
+      entries.forEach(function (entry) {
         if (entry.isIntersecting) {
-          entry.target.querySelectorAll('.ayova-reveal').forEach(function(slide) {
+          entry.target.querySelectorAll('.ayova-reveal').forEach(function (slide) {
             slide.classList.add('is-revealed');
           });
           obs.unobserve(entry.target);
@@ -444,7 +444,7 @@
       threshold: 0.05
     });
 
-    document.querySelectorAll('.ayova-carousel-outer, .ws-slider-wrapper, .shop-circles-grid').forEach(function(trackWrap) {
+    document.querySelectorAll('.ayova-carousel-outer, .ws-slider-wrapper, .shop-circles-grid').forEach(function (trackWrap) {
       carouselObserver.observe(trackWrap);
     });
   }
@@ -454,7 +454,7 @@
     if (window._testimonialToggleInit) return;
     window._testimonialToggleInit = true;
 
-    document.addEventListener('click', function(e) {
+    document.addEventListener('click', function (e) {
       var readMoreBtn = e.target.closest('.testimonial-read-more');
       var quoteWrap = e.target.closest('.testimonial-quote-wrap');
 

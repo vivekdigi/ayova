@@ -86,6 +86,67 @@
       text-align: center !important;
       transform: translateY(1px) !important;
     }
+    /* Product Card Marketplace Buttons (Buy now on top, Amazon & Flipkart below) */
+    .ayova-marketplace-bar--card {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: 100% !important;
+      gap: 3px !important;
+      margin-top: 6px !important;
+      padding: 0 !important;
+      box-sizing: border-box !important;
+    }
+    .ayova-marketplace-bar--card .ayova-marketplace-label {
+      display: block !important;
+      font-size: 11px !important;
+      font-weight: 600 !important;
+      color: #496357 !important;
+      text-align: center !important;
+      margin: 0 0 2px 0 !important;
+      line-height: 1.2 !important;
+      white-space: nowrap !important;
+    }
+    .ayova-marketplace-bar--card .ayova-marketplace-links {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: 100% !important;
+      gap: 5px !important;
+      box-sizing: border-box !important;
+    }
+    .ayova-marketplace-bar--card .ayova-marketplace-btn {
+      flex: 1 1 0 !important;
+      min-width: 0 !important;
+      width: 100% !important;
+      height: 27px !important;
+      padding: 2px 4px !important;
+      border-radius: 6px !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      box-sizing: border-box !important;
+      text-decoration: none !important;
+      background: #FFFFFF !important;
+      border: 1px solid #D6DED9 !important;
+    }
+    .ayova-marketplace-bar--card .ayova-marketplace-btn.ayova-mkt-amazon {
+      border-color: #FF9900 !important;
+      background: #FFFDF8 !important;
+    }
+    .ayova-marketplace-bar--card .ayova-marketplace-btn.ayova-mkt-flipkart {
+      border-color: #2874F0 !important;
+      background: #F8FBFF !important;
+    }
+    .ayova-marketplace-bar--card .ayova-mkt-logo {
+      height: 13px !important;
+      width: auto !important;
+      max-width: 82% !important;
+      max-height: 13px !important;
+      object-fit: contain !important;
+      display: block !important;
+    }
   </style>
 
   {{ content_for_header }}

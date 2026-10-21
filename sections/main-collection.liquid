@@ -19,12 +19,30 @@
     <div class="collection-layout">
       
       <!-- Sidebar Filters -->
-      <aside class="collection-filters">
-        <form class="filter-form" id="CollectionFiltersForm">
-          <div class="filter-header">
-            <h3 class="filter-heading">Filters</h3>
-            <a href="/collections/all" class="clear-filters-btn" style="text-decoration:none;">Clear All</a>
+      <aside class="collection-filters" id="CollectionFiltersAside">
+        <!-- Top Drag Handle (Mobile only) -->
+        <div class="mobile-filter-drag-handle"></div>
+
+        <!-- Mobile Popup Header (Mobile only) -->
+        <div class="mobile-filter-modal-header">
+          <div class="mobile-filter-modal-title-wrap">
+            <h3 class="mobile-filter-modal-title">Filters</h3>
+            <span class="mobile-filter-modal-count" id="MobileModalCount">{{ collection.products_count }} products</span>
           </div>
+          <button type="button" class="mobile-filter-close-btn" id="MobileFilterCloseBtn" aria-label="Close filters">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <div class="collection-filters-scroll-body">
+          <form class="filter-form" id="CollectionFiltersForm">
+            <div class="filter-header desktop-filter-header">
+              <h3 class="filter-heading">Filters</h3>
+              <a href="/collections/all" class="clear-filters-btn" style="text-decoration:none;">Clear All</a>
+            </div>
           
           <!-- Price Filter (Moved to Top) -->
           {% for filter in collection.filters %}
@@ -128,22 +146,39 @@
               </div>
             {% endif %}
           {% endfor %}
-        </form>
+          </form>
+        </div>
+
+        <!-- Mobile Modal Sticky Footer (Mobile only) -->
+        <div class="mobile-filter-modal-footer">
+          <a href="/collections/all" class="mobile-filter-clear-all" id="MobileFilterClearBtn">Clear All</a>
+          <button type="button" class="mobile-filter-apply-btn" id="MobileFilterApplyBtn">Apply Filters</button>
+        </div>
       </aside>
+
+      <!-- Mobile Filter Drawer Overlay -->
+      <div class="mobile-filter-overlay" id="MobileFilterOverlay"></div>
 
       <!-- Main Product Grid & Controls -->
       <main class="collection-products" id="ProductGridContainer">
         {% paginate collection.products by 12 %}
         <div class="collection-toolbar">
           <span class="product-count">Showing <strong>{{ collection.products_count }}</strong> Products</span>
-          <div class="sort-box">
-            <label for="sort-select">Sort by:</label>
-            <select id="sort-select" class="sort-select" name="sort_by" form="CollectionFiltersForm">
-              {% assign sort_by = collection.sort_by | default: collection.default_sort_by %}
-              {% for option in collection.sort_options %}
-                <option value="{{ option.value }}" {% if option.value == sort_by %}selected{% endif %}>{{ option.name }}</option>
-              {% endfor %}
-            </select>
+          <div class="toolbar-right">
+            <!-- Mobile Filter Button (only visible on mobile) -->
+            <button type="button" class="mobile-filter-btn" id="MobileFilterBtn" aria-label="Open filters">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+              Filters
+            </button>
+            <div class="sort-box">
+              <label for="sort-select">Sort by:</label>
+              <select id="sort-select" class="sort-select" name="sort_by" form="CollectionFiltersForm">
+                {% assign sort_by = collection.sort_by | default: collection.default_sort_by %}
+                {% for option in collection.sort_options %}
+                  <option value="{{ option.value }}" {% if option.value == sort_by %}selected{% endif %}>{{ option.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
           </div>
         </div>
 
@@ -523,6 +558,8 @@
   justify-content: space-between;
   align-items: center;
   margin: 6px 0 10px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .price-corner-pill {
@@ -536,15 +573,485 @@
   letter-spacing: 0.02em;
 }
 
+/* ========== TOOLBAR RIGHT ALIGNMENT ========== */
+.toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Desktop default: hide mobile drawer header, drag handle, and footer */
+.mobile-filter-drag-handle,
+.mobile-filter-modal-header,
+.mobile-filter-modal-footer,
+.mobile-filter-btn {
+  display: none;
+}
+
 @media (max-width: 900px) {
   .collection-layout {
     grid-template-columns: 1fr;
+    gap: 0;
   }
+
+  /* 2 products per row on mobile (2 do karke) */
+  .collection-products .grid,
+  .collection-products .grid-cols-3 {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px 10px !important;
+  }
+
+  /* Compact card styling in 2-column mobile view */
+  .ayova-product-card {
+    max-width: 100% !important;
+    border-radius: 14px !important;
+  }
+
+  .card-image-wrapper {
+    border-radius: 12px !important;
+  }
+
+  .card-info {
+    padding: 8px 8px 10px !important;
+  }
+
+  .card-category-tag {
+    font-size: 9px !important;
+    margin-bottom: 2px !important;
+  }
+
+  .card-rating {
+    margin-bottom: 2px !important;
+    gap: 3px !important;
+  }
+
+  .card-rating .rating-stars svg {
+    width: 11px !important;
+    height: 11px !important;
+  }
+
+  .card-rating .rating-count {
+    font-size: 11px !important;
+  }
+
+  /* Exactly 2 lines height title */
+  .card-title {
+    font-size: 13px !important;
+    line-height: 1.3 !important;
+    min-height: 2.6em !important;
+    max-height: 2.6em !important;
+    margin-bottom: 4px !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .card-title a {
+    font-size: 13px !important;
+    line-height: 1.3 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .card-short-desc {
+    display: none !important;
+  }
+
+  .card-price-row {
+    flex-wrap: wrap !important;
+    gap: 2px 6px !important;
+    margin-bottom: 6px !important;
+    align-items: baseline !important;
+  }
+
+  .price-amount {
+    font-size: 13.5px !important;
+  }
+
+  .price-compare {
+    font-size: 11px !important;
+  }
+
+  .price-save-badge {
+    font-size: 9px !important;
+    padding: 2px 5px !important;
+    border-radius: 4px !important;
+  }
+
+  .card-pack-pill,
+  .card-per-count {
+    font-size: 10px !important;
+  }
+
+  .btn-add-cart {
+    font-size: 11px !important;
+    height: 32px !important;
+    min-height: 32px !important;
+    padding: 0 8px !important;
+    border-radius: 6px !important;
+  }
+
+  /* Marketplace buttons on product card (Buy now + Amazon + Flipkart) */
+  .ayova-product-card .ayova-marketplace-bar,
+  .ayova-marketplace-bar--card {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    gap: 3px !important;
+    margin-top: 6px !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .ayova-product-card .ayova-marketplace-label,
+  .ayova-marketplace-bar--card .ayova-marketplace-label {
+    display: block !important;
+    font-size: 10.5px !important;
+    font-weight: 600 !important;
+    color: #496357 !important;
+    text-align: center !important;
+    margin: 0 !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+  }
+
+  .ayova-product-card .ayova-marketplace-links,
+  .ayova-marketplace-bar--card .ayova-marketplace-links {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    gap: 5px !important;
+    box-sizing: border-box !important;
+  }
+
+  .ayova-product-card .ayova-marketplace-btn,
+  .ayova-marketplace-bar--card .ayova-marketplace-btn {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    height: 26px !important;
+    padding: 2px 4px !important;
+    border-radius: 6px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
+    text-decoration: none !important;
+  }
+
+  .ayova-product-card .ayova-mkt-logo,
+  .ayova-marketplace-bar--card .ayova-mkt-logo {
+    height: 13px !important;
+    width: auto !important;
+    max-width: 82% !important;
+    max-height: 13px !important;
+    object-fit: contain !important;
+    display: block !important;
+  }
+
+  /* Hide sort-box option on mobile as requested */
+  .sort-box {
+    display: none !important;
+  }
+
+  .collection-toolbar {
+    padding: 12px 16px;
+    margin-bottom: 18px;
+  }
+
+  /* Show mobile filter button in toolbar */
+  .mobile-filter-btn {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 8px;
+    background: #173E34;
+    color: #ffffff;
+    border: none;
+    border-radius: 999px;
+    padding: 9px 18px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(23, 62, 52, 0.2);
+    transition: background 0.2s ease, transform 0.15s ease;
+    white-space: nowrap;
+  }
+  .mobile-filter-btn:hover {
+    background: #0E2920;
+    transform: translateY(-1px);
+  }
+
+  /* Hide desktop-only filter header on mobile */
+  .desktop-filter-header {
+    display: none !important;
+  }
+
+  /* Top Drag Handle */
+  .mobile-filter-drag-handle {
+    display: block !important;
+    width: 38px;
+    height: 4px;
+    background: #DCE4DD;
+    border-radius: 999px;
+    margin: 10px auto 4px auto;
+    flex-shrink: 0;
+  }
+
+  /* Mobile Popup Header */
+  .mobile-filter-modal-header {
+    display: flex !important;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px 14px 20px;
+    border-bottom: 1px solid #E8ECE9;
+    background: #FFFFFF;
+    flex-shrink: 0;
+  }
+
+  .mobile-filter-modal-title-wrap {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+
+  .mobile-filter-modal-title {
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #173E34;
+    margin: 0;
+  }
+
+  .mobile-filter-modal-count {
+    font-size: 0.82rem;
+    color: #7A857F;
+    font-weight: 500;
+  }
+
+  .mobile-filter-close-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #F4F6F4;
+    border: none;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    color: #173E34;
+    cursor: pointer;
+    padding: 0;
+    transition: background 0.2s ease, transform 0.15s ease;
+  }
+  .mobile-filter-close-btn:hover {
+    background: #E8EDE9;
+    transform: rotate(90deg);
+  }
+
+  /* Scrollable inner filter body */
+  .collection-filters-scroll-body {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 18px 20px 14px 20px;
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  .collection-filters-scroll-body .filter-form {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Sticky Footer on Mobile */
+  .mobile-filter-modal-footer {
+    display: flex !important;
+    gap: 12px;
+    align-items: center;
+    padding: 14px 20px;
+    border-top: 1px solid #E8ECE9;
+    background: #FFFFFF;
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.05);
+    flex-shrink: 0;
+  }
+
+  .mobile-filter-clear-all {
+    flex: 1;
+    padding: 13px 16px;
+    border: 1.5px solid #D5DDD8;
+    border-radius: 10px;
+    background: #FFFFFF;
+    color: #173E34;
+    font-weight: 600;
+    font-size: 0.88rem;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: background 0.2s ease;
+  }
+  .mobile-filter-clear-all:hover {
+    background: #F4F6F4;
+  }
+
+  .mobile-filter-apply-btn {
+    flex: 1.6;
+    padding: 13px 18px;
+    border: none;
+    border-radius: 10px;
+    background: #173E34;
+    color: #FFFFFF;
+    font-weight: 700;
+    font-size: 0.92rem;
+    cursor: pointer;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(23, 62, 52, 0.25);
+    transition: background 0.2s ease, transform 0.15s ease;
+  }
+  .mobile-filter-apply-btn:hover {
+    background: #0E2920;
+    transform: translateY(-1px);
+  }
+
+  /* Mobile Drawer Container */
+  .collection-filters {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    height: 85vh !important;
+    max-height: 85vh !important;
+    background: #FFFFFF !important;
+    border-radius: 22px 22px 0 0 !important;
+    border: none !important;
+    border-top: 1px solid #D5DDD8 !important;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.25) !important;
+    z-index: 99999 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    transform: translateY(105%) !important;
+    transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.32s !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  .collection-filters.mobile-open,
+  .collection-filters.is-open {
+    transform: translateY(0) !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+
+  body.filter-modal-open {
+    overflow: hidden !important;
+    touch-action: none;
+  }
+}
+
+/* ========== MOBILE FILTER OVERLAY ========== */
+.mobile-filter-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 99998;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.mobile-filter-overlay.active {
+  display: block;
+  opacity: 1;
 }
 </style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+
+  /* ====== MOBILE FILTER DRAWER LOGIC ====== */
+  function getFilterSidebar() {
+    return document.getElementById('CollectionFiltersAside') || document.querySelector('.collection-filters');
+  }
+  function getFilterOverlay() {
+    return document.getElementById('MobileFilterOverlay');
+  }
+
+  function openFilterDrawer() {
+    const sidebar = getFilterSidebar();
+    const overlay = getFilterOverlay();
+    if (!sidebar) return;
+    sidebar.classList.add('mobile-open', 'is-open');
+    if (overlay) overlay.classList.add('active');
+    document.body.classList.add('filter-modal-open');
+  }
+
+  function closeFilterDrawer() {
+    const sidebar = getFilterSidebar();
+    const overlay = getFilterOverlay();
+    if (!sidebar) return;
+    sidebar.classList.remove('mobile-open', 'is-open');
+    if (overlay) overlay.classList.remove('active');
+    document.body.classList.remove('filter-modal-open');
+  }
+
+  // Delegated click handler — persists across AJAX re-renders of ProductGridContainer
+  document.addEventListener('click', function(e) {
+    // Open Button
+    if (e.target.closest('#MobileFilterBtn')) {
+      e.preventDefault();
+      openFilterDrawer();
+      return;
+    }
+
+    // Close Button
+    if (e.target.closest('#MobileFilterCloseBtn')) {
+      e.preventDefault();
+      closeFilterDrawer();
+      return;
+    }
+
+    // Overlay Backdrop
+    if (e.target && e.target.id === 'MobileFilterOverlay') {
+      e.preventDefault();
+      closeFilterDrawer();
+      return;
+    }
+
+    // Apply Button
+    if (e.target.closest('#MobileFilterApplyBtn')) {
+      e.preventDefault();
+      const form = document.getElementById('CollectionFiltersForm');
+      if (form) {
+        form.dispatchEvent(new Event('change'));
+      }
+      closeFilterDrawer();
+      return;
+    }
+  });
+
+  // Escape key closes modal
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      const sidebar = getFilterSidebar();
+      if (sidebar && sidebar.classList.contains('mobile-open')) {
+        closeFilterDrawer();
+      }
+    }
+  });
+  /* ====== END MOBILE FILTER DRAWER LOGIC ====== */
   const filterForm = document.getElementById('CollectionFiltersForm');
   const sortSelect = document.getElementById('sort-select');
 
@@ -642,6 +1149,13 @@ document.addEventListener('DOMContentLoaded', function() {
           currentFilters.innerHTML = newFilters.innerHTML;
           attachCategoryListeners(); // Re-attach listeners to new DOM elements
           restoreCustomFilters(); // Restore custom tags state based on new URL
+        }
+
+        // Update mobile modal product count
+        const newModalCount = html.getElementById('MobileModalCount');
+        const currentModalCount = document.getElementById('MobileModalCount');
+        if (newModalCount && currentModalCount) {
+          currentModalCount.textContent = newModalCount.textContent;
         }
 
         // Remove loading state
@@ -749,12 +1263,13 @@ document.addEventListener('DOMContentLoaded', function() {
     renderPage(searchParams, basePath);
   });
 
-  // Handle Sort Select change
-  if(sortSelect) {
-    sortSelect.addEventListener('change', function(e) {
-      document.getElementById('CollectionFiltersForm').dispatchEvent(new Event('change'));
-    });
-  }
+  // Handle Sort Select change (delegated)
+  document.addEventListener('change', function(e) {
+    if (e.target && e.target.id === 'sort-select') {
+      const form = document.getElementById('CollectionFiltersForm');
+      if (form) form.dispatchEvent(new Event('change'));
+    }
+  });
 
   // Handle Category Clicks
   function attachCategoryListeners() {

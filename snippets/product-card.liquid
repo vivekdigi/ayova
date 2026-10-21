@@ -239,7 +239,7 @@
         {% endif %}
 
         {% if card_amazon_link != blank or card_flipkart_link != blank %}
-          {% render 'marketplace-buttons', amazon_link: card_amazon_link, flipkart_link: card_flipkart_link %}
+          {% render 'marketplace-buttons', amazon_link: card_amazon_link, flipkart_link: card_flipkart_link, context: 'product-card' %}
         {% endif %}
       {% endif %}
     </div>
