@@ -223,6 +223,23 @@
     </div>
   </div>
   {% endif %}
+
+  <!-- Mobile Sticky Checkout Action Bar -->
+  <div class="checkout-mobile-sticky-bar">
+    <div class="checkout-sticky-price">
+      <span class="sticky-price-label">TOTAL PAYABLE</span>
+      <span class="sticky-price-val">{{ cart.total_price | money }}</span>
+    </div>
+    {% if customer %}
+      <button type="button" class="btn btn-accent btn-pay-sticky" onclick="var p=document.querySelector('.checkout-summary-panel .btn-pay'); if(p) p.click(); else alert('Order Placed! Please note: Submitting orders from a custom page requires a backend app or API integration.');">
+        PAY NOW →
+      </button>
+    {% else %}
+      <a href="/customer_authentication/login?return_to=%2Fpages%2Fcheckout" class="btn btn-accent btn-pay-sticky">
+        LOGIN TO PAY →
+      </a>
+    {% endif %}
+  </div>
 </div>
 
 <style>
@@ -690,9 +707,24 @@
 
 .btn-pay {
   width: 100%;
-  padding: 16px;
-  font-size: 1rem;
-  margin-bottom: 16px;
+  height: 42px;
+  padding: 8px 18px;
+  font-size: 13.5px;
+  font-weight: 700;
+  border-radius: 22px;
+  background: var(--color-terracotta, #D96C3F);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  margin-bottom: 14px;
+}
+.btn-pay:hover {
+  background: #c25b30;
+  transform: scale(0.99);
 }
 
 .checkout-terms {
@@ -724,8 +756,8 @@
   flex: 1;
   border: 1px solid var(--color-sage-border);
   border-radius: 30px;
-  padding: 10px 100px 10px 16px; /* Space for absolute button */
-  font-size: 14px;
+  padding: 10px 95px 10px 16px; /* Space for absolute button */
+  font-size: 13px;
   outline: none;
 }
 .coupon-input:focus {
@@ -733,21 +765,26 @@
 }
 .btn-coupon {
   position: absolute;
-  right: 0;
-  top: 0;
-  height: 100%;
+  right: 2px;
+  top: 2px;
+  bottom: 2px;
+  height: calc(100% - 4px);
   background: #1F2924;
   color: #fff;
   border: none;
-  border-radius: 30px;
-  padding: 0 24px;
+  border-radius: 26px;
+  padding: 0 18px;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 12.5px;
   cursor: pointer;
   transition: opacity 0.3s ease;
 }
 .btn-coupon:hover {
   opacity: 0.9;
+}
+
+.checkout-mobile-sticky-bar {
+  display: none;
 }
 
 @media (max-width: 900px) {
@@ -759,6 +796,74 @@
   }
   .form-group.full-width {
     grid-column: span 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .checkout-page {
+    padding-bottom: calc(85px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+  .checkout-mobile-sticky-bar {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 998;
+    background: rgba(23, 62, 52, 0.98);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 8px 16px;
+    padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.15);
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    box-sizing: border-box;
+  }
+  .checkout-sticky-price {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  .sticky-price-label {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.7);
+    letter-spacing: 0.04em;
+    font-weight: 600;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+  .sticky-price-val {
+    font-size: 15px;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.2;
+  }
+  .btn-pay-sticky {
+    width: auto !important;
+    height: 36px !important;
+    padding: 6px 18px !important;
+    border-radius: 20px !important;
+    font-size: 12.5px !important;
+    font-weight: 700 !important;
+    background: var(--color-terracotta, #D96C3F) !important;
+    color: #ffffff !important;
+    border: none !important;
+    box-shadow: 0 2px 8px rgba(217, 108, 63, 0.35) !important;
+    white-space: nowrap !important;
+    text-decoration: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+  }
+  .btn-pay-sticky:active {
+    transform: scale(0.98);
   }
 }
 </style>

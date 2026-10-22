@@ -5949,7 +5949,8 @@ body.preloader-active {
 
 @media (max-width: 768px) {
   .floating-product-video {
-    bottom: calc(150px + env(safe-area-inset-bottom, 0px));
+    bottom: calc(135px + env(safe-area-inset-bottom, 0px)) !important;
+    z-index: 995;
   }
 }
 

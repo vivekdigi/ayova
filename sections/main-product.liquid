@@ -3640,7 +3640,7 @@
     }
     @media (max-width: 768px) {
       .floating-product-video {
-        bottom: calc(150px + env(safe-area-inset-bottom, 0px));
+        bottom: calc(135px + env(safe-area-inset-bottom, 0px)) !important;
         left: 14px;
         width: 65px;
         height: 65px;
@@ -3651,12 +3651,14 @@
         cursor: grab;
         user-select: none;
         -webkit-user-select: none;
+        z-index: 995;
       }
       .floating-product-video:active {
         cursor: grabbing;
       }
       .floating-product-video video {
         border-radius: 50%;
+        pointer-events: none;
       }
       .floating-product-video.expanded {
         width: 140px;
@@ -3666,6 +3668,7 @@
       }
       .floating-product-video.expanded video {
         border-radius: 12px;
+        pointer-events: auto;
       }
       .floating-product-video.minimized {
         width: 65px;
@@ -3738,11 +3741,13 @@
           var newLeft = startLeft + dx;
           var newTop = startTop + dy;
 
+          var minTop = 50;
+          var bottomClearance = (window.innerWidth <= 768) ? 120 : 20;
           var maxLeft = window.innerWidth - videoContainer.offsetWidth - 8;
-          var maxTop = window.innerHeight - videoContainer.offsetHeight - 8;
+          var maxTop = window.innerHeight - videoContainer.offsetHeight - bottomClearance;
 
           newLeft = Math.max(8, Math.min(newLeft, maxLeft));
-          newTop = Math.max(8, Math.min(newTop, maxTop));
+          newTop = Math.max(minTop, Math.min(newTop, maxTop));
 
           videoContainer.style.left = newLeft + 'px';
           videoContainer.style.top = newTop + 'px';
@@ -3758,10 +3763,12 @@
 
         if (hasDragged) {
           var rect = videoContainer.getBoundingClientRect();
+          var minTop = 50;
+          var bottomClearance = (window.innerWidth <= 768) ? 120 : 20;
           var maxLeft = window.innerWidth - videoContainer.offsetWidth - 8;
-          var maxTop = window.innerHeight - videoContainer.offsetHeight - 8;
+          var maxTop = window.innerHeight - videoContainer.offsetHeight - bottomClearance;
           var clampedL = Math.max(8, Math.min(rect.left, maxLeft));
-          var clampedT = Math.max(8, Math.min(rect.top, maxTop));
+          var clampedT = Math.max(minTop, Math.min(rect.top, maxTop));
           videoContainer.style.left = clampedL + 'px';
           videoContainer.style.top = clampedT + 'px';
 
@@ -3797,9 +3804,10 @@
           setTimeout(function() {
             var rect = videoContainer.getBoundingClientRect();
             var maxLeft = window.innerWidth - videoContainer.offsetWidth - 8;
-            var maxTop = window.innerHeight - videoContainer.offsetHeight - 8;
+            var bottomClearance = (window.innerWidth <= 768) ? 120 : 20;
+            var maxTop = window.innerHeight - videoContainer.offsetHeight - bottomClearance;
             if (rect.left > maxLeft) videoContainer.style.left = Math.max(8, maxLeft) + 'px';
-            if (rect.top > maxTop) videoContainer.style.top = Math.max(8, maxTop) + 'px';
+            if (rect.top > maxTop) videoContainer.style.top = Math.max(50, maxTop) + 'px';
           }, 320);
         });
       }
@@ -3813,33 +3821,38 @@
         });
       }
 
-      if (videoEl) {
-        videoEl.addEventListener('click', function() {
-          if (hasDragged) return;
+      videoContainer.addEventListener('click', function(e) {
+        if (hasDragged) return;
+        if (e.target.closest('#floatingVideoToggle') || e.target.closest('#floatingSoundBtn')) return;
 
-          if (videoContainer.classList.contains('minimized')) {
-            videoContainer.classList.remove('minimized');
-            videoContainer.classList.add('expanded');
-            if (toggleBtn) {
-              toggleBtn.innerHTML = '−';
-              toggleBtn.setAttribute('aria-label', 'Minimize video');
-            }
-            setTimeout(function() {
-              var rect = videoContainer.getBoundingClientRect();
-              var maxLeft = window.innerWidth - videoContainer.offsetWidth - 8;
-              var maxTop = window.innerHeight - videoContainer.offsetHeight - 8;
-              if (rect.left > maxLeft) videoContainer.style.left = Math.max(8, maxLeft) + 'px';
-              if (rect.top > maxTop) videoContainer.style.top = Math.max(8, maxTop) + 'px';
-            }, 320);
-          } else {
+        if (videoContainer.classList.contains('minimized')) {
+          videoContainer.classList.remove('minimized');
+          videoContainer.classList.add('expanded');
+          if (toggleBtn) {
+            toggleBtn.innerHTML = '−';
+            toggleBtn.setAttribute('aria-label', 'Minimize video');
+          }
+          if (videoEl && videoEl.paused) {
+            videoEl.play();
+          }
+          setTimeout(function() {
+            var rect = videoContainer.getBoundingClientRect();
+            var maxLeft = window.innerWidth - videoContainer.offsetWidth - 8;
+            var bottomClearance = (window.innerWidth <= 768) ? 120 : 20;
+            var maxTop = window.innerHeight - videoContainer.offsetHeight - bottomClearance;
+            if (rect.left > maxLeft) videoContainer.style.left = Math.max(8, maxLeft) + 'px';
+            if (rect.top > maxTop) videoContainer.style.top = Math.max(50, maxTop) + 'px';
+          }, 320);
+        } else {
+          if (videoEl) {
             if (videoEl.paused) {
               videoEl.play();
             } else {
               videoEl.pause();
             }
           }
-        });
-      }
+        }
+      });
     });
   </script>
 {% endif %}
