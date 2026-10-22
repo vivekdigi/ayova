@@ -608,6 +608,62 @@
       </div>
     </div>
 
+    <!-- Screen 3: Checkout Page -->
+    <div class="preview-col">
+      <div class="col-title">💳 Checkout Page (Sticky Pay Button)</div>
+      <div class="phone-frame" id="checkoutFrame" style="position: relative;">
+        <div class="phone-notch"></div>
+        <div class="screen-content" style="padding: 16px 16px 90px; background: #fff;">
+          <span style="font-size: 11px; color: #888;">Home / Cart / Checkout</span>
+          <h2 style="font-size: 18px; margin: 4px 0 12px; color: #173E34;">Secure Checkout</h2>
+
+          <!-- Step 1: Contact -->
+          <div style="background: #fff; border: 1px solid #E2E6DF; border-radius: 8px; padding: 12px; margin-bottom: 12px;">
+            <div style="font-weight: 700; font-size: 13px; color: #173E34; margin-bottom: 8px;">01 Contact Details</div>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <input type="email" value="user@example.com" style="width: 100%; padding: 8px 10px; font-size: 12px; border: 1px solid #ccd1d9; border-radius: 4px; box-sizing: border-box;" readonly>
+              <input type="tel" value="+91 98765 43210" style="width: 100%; padding: 8px 10px; font-size: 12px; border: 1px solid #ccd1d9; border-radius: 4px; box-sizing: border-box;" readonly>
+            </div>
+          </div>
+
+          <!-- Step 2: Address -->
+          <div style="background: #fff; border: 1px solid #E2E6DF; border-radius: 8px; padding: 12px; margin-bottom: 12px;">
+            <div style="font-weight: 700; font-size: 13px; color: #173E34; margin-bottom: 8px;">02 Delivery Address</div>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <input type="text" value="Rahul Sharma" style="width: 100%; padding: 8px 10px; font-size: 12px; border: 1px solid #ccd1d9; border-radius: 4px; box-sizing: border-box;" readonly>
+              <input type="text" value="Flat 402, Green Park, Mumbai 400001" style="width: 100%; padding: 8px 10px; font-size: 12px; border: 1px solid #ccd1d9; border-radius: 4px; box-sizing: border-box;" readonly>
+            </div>
+          </div>
+
+          <!-- Step 3: Payment Options -->
+          <div style="background: #fff; border: 1px solid #E2E6DF; border-radius: 8px; padding: 12px; margin-bottom: 12px;">
+            <div style="font-weight: 700; font-size: 13px; color: #173E34; margin-bottom: 8px;">03 Payment Method</div>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <label style="display: flex; align-items: center; gap: 8px; padding: 8px; border: 1px solid #285044; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f0f7f3; cursor: pointer;">
+                <input type="radio" checked name="p_opt"> UPI / QR (GPay, PhonePe)
+              </label>
+              <label style="display: flex; align-items: center; gap: 8px; padding: 8px; border: 1px solid #E2E6DF; border-radius: 6px; font-size: 12px; cursor: pointer;">
+                <input type="radio" name="p_opt"> Credit / Debit Card
+              </label>
+            </div>
+          </div>
+
+          <div style="font-size: 11px; color: #888; text-align: center; margin-top: 10px;">
+            🔒 256-bit SSL encrypted checkout
+          </div>
+        </div>
+
+        <!-- Sticky Checkout Payment Bar -->
+        <div class="checkout-action-box" style="position: absolute; bottom: 0; left: 0; right: 0; width: 100%; z-index: 998; background: rgba(23, 62, 52, 0.98); backdrop-filter: blur(10px); padding: 8px 16px; display: flex; align-items: center; justify-content: space-between; box-sizing: border-box;">
+          <div class="action-price">
+            <span class="label" style="font-size: 10px; color: rgba(255,255,255,0.7); text-transform: uppercase;">AMOUNT PAYABLE</span>
+            <span class="amount" style="font-size: 15px; font-weight: 700; color: #ffffff;">₹1,198</span>
+          </div>
+          <button type="button" class="btn-checkout-dark" style="background: #D96C3F; color: #ffffff; height: 36px; padding: 6px 18px; border-radius: 20px; font-size: 12.5px; font-weight: 700; border: none; cursor: pointer;">PAY NOW →</button>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <script>
@@ -615,6 +671,7 @@
     (function() {
       const videoEl = document.getElementById('floatingProductVideo');
       const frame = document.getElementById('pdpFrame');
+      const toggleBtn = document.getElementById('floatingVideoToggle');
       if (!videoEl || !frame) return;
 
       let isDragging = false;
@@ -654,7 +711,7 @@
           let nT = startTop + dy;
 
           const maxL = frame.clientWidth - videoEl.offsetWidth - 8;
-          const maxT = frame.clientHeight - videoEl.offsetHeight - 80;
+          const maxT = frame.clientHeight - videoEl.offsetHeight - 110;
 
           nL = Math.max(8, Math.min(nL, maxL));
           nT = Math.max(30, Math.min(nT, maxT));
@@ -670,7 +727,7 @@
         if (!isDragging) return;
         isDragging = false;
         videoEl.style.transition = '';
-        setTimeout(() => { hasDragged = false; }, 120);
+        setTimeout(() => { hasDragged = false; }, 150);
       }
 
       videoEl.addEventListener('touchstart', onStart, { passive: true });
@@ -679,6 +736,14 @@
       videoEl.addEventListener('mousedown', onStart);
       window.addEventListener('mousemove', onMove);
       window.addEventListener('mouseup', onEnd);
+
+      if (toggleBtn) {
+        toggleBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          videoEl.classList.toggle('expanded');
+          toggleBtn.textContent = videoEl.classList.contains('expanded') ? '−' : '+';
+        });
+      }
     })();
   </script>
 </body>
