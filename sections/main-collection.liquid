@@ -43,6 +43,25 @@
               <h3 class="filter-heading">Filters</h3>
               <a href="/collections/all" class="clear-filters-btn" style="text-decoration:none;">Clear All</a>
             </div>
+
+            <!-- Mobile Sort By (Popup only for mobile) -->
+            <div class="filter-group mobile-sort-filter-group">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h4 class="filter-title">Sort by</h4>
+                {% if collection.sort_by == 'price-ascending' or collection.sort_by == 'price-descending' %}
+                  <button type="button" class="clear-filters-btn mobile-sort-clear-btn" id="MobileSortClearBtn" style="background:none; border:none; padding:0; font-size:0.75rem; color:var(--color-terracotta, #C05621); cursor:pointer;">Clear</button>
+                {% endif %}
+              </div>
+              <div class="mobile-sort-select-wrapper">
+                {% assign current_sort = collection.sort_by | default: '' %}
+                <select class="mobile-sort-select" id="mobile-sort-select" name="sort_by">
+                  <option value="" {% if current_sort != 'price-ascending' and current_sort != 'price-descending' %}selected{% endif %} disabled>Sort by Price</option>
+                  <option value="price-ascending" {% if current_sort == 'price-ascending' %}selected{% endif %}>Price: Low to High</option>
+                  <option value="price-descending" {% if current_sort == 'price-descending' %}selected{% endif %}>Price: High to Low</option>
+                </select>
+                <svg class="select-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </div>
+            </div>
           
           <!-- Price Filter (Moved to Top) -->
           {% for filter in collection.filters %}
@@ -314,6 +333,11 @@
   border-bottom: none;
   margin-bottom: 0;
   padding-bottom: 0;
+}
+
+/* Mobile Sort By: Hidden on desktop */
+.mobile-sort-filter-group {
+  display: none !important;
 }
 
 .filter-title {
@@ -984,6 +1008,59 @@
     padding-bottom: 0 !important;
   }
 
+  /* Mobile Sort By inside filter drawer */
+  .mobile-sort-filter-group {
+    display: block !important;
+  }
+
+  .mobile-sort-select-wrapper {
+    position: relative;
+    width: 100%;
+    margin-top: 6px;
+  }
+
+  .mobile-sort-select {
+    width: 100%;
+    appearance: none;
+    -webkit-appearance: none;
+    padding: 9px 34px 9px 12px;
+    border: 1.5px solid #D5DDD8;
+    border-radius: 8px;
+    background: #FAFCFA;
+    font-family: inherit;
+    font-size: 0.80rem;
+    font-weight: 600;
+    color: #173E34;
+    outline: none;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .mobile-sort-select:focus {
+    border-color: #285044;
+    box-shadow: 0 0 0 2px rgba(40, 80, 68, 0.1);
+  }
+
+  .mobile-sort-select-wrapper .select-chevron {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #496357;
+  }
+
+  .mobile-sort-clear-btn {
+    font-size: 0.74rem;
+    color: var(--color-terracotta, #C05621);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
   .collection-filters .filter-title {
     font-size: 0.76rem !important;
     font-weight: 700 !important;
@@ -1450,6 +1527,16 @@ document.addEventListener('DOMContentLoaded', function() {
       updateSliderTrack();
     }
 
+    const desktopSort = document.getElementById('sort-select');
+    const mobileSort = document.getElementById('mobile-sort-select');
+    if (window.innerWidth <= 900) {
+      if (desktopSort) desktopSort.disabled = true;
+      if (mobileSort) mobileSort.disabled = false;
+    } else {
+      if (desktopSort) desktopSort.disabled = false;
+      if (mobileSort) mobileSort.disabled = true;
+    }
+
     const formData = new FormData(filterForm);
     const searchParams = new URLSearchParams(formData);
     
@@ -1470,6 +1557,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     renderPage(searchParams, basePath);
+  });
+
+  // Handle Mobile Sort Clear Click
+  document.addEventListener('click', function(e) {
+    if (e.target && e.target.id === 'MobileSortClearBtn') {
+      e.preventDefault();
+      const mobileSort = document.getElementById('mobile-sort-select');
+      if (mobileSort) {
+        mobileSort.value = '';
+        const form = document.getElementById('CollectionFiltersForm');
+        if (form) form.dispatchEvent(new Event('change'));
+      }
+    }
   });
 
   // Handle Sort Select change (delegated)

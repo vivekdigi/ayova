@@ -656,9 +656,12 @@
         padding: 20px 20px 14px 20px;
       }
 
-      /* Mobile Sort By dropdown hidden on mobile */
+      /* Mobile Sort By dropdown shown inside popup */
       .mobile-sort-filter-group {
-        display: none !important;
+        display: block !important;
+        margin-bottom: 14px !important;
+        padding-bottom: 14px !important;
+        border-bottom: 1px solid #E8ECE9 !important;
       }
 
       .mobile-sort-select-wrapper {
@@ -854,7 +857,7 @@
     #viewport-container.mobile-mode .mobile-filter-modal-count { font-size: 0.82rem; color: #7A857F; font-weight: 500; }
     #viewport-container.mobile-mode .mobile-filter-close-btn { width: 36px; height: 36px; border-radius: 50%; background: #F4F6F4; border: none; display: inline-flex; align-items: center; justify-content: center; color: #173E34; cursor: pointer; padding: 0; }
     #viewport-container.mobile-mode .collection-filters-scroll-body { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 20px 20px 14px 20px; }
-    #viewport-container.mobile-mode .mobile-sort-filter-group { display: none !important; }
+    #viewport-container.mobile-mode .mobile-sort-filter-group { display: block !important; margin-bottom: 14px !important; padding-bottom: 14px !important; border-bottom: 1px solid #E8ECE9 !important; }
     #viewport-container.mobile-mode .mobile-sort-select-wrapper { position: relative; width: 100%; margin-top: 8px; }
     #viewport-container.mobile-mode .mobile-sort-select { width: 100%; appearance: none; -webkit-appearance: none; padding: 12px 38px 12px 14px; border: 1.5px solid #D5DDD8; border-radius: 10px; background: #FAFCFA; font-family: 'Montserrat', sans-serif; font-size: 0.9rem; font-weight: 600; color: #173E34; outline: none; cursor: pointer; }
     #viewport-container.mobile-mode .mobile-sort-select-wrapper .select-chevron { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); pointer-events: none; color: #285044; }
@@ -929,13 +932,9 @@
                   <h4 class="filter-title">Sort by</h4>
                   <div class="mobile-sort-select-wrapper">
                     <select class="mobile-sort-select" id="mobile-sort-select" name="sort_by">
-                      <option value="manual">Featured</option>
-                      <option value="best-selling" selected>Best selling</option>
-                      <option value="title-ascending">Alphabetically, A-Z</option>
-                      <option value="title-descending">Alphabetically, Z-A</option>
+                      <option value="" disabled selected>Sort by Price</option>
                       <option value="price-ascending">Price, low to high</option>
                       <option value="price-descending">Price, high to low</option>
-                      <option value="created-descending">Date, new to old</option>
                     </select>
                     <svg class="select-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
                   </div>
