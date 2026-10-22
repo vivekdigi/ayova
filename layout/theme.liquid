@@ -245,8 +245,12 @@
       }
       .template-product .floating-widgets,
       body:has(.mobile-sticky-action-bar) .floating-widgets {
-        bottom: 85px;
-        bottom: calc(85px + env(safe-area-inset-bottom, 0px));
+        bottom: 115px;
+        bottom: calc(115px + env(safe-area-inset-bottom, 0px));
+      }
+      .template-cart .floating-widgets {
+        bottom: 75px;
+        bottom: calc(75px + env(safe-area-inset-bottom, 0px));
       }
       .floating-widgets a {
         width: 44px;

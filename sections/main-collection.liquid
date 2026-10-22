@@ -193,11 +193,11 @@
             </button>
             <div class="sort-box">
               <label for="sort-select">Sort by:</label>
+              {% assign current_sort = collection.sort_by | default: '' %}
               <select id="sort-select" class="sort-select" name="sort_by" form="CollectionFiltersForm">
-                {% assign sort_by = collection.sort_by | default: collection.default_sort_by %}
-                {% for option in collection.sort_options %}
-                  <option value="{{ option.value }}" {% if option.value == sort_by %}selected{% endif %}>{{ option.name }}</option>
-                {% endfor %}
+                <option value="" {% if current_sort != 'price-ascending' and current_sort != 'price-descending' %}selected{% endif %}>Featured</option>
+                <option value="price-ascending" {% if current_sort == 'price-ascending' %}selected{% endif %}>Price: Low to High</option>
+                <option value="price-descending" {% if current_sort == 'price-descending' %}selected{% endif %}>Price: High to Low</option>
               </select>
             </div>
           </div>
@@ -385,16 +385,34 @@
 }
 
 .sort-box {
-  display: none !important;
+  display: flex !important;
+  align-items: center;
+  gap: 8px;
+}
+
+.sort-box label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-body, #4B5563);
 }
 
 .sort-select {
   padding: 8px 14px;
-  border: 1px solid var(--color-sage-border);
-  border-radius: var(--radius-sm);
-  background: var(--color-white);
-  color: var(--color-forest-primary);
+  border: 1.5px solid var(--color-sage-border, #D5DDD8);
+  border-radius: var(--radius-sm, 8px);
+  background: var(--color-white, #FFFFFF);
+  color: var(--color-forest-primary, #173E34);
+  font-family: inherit;
+  font-size: 0.85rem;
   font-weight: 600;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sort-select:focus {
+  border-color: var(--color-forest-mid, #285044);
+  box-shadow: 0 0 0 2px rgba(40, 80, 68, 0.1);
 }
 
 /* Pagination Styles */

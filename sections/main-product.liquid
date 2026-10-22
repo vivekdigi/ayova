@@ -3640,13 +3640,20 @@
     }
     @media (max-width: 768px) {
       .floating-product-video {
-        bottom: calc(115px + env(safe-area-inset-bottom, 0px));
+        bottom: calc(150px + env(safe-area-inset-bottom, 0px));
         left: 14px;
         width: 65px;
         height: 65px;
         border-radius: 50%;
         aspect-ratio: 1/1;
         box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+        touch-action: none;
+        cursor: grab;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+      .floating-product-video:active {
+        cursor: grabbing;
       }
       .floating-product-video video {
         border-radius: 50%;
@@ -3678,16 +3685,106 @@
       var soundBtn = document.getElementById('floatingSoundBtn');
       var videoEl = document.querySelector('.floating-video-element');
       
-      if(videoContainer && toggleBtn) {
-        if (window.innerWidth <= 768) {
-          videoContainer.classList.add('minimized');
+      if (!videoContainer) return;
+
+      var isDragging = false;
+      var hasDragged = false;
+      var startX = 0;
+      var startY = 0;
+      var startLeft = 0;
+      var startTop = 0;
+
+      if (window.innerWidth <= 768) {
+        videoContainer.classList.add('minimized');
+        if (toggleBtn) {
           toggleBtn.innerHTML = '+';
           toggleBtn.setAttribute('aria-label', 'Maximize video');
         }
+      }
+
+      function onDragStart(e) {
+        if (e.target.closest('#floatingVideoToggle') || e.target.closest('#floatingSoundBtn')) {
+          return;
+        }
+
+        var point = e.touches ? e.touches[0] : e;
+        startX = point.clientX;
+        startY = point.clientY;
+
+        var rect = videoContainer.getBoundingClientRect();
+        startLeft = rect.left;
+        startTop = rect.top;
+
+        isDragging = true;
+        hasDragged = false;
+      }
+
+      function onDragMove(e) {
+        if (!isDragging) return;
+
+        var point = e.touches ? e.touches[0] : e;
+        var dx = point.clientX - startX;
+        var dy = point.clientY - startY;
+
+        if (!hasDragged && Math.hypot(dx, dy) > 6) {
+          hasDragged = true;
+          videoContainer.style.transition = 'none';
+        }
+
+        if (hasDragged) {
+          if (e.cancelable && e.touches) {
+            e.preventDefault();
+          }
+          var newLeft = startLeft + dx;
+          var newTop = startTop + dy;
+
+          var maxLeft = window.innerWidth - videoContainer.offsetWidth - 8;
+          var maxTop = window.innerHeight - videoContainer.offsetHeight - 8;
+
+          newLeft = Math.max(8, Math.min(newLeft, maxLeft));
+          newTop = Math.max(8, Math.min(newTop, maxTop));
+
+          videoContainer.style.left = newLeft + 'px';
+          videoContainer.style.top = newTop + 'px';
+          videoContainer.style.bottom = 'auto';
+          videoContainer.style.right = 'auto';
+        }
+      }
+
+      function onDragEnd(e) {
+        if (!isDragging) return;
+        isDragging = false;
+        videoContainer.style.transition = '';
+
+        if (hasDragged) {
+          var rect = videoContainer.getBoundingClientRect();
+          var maxLeft = window.innerWidth - videoContainer.offsetWidth - 8;
+          var maxTop = window.innerHeight - videoContainer.offsetHeight - 8;
+          var clampedL = Math.max(8, Math.min(rect.left, maxLeft));
+          var clampedT = Math.max(8, Math.min(rect.top, maxTop));
+          videoContainer.style.left = clampedL + 'px';
+          videoContainer.style.top = clampedT + 'px';
+
+          setTimeout(function() {
+            hasDragged = false;
+          }, 150);
+        }
+      }
+
+      videoContainer.addEventListener('touchstart', onDragStart, { passive: true });
+      window.addEventListener('touchmove', onDragMove, { passive: false });
+      window.addEventListener('touchend', onDragEnd);
+      window.addEventListener('touchcancel', onDragEnd);
+
+      videoContainer.addEventListener('mousedown', onDragStart);
+      window.addEventListener('mousemove', onDragMove);
+      window.addEventListener('mouseup', onDragEnd);
+
+      if (toggleBtn) {
         toggleBtn.addEventListener('click', function(e) {
           e.stopPropagation();
           videoContainer.classList.toggle('minimized');
-          if(videoContainer.classList.contains('minimized')) {
+          if (videoContainer.classList.contains('minimized')) {
             videoContainer.classList.remove('expanded');
             toggleBtn.innerHTML = '+';
             toggleBtn.setAttribute('aria-label', 'Maximize video');
@@ -3696,23 +3793,50 @@
             toggleBtn.innerHTML = '−';
             toggleBtn.setAttribute('aria-label', 'Minimize video');
           }
+
+          setTimeout(function() {
+            var rect = videoContainer.getBoundingClientRect();
+            var maxLeft = window.innerWidth - videoContainer.offsetWidth - 8;
+            var maxTop = window.innerHeight - videoContainer.offsetHeight - 8;
+            if (rect.left > maxLeft) videoContainer.style.left = Math.max(8, maxLeft) + 'px';
+            if (rect.top > maxTop) videoContainer.style.top = Math.max(8, maxTop) + 'px';
+          }, 320);
         });
       }
-      
-      if(soundBtn && videoEl) {
+
+      if (soundBtn && videoEl) {
         soundBtn.addEventListener('click', function(e) {
           e.preventDefault();
+          e.stopPropagation();
           videoEl.muted = !videoEl.muted;
           this.innerHTML = videoEl.muted ? '🔇' : '🔊';
         });
       }
-      
-      if(videoEl) {
+
+      if (videoEl) {
         videoEl.addEventListener('click', function() {
-          if (videoEl.paused) {
-            videoEl.play();
+          if (hasDragged) return;
+
+          if (videoContainer.classList.contains('minimized')) {
+            videoContainer.classList.remove('minimized');
+            videoContainer.classList.add('expanded');
+            if (toggleBtn) {
+              toggleBtn.innerHTML = '−';
+              toggleBtn.setAttribute('aria-label', 'Minimize video');
+            }
+            setTimeout(function() {
+              var rect = videoContainer.getBoundingClientRect();
+              var maxLeft = window.innerWidth - videoContainer.offsetWidth - 8;
+              var maxTop = window.innerHeight - videoContainer.offsetHeight - 8;
+              if (rect.left > maxLeft) videoContainer.style.left = Math.max(8, maxLeft) + 'px';
+              if (rect.top > maxTop) videoContainer.style.top = Math.max(8, maxTop) + 'px';
+            }, 320);
           } else {
-            videoEl.pause();
+            if (videoEl.paused) {
+              videoEl.play();
+            } else {
+              videoEl.pause();
+            }
           }
         });
       }

@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mobile Responsive Verification - Ayova</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/theme.css">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      background: #eef2ef;
+      margin: 0;
+      padding: 24px 16px;
+      font-family: 'Montserrat', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+    .header-banner {
+      text-align: center;
+      max-width: 800px;
+    }
+    .header-banner h1 {
+      margin: 0 0 6px;
+      font-size: 22px;
+      color: #173E34;
+    }
+    .header-banner p {
+      margin: 0;
+      font-size: 14px;
+      color: #556960;
+    }
+    .preview-columns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      justify-content: center;
+    }
+    .preview-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .col-title {
+      font-weight: 700;
+      font-size: 15px;
+      color: #173E34;
+      background: #ffffff;
+      padding: 6px 14px;
+      border-radius: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    }
+    .phone-frame {
+      width: 375px;
+      height: 680px;
+      background: #ffffff;
+      border-radius: 40px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.22), 0 0 0 10px #1a202c;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    .phone-notch {
+      width: 140px;
+      height: 24px;
+      background: #1a202c;
+      margin: 0 auto;
+      border-bottom-left-radius: 14px;
+      border-bottom-right-radius: 14px;
+      flex-shrink: 0;
+      z-index: 10000;
+    }
+    .screen-content {
+      flex: 1;
+      overflow-y: auto;
+      position: relative;
+      background: #ffffff;
+    }
+
+    /* PDP styles */
+    .pdp-body {
+      padding: 14px 16px 110px;
+    }
+    .product-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      color: #D96C3F;
+      background: #FFF3EE;
+      padding: 4px 8px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+    .product-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: #173E34;
+      margin: 0 0 6px;
+    }
+    .product-pricing {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .price-curr { font-size: 20px; font-weight: 700; color: #173E34; }
+    .price-strike { font-size: 14px; color: #999; text-decoration: line-through; }
+    .price-badge { font-size: 12px; color: #20874e; font-weight: 600; }
+    
+    .offer-box {
+      border: 1px dashed #20874e;
+      background: #f4faf6;
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-bottom: 14px;
+    }
+    .offer-box .offer-title { font-size: 13px; font-weight: 700; color: #173E34; }
+    .offer-box .offer-sub { font-size: 11px; color: #555; margin: 4px 0 8px; }
+    .coupon-pill {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fff;
+      border: 1px solid #d4e2d9;
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .btn-copy {
+      background: #173E34;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 3px 8px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .inpage-actions {
+      display: flex;
+      gap: 8px;
+      margin: 14px 0;
+    }
+    .inpage-btn {
+      flex: 1;
+      height: 38px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 12px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .inpage-cart { background: #285044; color: #fff; }
+    .inpage-buy { background: #D96C3F; color: #fff; }
+
+    /* Floating Video */
+    .floating-product-video {
+      position: absolute;
+      bottom: calc(150px + env(safe-area-inset-bottom, 0px));
+      left: 14px;
+      width: 65px;
+      height: 65px;
+      border-radius: 50%;
+      aspect-ratio: 1/1;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+      touch-action: none;
+      cursor: grab;
+      user-select: none;
+      -webkit-user-select: none;
+      background: #173E34;
+      border: 2px solid #ffffff;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 995;
+    }
+    .floating-product-video:active { cursor: grabbing; }
+    .floating-product-video img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      pointer-events: none;
+    }
+    .floating-video-toggle {
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      width: 18px;
+      height: 18px;
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      font-size: 12px;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    /* Floating WhatsApp Icon */
+    .wp-float-btn {
+      position: absolute;
+      bottom: calc(115px + env(safe-area-inset-bottom, 0px));
+      right: 14px;
+      width: 44px;
+      height: 44px;
+      background: #25d366;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(37,211,102,0.4);
+      z-index: 995;
+      text-decoration: none;
+      animation: bounce01 2s infinite;
+    }
+    @keyframes bounce01 {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    /* PDP Sticky Action Bar */
+    .mobile-sticky-action-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-top: 1px solid #E2E6DF;
+      padding: 8px 14px 10px;
+      z-index: 999;
+      box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .mobile-sticky-inner {
+      display: flex;
+      gap: 8px;
+    }
+    .btn-sticky-action {
+      flex: 1;
+      height: 36px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-sticky-action.add-cart-sticky { background: #285044; color: #fff; }
+    .btn-sticky-action.buy-now-sticky { background: #D96C3F; color: #fff; }
+
+    .sticky-marketplace-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .sticky-mkt-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #606B65;
+    }
+    .sticky-mkt-btn {
+      flex: 1;
+      height: 27px;
+      background: #fff;
+      border: 1px solid #D6DED9;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      padding: 2px 6px;
+    }
+    .sticky-mkt-btn.amazon { border-color: #FF9900; background: #FFFDF8; }
+    .sticky-mkt-btn.flipkart { border-color: #2874F0; background: #F8FBFF; }
+    .sticky-mkt-btn img { max-height: 13px; max-width: 80%; object-fit: contain; }
+
+    /* Cart Page styles */
+    .cart-body {
+      padding: 16px 16px 85px;
+    }
+    .cart-heading {
+      font-size: 18px;
+      font-weight: 700;
+      color: #173E34;
+      margin: 0 0 14px;
+    }
+    .cart-milestone {
+      background: #FDFBFA;
+      border: 1px solid #EBE4DD;
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-bottom: 14px;
+      font-size: 12px;
+      text-align: center;
+      color: #333;
+    }
+    .cart-item-card {
+      display: grid;
+      grid-template-columns: 60px 1fr auto;
+      grid-gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+      align-items: center;
+    }
+    .cart-item-img {
+      width: 60px;
+      height: 60px;
+      background: #f4f6f5;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: #666;
+    }
+    .cart-item-info h4 { margin: 0 0 4px; font-size: 13px; color: #173E34; }
+    .cart-item-info .item-cost { font-size: 13px; font-weight: 700; color: #173E34; }
+    .cart-item-qty {
+      display: flex;
+      align-items: center;
+      border: 1px solid #d4ded9;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .cart-item-qty button {
+      border: none;
+      background: #f4f6f5;
+      width: 24px;
+      height: 24px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .cart-item-qty span {
+      padding: 0 8px;
+      font-size: 12px;
+    }
+    
+    .order-summary-box {
+      margin-top: 14px;
+      background: #fff;
+      border: 1px solid #e2e8e4;
+      border-radius: 8px;
+      padding: 12px;
+    }
+    .order-summary-box h5 {
+      margin: 0 0 10px;
+      font-size: 14px;
+      color: #173E34;
+    }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      margin-bottom: 6px;
+      color: #555;
+    }
+    .summary-row.total {
+      font-weight: 700;
+      font-size: 14px;
+      color: #173E34;
+      border-top: 1px dashed #ddd;
+      padding-top: 8px;
+      margin-top: 8px;
+    }
+
+    /* Cart Sticky Checkout Action Box */
+    .cart-screen .checkout-action-box {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      margin: 0;
+      z-index: 998;
+      background: rgba(23, 62, 52, 0.98);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 10px 16px;
+      box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.15);
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      box-sizing: border-box;
+    }
+    .cart-screen .action-price {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .cart-screen .action-price .label {
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.7);
+      letter-spacing: 0.04em;
+      font-weight: 600;
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+    .cart-screen .action-price .amount {
+      font-size: 16px;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.2;
+    }
+    .cart-screen .btn-checkout-dark {
+      background: #D96C3F;
+      color: #ffffff;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      box-shadow: 0 2px 8px rgba(217, 108, 63, 0.35);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      cursor: pointer;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+    .cart-screen .wp-float-btn {
+      bottom: calc(75px + env(safe-area-inset-bottom, 0px));
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header-banner">
+    <h1>Ayova Mobile Responsive Layout Verification</h1>
+    <p>1. PDP: Video is draggable & default position raised above buttons. WhatsApp icon raised to 115px.</p>
+    <p>2. Cart: Checkout action bar is sticky at bottom with compact, small Proceed to Checkout button.</p>
+  </div>
+
+  <div class="preview-columns">
+
+    <!-- Screen 1: Product Detail Page -->
+    <div class="preview-col">
+      <div class="col-title">📱 Product Detail Page (PDP)</div>
+      <div class="phone-frame" id="pdpFrame">
+        <div class="phone-notch"></div>
+        <div class="screen-content pdp-body">
+          <div class="product-badge">AYURVEDIC FORMULATION</div>
+          <h2 class="product-name">Glutathione Effervescent Tablets</h2>
+          <div class="product-pricing">
+            <span class="price-curr">₹799</span>
+            <span class="price-strike">₹1,199</span>
+            <span class="price-badge">33% OFF</span>
+          </div>
+
+          <p style="font-size: 12px; color: #666; line-height: 1.5; margin: 0 0 12px;">
+            Provide 600 mg of Glutathione per serving. Glutathione is a naturally occurring antioxidant that forms part of the body's natural antioxidant defense.
+          </p>
+
+          <div style="font-weight: 700; font-size: 13px; color: #173E34; margin-bottom: 8px;">Select a Pack</div>
+          <div class="offer-box">
+            <div class="offer-title">🏷️ Available Offers</div>
+            <div class="offer-sub">10% OFF: Enjoy 10% OFF on all collections this festive season!</div>
+            <div class="coupon-pill">
+              <span>COUPON CODE: <strong>AYOVA10</strong></span>
+              <button class="btn-copy">COPY</button>
+            </div>
+          </div>
+
+          <div class="inpage-actions">
+            <button class="inpage-btn inpage-cart">ADD TO CART</button>
+            <button class="inpage-btn inpage-buy">BUY NOW</button>
+          </div>
+
+          <div style="height: 120px; background: #fafcfa; border: 1px solid #e8ede9; border-radius: 8px; padding: 12px; font-size: 11px; color: #666; margin-top: 10px;">
+            <strong>Key Benefits:</strong><br>
+            • Supports radiant glowing skin<br>
+            • Powerful cellular detox & antioxidant<br>
+            • Fast absorption effervescent formula
+          </div>
+        </div>
+
+        <!-- Draggable Video Bubble -->
+        <div class="floating-product-video minimized" id="floatingProductVideo" title="Drag me anywhere!">
+          <button type="button" class="floating-video-toggle" id="floatingVideoToggle">+</button>
+          <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&auto=format&fit=crop" alt="Video Avatar">
+        </div>
+
+        <!-- WhatsApp Icon (Raised above sticky bar to 115px) -->
+        <a href="#" class="wp-float-btn" aria-label="WhatsApp">
+          <svg width="24" height="24" viewBox="0 0 64 64" stroke-width="3" stroke="#ffffff" fill="none">
+            <path d="M35.66,35.67a16.71,16.71,0,0,1-7.75-6.78.82.82,0,0,1,.12-.95l1.55-1.69a.8.8,0,0,0,.15-.87l-2.44-4.65S26.21,19.08,24,20.5c0,0-5.81,4.54-2.1,10.78s7.2,8.35,10.34,9.88c2.73,1.33,8.64,3.1,12.21-3.39,0,0,1.25-2,0-2.51-.57-.23-3.68-1.77-5-2.41a.82.82,0,0,0-1,.22l-1.86,2.35A.81.81,0,0,1,35.66,35.67Z"/><path d="M8.86,53.49l4-11.2a23,23,0,1,1,8.64,8.8Z" stroke-linecap="round"/>
+          </svg>
+        </a>
+
+        <!-- Sticky Action Bar -->
+        <div class="mobile-sticky-action-bar">
+          <div class="mobile-sticky-inner">
+            <button type="button" class="btn-sticky-action add-cart-sticky">ADD TO CART</button>
+            <button type="button" class="btn-sticky-action buy-now-sticky">BUY NOW</button>
+          </div>
+          <div class="sticky-marketplace-row">
+            <span class="sticky-mkt-label">Buy now</span>
+            <a href="#" class="sticky-mkt-btn amazon"><img src="assets/amazon.svg" alt="Amazon"></a>
+            <a href="#" class="sticky-mkt-btn flipkart"><img src="assets/flipkart_wvl.svg" alt="Flipkart"></a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 2: Cart Page -->
+    <div class="preview-col">
+      <div class="col-title">🛒 Cart Page (Sticky Small Checkout)</div>
+      <div class="phone-frame cart-screen" id="cartFrame">
+        <div class="phone-notch"></div>
+        <div class="screen-content cart-body">
+          <h2 class="cart-heading">Your Shopping Cart (2)</h2>
+          <div class="cart-milestone">
+            🎉 You have unlocked <strong>Free Shipping!</strong>
+          </div>
+
+          <!-- Item 1 -->
+          <div class="cart-item-card">
+            <div class="cart-item-img">Tablet</div>
+            <div class="cart-item-info">
+              <h4>Glutathione Effervescent</h4>
+              <div class="item-cost">₹799</div>
+            </div>
+            <div class="cart-item-qty">
+              <button>-</button>
+              <span>1</span>
+              <button>+</button>
+            </div>
+          </div>
+
+          <!-- Item 2 -->
+          <div class="cart-item-card">
+            <div class="cart-item-img">Serum</div>
+            <div class="cart-item-info">
+              <h4>Kumkumadi Face Oil</h4>
+              <div class="item-cost">₹399</div>
+            </div>
+            <div class="cart-item-qty">
+              <button>-</button>
+              <span>1</span>
+              <button>+</button>
+            </div>
+          </div>
+
+          <!-- Order Summary Card -->
+          <div class="order-summary-box">
+            <h5>Order Summary</h5>
+            <div class="summary-row">
+              <span>Product Total</span>
+              <span>₹1,198</span>
+            </div>
+            <div class="summary-row" style="color: #20874e;">
+              <span>Shipping</span>
+              <span>FREE</span>
+            </div>
+            <div class="summary-row total">
+              <span>YOU PAY ONLY</span>
+              <span>₹1,198</span>
+            </div>
+          </div>
+
+          <p style="font-size: 11px; color: #888; text-align: center; margin-top: 14px;">
+            🔒 Guaranteed 256-bit Secure Checkout & Free Returns
+          </p>
+        </div>
+
+        <!-- WhatsApp Icon on Cart (Clean clearance) -->
+        <a href="#" class="wp-float-btn" aria-label="WhatsApp">
+          <svg width="24" height="24" viewBox="0 0 64 64" stroke-width="3" stroke="#ffffff" fill="none">
+            <path d="M35.66,35.67a16.71,16.71,0,0,1-7.75-6.78.82.82,0,0,1,.12-.95l1.55-1.69a.8.8,0,0,0,.15-.87l-2.44-4.65S26.21,19.08,24,20.5c0,0-5.81,4.54-2.1,10.78s7.2,8.35,10.34,9.88c2.73,1.33,8.64,3.1,12.21-3.39,0,0,1.25-2,0-2.51-.57-.23-3.68-1.77-5-2.41a.82.82,0,0,0-1,.22l-1.86,2.35A.81.81,0,0,1,35.66,35.67Z"/><path d="M8.86,53.49l4-11.2a23,23,0,1,1,8.64,8.8Z" stroke-linecap="round"/>
+          </svg>
+        </a>
+
+        <!-- Sticky Checkout Action Box -->
+        <div class="checkout-action-box">
+          <div class="action-price">
+            <span class="label">TOTAL PAYABLE</span>
+            <span class="amount">₹1,198</span>
+          </div>
+          <button type="submit" class="btn-checkout-dark">Proceed to Checkout →</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Draggable logic for phone frame preview
+    (function() {
+      const videoEl = document.getElementById('floatingProductVideo');
+      const frame = document.getElementById('pdpFrame');
+      if (!videoEl || !frame) return;
+
+      let isDragging = false;
+      let hasDragged = false;
+      let startX = 0, startY = 0;
+      let startLeft = 0, startTop = 0;
+
+      function onStart(e) {
+        if (e.target.closest('#floatingVideoToggle')) return;
+        const pt = e.touches ? e.touches[0] : e;
+        startX = pt.clientX;
+        startY = pt.clientY;
+
+        const fRect = frame.getBoundingClientRect();
+        const vRect = videoEl.getBoundingClientRect();
+        startLeft = vRect.left - fRect.left;
+        startTop = vRect.top - fRect.top;
+
+        isDragging = true;
+        hasDragged = false;
+      }
+
+      function onMove(e) {
+        if (!isDragging) return;
+        const pt = e.touches ? e.touches[0] : e;
+        const dx = pt.clientX - startX;
+        const dy = pt.clientY - startY;
+
+        if (!hasDragged && Math.hypot(dx, dy) > 5) {
+          hasDragged = true;
+          videoEl.style.transition = 'none';
+        }
+
+        if (hasDragged) {
+          if (e.cancelable && e.touches) e.preventDefault();
+          let nL = startLeft + dx;
+          let nT = startTop + dy;
+
+          const maxL = frame.clientWidth - videoEl.offsetWidth - 8;
+          const maxT = frame.clientHeight - videoEl.offsetHeight - 80;
+
+          nL = Math.max(8, Math.min(nL, maxL));
+          nT = Math.max(30, Math.min(nT, maxT));
+
+          videoEl.style.left = nL + 'px';
+          videoEl.style.top = nT + 'px';
+          videoEl.style.bottom = 'auto';
+          videoEl.style.right = 'auto';
+        }
+      }
+
+      function onEnd() {
+        if (!isDragging) return;
+        isDragging = false;
+        videoEl.style.transition = '';
+        setTimeout(() => { hasDragged = false; }, 120);
+      }
+
+      videoEl.addEventListener('touchstart', onStart, { passive: true });
+      window.addEventListener('touchmove', onMove, { passive: false });
+      window.addEventListener('touchend', onEnd);
+      videoEl.addEventListener('mousedown', onStart);
+      window.addEventListener('mousemove', onMove);
+      window.addEventListener('mouseup', onEnd);
+    })();
+  </script>
+</body>
+</html>

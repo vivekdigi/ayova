@@ -1849,11 +1849,23 @@ h6 {
   box-sizing: border-box;
 }
 
-/* Hide Sort by filter & collection banner on desktop and mobile */
-.collection-toolbar .sort-box,
-.sort-box,
+/* Collection banner hidden, Sort by visible on desktop */
 .collection-banner {
   display: none !important;
+}
+
+.collection-toolbar .sort-box,
+.sort-box {
+  display: flex !important;
+  align-items: center;
+  gap: 8px;
+}
+
+@media (max-width: 900px) {
+  .collection-toolbar .sort-box,
+  .sort-box {
+    display: none !important;
+  }
 }
 
 .card-info>form,
@@ -5937,7 +5949,7 @@ body.preloader-active {
 
 @media (max-width: 768px) {
   .floating-product-video {
-    bottom: calc(115px + env(safe-area-inset-bottom, 0px)) !important;
+    bottom: calc(150px + env(safe-area-inset-bottom, 0px));
   }
 }
 

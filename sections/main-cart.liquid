@@ -458,6 +458,84 @@
   .point-label {
     font-size: 10px;
   }
+  .cart-page {
+    padding-bottom: calc(85px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+  .checkout-action-box {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    margin: 0;
+    z-index: 998;
+    background: rgba(23, 62, 52, 0.98);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 10px 16px;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    box-sizing: border-box;
+  }
+  .action-price {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    border-bottom: none;
+    padding-bottom: 0;
+    width: auto;
+    flex-shrink: 0;
+  }
+  .action-price .label {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.7);
+    letter-spacing: 0.04em;
+    font-weight: 600;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+  .action-price .amount {
+    font-size: 16px;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.2;
+  }
+  .btn-checkout-dark {
+    width: auto;
+    flex-shrink: 0;
+    background: var(--color-terracotta, #D96C3F);
+    color: #ffffff;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    box-shadow: 0 2px 8px rgba(217, 108, 63, 0.35);
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    line-height: 1.2;
+  }
+  .btn-checkout-dark:hover,
+  .btn-checkout-dark:active {
+    background: #c25b30;
+    color: #ffffff;
+    opacity: 0.95;
+    transform: scale(0.98);
+  }
 }
 
 .summary-line-title {
@@ -654,30 +732,6 @@
   }
   .item-title {
     font-size: 0.9rem; /* Smaller title */
-  }
-  
-  /* Make checkout box smaller */
-  .checkout-action-box {
-    padding: 12px;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-  .btn-checkout-dark {
-    font-size: 13px;
-    padding: 0;
-    width: 100%;
-    justify-content: space-between;
-  }
-  .action-price {
-    width: 100%;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    padding-bottom: 8px;
-  }
-  .action-price .amount {
-    font-size: 16px;
   }
   
   .coupon-input-group {
