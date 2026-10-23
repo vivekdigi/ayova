@@ -85,6 +85,9 @@
             {% endif %}
           </a>
           <p class="footer-brand-desc">{{ section.settings.brand_description | default: 'Science-backed wellness, rooted in nature. Thoughtfully formulated supplements designed for everyday health and long-term balance.' }}</p>
+          {% if section.settings.show_social != false and section.settings.show_social_in_brand %}
+            {% render 'social-icons', class: 'footer-social-brand' %}
+          {% endif %}
         </div>
 
         <!-- Shop Links -->
@@ -147,6 +150,10 @@
           {% if section.settings.email != blank %}
             <p class="footer-contact-label">Email us</p>
             <a href="mailto:{{ section.settings.email }}" class="footer-contact-value footer-contact-value-sm">{{ section.settings.email }}</a>
+          {% endif %}
+          {% if section.settings.show_social != false and section.settings.show_social_in_contact != false %}
+            <p class="footer-contact-label" style="margin-top: 16px;">{{ section.settings.social_heading | default: 'Follow us' }}</p>
+            {% render 'social-icons' %}
           {% endif %}
         </div>
       </div>
@@ -334,6 +341,64 @@
       "id": "email",
       "label": "Email Address",
       "default": "info@ayovaorganics.com"
+    },
+    {
+      "type": "header",
+      "content": "Social Media"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social",
+      "label": "Show Social Media Links",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "social_heading",
+      "label": "Social Heading",
+      "default": "Follow us"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social_in_contact",
+      "label": "Show in 'Get In Touch' Column",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social_in_brand",
+      "label": "Show in Brand Column",
+      "default": false
+    },
+    {
+      "type": "url",
+      "id": "social_instagram",
+      "label": "Instagram URL (Overrides Theme Settings)"
+    },
+    {
+      "type": "url",
+      "id": "social_facebook",
+      "label": "Facebook URL (Overrides Theme Settings)"
+    },
+    {
+      "type": "url",
+      "id": "social_youtube",
+      "label": "YouTube URL (Overrides Theme Settings)"
+    },
+    {
+      "type": "url",
+      "id": "social_twitter",
+      "label": "Twitter / X URL (Overrides Theme Settings)"
+    },
+    {
+      "type": "url",
+      "id": "social_whatsapp",
+      "label": "WhatsApp URL (Overrides Theme Settings)"
+    },
+    {
+      "type": "url",
+      "id": "social_linkedin",
+      "label": "LinkedIn URL (Overrides Theme Settings)"
     },
     {
       "type": "header",

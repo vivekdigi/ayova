@@ -1,0 +1,86 @@
+{%- comment -%}
+  AYOVA SOCIAL ICONS SNIPPET
+  Renders configured social media links from Theme Settings or Section Settings
+{%- endcomment -%}
+
+{%- assign raw_insta = section.settings.social_instagram | default: settings.social_instagram | strip -%}
+{%- assign raw_fb = section.settings.social_facebook | default: settings.social_facebook | strip -%}
+{%- assign raw_yt = section.settings.social_youtube | default: settings.social_youtube | strip -%}
+{%- assign raw_tw = section.settings.social_twitter | default: settings.social_twitter | strip -%}
+{%- assign raw_wa = section.settings.social_whatsapp | default: settings.social_whatsapp | strip -%}
+{%- assign raw_li = section.settings.social_linkedin | default: settings.social_linkedin | strip -%}
+
+{%- comment -%} Sanitize URLs {%- endcomment -%}
+{%- if raw_insta contains '#http' -%}{%- assign raw_insta = raw_insta | replace_first: '#http', 'http' -%}{%- endif -%}
+{%- if raw_fb contains '#http' -%}{%- assign raw_fb = raw_fb | replace_first: '#http', 'http' -%}{%- endif -%}
+{%- if raw_yt contains '#http' -%}{%- assign raw_yt = raw_yt | replace_first: '#http', 'http' -%}{%- endif -%}
+{%- if raw_tw contains '#http' -%}{%- assign raw_tw = raw_tw | replace_first: '#http', 'http' -%}{%- endif -%}
+{%- if raw_wa contains '#http' -%}{%- assign raw_wa = raw_wa | replace_first: '#http', 'http' -%}{%- endif -%}
+{%- if raw_li contains '#http' -%}{%- assign raw_li = raw_li | replace_first: '#http', 'http' -%}{%- endif -%}
+
+{%- assign has_social = false -%}
+{%- if raw_insta != blank and raw_insta != '#' -%}{%- assign has_social = true -%}{%- endif -%}
+{%- if raw_fb != blank and raw_fb != '#' -%}{%- assign has_social = true -%}{%- endif -%}
+{%- if raw_yt != blank and raw_yt != '#' -%}{%- assign has_social = true -%}{%- endif -%}
+{%- if raw_tw != blank and raw_tw != '#' -%}{%- assign has_social = true -%}{%- endif -%}
+{%- if raw_wa != blank and raw_wa != '#' -%}{%- assign has_social = true -%}{%- endif -%}
+{%- if raw_li != blank and raw_li != '#' -%}{%- assign has_social = true -%}{%- endif -%}
+
+{%- if has_social -%}
+  <div class="footer-social-links {{ class }}">
+    {%- if raw_insta != blank and raw_insta != '#' -%}
+      <a href="{{ raw_insta }}" class="footer-social-link" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+        </svg>
+      </a>
+    {%- endif -%}
+
+    {%- if raw_fb != blank and raw_fb != '#' -%}
+      <a href="{{ raw_fb }}" class="footer-social-link" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+        </svg>
+      </a>
+    {%- endif -%}
+
+    {%- if raw_yt != blank and raw_yt != '#' -%}
+      <a href="{{ raw_yt }}" class="footer-social-link" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+        </svg>
+      </a>
+    {%- endif -%}
+
+    {%- if raw_tw != blank and raw_tw != '#' -%}
+      <a href="{{ raw_tw }}" class="footer-social-link" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+        </svg>
+      </a>
+    {%- endif -%}
+
+    {%- if raw_wa != blank and raw_wa != '#' -%}
+      {%- assign wa_href = raw_wa -%}
+      {%- unless wa_href contains 'http://' or wa_href contains 'https://' or wa_href contains 'wa.me' -%}
+        {%- assign wa_num = wa_href | remove: '+' | remove: '-' | remove: ' ' -%}
+        {%- assign wa_href = 'https://wa.me/' | append: wa_num -%}
+      {%- endunless -%}
+      <a href="{{ wa_href }}" class="footer-social-link" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M17.472 14.382c-.301-.15-1.78-.878-2.056-.978-.276-.1-.477-.15-.678.15-.201.3-.778.978-.954 1.179-.176.2-.352.226-.653.075-1.804-.903-2.982-1.616-4.168-3.654-.312-.536.312-.497.893-1.659.098-.2.049-.376-.025-.526-.075-.15-.678-1.635-.93-2.24-.244-.588-.493-.508-.678-.517-.176-.008-.377-.01-.578-.01s-.527.075-.803.376c-.276.3-1.054 1.03-1.054 2.511s1.079 2.912 1.23 3.113c.15.201 2.123 3.242 5.143 4.547 2.16.934 2.996.936 4.072.775.717-.107 2.18-.891 2.487-1.751.307-.86.307-1.597.215-1.752-.093-.155-.294-.251-.595-.401zM12.04 21.786c-1.802 0-3.568-.485-5.116-1.403l-.367-.218-3.805.998 1.016-3.71-.239-.38A9.73 9.73 0 0 1 2.25 12.04C2.25 6.643 6.644 2.25 12.04 2.25c2.614 0 5.071 1.018 6.92 2.868a9.734 9.734 0 0 1 2.868 6.922c0 5.397-4.393 9.746-9.788 9.746zM12.04 0C5.401 0 0 5.402 0 12.04c0 2.12.553 4.187 1.603 6.008L0 24l6.126-1.607a12.003 12.003 0 0 0 5.914 1.547h.005c6.638 0 12.039-5.402 12.039-12.04 0-3.216-1.252-6.24-3.526-8.514C18.284 1.252 15.26 0 12.04 0z"/>
+        </svg>
+      </a>
+    {%- endif -%}
+
+    {%- if raw_li != blank and raw_li != '#' -%}
+      <a href="{{ raw_li }}" class="footer-social-link" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+        </svg>
+      </a>
+    {%- endif -%}
+  </div>
+{%- endif -%}

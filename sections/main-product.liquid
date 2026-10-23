@@ -254,7 +254,7 @@
         {% endif %}
 
         <!-- Add to Cart Form -->
-        <form action="/cart/add" method="post" enctype="multipart/form-data" class="product-form" data-product-form onsubmit="event.preventDefault(); if(window.ayovaAddToCart) { window.ayovaAddToCart(this); } return false;">
+        <form action="/cart/add" method="post" enctype="multipart/form-data" class="product-form" data-product-form onsubmit="return window.handleProductFormSubmit(event);">
           <!-- Choose Pack / Variants -->
           <div class="variant-picker-new">
             <h4 class="variant-label-new">Select a Pack</h4>
@@ -548,11 +548,11 @@
                 <button type="button" class="qty-btn" onclick="var q=document.getElementById('pQty'); if(q){ q.value = parseInt(q.value,10)+1; q.dispatchEvent(new Event('change', {bubbles:true})); }">+</button>
               </div>
 
-              <button type="button" name="add" class="btn-add-cart-new" data-add-to-cart onclick="window.ayovaAddToCart(this.closest('form'));">
+              <button type="submit" name="add" class="btn-add-cart-new" data-add-to-cart onclick="var f=this.closest('form'); if(f) f.dataset.intent='add-to-cart';">
                 ADD TO CART
               </button>
               
-              <button type="button" class="btn-buy-now" onclick="window.ayovaBuyNow(this.closest('form'));">
+              <button type="submit" class="btn-buy-now" onclick="var f=this.closest('form'); if(f) f.dataset.intent='buy-now';">
                 BUY NOW
               </button>
             </div>
@@ -740,195 +740,114 @@
 </div>
 
 <script>
-  // Ayova High-Performance Add to Cart & Buy Now Engine
-  window.ayovaGetVariantAndQty = function(form) {
-    if (!form) form = document.querySelector('.product-form');
-    if (!form) return null;
-    var idInput = form.querySelector('input[name="id"]:checked') || form.querySelector('input[name="id"]');
-    var variantId = idInput ? idInput.value : null;
-    var qtyInput = form.querySelector('input[name="quantity"]') || document.getElementById('pQty');
-    var quantity = qtyInput ? (parseInt(qtyInput.value, 10) || 1) : 1;
-    return { form: form, variantId: variantId, quantity: quantity };
-  };
-
-  window.ayovaBuyNow = function(form) {
-    var data = window.ayovaGetVariantAndQty(form);
-    if (!data || !data.variantId) {
-      if (data && data.form) data.form.submit();
-      return;
+  // PDP Add-to-Cart and Buy-Now handler with double-submit prevention
+  window.handleProductFormSubmit = function(e) {
+    if (e) {
+      if (e.preventDefault) e.preventDefault();
+      if (e.stopPropagation) e.stopPropagation();
+      if (e.stopImmediatePropagation) e.stopImmediatePropagation();
     }
+    var form = e ? (e.target || e.currentTarget) : document.querySelector('.product-form');
+    if (!form) return false;
 
-    var buyBtn = document.querySelector('.product-form .btn-buy-now');
+    var submitter = e ? e.submitter : null;
+    var isBuyNow = false;
+    if (form.dataset.intent === 'buy-now') {
+      isBuyNow = true;
+    } else if (submitter && (submitter.classList.contains('btn-buy-now') || submitter.classList.contains('buy-now-sticky'))) {
+      isBuyNow = true;
+    }
+    form.dataset.intent = '';
+
+    var addBtn = form.querySelector('button[name="add"]') || form.querySelector('.btn-add-cart-new');
+    var buyBtn = form.querySelector('.btn-buy-now');
+    var stickyAddBtn = document.querySelector('.btn-sticky-action.add-cart-sticky');
     var stickyBuyBtn = document.querySelector('.btn-sticky-action.buy-now-sticky');
 
-    // 0ms instant visual loading state
-    if (buyBtn) {
-      buyBtn.disabled = true;
-      buyBtn.classList.add('loading');
-      buyBtn.innerHTML = '<span class="ayova-btn-spinner"></span> Processing...';
-    }
-    if (stickyBuyBtn) {
-      stickyBuyBtn.disabled = true;
-      stickyBuyBtn.classList.add('loading');
-      stickyBuyBtn.innerHTML = '<span class="ayova-btn-spinner"></span> Processing...';
+    // If item already added and user clicks "View Cart"
+    if (!isBuyNow && ((addBtn && addBtn.dataset.added === 'true') || (stickyAddBtn && stickyAddBtn.dataset.added === 'true') || (submitter && submitter.dataset.added === 'true'))) {
+      window.location.href = '/cart';
+      return false;
     }
 
-    // Direct, ultra-fast JSON cart addition
-    fetch('/cart/add.js', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify({
-        id: data.variantId,
-        quantity: data.quantity
-      })
-    })
-    .then(function(res) {
-      if (res.ok) {
-        // Immediate redirection to checkout — zero secondary calls!
-        window.location.href = '/checkout';
-      } else {
-        return res.json().then(function(err) { throw err; });
-      }
-    })
-    .catch(function(err) {
-      console.warn('Fast cart add failed, using direct checkout URL fallback:', err);
-      // Fallback: direct navigation to Shopify checkout with variant
-      window.location.href = '/cart/' + data.variantId + ':' + data.quantity;
-    });
-  };
+    if (form._submitting) return false;
+    form._submitting = true;
 
-  window.ayovaAddToCart = function(form) {
-    var data = window.ayovaGetVariantAndQty(form);
-    if (!data || !data.variantId) {
-      if (data && data.form) data.form.submit();
-      return;
+    if (isBuyNow) {
+      if (buyBtn) { buyBtn.disabled = true; buyBtn.innerText = 'Redirecting...'; }
+      if (stickyBuyBtn) { stickyBuyBtn.disabled = true; stickyBuyBtn.innerText = 'Redirecting...'; }
+    } else {
+      if (addBtn) { addBtn.disabled = true; addBtn.innerText = 'Adding...'; }
+      if (stickyAddBtn) { stickyAddBtn.disabled = true; stickyAddBtn.innerText = 'Adding...'; }
     }
 
-    var addBtn = document.querySelector('.product-form button[name="add"]') || document.querySelector('.product-form .btn-add-cart-new');
-    var stickyAddBtn = document.querySelector('.btn-sticky-action.add-cart-sticky');
-
-    var origText = 'ADD TO CART';
-
-    // 0ms instant loading state
-    if (addBtn) {
-      addBtn.disabled = true;
-      addBtn.classList.add('loading');
-      addBtn.innerHTML = '<span class="ayova-btn-spinner"></span> Adding...';
-    }
-    if (stickyAddBtn) {
-      stickyAddBtn.disabled = true;
-      stickyAddBtn.classList.add('loading');
-      stickyAddBtn.innerHTML = '<span class="ayova-btn-spinner"></span> Adding...';
-    }
+    var formData = new FormData(form);
 
     fetch('/cart/add.js', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify({
-        id: data.variantId,
-        quantity: data.quantity
-      })
+      body: formData
     })
     .then(function(res) {
       if (!res.ok) {
-        return res.json().then(function(err) { throw err; });
+        return res.json().then(function(errJson) { throw errJson; });
       }
       return res.json();
     })
-    .then(function(item) {
-      // Instant success feedback on buttons
-      if (addBtn) {
-        addBtn.disabled = false;
-        addBtn.classList.remove('loading');
-        addBtn.classList.add('added');
-        addBtn.innerHTML = '✓ Added to Cart!';
-      }
-      if (stickyAddBtn) {
-        stickyAddBtn.disabled = false;
-        stickyAddBtn.classList.remove('loading');
-        stickyAddBtn.classList.add('added');
-        stickyAddBtn.innerHTML = '✓ Added to Cart!';
-      }
+    .then(function(data) {
+      form._submitting = false;
 
-      // Optimistically update all cart badge counts immediately
-      var badges = document.querySelectorAll('[data-cart-count]');
-      badges.forEach(function(badge) {
-        var current = parseInt(badge.textContent, 10) || 0;
-        badge.textContent = current + data.quantity;
-      });
-
-      // Background sync with cart.js
       if (typeof window.updateCartCount === 'function') {
         window.updateCartCount();
+      } else {
+        fetch('/cart.js')
+          .then(function(r) { return r.json(); })
+          .then(function(cart) {
+            var badges = document.querySelectorAll('[data-cart-count]');
+            badges.forEach(function(b) { b.textContent = cart.item_count; });
+          })
+          .catch(function() {});
       }
 
-      // Show sleek floating cart toast
-      window.showAyovaToast(item.title ? (item.title + ' added to cart!') : 'Added to cart successfully!');
-
-      // Smoothly revert button text after 2 seconds
-      setTimeout(function() {
+      if (isBuyNow) {
+        window.location.href = '/checkout';
+      } else {
         if (addBtn) {
-          addBtn.classList.remove('added');
-          addBtn.innerHTML = origText;
+          addBtn.disabled = false;
+          addBtn.innerText = 'View Cart';
+          addBtn.dataset.added = 'true';
         }
         if (stickyAddBtn) {
-          stickyAddBtn.classList.remove('added');
-          stickyAddBtn.innerHTML = origText;
+          stickyAddBtn.disabled = false;
+          stickyAddBtn.innerText = 'View Cart';
+          stickyAddBtn.dataset.added = 'true';
         }
-      }, 2000);
+      }
     })
     .catch(function(err) {
-      console.error('Add to Cart error:', err);
+      console.error('Cart add error:', err);
+      form._submitting = false;
+      var errMsg = (err && (err.description || err.message)) ? (err.description || err.message) : 'Could not add to cart. Please try again.';
+      alert(errMsg);
       if (addBtn) {
         addBtn.disabled = false;
-        addBtn.classList.remove('loading');
-        addBtn.innerHTML = origText;
+        addBtn.innerText = 'ADD TO CART';
+        addBtn.dataset.added = 'false';
       }
       if (stickyAddBtn) {
         stickyAddBtn.disabled = false;
-        stickyAddBtn.classList.remove('loading');
-        stickyAddBtn.innerHTML = origText;
+        stickyAddBtn.innerText = 'ADD TO CART';
+        stickyAddBtn.dataset.added = 'false';
       }
-      var msg = (err && (err.description || err.message)) ? (err.description || err.message) : 'Could not add to cart. Please try again.';
-      alert(msg);
+      if (buyBtn) {
+        buyBtn.disabled = false;
+        buyBtn.innerText = 'BUY NOW';
+      }
+      if (stickyBuyBtn) {
+        stickyBuyBtn.disabled = false;
+        stickyBuyBtn.innerText = 'BUY NOW';
+      }
     });
-  };
 
-  // Toast notification helper
-  window.showAyovaToast = function(msg) {
-    var toast = document.getElementById('ayovaCartToast');
-    if (!toast) {
-      toast = document.createElement('div');
-      toast.id = 'ayovaCartToast';
-      toast.className = 'ayova-cart-toast';
-      toast.innerHTML = '<span class="toast-check">✓</span><span class="toast-text"></span><a href="/cart" class="toast-btn">View Cart →</a>';
-      document.body.appendChild(toast);
-    }
-    var textEl = toast.querySelector('.toast-text');
-    if (textEl) textEl.textContent = msg;
-
-    toast.classList.add('show');
-    clearTimeout(toast._hideTimer);
-    toast._hideTimer = setTimeout(function() {
-      toast.classList.remove('show');
-    }, 3200);
-  };
-
-  // Backward compatibility alias
-  window.handleProductFormSubmit = function(e) {
-    if (e && e.preventDefault) e.preventDefault();
-    var form = e ? (e.target || e.currentTarget) : document.querySelector('.product-form');
-    if (form && form.dataset.intent === 'buy-now') {
-      window.ayovaBuyNow(form);
-    } else {
-      window.ayovaAddToCart(form);
-    }
     return false;
   };
 
@@ -2485,98 +2404,6 @@
   opacity: 0.9;
 }
 
-.btn-add-cart-new.loading,
-.btn-buy-now.loading,
-.btn-sticky-action.loading {
-  opacity: 0.88;
-  cursor: wait;
-}
-
-.btn-add-cart-new.added,
-.btn-sticky-action.add-cart-sticky.added {
-  background-color: #20874e !important;
-  color: #ffffff !important;
-}
-
-.ayova-btn-spinner {
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  border: 2px solid rgba(255, 255, 255, 0.35);
-  border-radius: 50%;
-  border-top-color: #ffffff;
-  animation: ayova-spin 0.6s linear infinite;
-  margin-right: 6px;
-  vertical-align: middle;
-}
-@keyframes ayova-spin {
-  to { transform: rotate(360deg); }
-}
-
-/* Floating Cart Toast */
-.ayova-cart-toast {
-  position: fixed;
-  top: 24px;
-  left: 50%;
-  transform: translateX(-50%) translateY(-90px);
-  background: #173E34;
-  color: #ffffff;
-  padding: 10px 18px;
-  border-radius: 30px;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  z-index: 10002;
-  font-size: 13px;
-  font-weight: 600;
-  opacity: 0;
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  pointer-events: none;
-  max-width: 90vw;
-  box-sizing: border-box;
-}
-.ayova-cart-toast.show {
-  transform: translateX(-50%) translateY(0);
-  opacity: 1;
-  pointer-events: auto;
-}
-.ayova-cart-toast .toast-check {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: #20874e;
-  color: #fff;
-  font-size: 11px;
-  font-weight: 700;
-  flex-shrink: 0;
-}
-.ayova-cart-toast .toast-text {
-  flex: 1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 200px;
-}
-.ayova-cart-toast .toast-btn {
-  background: #D96C3F;
-  color: #ffffff;
-  padding: 5px 14px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 700;
-  text-decoration: none;
-  white-space: nowrap;
-  flex-shrink: 0;
-  transition: opacity 0.2s;
-}
-.ayova-cart-toast .toast-btn:hover {
-  opacity: 0.9;
-}
-
 .purchase-actions-row.redirect-row {
   display: flex;
   flex-wrap: wrap;
@@ -4044,10 +3871,11 @@
           BUY ON AMAZON
         </a>
       {% endif %}
-      <button type="button" class="btn-sticky-action add-cart-sticky" onclick="window.ayovaAddToCart();">
+    {% else %}
+      <button type="button" class="btn-sticky-action add-cart-sticky" onclick="if(this.dataset.added === 'true'){ window.location.href='/cart'; return; } var f=document.querySelector('.product-form'); if(f){ f.dataset.intent='add-to-cart'; var b=f.querySelector('button[name=add]'); if(b) b.click(); else (f.requestSubmit ? f.requestSubmit() : f.submit()); }">
         ADD TO CART
       </button>
-      <button type="button" class="btn-sticky-action buy-now-sticky" onclick="window.ayovaBuyNow();">
+      <button type="button" class="btn-sticky-action buy-now-sticky" onclick="var f=document.querySelector('.product-form'); if(f){ f.dataset.intent='buy-now'; var buyBtn=f.querySelector('.btn-buy-now') || f.querySelector('.btn-buy-now-new'); if(buyBtn) buyBtn.click(); else (f.requestSubmit ? f.requestSubmit() : f.submit()); }">
         BUY NOW
       </button>
     {% endif %}
