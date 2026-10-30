@@ -163,11 +163,7 @@
                 <span class="label">TOTAL PAYABLE</span>
                 <span class="amount">{{ cart.total_price | money }}</span>
               </div>
-              {% if customer %}
-                <button type="submit" name="checkout" class="btn btn-primary btn-checkout-dark">Proceed to Checkout →</button>
-              {% else %}
-                <a href="/customer_authentication/login?return_to=%2Fcheckout" class="btn btn-primary btn-checkout-dark">Proceed to Checkout →</a>
-              {% endif %}
+              <button type="submit" name="checkout" class="btn btn-primary btn-checkout-dark">Proceed to Checkout &rarr;</button>
             </div>
 
             <p class="cart-guarantee">

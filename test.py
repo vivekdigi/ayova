@@ -1,1 +1,0 @@
-import re; text=open(r"d:\xampp\htdocs\ayova\sections\main-product.liquid", "r", encoding="utf-8").read(); buttons = re.findall(r"<button.*?>.*?</button>", text, re.IGNORECASE | re.DOTALL); print("\n---\n".join(buttons))
